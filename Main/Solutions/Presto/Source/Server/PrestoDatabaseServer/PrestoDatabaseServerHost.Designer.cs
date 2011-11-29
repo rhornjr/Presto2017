@@ -1,6 +1,6 @@
 ﻿namespace PrestoDatabaseServer
 {
-    partial class PrestoDatabaseServer
+    partial class PrestoDatabaseServerHost
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Service1";
+            // 
+            // PrestoDatabaseServer
+            // 
+            this.ServiceName = "PrestoDatabaseServer";
+
         }
 
         #endregion

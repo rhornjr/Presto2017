@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Threading;
 
 namespace PrestoDashboard
 {
@@ -12,5 +8,22 @@ namespace PrestoDashboard
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(this.AppDispatcherUnhandledException);
+            //DispatcherHelper.Initialize();
+
+            base.OnStartup(e);
+
+            //MainTabControlViewModel.MainViewLoader = Utility.CreateViewLoaderWithViewAndViewModelAssociations<MainTabControlView, MainTabControlViewModel>();
+        }
+        private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            // ToDo: Create ability to log.
+            //LogUtility.LogError(e.Exception);
+            MessageBox.Show(string.Format(PrestoDashboardResource.ErrorMessage, e.Exception.Message), PrestoDashboardResource.ErrorCaption,
+                MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            e.Handled = true;
+        }
     }
 }

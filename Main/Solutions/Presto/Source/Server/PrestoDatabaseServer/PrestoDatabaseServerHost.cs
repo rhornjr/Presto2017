@@ -14,6 +14,9 @@ namespace PrestoDatabaseServer
     // http://stevesmithblog.com/blog/create-a-windows-service-in-net-that-can-also-run-as-console-application/
     // The one gotcha was that I forgot to change the project's output type to Console Application.
 
+    /// <summary>
+    /// Presto Database Server Host 
+    /// </summary>
     public partial class PrestoDatabaseServerHost : ServiceBase, IMessageRecipient
     {
         private IObjectServer _db4oServer;
@@ -21,6 +24,9 @@ namespace PrestoDatabaseServer
 
         #region [Constructors]
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrestoDatabaseServerHost"/> class.
+        /// </summary>
         public PrestoDatabaseServerHost()
         {
             InitializeComponent();
@@ -30,6 +36,11 @@ namespace PrestoDatabaseServer
 
         #region [IMessageRecipient Implementation]
 
+        /// <summary>
+        /// Processes the message.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="message">The message.</param>
         public void ProcessMessage(IMessageContext context, object message)
         {
             // Doing nothing is fine. The db4o tutorial will close the server when this method is called by a client.
@@ -68,6 +79,11 @@ namespace PrestoDatabaseServer
 
         #region [Protected Override Methods]
 
+        /// <summary>
+        /// When implemented in a derived class, executes when a Start command is sent to the service by the Service Control Manager
+        /// (SCM) or when the operating system starts (for a service that starts automatically). Specifies actions to take when the service starts.
+        /// </summary>
+        /// <param name="args">Data passed by the start command.</param>
         protected override void OnStart(string[] args)
         {
             try
@@ -78,8 +94,12 @@ namespace PrestoDatabaseServer
             {
                 LogException(ex);
             }
-        }        
+        }
 
+        /// <summary>
+        /// When implemented in a derived class, executes when a Stop command is sent to the service by the Service Control Manager (SCM).
+        /// Specifies actions to take when a service stops running.
+        /// </summary>
         protected override void OnStop()
         {
             try

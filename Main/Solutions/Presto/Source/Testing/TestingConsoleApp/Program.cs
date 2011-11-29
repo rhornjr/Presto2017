@@ -33,15 +33,39 @@ namespace TestingConsoleApp
 
             IObjectContainer db = GetDatabase();
 
+            //CreateApplicationWithTasks(db);
+            //CreateServers(db);
+
+            Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
+
+            db.Close();
+        }
+
+        private static void CreateApplicationWithTasks(IObjectContainer db)
+        {
+            Application application = new Application();
+
+            application.Name                  = "Sample app";
+            application.ReleaseFolderLocation = @"c:\temp\";
+            application.Version               = "1.0.0.42";
+
+            // The DOS command below writes NULL to the file. This is somewhat like the touch command in Linux.
+            TaskBase task1 = new TaskDosCommand("Test task 1a", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\test1a.txt");
+            TaskBase task2 = new TaskDosCommand("Test task 2a", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\test2a.txt");
+
+            application.Tasks.Add(task1);
+            application.Tasks.Add(task2);
+
+            db.Store(application);
+        }
+
+        private static void CreateServers(IObjectContainer db)
+        {
             for (int i = 10; i <= 24; i++)
             {
                 ApplicationServer server = new ApplicationServer() { Name = "PbgAppMesD" + i, IpAddress = "10.1.2." + i };
                 db.Store(server);
             }
-
-            Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
-
-            db.Close();
         }
 
         private static void TestReadFromDatabase()
@@ -51,6 +75,46 @@ namespace TestingConsoleApp
             IObjectContainer db = GetDatabase();
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
+            ReadApplications(db);
+            //ReadTasks(db);
+            //ReadServers(db);
+
+            db.Close();
+        }
+
+        private static void ReadApplications(IObjectContainer db)
+        {
+            IEnumerable<Application> applications = from Application application in db
+                                             select application;
+
+            int i = 0;
+            foreach (Application application in applications)
+            {
+                i++;
+                Console.WriteLine(i.ToString() + ": " + application.Name);
+
+                foreach (TaskBase task in application.Tasks)
+                {
+                    Console.WriteLine("-- task: " + task.Description);
+                }
+            }
+        }
+
+        private static void ReadTasks(IObjectContainer db)
+        {
+            IEnumerable<TaskBase> tasks = from TaskBase task in db
+                                          select task;
+
+            int i = 0;
+            foreach (TaskBase task in tasks)
+            {
+                i++;
+                Console.WriteLine(i.ToString() + ": " + task.Description);
+            }
+        }
+
+        private static void ReadServers(IObjectContainer db)
+        {
             // This didn't work...
             //Server testServer = db.Query<Server>(server => server.Name == "PbgAppMesD04").FirstOrDefault();
 
@@ -60,7 +124,7 @@ namespace TestingConsoleApp
             //                     select server).FirstOrDefault();
 
             IEnumerable<ApplicationServer> allServers = from ApplicationServer server in db
-                                             select server;
+                                                        select server;
 
             //Server anyServer = db.Query<Server>().FirstOrDefault();            
 
@@ -72,8 +136,6 @@ namespace TestingConsoleApp
             }
 
             //LogServerInfo(anyServer, "Any server");
-
-            db.Close();
         }
 
         private static void LogServerInfo(ApplicationServer server, string description)
@@ -89,11 +151,12 @@ namespace TestingConsoleApp
 
         private static IObjectContainer GetDatabase()
         {
-            string databaseUser     = ConfigurationManager.AppSettings["databaseUser"];
-            string databasePassword = ConfigurationManager.AppSettings["databasePassword"];
-            int databaseServerPort  = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
+            string databaseServerName = ConfigurationManager.AppSettings["databaseServerName"];
+            string databaseUser       = ConfigurationManager.AppSettings["databaseUser"];
+            string databasePassword   = ConfigurationManager.AppSettings["databasePassword"];
+            int databaseServerPort    = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
 
-            return Db4oClientServer.OpenClient("localhost", databaseServerPort, databaseUser, databasePassword);
+            return Db4oClientServer.OpenClient(databaseServerName, databaseServerPort, databaseUser, databasePassword);
         }   
     }
 }

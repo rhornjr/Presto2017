@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAFF2A9-EEB6-44B7-BC2C-FD92ECBB1A3E}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{9699A83B-D1BE-4BCD-B670-D778160EF16F}"
 EndProject

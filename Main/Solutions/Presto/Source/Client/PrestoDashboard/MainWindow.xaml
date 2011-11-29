@@ -1,8 +1,14 @@
 ﻿<Window x:Class="PrestoDashboard.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:tabs="clr-namespace:PrestoDashboard.Tabs"
+        Title="MainWindow" Height="650" Width="725"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <TabControl>
+            <TabItem Header="Apps"><tabs:ApplicationView/></TabItem>
+            <TabItem Header="Servers"><tabs:ApplicationServerView/></TabItem>
+            <TabItem Header="Variables"><tabs:GlobalVariableView/></TabItem>
+        </TabControl>
     </Grid>
 </Window>

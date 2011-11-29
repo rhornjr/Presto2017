@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingConsoleApp", "Source
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoDashboard", "Source\Client\PrestoDashboard\PrestoDashboard.csproj", "{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoTaskRunner", "Source\Server\PrestoTaskProcessor\PrestoTaskRunner.csproj", "{038990D2-3F29-4D89-97A3-A11BC53D937E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoTaskRunner", "Source\Server\PrestoTaskRunner\PrestoTaskRunner.csproj", "{038990D2-3F29-4D89-97A3-A11BC53D937E}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -64,10 +64,10 @@ Global
 		SccProjectTopLevelParentUniqueName5 = Presto.sln
 		SccProjectName5 = Source/Client/PrestoDashboard
 		SccLocalPath5 = Source\\Client\\PrestoDashboard
-		SccProjectUniqueName6 = Source\\Server\\PrestoTaskProcessor\\PrestoTaskRunner.csproj
+		SccProjectUniqueName6 = Source\\Server\\PrestoTaskRunner\\PrestoTaskRunner.csproj
 		SccProjectTopLevelParentUniqueName6 = Presto.sln
-		SccProjectName6 = Source/Server/PrestoTaskProcessor
-		SccLocalPath6 = Source\\Server\\PrestoTaskProcessor
+		SccProjectName6 = Source/Server/PrestoTaskRunner
+		SccLocalPath6 = Source\\Server\\PrestoTaskRunner
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -25,7 +25,7 @@
             <Label Content="Selected Application" HorizontalAlignment="Center"/>
             <Label Content="Name: "/>
             <TextBox Text="{Binding SelectedApplicationServer.Name}"/>
-            <Label Content="Version: "/>
+            <Label Content="IP Address: "/>
             <TextBox Text="{Binding SelectedApplicationServer.IpAddress}"/>
             <Label Content="Future use: "/>
             <TextBox Text=""/>

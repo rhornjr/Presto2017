@@ -6,6 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <vm:ApplicationViewModel x:Key="ApplicationViewModel"/>
+            <vm:ApplicationServerViewModel x:Key="ApplicationServerViewModel"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

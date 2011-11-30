@@ -1,31 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Db4objects.Db4o;
-using Db4objects.Db4o.CS;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
 
 namespace PrestoViewModel.Tabs
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApplicationViewModel : ViewModelBase
     {
-        private List<Application> _applications;
+        private Collection<Application> _applications;
         private Application _selectedApplication;
 
-        public List<Application> Applications
+        /// <summary>
+        /// Gets or sets the applications.
+        /// </summary>
+        /// <value>
+        /// The applications.
+        /// </value>
+        public Collection<Application> Applications
         {
             get { return this._applications; }
 
-            set
+            private set
             {
                 this._applications = value;
                 this.NotifyPropertyChanged(() => this.Applications);
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected application.
+        /// </summary>
+        /// <value>
+        /// The selected application.
+        /// </value>
         public Application SelectedApplication
         {
             get { return this._selectedApplication; }
@@ -37,8 +49,13 @@ namespace PrestoViewModel.Tabs
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationViewModel"/> class.
+        /// </summary>
         public ApplicationViewModel()
         {
+            if (DesignMode.IsInDesignMode) { return; }
+
             LoadApplications();
         }
 
@@ -49,19 +66,9 @@ namespace PrestoViewModel.Tabs
             IEnumerable<Application> apps = from Application app in db
                                             select app;
 
-            this.Applications = apps.ToList();
+            this.Applications = new Collection<Application>(apps.ToList());
 
             db.Close();
-        }
-
-        private static IObjectContainer GetDatabase()
-        {
-            string databaseServerName = ConfigurationManager.AppSettings["databaseServerName"];
-            string databaseUser       = ConfigurationManager.AppSettings["databaseUser"];
-            string databasePassword   = ConfigurationManager.AppSettings["databasePassword"];
-            int databaseServerPort    = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
-
-            return Db4oClientServer.OpenClient(databaseServerName, databaseServerPort, databaseUser, databasePassword);
-        }   
+        }        
     }
 }

@@ -45,13 +45,13 @@ namespace TestingConsoleApp
         {
             Application application = new Application();
 
-            application.Name                  = "Sample app";
-            application.ReleaseFolderLocation = @"c:\temp\";
-            application.Version               = "1.0.0.42";
+            application.Name                  = "Another app";
+            application.ReleaseFolderLocation = @"c:\temp\anotherapp\";
+            application.Version               = "2.18.0.80";
 
             // The DOS command below writes NULL to the file. This is somewhat like the touch command in Linux.
-            TaskBase task1 = new TaskDosCommand("Test task 1a", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\test1a.txt");
-            TaskBase task2 = new TaskDosCommand("Test task 2a", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\test2a.txt");
+            TaskBase task1 = new TaskDosCommand("t1", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\t1.txt");
+            TaskBase task2 = new TaskDosCommand("t2", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\t2.txt");
 
             application.Tasks.Add(task1);
             application.Tasks.Add(task2);

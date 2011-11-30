@@ -13,6 +13,7 @@ namespace PrestoViewModel.Tabs
     public class ApplicationViewModel : ViewModelBase
     {
         private List<Application> _applications;
+        private Application _selectedApplication;
 
         public List<Application> Applications
         {
@@ -21,7 +22,18 @@ namespace PrestoViewModel.Tabs
             set
             {
                 this._applications = value;
-                this.NotifyPropertyChanged("Applications");
+                this.NotifyPropertyChanged(() => this.Applications);
+            }
+        }
+
+        public Application SelectedApplication
+        {
+            get { return this._selectedApplication; }
+
+            set
+            {
+                this._selectedApplication = value;
+                this.NotifyPropertyChanged(() => this.SelectedApplication);
             }
         }
 

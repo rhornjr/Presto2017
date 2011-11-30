@@ -4,8 +4,42 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="700">
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource ApplicationServerViewModel}"/>
+    </UserControl.DataContext>
+
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0">
+            <Label DockPanel.Dock="Top" Content="Application Servers" HorizontalAlignment="Center"/>
+            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding ApplicationServers}" DisplayMemberPath="Name"
+                     SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
+        </DockPanel>
+
+        <StackPanel Grid.Column="1">
+            <Label Content="Selected Application" HorizontalAlignment="Center"/>
+            <Label Content="Name: "/>
+            <TextBox Text="{Binding SelectedApplicationServer.Name}"/>
+            <Label Content="Version: "/>
+            <TextBox Text="{Binding SelectedApplicationServer.IpAddress}"/>
+            <Label Content="Future use: "/>
+            <TextBox Text=""/>
+            <Label Content="Applications"/>
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  ItemsSource="{Binding SelectedApplicationServer.Applications}"
+                  SelectedItem="{Binding SelectedApplication}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
+                    <DataGridTextColumn Binding="{Binding Path=Version}" Header="Version" Width="100"/>
+                    <DataGridTextColumn Binding="{Binding Path=TaskTypeReleaseFolderLocation}" Header="Location" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
     </Grid>
 </UserControl>

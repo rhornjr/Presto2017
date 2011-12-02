@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.Linq;
@@ -15,7 +16,7 @@ namespace TestingConsoleApp
         {
             try
             {
-                //TestWriteToDatabase();
+                TestWriteToDatabase();
                 TestReadFromDatabase();
             }
             catch (Exception ex)
@@ -33,12 +34,49 @@ namespace TestingConsoleApp
 
             IObjectContainer db = GetDatabase();
 
+            AssociateAppWithServer(db);
             //CreateApplicationWithTasks(db);
             //CreateServers(db);
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
             db.Close();
+        }
+
+        private static void AssociateAppWithServer(IObjectContainer db)
+        {
+            string appName = "Derating";
+
+            Application application = (from Application app in db
+                                       where app.Name == appName
+                                       select app).FirstOrDefault();
+
+            if (application == null)
+            {
+                Console.WriteLine("AssociateAppWithServer(), app {0} not found.", appName);
+                return;
+            }
+
+            string appServerName = "PbgAppMesD14";
+
+            ApplicationServer server = (from ApplicationServer appServer in db
+                                        where appServer.Name == appServerName
+                                        select appServer).FirstOrDefault();
+
+            if (server == null)
+            {
+                Console.WriteLine("AssociateAppWithServer(), server {0} not found.", appServerName);
+                return;
+            }
+
+            server.Applications.Add(application);
+
+            foreach (Application app in server.Applications)
+            {
+                db.Store(app);
+            }
+
+            db.Store(server);
         }
 
         private static void CreateApplicationWithTasks(IObjectContainer db)
@@ -74,10 +112,10 @@ namespace TestingConsoleApp
 
             IObjectContainer db = GetDatabase();
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
-
-            ReadApplications(db);
+            
+            //ReadApplications(db);
             //ReadTasks(db);
-            //ReadServers(db);
+            ReadServers(db);
 
             db.Close();
         }
@@ -85,7 +123,8 @@ namespace TestingConsoleApp
         private static void ReadApplications(IObjectContainer db)
         {
             IEnumerable<Application> applications = from Application application in db
-                                             select application;
+                                                    where application.Name == "Derating"
+                                                    select application;
 
             int i = 0;
             foreach (Application application in applications)
@@ -123,7 +162,10 @@ namespace TestingConsoleApp
             //                     where server.Name == "PbgAppMesD04"
             //                     select server).FirstOrDefault();
 
+            string serverName = "PbgAppMesD14";
+
             IEnumerable<ApplicationServer> allServers = from ApplicationServer server in db
+                                                        where server.Name == serverName
                                                         select server;
 
             //Server anyServer = db.Query<Server>().FirstOrDefault();            
@@ -133,6 +175,11 @@ namespace TestingConsoleApp
             {
                 i++;
                 LogServerInfo(server, i.ToString());
+
+                foreach (Application app in server.Applications)
+                {
+                    Console.WriteLine("-- {0}", app.Name);
+                }
             }
 
             //LogServerInfo(anyServer, "Any server");

@@ -115,8 +115,8 @@ namespace TestingConsoleApp
             application.Version               = "1.0.0.0";
 
             // The DOS command below writes NULL to the file. This is somewhat like the touch command in Linux.
-            TaskBase task1 = new TaskDosCommand("Copy files", 1, 1, false, @"cmd", "/c copy /y NUL c:\temp\t1.txt");
-            TaskBase task2 = new TaskDosCommand("Alter config", 1, 2, false, @"cmd", "/c copy /y NUL c:\temp\t2.txt");
+            TaskBase task1 = new TaskDosCommand("Copy files", 1, 1, false, "cmd", @"/c copy /y NUL c:\temp\t1.txt");
+            TaskBase task2 = new TaskDosCommand("Alter config", 1, 2, false, "cmd", @"/c copy /y NUL c:\temp\t2.txt");
 
             application.Tasks.Add(task1);
             application.Tasks.Add(task2);

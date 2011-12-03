@@ -147,10 +147,13 @@ namespace PrestoTaskRunner.Logic
         private static InstallationResult ProcessTasks(Application application)
         {
             bool atLeastOneTaskFailed = false;
+            int numberOfSuccessfulTasks = 0;
 
             foreach (TaskBase task in application.Tasks)
             {
                 task.Execute();
+
+                if (task.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
 
                 if (task.TaskSucceeded == false)
                 {
@@ -158,6 +161,8 @@ namespace PrestoTaskRunner.Logic
                     if (task.FailureCausesAllStop == 1) { break; }  // No more processing.
                 }
             }
+
+            if (numberOfSuccessfulTasks < 1) { return InstallationResult.Failure; }
 
             if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
 

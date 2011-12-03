@@ -41,6 +41,12 @@ namespace PrestoCommon.Misc
         private static void Log(string message, EventLogEntryType entryType)
         {
             EventLog.WriteEntry(GetSource(), message, entryType);
+
+            // If we're running a console app, also write the message to the console window.
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine(message);
+            }
         }
 
         private static string GetSource()

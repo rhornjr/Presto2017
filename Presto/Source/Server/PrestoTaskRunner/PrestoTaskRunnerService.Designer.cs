@@ -1,6 +1,6 @@
 ﻿namespace PrestoTaskProcessor
 {
-    partial class Service1
+    partial class PrestoTaskRunnerService
     {
         /// <summary> 
         /// Required designer variable.
@@ -17,6 +17,12 @@
             {
                 components.Dispose();
             }
+
+            if (disposing && this._controller != null)
+            {
+                this._controller.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 
@@ -28,8 +34,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Service1";
+            // 
+            // PrestoTaskRunner
+            // 
+            this.ServiceName = "PrestoTaskRunner";
         }
 
         #endregion

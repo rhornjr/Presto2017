@@ -30,7 +30,7 @@
                   ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"
                   SelectedItem="{Binding SelectedVariable}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="100" />
+                    <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="170" />
                     <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>

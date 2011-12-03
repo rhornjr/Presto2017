@@ -8,6 +8,7 @@ namespace PrestoCommon.Entities
     public class ApplicationServer : ActivatableEntity
     {
         private Collection<Application> _applications;
+        private Collection<CustomVariableGroup> _customVariableGroups;
 
         /// <summary>
         /// Gets or sets the name.
@@ -35,6 +36,19 @@ namespace PrestoCommon.Entities
                 if (this._applications == null) { this._applications = new Collection<Application>(); }
 
                 return this._applications;
+            }
+        }
+
+        /// <summary>
+        /// Gets the custom variable groups.
+        /// </summary>
+        public Collection<CustomVariableGroup> CustomVariableGroups
+        {
+            get
+            {
+                if (this._customVariableGroups == null) { this._customVariableGroups = new Collection<CustomVariableGroup>(); }
+
+                return this._customVariableGroups;
             }
         }
 

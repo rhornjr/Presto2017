@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
@@ -78,6 +79,11 @@ namespace PrestoViewModel.Tabs
             catch (SocketException ex)
             {
                 ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseConnectionFailureMessage;
+                LogUtility.LogException(ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseInvalidOperation;
                 LogUtility.LogException(ex);
             }
         }        

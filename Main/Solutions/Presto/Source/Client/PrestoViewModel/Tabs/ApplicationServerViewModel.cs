@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
@@ -6,6 +7,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.Misc;
+using PrestoViewModel.Misc;
 
 namespace PrestoViewModel.Tabs
 {
@@ -76,6 +78,12 @@ namespace PrestoViewModel.Tabs
             }
             catch (SocketException ex)
             {
+                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseConnectionFailureMessage;
+                LogUtility.LogException(ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseInvalidOperation;
                 LogUtility.LogException(ex);
             }
         }

@@ -68,5 +68,14 @@ namespace PrestoViewModel {
                 return ResourceManager.GetString("DatabaseConnectionFailureMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An invalid operation occurred on the database. Sometimes this is because of an unsupported class hierarchy change..
+        /// </summary>
+        internal static string DatabaseInvalidOperation {
+            get {
+                return ResourceManager.GetString("DatabaseInvalidOperation", resourceCulture);
+            }
+        }
     }
 }

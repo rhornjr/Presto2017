@@ -51,11 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ActivatableEntity.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />
     <Compile Include="Enums\TaskType.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

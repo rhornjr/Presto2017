@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Base class for all tasks
     /// </summary>
-    public abstract class TaskBase
+    public abstract class TaskBase : ActivatableEntity
     {
         /// <summary>
         /// Gets or sets the failure causes all stop.

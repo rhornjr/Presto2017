@@ -1,18 +1,12 @@
-﻿
-using System.Collections.ObjectModel;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Activation;
-using Db4objects.Db4o.TA;
+﻿using System.Collections.ObjectModel;
+
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// An application, or product, that gets installed.
     /// </summary>
-    public class Application : IActivatable
+    public class Application : ActivatableEntity
     {
-        [Transient]
-        private IActivator _activator;
-
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
@@ -51,31 +45,6 @@ namespace PrestoCommon.Entities
         public Application()
         {
             this.Tasks = new Collection<TaskBase>();
-        }
-
-        /// <summary>
-        /// Activates the specified purpose.
-        /// </summary>
-        /// <param name="purpose">The purpose.</param>
-        public void Activate(ActivationPurpose purpose)
-        {
-            if (this._activator != null)
-            {
-                this._activator.Activate(purpose);
-            }
-        }
-
-        /// <summary>
-        /// Binds the specified activator.
-        /// </summary>
-        /// <param name="activator">The activator.</param>
-        public void Bind(IActivator activator)
-        {
-            if (_activator == activator) { return; }
-
-            if (activator != null && null != _activator) { throw new System.InvalidOperationException(); }
-
-            _activator = activator;
-        }
+        }        
     }
 }

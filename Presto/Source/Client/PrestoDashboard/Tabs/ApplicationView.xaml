@@ -30,6 +30,7 @@
             <TextBox Text="{Binding SelectedApplication.Version}"/>
             <Label Content="Release folder location: "/>
             <TextBox Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
+            <CheckBox Content="Force installation"/>
             <Label Content="Tasks"/>
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplication.Tasks}"
@@ -41,6 +42,9 @@
                     <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
                 </DataGrid.Columns>
             </DataGrid>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource StandardButton}" Content="Save" />
+            </StackPanel>
         </StackPanel>
 
     </Grid>

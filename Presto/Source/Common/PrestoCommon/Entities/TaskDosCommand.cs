@@ -39,5 +39,13 @@ namespace PrestoCommon.Entities
             this.DosExecutable = dosExecutable;
             this.Parameters    = parameters;
         }
+
+        /// <summary>
+        /// Executes this instance.
+        /// </summary>
+        public override void Execute()
+        {
+            // ToDo: Implement this.
+        }
     }
 }

@@ -40,6 +40,17 @@ namespace PrestoCommon.Entities
         public Collection<TaskBase> Tasks { get; private set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to force an installation.
+        /// Normally an app will only get installed on servers when there is a new version of the app.
+        /// If we want the same version of the app installed again (like an update to QA), the set this
+        /// to true so an installation occurs.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if [force installation]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ForceInstallation { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Application"/> class.
         /// </summary>
         public Application()

@@ -63,5 +63,10 @@ namespace PrestoCommon.Entities
             this.Sequence             = sequence;
             this.TaskSucceeded        = taskSucceeded;
         }
+
+        /// <summary>
+        /// Executes this instance.
+        /// </summary>
+        public abstract void Execute();
     }
 }

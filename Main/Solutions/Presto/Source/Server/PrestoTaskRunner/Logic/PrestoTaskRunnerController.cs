@@ -7,6 +7,7 @@ using System.Timers;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 
 namespace PrestoTaskRunner.Logic
@@ -85,16 +86,22 @@ namespace PrestoTaskRunner.Logic
             // If we find an app that needs to be installed, install it.
             foreach (Application app in appServer.Applications)
             {
-                if (installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() == null)
+                if (app.ForceInstallation || !InstallationSummaryFoundForApplication(installationSummaryList, app))
                 {
-                    // No installation summary found for this app, so install it.
+                    // No installation summary found for this app, so install it (or we're forcing an installation).
                     LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                         PrestoTaskRunnerResources.AppWillBeInstalledOnAppServer,
                         app.Name,
                         appServer.Name));
-                    InstallApplication(app);
+
+                    InstallApplication(app, appServer);
                 }
             }
+        }
+
+        private static bool InstallationSummaryFoundForApplication(IEnumerable<InstallationSummary> installationSummaryList, Application app)
+        {
+            return installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() != null;
         }
 
         private static ApplicationServer GetApplicationServerForThisMachine(IObjectContainer db, string serverName)
@@ -115,10 +122,32 @@ namespace PrestoTaskRunner.Logic
             return appServer;
         }
 
-        private static InstallationSummary InstallApplication(Application application)
+        private static InstallationSummary InstallApplication(Application application, ApplicationServer appServer)
         {
-            // ToDo: Implement this
-            return new InstallationSummary() { Application = application };
+            InstallationSummary installationSummary = new InstallationSummary()
+            {
+                Application       = application,
+                ApplicationServer = appServer,
+                InstallationStart = DateTime.Now
+            };
+
+            foreach (TaskBase task in application.Tasks)
+            {
+                task.Execute();
+            }
+
+            installationSummary.InstallationEnd    = DateTime.Now;
+            installationSummary.InstallationResult = InstallationResult.Success;  // ToDo: Make this right.
+
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                PrestoTaskRunnerResources.ApplicationInstalled,
+                installationSummary.Application.Name,
+                installationSummary.ApplicationServer.Name,
+                installationSummary.InstallationStart.ToString(CultureInfo.CurrentCulture),
+                installationSummary.InstallationEnd.ToString(CultureInfo.CurrentCulture),
+                installationSummary.InstallationResult.ToString()));
+
+            return installationSummary;
         }
 
         /// <summary>

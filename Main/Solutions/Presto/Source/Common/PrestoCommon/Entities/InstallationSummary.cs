@@ -41,11 +41,11 @@ namespace PrestoCommon.Entities
         public DateTime InstallationEnd { get; set; }
 
         /// <summary>
-        /// Gets or sets the installation status.
+        /// Gets or sets the installation result.
         /// </summary>
         /// <value>
-        /// The installation status.
+        /// The installation result.
         /// </value>
-        public InstallationSummary InstallationResult { get; set; }
+        public InstallationResult InstallationResult { get; set; }
     }
 }

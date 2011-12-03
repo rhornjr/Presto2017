@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Timers;
@@ -52,29 +54,16 @@ namespace PrestoTaskRunner.Logic
 
             try
             {
-                // Find an application that needs to be installed.            
+                string thisServerName = Environment.MachineName;            
+                IObjectContainer db   = CommonUtility.GetDatabase();
 
-                // Step 1: Get the app server, on which this process is running, from the DB.
+                ApplicationServer appServer = GetApplicationServerForThisMachine(db, thisServerName);
 
-                string thisServerName = Environment.MachineName;
+                if (appServer == null) { return; }
 
-                IObjectContainer db = CommonUtility.GetDatabase();
+                IEnumerable<InstallationSummary> installationSummaryList = GetInstallationSummaryList(thisServerName, db);
 
-                ApplicationServer appServer = (from ApplicationServer server in db
-                                               where server.Name == thisServerName
-                                               select server).FirstOrDefault();
-
-                if (appServer == null)
-                {
-                    // ToDo: Log warning here.
-                }
-
-                // Step 2: Get the applications associated with this server.
-
-
-                // Step 3: Get the list of InstallationStatus entities to validate against our list of apps.
-                //         If we find an app that needs to be installed, install it.
-                InstallApplication(new Application());
+                InstallApplications(appServer, installationSummaryList);            
             }
             finally
             {
@@ -82,10 +71,54 @@ namespace PrestoTaskRunner.Logic
             }
         }
 
-        private static InstallationStatus InstallApplication(Application application)
+        private static IEnumerable<InstallationSummary> GetInstallationSummaryList(string thisServerName, IObjectContainer db)
+        {
+            // Get the list of InstallationStatus entities to validate against our list of apps.                
+            IEnumerable<InstallationSummary> installationSummaryList = from InstallationSummary summary in db
+                                                                       where summary.ApplicationServer.Name == thisServerName
+                                                                       select summary;
+            return installationSummaryList;
+        }
+
+        private static void InstallApplications(ApplicationServer appServer, IEnumerable<InstallationSummary> installationSummaryList)
+        {
+            // If we find an app that needs to be installed, install it.
+            foreach (Application app in appServer.Applications)
+            {
+                if (installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() == null)
+                {
+                    // No installation summary found for this app, so install it.
+                    LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                        PrestoTaskRunnerResources.AppWillBeInstalledOnAppServer,
+                        app.Name,
+                        appServer.Name));
+                    InstallApplication(app);
+                }
+            }
+        }
+
+        private static ApplicationServer GetApplicationServerForThisMachine(IObjectContainer db, string serverName)
+        {
+            // Get the app server, on which this process is running, from the DB.            
+
+            ApplicationServer appServer = (from ApplicationServer server in db
+                                           where server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
+                                           select server).FirstOrDefault();
+
+            if (appServer == null)
+            {
+                LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
+                    PrestoTaskRunnerResources.AppServerNotFound,
+                    appServer.Name));
+            }
+
+            return appServer;
+        }
+
+        private static InstallationSummary InstallApplication(Application application)
         {
             // ToDo: Implement this
-            return new InstallationStatus() { Application = application };
+            return new InstallationSummary() { Application = application };
         }
 
         /// <summary>

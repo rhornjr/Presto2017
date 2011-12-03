@@ -61,6 +61,24 @@ namespace PrestoTaskRunner {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} not found in the list of app servers in the database. No applications will be installed..
+        /// </summary>
+        internal static string AppServerNotFound {
+            get {
+                return ResourceManager.GetString("AppServerNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application {0} will be installed on app server {1}.
+        /// </summary>
+        internal static string AppWillBeInstalledOnAppServer {
+            get {
+                return ResourceManager.GetString("AppWillBeInstalledOnAppServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Presto Task Runner started. Press any key to end..
         /// </summary>
         internal static string ServerStartedConsoleMessage {

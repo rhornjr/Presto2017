@@ -47,5 +47,18 @@ namespace PrestoCommon.Entities
         /// The installation result.
         /// </value>
         public InstallationResult InstallationResult { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstallationSummary"/> class.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="applicationServer">The application server.</param>
+        /// <param name="startTime">The start time.</param>
+        public InstallationSummary(Application application, ApplicationServer applicationServer, DateTime startTime)
+        {
+            this.Application       = application;
+            this.ApplicationServer = applicationServer;
+            this.InstallationStart = startTime;
+        }
     }
 }

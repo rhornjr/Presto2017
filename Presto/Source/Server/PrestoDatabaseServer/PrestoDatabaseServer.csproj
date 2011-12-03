@@ -69,11 +69,6 @@
     <Compile Include="PrestoDatabaseServerHost.Designer.cs">
       <DependentUpon>PrestoDatabaseServerHost.cs</DependentUpon>
     </Compile>
-    <Compile Include="PrestoServerResources1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PrestoServerResources.resx</DependentUpon>
-    </Compile>
     <Compile Include="PrestoServerResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -87,7 +82,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PrestoServerResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>PrestoServerResources1.Designer.cs</LastGenOutput>
+      <LastGenOutput>PrestoServerResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,24 @@ namespace PrestoCommon.Misc
     public static class LogUtility
     {
         /// <summary>
+        /// Logs the information.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public static void LogInformation(string message)
+        {
+            Log(message, EventLogEntryType.Information);
+        }
+
+        /// <summary>
+        /// Logs the warning.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public static void LogWarning(string message)
+        {
+            Log(message, EventLogEntryType.Warning);
+        }
+
+        /// <summary>
         /// Logs the exception.
         /// </summary>
         /// <param name="ex">The ex.</param>
@@ -18,6 +36,11 @@ namespace PrestoCommon.Misc
             if (ex == null) { throw new ArgumentNullException("ex"); }
 
             EventLog.WriteEntry(GetSource(), ex.ToString(), EventLogEntryType.Error);
+        }
+
+        private static void Log(string message, EventLogEntryType entryType)
+        {
+            EventLog.WriteEntry(GetSource(), message, entryType);
         }
 
         private static string GetSource()

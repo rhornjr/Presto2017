@@ -66,7 +66,7 @@ namespace PrestoDatabaseServer
 
                 // Run service as console app
                 _prestoDatabaseServerHost.OnStart(args);
-                Console.WriteLine(PrestoServerResource.ServerStartedConsoleMessage);
+                Console.WriteLine(PrestoServerResources.ServerStartedConsoleMessage);
                 Console.ReadKey();
                 _prestoDatabaseServerHost.OnStop();
             }

@@ -6,7 +6,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// A record of an installation for an <see cref="Application"/> on an <see cref="ApplicationServer"/>
     /// </summary>
-    public class InstallationStatus : ActivatableEntity
+    public class InstallationSummary : ActivatableEntity
     {
         /// <summary>
         /// Gets or sets the application server.
@@ -46,6 +46,6 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The installation status.
         /// </value>
-        public InstallationStatus InstallationResult { get; set; }
+        public InstallationSummary InstallationResult { get; set; }
     }
 }

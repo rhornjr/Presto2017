@@ -56,10 +56,10 @@ namespace TestingConsoleApp
             Console.WriteLine("Writing to DB...");
 
             IObjectContainer db = GetDatabase();
-
-            AssociateAppWithServer(db);
+            
             //CreateApplicationWithTasks(db);
             //CreateServers(db);
+            AssociateAppWithServer(db);
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
@@ -80,7 +80,7 @@ namespace TestingConsoleApp
                 return;
             }
 
-            string appServerName = "PbgAppMesD10";
+            string appServerName = "DellXps";
 
             ApplicationServer server = (from ApplicationServer appServer in db
                                         where appServer.Name == appServerName
@@ -131,6 +131,10 @@ namespace TestingConsoleApp
                 ApplicationServer server = new ApplicationServer() { Name = "PbgAppMesD" + i, IpAddress = "10.1.2." + i };
                 db.Store(server);
             }
+
+            // For testing on my laptop
+            ApplicationServer laptop = new ApplicationServer() { Name = "DellXps", IpAddress = "10.0.0.3" };
+            db.Store(laptop);
         }
 
         private static void TestReadFromDatabase()

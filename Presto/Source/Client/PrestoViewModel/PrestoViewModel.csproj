@@ -63,16 +63,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DesignMode.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Misc\ViewModelUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabs\ApplicationServerViewModel.cs" />
     <Compile Include="Tabs\ApplicationViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="ViewModelResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewModelResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\PrestoCommon\PrestoCommon.csproj">
       <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
       <Name>PrestoCommon</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ViewModelResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewModelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

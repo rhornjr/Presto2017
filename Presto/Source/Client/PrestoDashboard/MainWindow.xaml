@@ -4,11 +4,21 @@
         xmlns:tabs="clr-namespace:PrestoDashboard.Tabs"
         Title="Presto Dashboard" Height="650" Width="725"
         WindowStartupLocation="CenterScreen">
+    
+    <Window.DataContext>
+        <Binding Source="{StaticResource MainWindowViewModel}"/>
+    </Window.DataContext>
+    
     <Grid>
-        <TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
             <TabItem Header="Apps"><tabs:ApplicationView/></TabItem>
             <TabItem Header="Servers"><tabs:ApplicationServerView/></TabItem>
             <TabItem Header="Variables"><tabs:GlobalVariableView/></TabItem>
         </TabControl>
+        <TextBlock Grid.Row="1" Text="{Binding UserMessage}" Foreground="Red" TextWrapping="Wrap" Margin="2"/>
     </Grid>
 </Window>

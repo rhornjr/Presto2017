@@ -58,6 +58,7 @@
     <Compile Include="Entities\TaskDosCommand.cs" />
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

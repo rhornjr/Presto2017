@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 
@@ -37,7 +38,8 @@ namespace PrestoViewModel
         /// <summary>
         /// Gets the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns></returns>        
+        /// <exception cref="SocketException"/>
         protected static IObjectContainer GetDatabase()
         {
             string databaseServerName = ConfigurationManager.AppSettings["databaseServerName"];

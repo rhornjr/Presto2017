@@ -56,12 +56,12 @@ namespace TestingConsoleApp
             Console.WriteLine("Writing to DB...");
 
             IObjectContainer db = GetDatabase();
-            
+
             //CreateApplicationWithTasks(db);
             //CreateServers(db);
-            //AssociateAppWithServer(db);
-            //AssociateServerWithVariableGroup(db);
-            CreateCustomVariables(db);
+            //AssociateAppWithServer(db);            
+            //CreateCustomVariables(db);
+            AssociateServerWithVariableGroup(db);
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
@@ -70,35 +70,56 @@ namespace TestingConsoleApp
 
         private static void AssociateServerWithVariableGroup(IObjectContainer db)
         {
-            throw new NotImplementedException();
+            ApplicationServer server = (from ApplicationServer appServer in db
+                                        where appServer.Name == "PbgAppMesD10"
+                                        select appServer).FirstOrDefault();
+
+            if (server == null) { return; }
+
+            CustomVariableGroup qaGroup = (from CustomVariableGroup customGroup in db
+                                           where customGroup.Name == "QA"
+                                           select customGroup).FirstOrDefault();
+
+            if (qaGroup != null) { server.CustomVariableGroups.Add(qaGroup); }
+
+            CustomVariableGroup pbgGroup = (from CustomVariableGroup customGroup in db
+                                            where customGroup.Name == "PBG"
+                                            select customGroup).FirstOrDefault();
+
+            if (pbgGroup != null) { server.CustomVariableGroups.Add(pbgGroup); }
+
+            if (qaGroup != null || pbgGroup != null)
+            {
+                db.Store(server);
+            }
         }
 
         private static void CreateCustomVariables(IObjectContainer db)
         {
-            //CustomVariableGroup customVariableGroup = new CustomVariableGroup() { Name = "QA" };
+            CustomVariableGroup customVariableGroup = new CustomVariableGroup() { Name = "QA" };
 
-            //customVariableGroup.CustomVariables.Add(new CustomVariable()
-            //    { Key = "connectionStringSomeDb", Value = "Data Source = QaDbServer; Initial Catalog = SomeDb; Integrated Security = True" });
+            customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "connectionStringSomeDb", Value = "Data Source = QaDbServer; Initial Catalog = SomeDb; Integrated Security = True" });
 
-            //customVariableGroup.CustomVariables.Add(new CustomVariable()
-            //    { Key = "connectionStringAnotherDb", Value = "Data Source = QaDbServer; Initial Catalog = AnotherDb; Integrated Security = True" });
+            customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "connectionStringAnotherDb", Value = "Data Source = QaDbServer; Initial Catalog = AnotherDb; Integrated Security = True" });
 
-            //customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "serviceAccountUser", Value = @"domain\QaUser" });
+            customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "serviceAccountUser", Value = @"domain\QaUser" });
 
-            //customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "serviceAccountPassword", Value = @"pw" });
+            customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "serviceAccountPassword", Value = @"pw" });
 
-            CustomVariableGroup pbgGroup = new CustomVariableGroup() { Name = "PBG" };
-            pbgGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "PBG" });
+            db.Store(customVariableGroup);
 
-            CustomVariableGroup ffoGroup = new CustomVariableGroup() { Name = "FFO" };
-            ffoGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "FFO" });
+            //CustomVariableGroup pbgGroup = new CustomVariableGroup() { Name = "PBG" };
+            //pbgGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "PBG" });
 
-            CustomVariableGroup klmGroup = new CustomVariableGroup() { Name = "KLM" };
-            klmGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "KLM" });
+            //CustomVariableGroup ffoGroup = new CustomVariableGroup() { Name = "FFO" };
+            //ffoGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "FFO" });
 
-            db.Store(pbgGroup);
-            db.Store(ffoGroup);
-            db.Store(klmGroup);
+            //CustomVariableGroup klmGroup = new CustomVariableGroup() { Name = "KLM" };
+            //klmGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "KLM" });
+
+            //db.Store(pbgGroup);
+            //db.Store(ffoGroup);
+            //db.Store(klmGroup);
         }
 
         private static void AssociateAppWithServer(IObjectContainer db)

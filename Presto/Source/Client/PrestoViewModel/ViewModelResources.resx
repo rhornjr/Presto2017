@@ -120,4 +120,7 @@
   <data name="DatabaseConnectionFailureMessage" xml:space="preserve">
     <value>A connection could not be made to the database. Please verify that the database is running and try again. See the log for more detail.</value>
   </data>
+  <data name="DatabaseInvalidOperation" xml:space="preserve">
+    <value>An invalid operation occurred on the database. Sometimes this is because of an unsupported class hierarchy change.</value>
+  </data>
 </root>

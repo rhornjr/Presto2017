@@ -29,16 +29,27 @@
             <TextBox Text="{Binding SelectedApplicationServer.IpAddress}"/>
             <Label Content="Future use: "/>
             <TextBox Text=""/>
-            <Label Content="Applications"/>
+            
+            <Label Content="Applications"/>            
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplicationServer.Applications}"
-                  SelectedItem="{Binding SelectedApplication}">
+                  Height="150">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
                     <DataGridTextColumn Binding="{Binding Path=Version}" Header="Version" Width="100"/>
                     <DataGridTextColumn Binding="{Binding Path=ReleaseFolderLocation}" Header="Location" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <Label Content="Custom Variable Groups"/>
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
+                      Height="150">                
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            
         </StackPanel>
 
     </Grid>

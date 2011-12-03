@@ -16,14 +16,37 @@ namespace TestingConsoleApp
         {
             try
             {
-                TestWriteToDatabase();
-                TestReadFromDatabase();
+                Console.WriteLine("(R)ead, (W)rite, (B)oth, (C)ancel");
+                ConsoleKey key = Console.ReadKey().Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.R:
+                        TestReadFromDatabase();
+                        PressAnyKeyToExit();
+                        break;
+                    case ConsoleKey.W:
+                        TestWriteToDatabase();
+                        PressAnyKeyToExit();
+                        break;
+                    case ConsoleKey.B:
+                        TestWriteToDatabase();
+                        TestReadFromDatabase();                        
+                        PressAnyKeyToExit();
+                        break;
+                    case ConsoleKey.C:
+                    default:
+                        break;
+                }                                               
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-            }
+            }            
+        }
 
+        private static void PressAnyKeyToExit()
+        {
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
@@ -57,7 +80,7 @@ namespace TestingConsoleApp
                 return;
             }
 
-            string appServerName = "PbgAppMesD14";
+            string appServerName = "PbgAppMesD10";
 
             ApplicationServer server = (from ApplicationServer appServer in db
                                         where appServer.Name == appServerName
@@ -69,12 +92,16 @@ namespace TestingConsoleApp
                 return;
             }
 
+            //server.IpAddress += "x";
             server.Applications.Add(application);
+            //server.Applications.Add(new Application() { Name = "Presto", ReleaseFolderLocation = "somewhere", Version = "2.0" });
 
-            foreach (Application app in server.Applications)
-            {
-                db.Store(app);
-            }
+            //db.Commit();
+
+            //foreach (Application app in server.Applications)
+            //{
+            //    db.Store(app);
+            //}
 
             db.Store(server);
         }
@@ -112,7 +139,7 @@ namespace TestingConsoleApp
 
             IObjectContainer db = GetDatabase();
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
-            
+
             //ReadApplications(db);
             //ReadTasks(db);
             ReadServers(db);
@@ -123,7 +150,7 @@ namespace TestingConsoleApp
         private static void ReadApplications(IObjectContainer db)
         {
             IEnumerable<Application> applications = from Application application in db
-                                                    where application.Name == "Derating"
+                                                    //where application.Name == "Derating"
                                                     select application;
 
             int i = 0;
@@ -162,7 +189,7 @@ namespace TestingConsoleApp
             //                     where server.Name == "PbgAppMesD04"
             //                     select server).FirstOrDefault();
 
-            string serverName = "PbgAppMesD14";
+            string serverName = "PbgAppMesD10";
 
             IEnumerable<ApplicationServer> allServers = from ApplicationServer server in db
                                                         where server.Name == serverName
@@ -202,6 +229,9 @@ namespace TestingConsoleApp
             string databaseUser       = ConfigurationManager.AppSettings["databaseUser"];
             string databasePassword   = ConfigurationManager.AppSettings["databasePassword"];
             int databaseServerPort    = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
+
+            //IClientConfiguration clientConfig = Db4oClientServer.NewClientConfiguration();
+            //clientConfig.Common.Add(new TransparentPersistenceSupport());
 
             return Db4oClientServer.OpenClient(databaseServerName, databaseServerPort, databaseUser, databasePassword);
         }   

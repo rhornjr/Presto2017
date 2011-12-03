@@ -7,6 +7,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Messaging;
+using Db4objects.Db4o.TA;
 
 namespace PrestoDatabaseServer
 {
@@ -125,6 +126,8 @@ namespace PrestoDatabaseServer
             IServerConfiguration serverConfiguration = Db4oClientServer.NewServerConfiguration();
 
             serverConfiguration.Networking.MessageRecipient = this;
+
+            serverConfiguration.Common.Add(new TransparentPersistenceSupport());
 
             string db4oDatabasePath     = AppDomain.CurrentDomain.BaseDirectory;
             string db4oDatabaseFileName = ConfigurationManager.AppSettings["db4oDatabaseFileName"];            

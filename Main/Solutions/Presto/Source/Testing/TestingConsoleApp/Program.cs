@@ -140,8 +140,8 @@ namespace TestingConsoleApp
             IObjectContainer db = GetDatabase();
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
-            //ReadApplications(db);
-            //ReadTasks(db);
+            ReadApplications(db);
+            ReadTasks(db);
             ReadServers(db);
 
             db.Close();
@@ -189,10 +189,10 @@ namespace TestingConsoleApp
             //                     where server.Name == "PbgAppMesD04"
             //                     select server).FirstOrDefault();
 
-            string serverName = "PbgAppMesD10";
+            //string serverName = "PbgAppMesD10";
 
             IEnumerable<ApplicationServer> allServers = from ApplicationServer server in db
-                                                        where server.Name == serverName
+                                                        //where server.Name == serverName
                                                         select server;
 
             //Server anyServer = db.Query<Server>().FirstOrDefault();            

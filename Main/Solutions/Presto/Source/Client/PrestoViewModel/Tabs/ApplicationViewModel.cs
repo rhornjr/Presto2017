@@ -66,7 +66,7 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                IObjectContainer db = GetDatabase();
+                IObjectContainer db = CommonUtility.GetDatabase();
 
                 IEnumerable<Application> apps = from Application app in db
                                                 select app;

@@ -42,7 +42,11 @@
     <Reference Include="Db4objects.Db4o">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\db4o\Db4objects.Db4o.dll</HintPath>
     </Reference>
+    <Reference Include="Db4objects.Db4o.CS">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\db4o\Db4objects.Db4o.CS.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,6 +64,7 @@
     <Compile Include="Enums\InstallationResult.cs" />
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq.Expressions;
-using System.Net.Sockets;
-using Db4objects.Db4o;
-using Db4objects.Db4o.CS;
 
 namespace PrestoViewModel
 {
@@ -33,22 +28,7 @@ namespace PrestoViewModel
             string propertyName = GetPropertyName(expression);
 
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
-        /// Gets the database.
-        /// </summary>
-        /// <returns></returns>        
-        /// <exception cref="SocketException"/>
-        protected static IObjectContainer GetDatabase()
-        {
-            string databaseServerName = ConfigurationManager.AppSettings["databaseServerName"];
-            string databaseUser       = ConfigurationManager.AppSettings["databaseUser"];
-            string databasePassword   = ConfigurationManager.AppSettings["databasePassword"];
-            int databaseServerPort    = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
-
-            return Db4oClientServer.OpenClient(databaseServerName, databaseServerPort, databaseUser, databasePassword);
-        }   
+        }        
 
         private static string GetPropertyName<T>(Expression<Func<T>> expression)
         {

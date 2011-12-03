@@ -36,7 +36,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
                     <DataGridTextColumn Binding="{Binding Path=Version}" Header="Version" Width="100"/>
-                    <DataGridTextColumn Binding="{Binding Path=TaskTypeReleaseFolderLocation}" Header="Location" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding Path=ReleaseFolderLocation}" Header="Location" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

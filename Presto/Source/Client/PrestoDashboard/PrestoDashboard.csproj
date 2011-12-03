@@ -76,8 +76,8 @@
     <Compile Include="Tabs\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tabs\GlobalVariableView.xaml.cs">
-      <DependentUpon>GlobalVariableView.xaml</DependentUpon>
+    <Compile Include="Tabs\CustomVariableView.xaml.cs">
+      <DependentUpon>CustomVariableView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -99,7 +99,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tabs\GlobalVariableView.xaml">
+    <Page Include="Tabs\CustomVariableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

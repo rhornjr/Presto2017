@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="PrestoDashboard.Tabs.GlobalVariableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="700">
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource CustomVariableViewModel}"/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0">
+            <Label DockPanel.Dock="Top" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
+            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"
+                     SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
+        </DockPanel>
+
+        <StackPanel Grid.Column="1">
+            <Label Content="Selected Group" HorizontalAlignment="Center"/>
+            <Label Content="Name: "/>
+            <TextBox Text="{Binding SelectedCustomVariableGroup.Name}"/>
+            <Label Content="Custom Variables"/>
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"
+                  SelectedItem="{Binding SelectedVariable}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="100" />
+                    <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource StandardButton}" Content="Save" />
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

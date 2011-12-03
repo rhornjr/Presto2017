@@ -58,6 +58,8 @@
     <Compile Include="Entities\ActivatableEntity.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
+    <Compile Include="Entities\CustomVariable.cs" />
+    <Compile Include="Entities\CustomVariableGroup.cs" />
     <Compile Include="Entities\InstallationSummary.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />

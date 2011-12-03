@@ -49,6 +49,9 @@
     <Reference Include="Db4objects.Db4o, Version=8.1.184.15492, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\db4o\Db4objects.Db4o.dll</HintPath>
     </Reference>
+    <Reference Include="Db4objects.Db4o.Linq">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\db4o\Db4objects.Db4o.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

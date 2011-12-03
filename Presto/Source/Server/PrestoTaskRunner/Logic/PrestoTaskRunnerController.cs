@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Timers;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.Misc;
 
 namespace PrestoTaskRunner.Logic
 {
@@ -9,7 +14,8 @@ namespace PrestoTaskRunner.Logic
     /// </summary>
     public class PrestoTaskRunnerController : IDisposable
     {
-        private Timer _timer;
+        private System.Timers.Timer _timer;
+        private static readonly object _locker = new object();
 
         /// <summary>
         /// Starts this instance.
@@ -17,6 +23,7 @@ namespace PrestoTaskRunner.Logic
         public void Start()
         {
             Initialize();
+            CheckForApplicationsToInstall();
         }
 
         /// <summary>
@@ -29,8 +36,8 @@ namespace PrestoTaskRunner.Logic
 
         private void Initialize()
         {
-            this._timer = new Timer(60000);
-            this._timer.Elapsed += new ElapsedEventHandler(OnTimerElapsed);
+            this._timer = new System.Timers.Timer(60000);
+            this._timer.Elapsed += new ElapsedEventHandler(OnTimerElapsed);            
             this._timer.Start();
         }
 
@@ -41,10 +48,38 @@ namespace PrestoTaskRunner.Logic
 
         private static void CheckForApplicationsToInstall()
         {
-            // Find an application that needs to be installed.
-            Application application = null;  // ToDo: Add DB call here to check for an app to install.
+            if (!Monitor.TryEnter(_locker)) { return; }  // Don't let  multiple threads in here at the same time.
 
-            InstallApplication(application);
+            try
+            {
+                // Find an application that needs to be installed.            
+
+                // Step 1: Get the app server, on which this process is running, from the DB.
+
+                string thisServerName = Environment.MachineName;
+
+                IObjectContainer db = CommonUtility.GetDatabase();
+
+                ApplicationServer appServer = (from ApplicationServer server in db
+                                               where server.Name == thisServerName
+                                               select server).FirstOrDefault();
+
+                if (appServer == null)
+                {
+                    // ToDo: Log warning here.
+                }
+
+                // Step 2: Get the applications associated with this server.
+
+
+                // Step 3: Get the list of InstallationStatus entities to validate against our list of apps.
+                //         If we find an app that needs to be installed, install it.
+                InstallApplication(new Application());
+            }
+            finally
+            {
+                Monitor.Exit(_locker);
+            }
         }
 
         private static InstallationStatus InstallApplication(Application application)

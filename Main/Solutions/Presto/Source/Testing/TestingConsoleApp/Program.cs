@@ -59,11 +59,46 @@ namespace TestingConsoleApp
             
             //CreateApplicationWithTasks(db);
             //CreateServers(db);
-            AssociateAppWithServer(db);
+            //AssociateAppWithServer(db);
+            //AssociateServerWithVariableGroup(db);
+            CreateCustomVariables(db);
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
             db.Close();
+        }
+
+        private static void AssociateServerWithVariableGroup(IObjectContainer db)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void CreateCustomVariables(IObjectContainer db)
+        {
+            //CustomVariableGroup customVariableGroup = new CustomVariableGroup() { Name = "QA" };
+
+            //customVariableGroup.CustomVariables.Add(new CustomVariable()
+            //    { Key = "connectionStringSomeDb", Value = "Data Source = QaDbServer; Initial Catalog = SomeDb; Integrated Security = True" });
+
+            //customVariableGroup.CustomVariables.Add(new CustomVariable()
+            //    { Key = "connectionStringAnotherDb", Value = "Data Source = QaDbServer; Initial Catalog = AnotherDb; Integrated Security = True" });
+
+            //customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "serviceAccountUser", Value = @"domain\QaUser" });
+
+            //customVariableGroup.CustomVariables.Add(new CustomVariable() { Key = "serviceAccountPassword", Value = @"pw" });
+
+            CustomVariableGroup pbgGroup = new CustomVariableGroup() { Name = "PBG" };
+            pbgGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "PBG" });
+
+            CustomVariableGroup ffoGroup = new CustomVariableGroup() { Name = "FFO" };
+            ffoGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "FFO" });
+
+            CustomVariableGroup klmGroup = new CustomVariableGroup() { Name = "KLM" };
+            klmGroup.CustomVariables.Add(new CustomVariable() { Key = "site", Value = "KLM" });
+
+            db.Store(pbgGroup);
+            db.Store(ffoGroup);
+            db.Store(klmGroup);
         }
 
         private static void AssociateAppWithServer(IObjectContainer db)
@@ -147,8 +182,25 @@ namespace TestingConsoleApp
             ReadApplications(db);
             ReadTasks(db);
             ReadServers(db);
+            ReadCustomVariables(db);
 
             db.Close();
+        }
+
+        private static void ReadCustomVariables(IObjectContainer db)
+        {
+            IEnumerable<CustomVariableGroup> groups = from CustomVariableGroup customGroup in db
+                                                      select customGroup;
+
+            foreach (CustomVariableGroup group in groups)
+            {
+                Console.WriteLine(group.Name);
+
+                foreach (CustomVariable variable in group.CustomVariables)
+                {
+                    Console.WriteLine("-- variable: " + variable.Key + ": " + variable.Value);
+                }
+            }
         }
 
         private static void ReadApplications(IObjectContainer db)

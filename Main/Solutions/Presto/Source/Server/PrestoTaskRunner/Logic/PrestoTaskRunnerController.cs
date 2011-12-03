@@ -122,23 +122,19 @@ namespace PrestoTaskRunner.Logic
             return appServer;
         }
 
-        private static InstallationSummary InstallApplication(Application application, ApplicationServer appServer)
+        private static void InstallApplication(Application application, ApplicationServer appServer)
         {
-            InstallationSummary installationSummary = new InstallationSummary()
-            {
-                Application       = application,
-                ApplicationServer = appServer,
-                InstallationStart = DateTime.Now
-            };
+            InstallationSummary installationSummary = new InstallationSummary(application, appServer, DateTime.Now);
 
-            foreach (TaskBase task in application.Tasks)
-            {
-                task.Execute();
-            }
+            installationSummary.InstallationResult = ProcessTasks(application);
 
             installationSummary.InstallationEnd    = DateTime.Now;
-            installationSummary.InstallationResult = InstallationResult.Success;  // ToDo: Make this right.
 
+            LogInstallationSummary(installationSummary);
+        }
+
+        private static void LogInstallationSummary(InstallationSummary installationSummary)
+        {
             LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoTaskRunnerResources.ApplicationInstalled,
                 installationSummary.Application.Name,
@@ -146,8 +142,26 @@ namespace PrestoTaskRunner.Logic
                 installationSummary.InstallationStart.ToString(CultureInfo.CurrentCulture),
                 installationSummary.InstallationEnd.ToString(CultureInfo.CurrentCulture),
                 installationSummary.InstallationResult.ToString()));
+        }
 
-            return installationSummary;
+        private static InstallationResult ProcessTasks(Application application)
+        {
+            bool atLeastOneTaskFailed = false;
+
+            foreach (TaskBase task in application.Tasks)
+            {
+                task.Execute();
+
+                if (task.TaskSucceeded == false)
+                {
+                    atLeastOneTaskFailed = true;
+                    if (task.FailureCausesAllStop == 1) { break; }  // No more processing.
+                }
+            }
+
+            if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
+
+            return InstallationResult.Success;
         }
 
         /// <summary>

@@ -99,6 +99,12 @@ namespace PrestoViewModel.Windows
 
         private void AppyChangesFromCopyToOriginal()
         {
+            if (this.TaskDosCommandOriginal == null)
+            {
+                this.TaskDosCommandOriginal = TaskDosCommand.Copy(this.TaskDosCommandCopy, new TaskDosCommand());
+                return;
+            }
+
             this.TaskDosCommandOriginal = TaskDosCommand.Copy(this.TaskDosCommandCopy, this.TaskDosCommandOriginal);
         }
     }

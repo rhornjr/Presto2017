@@ -20,5 +20,14 @@ namespace PrestoCommon.Logic
 
             return apps;
         }
+
+        /// <summary>
+        /// Saves the specified application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        public static void Save(Application application)
+        {
+            Database.Store(application);
+        }
     }
 }

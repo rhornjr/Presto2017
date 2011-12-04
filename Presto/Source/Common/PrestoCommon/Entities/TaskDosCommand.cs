@@ -31,7 +31,10 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.
         /// </summary>
-        public TaskDosCommand() { }
+        public TaskDosCommand()
+        {
+            this.TaskType = TaskType.DosCommand;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.

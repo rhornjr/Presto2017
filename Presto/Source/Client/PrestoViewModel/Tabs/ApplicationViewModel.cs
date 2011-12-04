@@ -102,22 +102,25 @@ namespace PrestoViewModel.Tabs
             this.EditCommand = new RelayCommand(_ => EditTask());
         }
 
-        private static void AddTask()
+        private void AddTask()
         {
             TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel();
 
-            AddOrEditTask(viewModel);
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedApplication.Tasks.Add(viewModel.TaskDosCommandOriginal);
+
+            // ToDo: This task is not associated with this app after saving. Why? Fix that.
+            TaskDosCommandLogic.Save(viewModel.TaskDosCommandOriginal);
+            ApplicationLogic.Save(this.SelectedApplication);
         }
 
         private void EditTask()
         {
             TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel(this.SelectedTask as TaskDosCommand);
 
-            AddOrEditTask(viewModel);
-        }
-
-        private static void AddOrEditTask(TaskDosCommandViewModel viewModel)
-        {
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
             if (viewModel.UserCanceled) { return; }

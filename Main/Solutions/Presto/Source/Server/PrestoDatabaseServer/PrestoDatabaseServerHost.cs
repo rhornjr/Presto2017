@@ -127,6 +127,7 @@ namespace PrestoDatabaseServer
 
             serverConfiguration.Networking.MessageRecipient = this;
 
+            //serverConfiguration.Common.Add(new TransparentActivationSupport());
             serverConfiguration.Common.Add(new TransparentPersistenceSupport());
 
             string db4oDatabasePath     = AppDomain.CurrentDomain.BaseDirectory;

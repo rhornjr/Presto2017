@@ -16,6 +16,14 @@ namespace PrestoViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        protected void Close()
+        {
+            MainWindowViewModel.ViewLoader.CloseView(this);
+        }
+
+        /// <summary>
         /// Notifies the property changed.
         /// </summary>
         /// <typeparam name="T"></typeparam>

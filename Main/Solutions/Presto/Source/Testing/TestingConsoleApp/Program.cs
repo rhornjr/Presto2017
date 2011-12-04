@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
+using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Linq;
+using Db4objects.Db4o.TA;
 using PrestoCommon.Entities;
 
 namespace TestingConsoleApp
@@ -47,6 +49,9 @@ namespace TestingConsoleApp
 
         private static void PressAnyKeyToExit()
         {
+            Console.WriteLine();
+            Console.WriteLine("--done--");
+            Console.WriteLine();
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
@@ -59,13 +64,44 @@ namespace TestingConsoleApp
 
             //CreateApplicationWithTasks(db);
             //CreateServers(db);
-            //AssociateAppWithServer(db);            
+            //AssociateAppWithServer(db);
             //CreateCustomVariables(db);
-            AssociateServerWithVariableGroup(db);
+            //AssociateServerWithVariableGroup(db);
+            UpdateTaskWithinApplication(db);
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
             db.Close();
+        }
+
+        private static void UpdateTaskWithinApplication(IObjectContainer db)
+        {
+            Application application = (from Application app in db
+                                       where app.Name == "Derating"
+                                       select app).FirstOrDefault();
+
+            foreach (TaskBase task in application.Tasks)
+            {
+                task.Description += ".";
+                db.Store(task);
+            }
+
+            // What I found:
+            // For an update to work on sub-properties of an object, we need to do one of two things:
+            // (1) Call db.store as each sub-property is changed, like when altering the specific task above [Recommended]
+            // (2) Explicitly set update depth: db.Ext().Configure().UpdateDepth(5);
+            // I thought transparent persistence was supposed to make these steps unnecessary, but it's not working.
+            // Is transparent activation necessary? I don't think so, but it may be worth investigating. That' didn't work either.
+            // Actually, there is a danger with doing #1: If we need to rollback, we don't want partially-committed objects.
+            // No worries here; if we need to rollback, then just call db.Rollback before doing a db.Commit() or db.Close().
+            // From http://stackoverflow.com/questions/6803215/db4o-tranparent-persistence-doesnt-store-later-objects-in-my-own-activatablecol:
+            // Just use an ActivatableList<T> instead of a List<T>. then everything works fine.
+
+            //db.Ext().Configure().UpdateDepth(5);
+            //db.Store(application.Tasks);  // didn't work
+            //db.Store(application);
+            //db.Rollback();  // This should work because we haven't called Commit() or Close() on db.
+            db.Commit();
         }
 
         private static void AssociateServerWithVariableGroup(IObjectContainer db)
@@ -213,6 +249,10 @@ namespace TestingConsoleApp
             IEnumerable<CustomVariableGroup> groups = from CustomVariableGroup customGroup in db
                                                       select customGroup;
 
+            Console.WriteLine();
+            Console.WriteLine("-- All Custom Variable Groups --");
+            Console.WriteLine();
+
             foreach (CustomVariableGroup group in groups)
             {
                 Console.WriteLine(group.Name);
@@ -229,6 +269,10 @@ namespace TestingConsoleApp
             IEnumerable<Application> applications = from Application application in db
                                                     //where application.Name == "Derating"
                                                     select application;
+
+            Console.WriteLine();
+            Console.WriteLine("-- All Applications --");
+            Console.WriteLine();
 
             int i = 0;
             foreach (Application application in applications)
@@ -247,6 +291,10 @@ namespace TestingConsoleApp
         {
             IEnumerable<TaskBase> tasks = from TaskBase task in db
                                           select task;
+
+            Console.WriteLine();
+            Console.WriteLine("-- All Tasks --");
+            Console.WriteLine();
 
             int i = 0;
             foreach (TaskBase task in tasks)
@@ -271,6 +319,10 @@ namespace TestingConsoleApp
             IEnumerable<ApplicationServer> allServers = from ApplicationServer server in db
                                                         //where server.Name == serverName
                                                         select server;
+
+            Console.WriteLine();
+            Console.WriteLine("-- All Servers --");
+            Console.WriteLine();
 
             //Server anyServer = db.Query<Server>().FirstOrDefault();            
 
@@ -307,10 +359,11 @@ namespace TestingConsoleApp
             string databasePassword   = ConfigurationManager.AppSettings["databasePassword"];
             int databaseServerPort    = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
 
-            //IClientConfiguration clientConfig = Db4oClientServer.NewClientConfiguration();
-            //clientConfig.Common.Add(new TransparentPersistenceSupport());
+            IClientConfiguration clientConfig = Db4oClientServer.NewClientConfiguration();
+            clientConfig.Common.Add(new TransparentPersistenceSupport());            
 
             return Db4oClientServer.OpenClient(databaseServerName, databaseServerPort, databaseUser, databasePassword);
+            //return Db4oClientServer.OpenClient(clientConfig, databaseServerName, databaseServerPort, databaseUser, databasePassword);
         }   
     }
 }

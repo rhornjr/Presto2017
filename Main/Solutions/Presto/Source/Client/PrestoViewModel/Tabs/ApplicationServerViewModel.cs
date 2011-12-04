@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 
@@ -67,14 +65,7 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                IObjectContainer db = CommonUtility.GetDatabase();
-
-                IEnumerable<ApplicationServer> appServers = from ApplicationServer appServer in db
-                                                            select appServer;
-
-                this.ApplicationServers = new Collection<ApplicationServer>(appServers.ToList());
-
-                db.Close();
+                this.ApplicationServers = new Collection<ApplicationServer>(ApplicationServerLogic.GetAll().ToList());
             }
             catch (SocketException ex)
             {

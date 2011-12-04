@@ -4,10 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Timers;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
+using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 
 namespace PrestoTaskRunner.Logic
@@ -55,14 +54,14 @@ namespace PrestoTaskRunner.Logic
 
             try
             {
-                string thisServerName = Environment.MachineName;            
-                IObjectContainer db   = CommonUtility.GetDatabase();
+                string serverName = Environment.MachineName;
 
-                ApplicationServer appServer = GetApplicationServerForThisMachine(db, thisServerName);
+                ApplicationServer appServer = GetApplicationServerForThisMachine(serverName);
 
                 if (appServer == null) { return; }
 
-                IEnumerable<InstallationSummary> installationSummaryList = GetInstallationSummaryList(thisServerName, db);
+                // Get the list of InstallationStatus entities to validate against our list of apps.                
+                IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerName(serverName);
 
                 InstallApplications(appServer, installationSummaryList);            
             }
@@ -70,15 +69,6 @@ namespace PrestoTaskRunner.Logic
             {
                 Monitor.Exit(_locker);
             }
-        }
-
-        private static IEnumerable<InstallationSummary> GetInstallationSummaryList(string thisServerName, IObjectContainer db)
-        {
-            // Get the list of InstallationStatus entities to validate against our list of apps.                
-            IEnumerable<InstallationSummary> installationSummaryList = from InstallationSummary summary in db
-                                                                       where summary.ApplicationServer.Name == thisServerName
-                                                                       select summary;
-            return installationSummaryList;
         }
 
         private static void InstallApplications(ApplicationServer appServer, IEnumerable<InstallationSummary> installationSummaryList)
@@ -104,13 +94,11 @@ namespace PrestoTaskRunner.Logic
             return installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() != null;
         }
 
-        private static ApplicationServer GetApplicationServerForThisMachine(IObjectContainer db, string serverName)
+        private static ApplicationServer GetApplicationServerForThisMachine(string serverName)
         {
-            // Get the app server, on which this process is running, from the DB.            
+            // Get the app server, on which this process is running.
 
-            ApplicationServer appServer = (from ApplicationServer server in db
-                                           where server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                                           select server).FirstOrDefault();
+            ApplicationServer appServer = ApplicationServerLogic.GetByName(serverName);
 
             if (appServer == null)
             {

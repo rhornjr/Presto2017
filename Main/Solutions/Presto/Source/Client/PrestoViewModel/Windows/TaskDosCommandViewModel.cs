@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoViewModel.Mvvm;
 
@@ -9,6 +10,14 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class TaskDosCommandViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Gets a value indicating whether [user canceled].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [user canceled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool UserCanceled { get; private set; }
+
         /// <summary>
         /// Gets or sets the ok command.
         /// </summary>
@@ -26,12 +35,20 @@ namespace PrestoViewModel.Windows
         public ICommand CancelCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the task dos command.
+        /// Gets or sets the task dos command original.
         /// </summary>
         /// <value>
-        /// The task dos command.
+        /// The task dos command original.
         /// </value>
-        public TaskDosCommand TaskDosCommand { get; set; }
+        public TaskDosCommand TaskDosCommandOriginal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the task dos command copy.
+        /// </summary>
+        /// <value>
+        /// The task dos command copy.
+        /// </value>
+        public TaskDosCommand TaskDosCommandCopy { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDosCommandViewModel"/> class.
@@ -41,6 +58,9 @@ namespace PrestoViewModel.Windows
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
+
+            this.TaskDosCommandOriginal = null;
+            this.TaskDosCommandCopy     = new TaskDosCommand();
         }
 
         /// <summary>
@@ -49,11 +69,14 @@ namespace PrestoViewModel.Windows
         /// <param name="taskDosCommand">The task dos command.</param>
         public TaskDosCommandViewModel(TaskDosCommand taskDosCommand)
         {
+            if (taskDosCommand == null) { throw new ArgumentNullException("taskDosCommand"); }
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
 
-            this.TaskDosCommand = taskDosCommand;
+            this.TaskDosCommandOriginal = taskDosCommand;
+            this.TaskDosCommandCopy     = taskDosCommand.CreateCopyFromThis();
         }
 
         private void Initialize()
@@ -64,13 +87,19 @@ namespace PrestoViewModel.Windows
 
         private void Save()
         {
+            AppyChangesFromCopyToOriginal();
             this.Close();
         }
 
         private void Cancel()
         {
-            this.TaskDosCommand = null;
+            this.UserCanceled = true;
             this.Close();
+        }
+
+        private void AppyChangesFromCopyToOriginal()
+        {
+            this.TaskDosCommandOriginal = TaskDosCommand.Copy(this.TaskDosCommandCopy, this.TaskDosCommandOriginal);
         }
     }
 }

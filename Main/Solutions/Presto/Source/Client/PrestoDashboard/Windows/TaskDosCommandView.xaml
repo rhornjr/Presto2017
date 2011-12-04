@@ -15,22 +15,22 @@
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
             <Label Content="Description:" Width="130" />
-            <TextBox x:Name="txtDescription" Text="{Binding TaskDosCommand.Description}" Width="340"/>
+            <TextBox x:Name="txtDescription" Text="{Binding TaskDosCommandCopy.Description}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
             <Label Content="Executable:" Width="130" />
-            <TextBox x:Name="txtExecutable" Text="{Binding TaskDosCommand.DosExecutable}" Width="340"/>
+            <TextBox x:Name="txtExecutable" Text="{Binding TaskDosCommandCopy.DosExecutable}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="2">
             <Label Content="Parameters:" Width="130" />
-            <TextBox x:Name="txtParameters" Text="{Binding TaskDosCommand.Parameters}" Width="340"/>
+            <TextBox x:Name="txtParameters" Text="{Binding TaskDosCommandCopy.Parameters}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="3">
             <Label Content="FailureCausesAllStop:" Width="130" />
-            <CheckBox x:Name="chkFailureCausesAllStop" IsChecked="{Binding TaskDosCommand.FailureCausesAllStop}" VerticalAlignment="Center"/>
+            <CheckBox x:Name="chkFailureCausesAllStop" IsChecked="{Binding TaskDosCommandCopy.FailureCausesAllStop}" VerticalAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Height="35">

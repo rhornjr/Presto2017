@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
+using System.Windows.Input;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
+using PrestoViewModel.Mvvm;
+using PrestoViewModel.Windows;
 
 namespace PrestoViewModel.Tabs
 {
@@ -18,6 +21,11 @@ namespace PrestoViewModel.Tabs
     {
         private Collection<Application> _applications;
         private Application _selectedApplication;
+
+        /// <summary>
+        /// Gets the add command.
+        /// </summary>
+        public ICommand AddCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the applications.
@@ -60,7 +68,18 @@ namespace PrestoViewModel.Tabs
         {
             if (DesignMode.IsInDesignMode) { return; }
 
+            Initialize();
             LoadApplications();
+        }
+
+        private void Initialize()
+        {
+            this.AddCommand = new RelayCommand(_ => AddTask());
+        }
+
+        private static void AddTask()
+        {
+            MainWindowViewModel.ViewLoader.ShowDialog(new TaskDosCommandViewModel());
         }
 
         private void LoadApplications()

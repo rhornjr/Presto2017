@@ -1,4 +1,5 @@
 ﻿using PrestoViewModel.Misc;
+using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel
 {
@@ -8,6 +9,14 @@ namespace PrestoViewModel
     public class MainWindowViewModel : ViewModelBase
     {
         private string _userMessage;
+
+        /// <summary>
+        /// Gets or sets the view loader.
+        /// </summary>
+        /// <value>
+        /// The view loader.
+        /// </value>
+        public static ViewLoader ViewLoader { get; set; }
 
         /// <summary>
         /// Gets or sets the user message.

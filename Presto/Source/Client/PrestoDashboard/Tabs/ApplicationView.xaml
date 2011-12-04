@@ -32,7 +32,7 @@
             <TextBox Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
             <CheckBox Content="Force installation"/>
             <Label Content="Tasks"/>
-            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+            <DataGrid Height="280" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplication.Tasks}"
                   SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>
@@ -43,7 +43,10 @@
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource StandardButton}" Content="Save" />
+                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveCommand}" />
             </StackPanel>
         </StackPanel>
 

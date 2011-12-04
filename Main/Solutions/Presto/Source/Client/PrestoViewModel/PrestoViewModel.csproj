@@ -63,8 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DesignMode.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Misc\ViewModelUtility.cs" />
+    <Compile Include="Mvvm\RelayCommand.cs" />
+    <Compile Include="Mvvm\ViewLoader.cs" />
+    <Compile Include="Mvvm\ViewModelAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabs\ApplicationServerViewModel.cs" />
     <Compile Include="Tabs\ApplicationViewModel.cs" />
@@ -75,6 +79,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewModelResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TaskDosCommandViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\PrestoCommon\PrestoCommon.csproj">

@@ -31,6 +31,11 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.
         /// </summary>
+        public TaskDosCommand() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.
+        /// </summary>
         /// <param name="description">The description.</param>
         /// <param name="failureCausesAllStop">The failure causes all stop.</param>
         /// <param name="sequence">The sequence.</param>
@@ -102,6 +107,41 @@ namespace PrestoCommon.Entities
                     LogUtility.LogInformation(logMessage);
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="TaskDosCommand"/>, setting all of the properties to equal
+        /// the values of this instance.
+        /// </summary>
+        /// <returns></returns>
+        public TaskDosCommand CreateCopyFromThis()
+        {
+            TaskDosCommand newTaskDosCommand = new TaskDosCommand();
+
+            return Copy(this, newTaskDosCommand);
+        }
+
+        /// <summary>
+        /// Copies the specified source.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="destination">The destination.</param>
+        /// <returns></returns>
+        public static TaskDosCommand Copy(TaskDosCommand source, TaskDosCommand destination)
+        {
+            if (source == null) { return null; }
+
+            if (destination == null) { throw new ArgumentNullException("destination"); }
+
+            destination.Description          = source.Description;
+            destination.DosExecutable        = source.DosExecutable;
+            destination.FailureCausesAllStop = source.FailureCausesAllStop;
+            destination.Parameters           = source.Parameters;
+            destination.Sequence             = source.Sequence;
+            destination.TaskSucceeded        = source.TaskSucceeded;
+            destination.TaskType             = source.TaskType;
+
+            return destination;
         }
     }
 }

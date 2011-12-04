@@ -1,12 +1,25 @@
-﻿using PrestoCommon.Enums;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
+using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// Base class for all tasks
     /// </summary>
-    public abstract class TaskBase : ActivatableEntity
+    public abstract class TaskBase : ActivatableEntity, INotifyPropertyChanged
     {
+        // ToDo: Implement NotifyPropertyChanged() on the rest of the properties.
+
+        private string _description;
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Gets or sets the failure causes all stop.
         /// </summary>
@@ -21,7 +34,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The description.
         /// </value>
-        public string Description { get; set; }
+        public string Description
+        {
+            get { return this._description; }
+
+            set
+            {
+                this._description = value;
+                NotifyPropertyChanged(() => this.Description);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the type of the task.
@@ -50,6 +72,11 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskBase"/> class.
         /// </summary>
+        protected TaskBase() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskBase"/> class.
+        /// </summary>
         /// <param name="description">The description.</param>
         /// <param name="taskType">Type of the task.</param>
         /// <param name="failureCausesAllStop">The failure causes all stop.</param>
@@ -68,5 +95,27 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         public abstract void Execute();
+
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected void NotifyPropertyChanged<T>(Expression<Func<T>> expression)
+        {
+            if (this.PropertyChanged == null) { return; }
+
+            string propertyName = GetPropertyName(expression);
+
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private static string GetPropertyName<T>(Expression<Func<T>> expression)
+        {
+            MemberExpression memberExpression = (MemberExpression)expression.Body;
+
+            return memberExpression.Member.Name;
+        }
     }
 }

@@ -62,12 +62,12 @@ namespace TestingConsoleApp
 
             IObjectContainer db = GetDatabase();
 
-            //CreateApplicationWithTasks(db);
-            //CreateServers(db);
-            //AssociateAppWithServer(db);
-            //CreateCustomVariables(db);
-            //AssociateServerWithVariableGroup(db);
-            UpdateTaskWithinApplication(db);
+            CreateApplicationWithTasks(db);
+            CreateServers(db);
+            AssociateAppWithServer(db);
+            CreateCustomVariables(db);
+            AssociateServerWithVariableGroup(db);
+            //UpdateTaskWithinApplication(db);
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 

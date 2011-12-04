@@ -104,14 +104,25 @@ namespace PrestoViewModel.Tabs
 
         private static void AddTask()
         {
-            MainWindowViewModel.ViewLoader.ShowDialog(new TaskDosCommandViewModel());
+            TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel();
+
+            AddOrEditTask(viewModel);
         }
 
         private void EditTask()
         {
-            MainWindowViewModel.ViewLoader.ShowDialog(new TaskDosCommandViewModel(this.SelectedTask as TaskDosCommand));
+            TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel(this.SelectedTask as TaskDosCommand);
 
-            TaskDosCommandLogic.Save(this.SelectedTask as TaskDosCommand);
+            AddOrEditTask(viewModel);
+        }
+
+        private static void AddOrEditTask(TaskDosCommandViewModel viewModel)
+        {
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            TaskDosCommandLogic.Save(viewModel.TaskDosCommandOriginal);
         }
 
         private void LoadApplications()

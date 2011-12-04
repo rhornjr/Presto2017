@@ -66,6 +66,7 @@
     <Compile Include="Enums\InstallationResult.cs" />
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Misc\ActivatableCollection.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">

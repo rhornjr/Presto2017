@@ -19,13 +19,24 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationViewModel : ViewModelBase
     {
+        private IObjectContainer _db;
+
         private Collection<Application> _applications;
         private Application _selectedApplication;
+        private TaskBase _selectedTask;               
 
         /// <summary>
         /// Gets the add command.
         /// </summary>
         public ICommand AddCommand { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the edit command.
+        /// </summary>
+        /// <value>
+        /// The edit command.
+        /// </value>
+        public ICommand EditCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the applications.
@@ -62,6 +73,23 @@ namespace PrestoViewModel.Tabs
         }
 
         /// <summary>
+        /// Gets or sets the selected task.
+        /// </summary>
+        /// <value>
+        /// The selected task.
+        /// </value>
+        public TaskBase SelectedTask
+        {
+            get { return this._selectedTask; }
+
+            set
+            {
+                this._selectedTask = value;
+                NotifyPropertyChanged(() => this.SelectedTask);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationViewModel"/> class.
         /// </summary>
         public ApplicationViewModel()
@@ -74,7 +102,10 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddCommand = new RelayCommand(_ => AddTask());
+            this._db = CommonUtility.GetDatabase();
+
+            this.AddCommand  = new RelayCommand(_ => AddTask());
+            this.EditCommand = new RelayCommand(_ => EditTask());
         }
 
         private static void AddTask()
@@ -82,18 +113,22 @@ namespace PrestoViewModel.Tabs
             MainWindowViewModel.ViewLoader.ShowDialog(new TaskDosCommandViewModel());
         }
 
+        private void EditTask()
+        {
+            MainWindowViewModel.ViewLoader.ShowDialog(new TaskDosCommandViewModel(this.SelectedTask as TaskDosCommand));
+
+            _db.Store(this.SelectedTask);
+            _db.Commit();
+        }
+
         private void LoadApplications()
         {
             try
             {
-                IObjectContainer db = CommonUtility.GetDatabase();
-
-                IEnumerable<Application> apps = from Application app in db
+                IEnumerable<Application> apps = from Application app in this._db
                                                 select app;
 
                 this.Applications = new Collection<Application>(apps.ToList());
-
-                db.Close();
             }
             catch (SocketException ex)
             {

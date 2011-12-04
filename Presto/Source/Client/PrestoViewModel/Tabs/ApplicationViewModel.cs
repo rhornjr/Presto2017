@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -19,8 +17,6 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationViewModel : ViewModelBase
     {
-        private IObjectContainer _db;
-
         private Collection<Application> _applications;
         private Application _selectedApplication;
         private TaskBase _selectedTask;               
@@ -102,8 +98,6 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this._db = CommonUtility.GetDatabase();
-
             this.AddCommand  = new RelayCommand(_ => AddTask());
             this.EditCommand = new RelayCommand(_ => EditTask());
         }
@@ -117,18 +111,14 @@ namespace PrestoViewModel.Tabs
         {
             MainWindowViewModel.ViewLoader.ShowDialog(new TaskDosCommandViewModel(this.SelectedTask as TaskDosCommand));
 
-            _db.Store(this.SelectedTask);
-            _db.Commit();
+            TaskDosCommandLogic.Save(this.SelectedTask as TaskDosCommand);
         }
 
         private void LoadApplications()
-        {
+        {            
             try
             {
-                IEnumerable<Application> apps = from Application app in this._db
-                                                select app;
-
-                this.Applications = new Collection<Application>(apps.ToList());
+                this.Applications = new Collection<Application>(ApplicationLogic.GetAll().ToList());
             }
             catch (SocketException ex)
             {

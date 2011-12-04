@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 
@@ -64,17 +62,10 @@ namespace PrestoViewModel.Tabs
         }
 
         private void LoadCustomVariableGroups()
-        {
+        {            
             try
             {
-                IObjectContainer db = CommonUtility.GetDatabase();
-
-                IEnumerable<CustomVariableGroup> groups = from CustomVariableGroup variableGroup in db
-                                                          select variableGroup;
-
-                this.CustomVariableGroups = new Collection<CustomVariableGroup>(groups.ToList());
-
-                db.Close();
+                this.CustomVariableGroups = new Collection<CustomVariableGroup>(CustomVariableGroupLogic.GetAll().ToList());
             }
             catch (SocketException ex)
             {

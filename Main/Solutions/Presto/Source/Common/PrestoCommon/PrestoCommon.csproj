@@ -76,7 +76,6 @@
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\TaskDosCommandLogic.cs" />
     <Compile Include="Misc\ActivatableCollection.cs" />
-    <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>

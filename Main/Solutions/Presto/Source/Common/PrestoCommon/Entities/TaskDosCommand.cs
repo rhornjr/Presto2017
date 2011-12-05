@@ -12,13 +12,25 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class TaskDosCommand : TaskBase
     {
+        private string _dosExecutable;
+        private string _parameters;
+
         /// <summary>
         /// Gets or sets the dos executable.
         /// </summary>
         /// <value>
         /// The dos executable.
         /// </value>
-        public string DosExecutable { get; set; }
+        public string DosExecutable
+        {
+            get { return this._dosExecutable; }
+
+            set
+            {
+                this._dosExecutable = value;
+                NotifyPropertyChanged(() => this.DosExecutable);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the parameters.
@@ -26,7 +38,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The parameters.
         /// </value>
-        public string Parameters { get; set; }
+        public string Parameters
+        {
+            get { return this._parameters; }
+
+            set
+            {
+                this._parameters = value;
+                NotifyPropertyChanged(() => this.Parameters);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.

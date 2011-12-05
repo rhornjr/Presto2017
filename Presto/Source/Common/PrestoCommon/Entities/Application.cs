@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// An application, or product, that gets installed.
     /// </summary>
-    public class Application : ActivatableEntity
+    public class Application
     {
         /// <summary>
         /// Gets or sets the name.

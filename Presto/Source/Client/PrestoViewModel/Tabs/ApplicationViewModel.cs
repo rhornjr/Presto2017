@@ -112,8 +112,6 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedApplication.Tasks.Add(viewModel.TaskDosCommandOriginal);
 
-            // ToDo: This task is not associated with this app after saving. Why? Fix that.
-            //TaskDosCommandLogic.Save(viewModel.TaskDosCommandOriginal);
             ApplicationLogic.Save(this.SelectedApplication);
         }
 

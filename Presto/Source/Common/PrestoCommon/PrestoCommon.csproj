@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\ActivatableEntity.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\CustomVariable.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\TaskDosCommandLogic.cs" />
-    <Compile Include="Misc\ActivatableCollection.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>

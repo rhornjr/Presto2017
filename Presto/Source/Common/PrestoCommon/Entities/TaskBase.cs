@@ -11,9 +11,11 @@ namespace PrestoCommon.Entities
     /// </summary>
     public abstract class TaskBase : INotifyPropertyChanged
     {
-        // ToDo: Implement NotifyPropertyChanged() on the rest of the properties.
-
-        private string _description;
+        private string   _description;
+        private byte     _failureCausesAllStop;
+        private TaskType _taskType;
+        private int      _sequence;
+        private bool     _taskSucceeded;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -26,7 +28,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The failure causes all stop.
         /// </value>
-        public byte FailureCausesAllStop { get; set; }
+        public byte FailureCausesAllStop
+        {
+            get { return this._failureCausesAllStop; }
+
+            set
+            {
+                this._failureCausesAllStop = value;
+                NotifyPropertyChanged(() => this.FailureCausesAllStop);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the description.
@@ -51,7 +62,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The type of the task.
         /// </value>
-        public TaskType TaskType { get; set; }
+        public TaskType TaskType
+        {
+            get { return this._taskType; }
+
+            set
+            {
+                this._taskType = value;
+                NotifyPropertyChanged(() => this.TaskType);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the sequence.
@@ -59,7 +79,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The sequence.
         /// </value>
-        public int Sequence { get; set; }
+        public int Sequence
+        {
+            get { return this._sequence; }
+
+            set
+            {
+                this._sequence = value;
+                NotifyPropertyChanged(() => this.Sequence);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether [task succeeded].
@@ -67,7 +96,16 @@ namespace PrestoCommon.Entities
         /// <value>
         ///   <c>true</c> if [task succeeded]; otherwise, <c>false</c>.
         /// </value>
-        public bool TaskSucceeded { get; set; }
+        public bool TaskSucceeded
+        {
+            get { return this._taskSucceeded; }
+
+            set
+            {
+                this._taskSucceeded = value;
+                NotifyPropertyChanged(() => this.TaskSucceeded);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskBase"/> class.

@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Container for <see cref="CustomVariable"/>s
     /// </summary>
-    public class CustomVariableGroup : ActivatableEntity
+    public class CustomVariableGroup
     {
         private Collection<CustomVariable> _customVariables;
 

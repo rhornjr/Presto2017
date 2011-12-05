@@ -9,7 +9,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Base class for all tasks
     /// </summary>
-    public abstract class TaskBase : ActivatableEntity, INotifyPropertyChanged
+    public abstract class TaskBase : INotifyPropertyChanged
     {
         // ToDo: Implement NotifyPropertyChanged() on the rest of the properties.
 

@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// ApplicationServer entity
     /// </summary>
-    public class ApplicationServer : ActivatableEntity
+    public class ApplicationServer
     {
         private Collection<Application> _applications;
         private Collection<CustomVariableGroup> _customVariableGroups;

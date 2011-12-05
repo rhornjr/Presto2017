@@ -9,7 +9,6 @@ using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
 
 namespace TestingConsoleApp
 {
@@ -122,8 +121,8 @@ namespace TestingConsoleApp
 
         private static void AddNewTaskToApplicationUsingPrestoLogicClasses()
         {
-            IObjectContainer db = LogicBase.Database;
-            //IObjectContainer db = GetDatabase();
+            //IObjectContainer db = LogicBase.Database;  // Need to make LogicBase.Database public for this to work
+            IObjectContainer db = GetDatabase();
 
             //Collection<Application> appCollection = new Collection<Application>(ApplicationLogic.GetAll().ToList());
             IEnumerable<Application> applications = from Application app in db

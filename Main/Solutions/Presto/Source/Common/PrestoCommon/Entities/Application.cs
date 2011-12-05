@@ -37,7 +37,7 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The tasks.
         /// </value>
-        public Collection<TaskBase> Tasks { get; private set; }
+        public ObservableCollection<TaskBase> Tasks { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to force an installation.
@@ -55,7 +55,7 @@ namespace PrestoCommon.Entities
         /// </summary>
         public Application()
         {
-            this.Tasks = new Collection<TaskBase>();
+            this.Tasks = new ObservableCollection<TaskBase>();
         }        
     }
 }

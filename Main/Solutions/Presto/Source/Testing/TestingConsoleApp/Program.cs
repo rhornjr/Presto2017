@@ -7,7 +7,6 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Linq;
-using Db4objects.Db4o.TA;
 using PrestoCommon.Entities;
 
 namespace TestingConsoleApp
@@ -18,7 +17,7 @@ namespace TestingConsoleApp
         {
             try
             {
-                Console.WriteLine("(R)ead, (W)rite, (B)oth, (C)ancel");
+                Console.WriteLine("(R)ead, (W)rite, (B)oth, (C)reate objects, E(x)it");
                 ConsoleKey key = Console.ReadKey().Key;
 
                 switch (key)
@@ -29,6 +28,7 @@ namespace TestingConsoleApp
                         break;
                     case ConsoleKey.W:
                         TestWriteToDatabase();
+                        TestReadFromDatabase();                        
                         PressAnyKeyToExit();
                         break;
                     case ConsoleKey.B:
@@ -37,6 +37,10 @@ namespace TestingConsoleApp
                         PressAnyKeyToExit();
                         break;
                     case ConsoleKey.C:
+                        CreateDatabaseObjects();
+                        TestReadFromDatabase();
+                        PressAnyKeyToExit();
+                        break;
                     default:
                         break;
                 }                                               
@@ -60,18 +64,48 @@ namespace TestingConsoleApp
         {
             Console.WriteLine("Writing to DB...");
 
-            IObjectContainer db = GetDatabase();
+            IObjectContainer db = GetDatabase();            
+
+            //UpdateTaskWithinApplication(db);
+            AddNewTaskToApplication(db);
+
+            Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
+
+            db.Close();
+        }
+
+        private static void CreateDatabaseObjects()
+        {
+            IObjectContainer db = GetDatabase();            
 
             CreateApplicationWithTasks(db);
             CreateServers(db);
             AssociateAppWithServer(db);
             CreateCustomVariables(db);
             AssociateServerWithVariableGroup(db);
-            //UpdateTaskWithinApplication(db);
-
-            Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
             db.Close();
+        }
+
+        private static void AddNewTaskToApplication(IObjectContainer db)
+        {
+            Application application = (from Application app in db
+                                       where app.Name == "Derating"
+                                       select app).FirstOrDefault();
+
+            TaskDosCommand taskDosCommand = new TaskDosCommand("Task " + DateTime.Now.ToString(), 1, 20, false, "cmd", "/c exit");
+
+            application.Tasks.Add(taskDosCommand);
+
+            //foreach (TaskBase task in application.Tasks)
+            //{
+            //    db.Store(task);
+            //}
+            
+            //db.Store(taskDosCommand);
+            db.Store(application);
+
+            //db.Commit();
         }
 
         private static void UpdateTaskWithinApplication(IObjectContainer db)
@@ -359,11 +393,10 @@ namespace TestingConsoleApp
             string databasePassword   = ConfigurationManager.AppSettings["databasePassword"];
             int databaseServerPort    = Convert.ToInt32(ConfigurationManager.AppSettings["databaseServerPort"], CultureInfo.InvariantCulture);
 
-            IClientConfiguration clientConfig = Db4oClientServer.NewClientConfiguration();
-            clientConfig.Common.Add(new TransparentPersistenceSupport());            
+            IClientConfiguration clientConfig = Db4oClientServer.NewClientConfiguration();            
+            clientConfig.Common.UpdateDepth = 10;
 
-            return Db4oClientServer.OpenClient(databaseServerName, databaseServerPort, databaseUser, databasePassword);
-            //return Db4oClientServer.OpenClient(clientConfig, databaseServerName, databaseServerPort, databaseUser, databasePassword);
+            return Db4oClientServer.OpenClient(clientConfig, databaseServerName, databaseServerPort, databaseUser, databasePassword);
         }   
     }
 }

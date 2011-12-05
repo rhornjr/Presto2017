@@ -7,7 +7,6 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Messaging;
-using Db4objects.Db4o.TA;
 
 namespace PrestoDatabaseServer
 {
@@ -120,15 +119,9 @@ namespace PrestoDatabaseServer
 
         private void StartDatabase()
         {
-            // In the db4o tutorial, see section 12.4: Putting it all together: a simple but complete db4o server
-            // db4o binaries are here: C:\Program Files (x86)\db4o\db4o-8.1\bin\net-4.0\
-
             IServerConfiguration serverConfiguration = Db4oClientServer.NewServerConfiguration();
 
             serverConfiguration.Networking.MessageRecipient = this;
-
-            //serverConfiguration.Common.Add(new TransparentActivationSupport());
-            serverConfiguration.Common.Add(new TransparentPersistenceSupport());
 
             string db4oDatabasePath     = AppDomain.CurrentDomain.BaseDirectory;
             string db4oDatabaseFileName = ConfigurationManager.AppSettings["db4oDatabaseFileName"];            
@@ -140,6 +133,10 @@ namespace PrestoDatabaseServer
             string databasePassword = ConfigurationManager.AppSettings["databasePassword"];
 
             _db4oServer.GrantAccess(databaseUser, databasePassword);
+
+            // Note: I was able to get transparent persistence working, but decided against it because of the db4o code
+            //       that would have to be littered throughout the domain entities. This is my post about it:
+            //       http://stackoverflow.com/questions/8377537/db4o-transparent-persistence-not-working/8380590#8380590
         }
 
         private static void LogException(Exception ex)

@@ -28,6 +28,7 @@ namespace PrestoCommon.Logic
         public static void Save(Application application)
         {
             Database.Store(application);
+            Database.Commit();
         }
     }
 }

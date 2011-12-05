@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +9,7 @@ using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.Logic;
 
 namespace TestingConsoleApp
 {
@@ -67,7 +69,9 @@ namespace TestingConsoleApp
             IObjectContainer db = GetDatabase();            
 
             //UpdateTaskWithinApplication(db);
-            AddNewTaskToApplication(db);
+            //AddNewTaskToApplication(db);
+            //AddNewTaskToApplicationLikePrestoDoes(db);
+            AddNewTaskToApplicationUsingPrestoLogicClasses();
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
@@ -97,15 +101,44 @@ namespace TestingConsoleApp
 
             application.Tasks.Add(taskDosCommand);
 
-            //foreach (TaskBase task in application.Tasks)
-            //{
-            //    db.Store(task);
-            //}
-            
-            //db.Store(taskDosCommand);
             db.Store(application);
+        }
+        
+        private static void AddNewTaskToApplicationLikePrestoDoes(IObjectContainer db)
+        {
+            IEnumerable<Application> applications = from Application app in db
+                                                    select app;
 
-            //db.Commit();
+            Collection<Application> appCollection = new Collection<Application>(applications.ToList());            
+
+            Application application = appCollection.Where(app => app.Name == "Derating").FirstOrDefault();
+
+            TaskDosCommand taskDosCommand = new TaskDosCommand("Task " + DateTime.Now.ToString(), 1, 20, false, "cmd", "/c exit");
+
+            application.Tasks.Add(taskDosCommand);
+
+            db.Store(application);
+        }
+
+        private static void AddNewTaskToApplicationUsingPrestoLogicClasses()
+        {
+            IObjectContainer db = LogicBase.Database;
+            //IObjectContainer db = GetDatabase();
+
+            //Collection<Application> appCollection = new Collection<Application>(ApplicationLogic.GetAll().ToList());
+            IEnumerable<Application> applications = from Application app in db
+                                                    select app;
+            Collection<Application> appCollection = new Collection<Application>(applications.ToList());
+
+            Application selectedApplication = appCollection.Where(app => app.Name == "Derating").FirstOrDefault();
+
+            TaskDosCommand taskDosCommand = new TaskDosCommand("Task " + DateTime.Now.ToString(), 1, 20, false, "cmd", "/c exit");
+
+            selectedApplication.Tasks.Add(taskDosCommand);
+
+            //ApplicationLogic.Save(selectedApplication);
+            db.Store(selectedApplication);
+            db.Commit();
         }
 
         private static void UpdateTaskWithinApplication(IObjectContainer db)

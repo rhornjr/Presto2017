@@ -43,7 +43,6 @@ namespace PrestoViewModel.Mvvm
             viewWindow.ShowDialog();
         }
 
-        // ToDo: This functionality should probably go in ViewModelBase.
         /// <summary>
         /// Closes the view.
         /// </summary>

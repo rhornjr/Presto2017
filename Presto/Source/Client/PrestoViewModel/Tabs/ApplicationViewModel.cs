@@ -102,17 +102,29 @@ namespace PrestoViewModel.Tabs
             this.EditCommand = new RelayCommand(_ => EditTask());
         }
 
-        private void AddTask()
+        private static void AddTask()
         {
-            TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel();
+            TaskTypeSelectorViewModel viewModel = new TaskTypeSelectorViewModel();
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
-            if (viewModel.UserCanceled) { return; }
+            if (viewModel.UserHitCancel == true) { return; }
 
-            this.SelectedApplication.Tasks.Add(viewModel.TaskDosCommandOriginal);
+            Type type = ViewModelUtility.GetViewModel(viewModel.SelectedTaskType);
 
-            ApplicationLogic.Save(this.SelectedApplication);
+            ViewModelBase viewModelBase = Activator.CreateInstance(type) as ViewModelBase;
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModelBase);
+
+            //TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel();
+
+            //MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            //if (viewModel.UserCanceled) { return; }
+
+            //this.SelectedApplication.Tasks.Add(viewModel.TaskDosCommandOriginal);
+
+            //ApplicationLogic.Save(this.SelectedApplication);
         }
 
         private void EditTask()

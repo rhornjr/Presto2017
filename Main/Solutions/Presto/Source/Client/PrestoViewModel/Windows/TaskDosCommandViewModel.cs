@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.Enums;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
@@ -8,6 +9,7 @@ namespace PrestoViewModel.Windows
     /// <summary>
     /// 
     /// </summary>
+    [TaskTypeAttribute(TaskType.DosCommand)]
     public class TaskDosCommandViewModel : ViewModelBase
     {
         /// <summary>

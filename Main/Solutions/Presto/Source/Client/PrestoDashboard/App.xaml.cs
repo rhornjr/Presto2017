@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
+using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
 
@@ -26,13 +27,10 @@ namespace PrestoDashboard
             base.OnStartup(e);
 
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
-
-            //MainTabControlViewModel.MainViewLoader = Utility.CreateViewLoaderWithViewAndViewModelAssociations<MainTabControlView, MainTabControlViewModel>();
         }
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            // ToDo: Create ability to log.
-            //LogUtility.LogError(e.Exception);
+            LogUtility.LogException(e.Exception);
             MessageBox.Show(string.Format(PrestoDashboardResource.ErrorMessage, e.Exception.Message), PrestoDashboardResource.ErrorCaption,
                 MessageBoxButton.OK, MessageBoxImage.Exclamation);
             e.Handled = true;

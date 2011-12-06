@@ -82,6 +82,9 @@
     <Compile Include="Windows\TaskDosCommandView.xaml.cs">
       <DependentUpon>TaskDosCommandView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TaskTypeSelectorView.xaml.cs">
+      <DependentUpon>TaskTypeSelectorView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -107,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\TaskDosCommandView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\TaskTypeSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -141,6 +148,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\PrestoCommon\PrestoCommon.csproj">
+      <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
+      <Name>PrestoCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PrestoViewModel\PrestoViewModel.csproj">
       <Project>{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}</Project>
       <Name>PrestoViewModel</Name>

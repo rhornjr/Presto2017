@@ -28,12 +28,18 @@ namespace PrestoDashboard
 
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
         }
+        
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             LogUtility.LogException(e.Exception);
+            
             MessageBox.Show(string.Format(PrestoDashboardResource.ErrorMessage, e.Exception.Message), PrestoDashboardResource.ErrorCaption,
                 MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            
             e.Handled = true;
+            
+            //Dispatcher.CurrentDispatcher.InvokeShutdown();
+            Application.Current.Shutdown();
         }
 
         private ViewLoader RegisterViewModelsAndTypes()

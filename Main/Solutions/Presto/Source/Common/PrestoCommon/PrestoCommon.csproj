@@ -65,6 +65,7 @@
     <Compile Include="Entities\InstallationSummary.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />
+    <Compile Include="Entities\TaskXmlModify.cs" />
     <Compile Include="Enums\InstallationResult.cs" />
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -104,7 +104,7 @@ namespace PrestoTaskRunner.Logic
             {
                 LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
                     PrestoTaskRunnerResources.AppServerNotFound,
-                    appServer.Name));
+                    serverName));
             }
 
             return appServer;

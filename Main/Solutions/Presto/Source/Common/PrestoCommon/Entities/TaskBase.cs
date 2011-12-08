@@ -62,14 +62,14 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The type of the task.
         /// </value>
-        public TaskType TaskType
+        public TaskType PrestoTaskType
         {
             get { return this._taskType; }
 
             set
             {
                 this._taskType = value;
-                NotifyPropertyChanged(() => this.TaskType);
+                NotifyPropertyChanged(() => this.PrestoTaskType);
             }
         }
 
@@ -123,7 +123,7 @@ namespace PrestoCommon.Entities
         protected TaskBase(string description, TaskType taskType, byte failureCausesAllStop, int sequence, bool taskSucceeded)
         {
             this.Description          = description;
-            this.TaskType             = taskType;
+            this.PrestoTaskType             = taskType;
             this.FailureCausesAllStop = failureCausesAllStop;
             this.Sequence             = sequence;
             this.TaskSucceeded        = taskSucceeded;

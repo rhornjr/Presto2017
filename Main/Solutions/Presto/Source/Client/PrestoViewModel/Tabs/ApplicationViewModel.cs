@@ -132,7 +132,7 @@ namespace PrestoViewModel.Tabs
 
         private void EditTask()
         {
-            TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(this.SelectedTask.TaskType, this.SelectedTask);
+            TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(this.SelectedTask.PrestoTaskType, this.SelectedTask);
 
             if (taskViewModel == null) { return; }
 

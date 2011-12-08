@@ -54,7 +54,7 @@ namespace PrestoCommon.Entities
         /// </summary>
         public TaskDosCommand()
         {
-            this.TaskType = TaskType.DosCommand;
+            this.PrestoTaskType = TaskType.DosCommand;
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace PrestoCommon.Entities
             destination.Parameters           = source.Parameters;
             destination.Sequence             = source.Sequence;
             destination.TaskSucceeded        = source.TaskSucceeded;
-            destination.TaskType             = source.TaskType;
+            destination.PrestoTaskType             = source.PrestoTaskType;
 
             return destination;
         }

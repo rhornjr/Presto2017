@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using PrestoCommon.Entities;
 using PrestoCommon.Enums;
 using PrestoViewModel.Mvvm;
+using PrestoViewModel.Windows;
 
 namespace PrestoViewModel.Misc
 {
@@ -20,7 +22,27 @@ namespace PrestoViewModel.Misc
         /// </value>
         internal static MainWindowViewModel MainWindowViewModel { get; set; }
 
-        internal static Type GetViewModel(TaskType taskType)
+        internal static TaskViewModel GetViewModel(TaskType taskType)
+        {
+            Type taskViewModelType = GetViewModelType(taskType);
+
+            return Activator.CreateInstance(taskViewModelType) as TaskViewModel;
+        }
+
+        /// <summary>
+        /// Gets the type of the view model.
+        /// </summary>
+        /// <param name="taskType">Type of the task.</param>
+        /// <param name="taskBase">The task base to be passed to the view model in the constructor.</param>
+        /// <returns></returns>
+        internal static TaskViewModel GetViewModel(TaskType taskType, TaskBase taskBase)
+        {
+            Type taskViewModelType = GetViewModelType(taskType);
+
+            return Activator.CreateInstance(taskViewModelType, taskBase) as TaskViewModel;
+        }
+
+        private static Type GetViewModelType(TaskType taskType)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
 
@@ -33,11 +55,14 @@ namespace PrestoViewModel.Misc
 
                 foreach (TaskTypeAttribute attribute in attributes.Where(attr => attr is TaskTypeAttribute))
                 {
-                    if (attribute.TaskType == taskType) { return theType; }
+                    if (attribute.TaskType == taskType)
+                    {
+                        return theType;
+                    }
                 }
             }
 
-            return default(Type);
+            return null;
         }
     }
 }

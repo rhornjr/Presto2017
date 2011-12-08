@@ -83,9 +83,9 @@ namespace PrestoViewModel.Windows
             this.CancelCommand = new RelayCommand(_ => this.Cancel());
         }        
 
-        private static void Ok()
+        private void Ok()
         {
-            throw new NotImplementedException();
+            this.Close();
         }
 
         private void Cancel()

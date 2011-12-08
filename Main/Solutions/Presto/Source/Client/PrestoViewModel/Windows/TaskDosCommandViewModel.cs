@@ -10,16 +10,8 @@ namespace PrestoViewModel.Windows
     /// 
     /// </summary>
     [TaskTypeAttribute(TaskType.DosCommand)]
-    public class TaskDosCommandViewModel : ViewModelBase
+    public class TaskDosCommandViewModel : TaskViewModel
     {
-        /// <summary>
-        /// Gets a value indicating whether [user canceled].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [user canceled]; otherwise, <c>false</c>.
-        /// </value>
-        public bool UserCanceled { get; private set; }
-
         /// <summary>
         /// Gets or sets the ok command.
         /// </summary>
@@ -35,14 +27,6 @@ namespace PrestoViewModel.Windows
         /// The cancel command.
         /// </value>
         public ICommand CancelCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the task dos command original.
-        /// </summary>
-        /// <value>
-        /// The task dos command original.
-        /// </value>
-        public TaskDosCommand TaskDosCommandOriginal { get; set; }
 
         /// <summary>
         /// Gets or sets the task dos command copy.
@@ -61,8 +45,8 @@ namespace PrestoViewModel.Windows
 
             Initialize();
 
-            this.TaskDosCommandOriginal = null;
-            this.TaskDosCommandCopy     = new TaskDosCommand();
+            this.TaskBase           = null;
+            this.TaskDosCommandCopy = new TaskDosCommand();
         }
 
         /// <summary>
@@ -77,8 +61,8 @@ namespace PrestoViewModel.Windows
 
             Initialize();
 
-            this.TaskDosCommandOriginal = taskDosCommand;
-            this.TaskDosCommandCopy     = taskDosCommand.CreateCopyFromThis();
+            this.TaskBase           = taskDosCommand;
+            this.TaskDosCommandCopy = taskDosCommand.CreateCopyFromThis();
         }
 
         private void Initialize()
@@ -101,13 +85,13 @@ namespace PrestoViewModel.Windows
 
         private void AppyChangesFromCopyToOriginal()
         {
-            if (this.TaskDosCommandOriginal == null)
+            if (this.TaskBase == null)
             {
-                this.TaskDosCommandOriginal = TaskDosCommand.Copy(this.TaskDosCommandCopy, new TaskDosCommand());
+                this.TaskBase = TaskDosCommand.Copy(this.TaskDosCommandCopy, new TaskDosCommand());
                 return;
             }
 
-            this.TaskDosCommandOriginal = TaskDosCommand.Copy(this.TaskDosCommandCopy, this.TaskDosCommandOriginal);
+            this.TaskBase = TaskDosCommand.Copy(this.TaskDosCommandCopy, this.TaskBase as TaskDosCommand);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Globalization;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
+using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
 {
@@ -41,6 +42,16 @@ namespace PrestoCommon.Logic
             // clientConfig.Common.ObjectClass(typeof(Application)).CascadeOnUpdate(true);
             // clientConfig.Common.ObjectClass(typeof(TaskBase)).CascadeOnUpdate(true);
             // etc...
-        }   
+        }
+
+        /// <summary>
+        /// Saves the specified task base.
+        /// </summary>
+        /// <param name="taskBase">The task base.</param>
+        public static void Save(TaskBase taskBase)
+        {
+            Database.Store(taskBase);
+            Database.Commit();
+        }
     }
 }

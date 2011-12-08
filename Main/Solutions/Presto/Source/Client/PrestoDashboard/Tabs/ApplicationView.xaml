@@ -38,7 +38,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50" />
                     <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>
-                    <DataGridTextColumn Binding="{Binding Path=TaskType}" Header="Type" Width="120"/>
+                    <DataGridTextColumn Binding="{Binding Path=PrestoTaskType}" Header="Type" Width="120"/>
                     <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
                 </DataGrid.Columns>
             </DataGrid>

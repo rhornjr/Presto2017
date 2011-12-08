@@ -7,6 +7,8 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class Application
     {
+        private ObservableCollection<TaskBase> _tasks;
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
@@ -37,7 +39,19 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The tasks.
         /// </value>
-        public ObservableCollection<TaskBase> Tasks { get; private set; }
+        public ObservableCollection<TaskBase> Tasks
+        {
+            get
+            {
+                if (this._tasks == null) { this._tasks = new ObservableCollection<TaskBase>(); }
+                return this._tasks;
+            }
+
+            private set
+            {
+                this._tasks = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether to force an installation.

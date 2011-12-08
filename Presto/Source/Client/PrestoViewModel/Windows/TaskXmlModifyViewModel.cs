@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using PrestoCommon.Entities;
 using PrestoCommon.Enums;
 using PrestoViewModel.Mvvm;
 
@@ -32,6 +33,8 @@ namespace PrestoViewModel.Windows
         public TaskXmlModifyViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
+
+            this.TaskBase = new TaskXmlModify();
 
             Initialize();
         }

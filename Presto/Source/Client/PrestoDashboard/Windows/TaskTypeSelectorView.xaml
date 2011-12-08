@@ -12,8 +12,8 @@
         <ListBox Grid.Row="0" ItemsSource="{Binding TaskTypes}" SelectedItem="{Binding SelectedTaskType}"/>
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Style="{StaticResource StandardButton}" Content="OK"/>
-            <Button Style="{StaticResource StandardButton}" Content="Cancel"/>
+            <Button Style="{StaticResource StandardButton}" Content="OK" Command="{Binding OkCommand}"/>
+            <Button Style="{StaticResource StandardButton}" Content="Cancel" Command="{Binding CancelCommand}"/>
         </StackPanel>
         
     </Grid>

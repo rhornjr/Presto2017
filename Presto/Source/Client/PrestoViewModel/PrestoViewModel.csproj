@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Windows\TaskDosCommandViewModel.cs" />
     <Compile Include="Windows\TaskTypeSelectorViewModel.cs" />
+    <Compile Include="Windows\TaskViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\PrestoCommon\PrestoCommon.csproj">

@@ -102,40 +102,45 @@ namespace PrestoViewModel.Tabs
             this.EditCommand = new RelayCommand(_ => EditTask());
         }
 
-        private static void AddTask()
+        private void AddTask()
         {
-            TaskTypeSelectorViewModel viewModel = new TaskTypeSelectorViewModel();
+            TaskViewModel taskViewModel = GetTaskViewModel();
 
-            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+            if (taskViewModel == null) { return; }
 
-            if (viewModel.UserHitCancel == true) { return; }
+            MainWindowViewModel.ViewLoader.ShowDialog(taskViewModel as ViewModelBase);
 
-            Type type = ViewModelUtility.GetViewModel(viewModel.SelectedTaskType);
+            if (taskViewModel.UserCanceled) { return; }
 
-            ViewModelBase viewModelBase = Activator.CreateInstance(type) as ViewModelBase;
+            this.SelectedApplication.Tasks.Add(taskViewModel.TaskBase);
 
-            MainWindowViewModel.ViewLoader.ShowDialog(viewModelBase);
+            ApplicationLogic.Save(this.SelectedApplication);
+        }
 
-            //TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel();
+        private static TaskViewModel GetTaskViewModel()
+        {
+            TaskTypeSelectorViewModel selectorViewModel = new TaskTypeSelectorViewModel();
 
-            //MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+            MainWindowViewModel.ViewLoader.ShowDialog(selectorViewModel);
 
-            //if (viewModel.UserCanceled) { return; }
+            if (selectorViewModel.UserHitCancel == true) { return null; }            
 
-            //this.SelectedApplication.Tasks.Add(viewModel.TaskDosCommandOriginal);
+            TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(selectorViewModel.SelectedTaskType);
 
-            //ApplicationLogic.Save(this.SelectedApplication);
+            return taskViewModel;
         }
 
         private void EditTask()
         {
-            TaskDosCommandViewModel viewModel = new TaskDosCommandViewModel(this.SelectedTask as TaskDosCommand);
+            TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(this.SelectedTask.TaskType, this.SelectedTask);
 
-            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+            if (taskViewModel == null) { return; }
 
-            if (viewModel.UserCanceled) { return; }
+            MainWindowViewModel.ViewLoader.ShowDialog(taskViewModel);
 
-            TaskDosCommandLogic.Save(viewModel.TaskDosCommandOriginal);
+            if (taskViewModel.UserCanceled) { return; }
+
+            TaskDosCommandLogic.Save(taskViewModel.TaskBase);
         }
 
         private void LoadApplications()

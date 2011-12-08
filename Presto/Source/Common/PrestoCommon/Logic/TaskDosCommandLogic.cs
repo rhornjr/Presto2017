@@ -10,9 +10,11 @@ namespace PrestoCommon.Logic
         /// <summary>
         /// Saves the specified task dos command.
         /// </summary>
-        /// <param name="taskDosCommand">The task dos command.</param>
-        public static void Save(TaskDosCommand taskDosCommand)
+        /// <param name="taskBase">The task base.</param>
+        public static void Save(TaskBase taskBase)
         {
+            TaskDosCommand taskDosCommand = taskBase as TaskDosCommand; // ToDo: Is this cast necessary?
+
             Database.Store(taskDosCommand);
             Database.Commit();
         }

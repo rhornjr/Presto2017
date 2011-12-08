@@ -80,6 +80,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewModelResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ApplicationSelectorViewModel.cs" />
     <Compile Include="Windows\TaskDosCommandViewModel.cs" />
     <Compile Include="Windows\TaskTypeSelectorViewModel.cs" />
     <Compile Include="Windows\TaskViewModel.cs" />

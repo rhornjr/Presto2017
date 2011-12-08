@@ -140,7 +140,9 @@ namespace PrestoViewModel.Tabs
 
             if (taskViewModel.UserCanceled) { return; }
 
-            TaskDosCommandLogic.Save(taskViewModel.TaskBase);
+            // ToDo: Need to call the right logic class here. Or can we just call one logic class for all
+            //       and save a TaskBase?
+            //TaskDosCommandLogic.Save(taskViewModel.TaskBase);
         }
 
         private void LoadApplications()

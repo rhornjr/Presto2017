@@ -40,6 +40,11 @@
                     <DataGridTextColumn Binding="{Binding Path=ReleaseFolderLocation}" Header="Location" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
+            
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Remove..." />
+            </StackPanel>
 
             <Label Content="Custom Variable Groups"/>
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"

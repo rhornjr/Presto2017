@@ -2,10 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
+using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
+using PrestoViewModel.Mvvm;
+using PrestoViewModel.Windows;
 
 namespace PrestoViewModel.Tabs
 {
@@ -16,6 +19,11 @@ namespace PrestoViewModel.Tabs
     {
         private Collection<ApplicationServer> _applicationServers;
         private ApplicationServer _selectedApplicationServer;
+
+        /// <summary>
+        /// Gets the add application command.
+        /// </summary>
+        public ICommand AddApplicationCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the application servers.
@@ -58,7 +66,22 @@ namespace PrestoViewModel.Tabs
         {
             if (DesignMode.IsInDesignMode) { return; }
 
+            Initialize();
             LoadApplicationServers();
+        }
+
+        private void Initialize()
+        {
+            this.AddApplicationCommand = new RelayCommand(_ => AddApplication());
+        }
+
+        private static void AddApplication()
+        {
+            ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            // ToDo: viewModel.SelectedApplication...
         }
 
         private void LoadApplicationServers()

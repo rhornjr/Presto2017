@@ -4,7 +4,6 @@ using System.Globalization;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
-using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
 {
@@ -45,12 +44,13 @@ namespace PrestoCommon.Logic
         }
 
         /// <summary>
-        /// Saves the specified task base.
+        /// Saves the specified object.
         /// </summary>
-        /// <param name="taskBase">The task base.</param>
-        public static void Save(TaskBase taskBase)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="objectToSave">The object to save.</param>
+        public static void Save<T>(T objectToSave)
         {
-            Database.Store(taskBase);
+            Database.Store(objectToSave);
             Database.Commit();
         }
     }

@@ -33,6 +33,7 @@
             <Label Content="Applications"/>            
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplicationServer.Applications}"
+                      SelectedItem="{Binding SelectedApplication}"
                   Height="150">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
@@ -43,7 +44,7 @@
             
             <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Remove..." />
+                <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
             </StackPanel>
 
             <Label Content="Custom Variable Groups"/>

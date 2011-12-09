@@ -70,7 +70,7 @@ namespace TestingConsoleApp
             //UpdateTaskWithinApplication(db);
             //AddNewTaskToApplication(db);
             //AddNewTaskToApplicationLikePrestoDoes(db);
-            AddNewTaskToApplicationUsingPrestoLogicClasses();
+            //AddNewTaskToApplicationUsingPrestoLogicClasses();
 
             Console.WriteLine(string.Format("db4o server DB closed: {0}", db.Ext().IsClosed().ToString()));
 
@@ -276,8 +276,13 @@ namespace TestingConsoleApp
             TaskBase task1 = new TaskDosCommand("Copy files", 1, 1, false, "cmd", @"/c copy /y NUL c:\temp\t1.txt");
             TaskBase task2 = new TaskDosCommand("Alter config", 1, 2, false, "cmd", @"/c copy /y NUL c:\temp\t2.txt");
 
+            TaskBase task3 = new TaskXmlModify("Set value 1 in config file", 1, 3, false,
+                                               @"C:\Temp\HelloWorldWindowsService.exe.config",
+                                               "appSettings/add", "key", "SampleKey1", "value", "SampleValue1 - New");
+
             application.Tasks.Add(task1);
             application.Tasks.Add(task2);
+            application.Tasks.Add(task3);
 
             db.Store(application);
         }

@@ -19,11 +19,17 @@ namespace PrestoViewModel.Tabs
     {
         private Collection<ApplicationServer> _applicationServers;
         private ApplicationServer _selectedApplicationServer;
+        private Application _selectedApplication;
 
         /// <summary>
         /// Gets the add application command.
         /// </summary>
         public ICommand AddApplicationCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the remove application command.
+        /// </summary>
+        public ICommand RemoveApplicationCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the application servers.
@@ -60,6 +66,23 @@ namespace PrestoViewModel.Tabs
         }
 
         /// <summary>
+        /// Gets or sets the selected application.
+        /// </summary>
+        /// <value>
+        /// The selected application.
+        /// </value>
+        public Application SelectedApplication
+        {
+            get { return this._selectedApplication; }
+
+            set
+            {
+                this._selectedApplication = value;
+                this.NotifyPropertyChanged(() => this.SelectedApplication);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationServerViewModel"/> class.
         /// </summary>
         public ApplicationServerViewModel()
@@ -72,16 +95,28 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddApplicationCommand = new RelayCommand(_ => AddApplication());
-        }
+            this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
+            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication());
+        }        
 
-        private static void AddApplication()
+        private  void AddApplication()
         {
             ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
-            // ToDo: viewModel.SelectedApplication...
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedApplicationServer.Applications.Add(viewModel.SelectedApplication);
+
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+        }
+
+        private void RemoveApplication()
+        {
+            this.SelectedApplicationServer.Applications.Remove(this.SelectedApplication);
+
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
 
         private void LoadApplicationServers()

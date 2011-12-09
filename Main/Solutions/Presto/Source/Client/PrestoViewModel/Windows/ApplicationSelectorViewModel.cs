@@ -30,6 +30,14 @@ namespace PrestoViewModel.Windows
         public ICommand CancelCommand { get; private set; }
 
         /// <summary>
+        /// Gets a value indicating whether [user canceled].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [user canceled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool UserCanceled { get; private set; }
+
+        /// <summary>
         /// Gets or sets the applications.
         /// </summary>
         /// <value>
@@ -68,6 +76,8 @@ namespace PrestoViewModel.Windows
         /// </summary>
         public ApplicationSelectorViewModel()
         {
+            // ToDo: This constructor should take a list of existing applications that are already associated
+            //       with a server so we don't display them.
             Initialize();
         }
 
@@ -86,6 +96,7 @@ namespace PrestoViewModel.Windows
 
         private void Cancel()
         {
+            this.UserCanceled = true;
             this.Close();
         }
 

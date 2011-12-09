@@ -17,7 +17,8 @@ namespace PrestoCommon.Logic
         public static IEnumerable<InstallationSummary> GetByServerName(string serverName)
         {
             IEnumerable<InstallationSummary> installationSummaryList = from InstallationSummary summary in Database
-                                                                       where summary.ApplicationServer.Name == serverName
+                                                                       where summary.ApplicationServer.Name.ToUpperInvariant()
+                                                                         == serverName.ToUpperInvariant()
                                                                        select summary;
             return installationSummaryList;
         }

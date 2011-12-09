@@ -118,11 +118,13 @@ namespace PrestoTaskRunner.Logic
 
             installationSummary.InstallationEnd    = DateTime.Now;
 
-            LogInstallationSummary(installationSummary);
+            LogAndSaveInstallationSummary(installationSummary);
         }
 
-        private static void LogInstallationSummary(InstallationSummary installationSummary)
+        private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)
         {
+            LogicBase.Save<InstallationSummary>(installationSummary);
+
             LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoTaskRunnerResources.ApplicationInstalled,
                 installationSummary.Application.Name,

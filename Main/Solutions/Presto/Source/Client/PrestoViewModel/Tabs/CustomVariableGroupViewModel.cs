@@ -113,7 +113,7 @@ namespace PrestoViewModel.Tabs
 
             this.AddVariableCommand    = new RelayCommand(_ => AddVariable());
             this.EditVariableCommand   = new RelayCommand(_ => EditVariable());
-            this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable());
+            this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable(), _ => CanDeleteCustomVariable());
         }        
 
         private void AddVariable()
@@ -140,9 +140,18 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
         }
 
-        private static object DeleteVariable()
+        private bool CanDeleteCustomVariable()
         {
-            throw new NotImplementedException();
+            return this.SelectedCustomVariable != null;
+        }
+
+        private void DeleteVariable()
+        {
+            if (!UserConfirmsDelete(this.SelectedCustomVariable.Key)) { return; }
+
+            LogicBase.Delete<CustomVariable>(this.SelectedCustomVariable);
+
+            this.SelectedCustomVariableGroup.CustomVariables.Remove(this.SelectedCustomVariable);
         }
 
         private void AddVariableGroup()

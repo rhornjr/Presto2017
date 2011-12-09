@@ -15,8 +15,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Column="0">
+        <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
+                <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddVariableGroupCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />
+            </StackPanel>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
         </DockPanel>
@@ -35,7 +39,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource StandardButton}" Content="Save" />
+                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveGroupCommand}" />
             </StackPanel>
         </StackPanel>
 

@@ -152,6 +152,10 @@ namespace PrestoViewModel.Tabs
             LogicBase.Delete<CustomVariable>(this.SelectedCustomVariable);
 
             this.SelectedCustomVariableGroup.CustomVariables.Remove(this.SelectedCustomVariable);
+
+            // Need to save the group. If we don't, then we'll get an exception when we access it again.
+            // The group still thinks is has this variable until we save the group.
+            LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
         }
 
         private void AddVariableGroup()

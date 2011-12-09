@@ -64,7 +64,7 @@ namespace PrestoCommon.Entities
         /// Initializes a new instance of the <see cref="TaskXmlModify"/> class.
         /// </summary>
         public TaskXmlModify()
-            : base("", TaskType.XmlModify, 1, 1, false)
+            : base(string.Empty, TaskType.XmlModify, 1, 1, false)
         {}
 
         /// <summary>

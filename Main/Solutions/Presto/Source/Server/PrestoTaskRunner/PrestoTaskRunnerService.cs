@@ -39,12 +39,20 @@ namespace PrestoTaskProcessor
                 // Run service as console app
                 _prestoTaskRunnerService.OnStart(args);
                 Console.WriteLine(PrestoTaskRunnerResources.ServerStartedConsoleMessage);
-                Console.ReadKey();
-                _prestoTaskRunnerService.OnStop();
+                Console.ReadKey();                
             }
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
+
+                if (Environment.UserInteractive)
+                {
+                    Console.ReadKey();
+                }
+            }
+            finally
+            {
+                _prestoTaskRunnerService.OnStop();
             }
         }
 

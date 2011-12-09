@@ -35,6 +35,12 @@ namespace PrestoCommon.Misc
         {
             if (ex == null) { throw new ArgumentNullException("ex"); }
 
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine(ex.ToString());
+                return;
+            }
+
             EventLog.WriteEntry(GetSource(), ex.ToString(), EventLogEntryType.Error);
         }
 

@@ -38,6 +38,11 @@ namespace PrestoViewModel.Tabs
         public ICommand AddTaskCommand { get; private set; }
 
         /// <summary>
+        /// Gets the delete task command.
+        /// </summary>
+        public ICommand DeleteTaskCommand { get; private set; }
+
+        /// <summary>
         /// Gets or sets the edit command.
         /// </summary>
         /// <value>
@@ -118,9 +123,10 @@ namespace PrestoViewModel.Tabs
             this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanDeleteApplication());
             this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication());
 
-            this.AddTaskCommand  = new RelayCommand(_ => AddTask());
-            this.EditTaskCommand = new RelayCommand(_ => EditTask());            
-        }        
+            this.AddTaskCommand    = new RelayCommand(_ => AddTask());
+            this.EditTaskCommand   = new RelayCommand(_ => EditTask());
+            this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => CanDeleteTask());
+        }             
 
         private void AddApplication()
         {
@@ -185,6 +191,22 @@ namespace PrestoViewModel.Tabs
 
             LogicBase.Save(taskViewModel.TaskBase);
         }
+
+        private bool CanDeleteTask()
+        {
+            return this.SelectedTask != null;
+        }   
+
+        private void DeleteTask()
+        {
+            if (!UserConfirmsDelete(this.SelectedTask.Description)) { return; }
+
+            LogicBase.Delete<TaskBase>(this.SelectedTask);
+
+            this.SelectedApplication.Tasks.Remove(this.SelectedTask);
+
+            LogicBase.Save<Application>(this.SelectedApplication);
+        }        
 
         private void SaveApplication()
         {

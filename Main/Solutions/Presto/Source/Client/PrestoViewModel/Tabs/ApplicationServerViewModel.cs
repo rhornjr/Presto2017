@@ -134,11 +134,11 @@ namespace PrestoViewModel.Tabs
             this.SaveServerCommand   = new RelayCommand(_ => SaveServer());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication());
+            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => CanRemoveApplication());
 
             this.AddVariableGroupCommand = new RelayCommand(_ => AddVariableGroup());
-            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup());
-        }                
+            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => CanRemoveVariableGroup());
+        }                   
 
         private void AddServer()
         {
@@ -181,12 +181,17 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
 
+        private bool CanRemoveApplication()
+        {
+            return this.SelectedApplication != null;
+        }
+
         private void RemoveApplication()
         {
             this.SelectedApplicationServer.Applications.Remove(this.SelectedApplication);
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
-        }
+        }                
 
         private void AddVariableGroup()
         {
@@ -200,6 +205,11 @@ namespace PrestoViewModel.Tabs
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
+
+        private bool CanRemoveVariableGroup()
+        {
+            return this.SelectedCustomVariableGroup != null;
+        }     
 
         private void RemoveVariableGroup()
         {

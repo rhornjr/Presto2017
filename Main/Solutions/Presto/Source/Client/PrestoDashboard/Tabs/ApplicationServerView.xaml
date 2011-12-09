@@ -15,8 +15,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Column="0">
+        <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="Application Servers" HorizontalAlignment="Center"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
+                <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddServerCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete" Command="{Binding DeleteServerCommand}" />
+            </StackPanel>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding ApplicationServers}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
         </DockPanel>

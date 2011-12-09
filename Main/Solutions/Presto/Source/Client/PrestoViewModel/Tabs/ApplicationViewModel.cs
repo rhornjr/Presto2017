@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
@@ -114,23 +115,34 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication());
+            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanDelete());
             this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication());
 
             this.AddTaskCommand  = new RelayCommand(_ => AddTask());
             this.EditTaskCommand = new RelayCommand(_ => EditTask());            
-        }
+        }        
 
         private void AddApplication()
         {
-            this.Applications.Add(new Application() { Name = "New App" });
+            string newAppName = "New App - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
 
-            this.SelectedApplication = this.Applications.Where(app => app.Name == "New App").FirstOrDefault();
+            this.Applications.Add(new Application() { Name = newAppName });
+
+            this.SelectedApplication = this.Applications.Where(app => app.Name == newAppName).FirstOrDefault();
         }
 
-        private static void DeleteApplication()
+        private bool CanDelete()
+        {            
+            return this.SelectedApplication != null;
+        }
+
+        private void DeleteApplication()
         {
-            throw new NotImplementedException();
+            if (!UserConfirmsDelete(this.SelectedApplication.Name)) { return; }
+
+            LogicBase.Delete<Application>(this.SelectedApplication);
+            
+            this.Applications.Remove(this.SelectedApplication);
         }        
 
         private void AddTask()

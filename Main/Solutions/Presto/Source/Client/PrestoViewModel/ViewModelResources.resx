@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConfirmDeleteCaption" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="ConfirmDeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete {0}?</value>
+  </data>
   <data name="DatabaseConnectionFailureMessage" xml:space="preserve">
     <value>A connection could not be made to the database. Please verify that the database is running and try again. See the log for more detail.</value>
   </data>

@@ -76,11 +76,14 @@
     <Compile Include="Tabs\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tabs\CustomVariableView.xaml.cs">
-      <DependentUpon>CustomVariableView.xaml</DependentUpon>
+    <Compile Include="Tabs\CustomVariableGroupView.xaml.cs">
+      <DependentUpon>CustomVariableGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ApplicationSelectorView.xaml.cs">
       <DependentUpon>ApplicationSelectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CustomVariableView.xaml.cs">
+      <DependentUpon>CustomVariableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\TaskDosCommandView.xaml.cs">
       <DependentUpon>TaskDosCommandView.xaml</DependentUpon>
@@ -111,11 +114,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tabs\CustomVariableView.xaml">
+    <Page Include="Tabs\CustomVariableGroupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ApplicationSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\CustomVariableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

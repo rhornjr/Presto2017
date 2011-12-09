@@ -7,7 +7,7 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class CustomVariableGroup
     {
-        private Collection<CustomVariable> _customVariables;
+        private ObservableCollection<CustomVariable> _customVariables;
 
         /// <summary>
         /// Gets or sets the name.
@@ -23,13 +23,13 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The custom variables.
         /// </value>
-        public Collection<CustomVariable> CustomVariables
+        public ObservableCollection<CustomVariable> CustomVariables
         {
             get
             {
                 if (this._customVariables == null)
                 {
-                    this._customVariables = new Collection<CustomVariable>();
+                    this._customVariables = new ObservableCollection<CustomVariable>();
                 }
                 return this._customVariables;
             }

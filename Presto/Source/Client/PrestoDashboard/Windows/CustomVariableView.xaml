@@ -1,0 +1,30 @@
+﻿<Window x:Class="PrestoDashboard.Windows.CustomVariableView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="CustomVariableView" Width="510">
+    <Grid Margin="5" HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
+            <Label Content="Key:" Width="50" />
+            <TextBox Text="{Binding CustomVariable.Key}" Width="420"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
+            <Label Content="Value:" Width="50" />
+            <TextBox Text="{Binding CustomVariable.Value}" Width="420"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Height="35">
+            <Button Command="{Binding OkCommand}" Style="{StaticResource StandardButton}" Content="OK" Margin="5" />
+            <Button Command="{Binding CancelCommand}" Style="{StaticResource StandardButton}" Content="Cancel" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>

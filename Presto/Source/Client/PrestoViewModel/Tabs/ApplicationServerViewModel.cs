@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
@@ -17,9 +18,19 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
-        private Collection<ApplicationServer> _applicationServers;
+        private ObservableCollection<ApplicationServer> _applicationServers;
         private ApplicationServer _selectedApplicationServer;
         private Application _selectedApplication;
+
+        /// <summary>
+        /// Gets the add server command.
+        /// </summary>
+        public ICommand AddServerCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the delete server command.
+        /// </summary>
+        public ICommand DeleteServerCommand { get; private set; }
 
         /// <summary>
         /// Gets the add application command.
@@ -37,7 +48,7 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The application servers.
         /// </value>
-        public Collection<ApplicationServer> ApplicationServers
+        public ObservableCollection<ApplicationServer> ApplicationServers
         {
             get { return this._applicationServers; }
 
@@ -95,8 +106,29 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
+            this.AddServerCommand    = new RelayCommand(_ => AddServer());
+            this.DeleteServerCommand = new RelayCommand(_ => DeleteServer());
+
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication());
+        }
+
+        private void AddServer()
+        {
+            string newServerName = "New server - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
+
+            this.ApplicationServers.Add(new ApplicationServer() { Name = newServerName });
+
+            this.SelectedApplicationServer = this.ApplicationServers.Where(server => server.Name == newServerName).FirstOrDefault();
+        }
+
+        private void DeleteServer()
+        {
+            if (!UserConfirmsDelete(this.SelectedApplicationServer.Name)) { return; }
+
+            LogicBase.Delete<ApplicationServer>(this.SelectedApplicationServer);
+
+            this.ApplicationServers.Remove(this.SelectedApplicationServer);
         }        
 
         private  void AddApplication()
@@ -123,7 +155,7 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.ApplicationServers = new Collection<ApplicationServer>(ApplicationServerLogic.GetAll().ToList());
+                this.ApplicationServers = new ObservableCollection<ApplicationServer>(ApplicationServerLogic.GetAll().ToList());
             }
             catch (SocketException ex)
             {

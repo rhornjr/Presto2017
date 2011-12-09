@@ -61,6 +61,24 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm Delete.
+        /// </summary>
+        internal static string ConfirmDeleteCaption {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete {0}?.
+        /// </summary>
+        internal static string ConfirmDeleteMessage {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A connection could not be made to the database. Please verify that the database is running and try again. See the log for more detail..
         /// </summary>
         internal static string DatabaseConnectionFailureMessage {

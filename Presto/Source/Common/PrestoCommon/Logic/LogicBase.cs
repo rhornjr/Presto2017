@@ -53,5 +53,16 @@ namespace PrestoCommon.Logic
             Database.Store(objectToSave);
             Database.Commit();
         }
+
+        /// <summary>
+        /// Deletes the specified object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="objectToDelete">The object to delete.</param>
+        public static void Delete<T>(T objectToDelete)
+        {
+            Database.Delete(objectToDelete);
+            Database.Commit();
+        }
     }
 }

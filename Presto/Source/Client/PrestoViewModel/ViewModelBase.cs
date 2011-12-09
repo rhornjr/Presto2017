@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq.Expressions;
+using System.Windows;
 
 namespace PrestoViewModel
 {
@@ -21,6 +23,24 @@ namespace PrestoViewModel
         protected void Close()
         {
             MainWindowViewModel.ViewLoader.CloseView(this);
+        }
+
+        /// <summary>
+        /// Users the confirms delete.
+        /// </summary>
+        /// <param name="nameOfItemToDelete">The item name to delete.</param>
+        /// <returns></returns>
+        protected static bool UserConfirmsDelete(string nameOfItemToDelete)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ConfirmDeleteMessage, nameOfItemToDelete);
+
+            if (MessageBox.Show(message, ViewModelResources.ConfirmDeleteCaption,
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

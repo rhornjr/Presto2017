@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
+using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
+using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Tabs
 {
@@ -14,8 +17,23 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class CustomVariableViewModel : ViewModelBase
     {
-        private Collection<CustomVariableGroup> _customVariableGroups;
+        private ObservableCollection<CustomVariableGroup> _customVariableGroups;
         private CustomVariableGroup _selectedCustomVariableGroup;
+
+        /// <summary>
+        /// Gets the add variable group command.
+        /// </summary>
+        public ICommand AddVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the delete variable group command.
+        /// </summary>
+        public ICommand DeleteVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the save group command.
+        /// </summary>
+        public ICommand SaveGroupCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the custom variable groups.
@@ -23,7 +41,7 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The custom variable groups.
         /// </value>
-        public Collection<CustomVariableGroup> CustomVariableGroups
+        public ObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
             get { return this._customVariableGroups; }
 
@@ -58,14 +76,51 @@ namespace PrestoViewModel.Tabs
         {
             if (DesignMode.IsInDesignMode) { return; }
 
+            Initialize();
+
             LoadCustomVariableGroups();
         }
+
+        private void Initialize()
+        {
+            this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
+            this.DeleteVariableGroupCommand = new RelayCommand(_ => DeleteVariableGroup(), _ => CanDeleteGroup());
+            this.SaveGroupCommand           = new RelayCommand(_ => SaveVariableGroup());
+        }              
+
+        private void AddVariableGroup()
+        {
+            string newGroupName = "New group - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
+
+            this.CustomVariableGroups.Add(new CustomVariableGroup() { Name = newGroupName });
+
+            this.SelectedCustomVariableGroup = this.CustomVariableGroups.Where(group => group.Name == newGroupName).FirstOrDefault();
+        }
+
+        private bool CanDeleteGroup()
+        {
+            return this.SelectedCustomVariableGroup != null;
+        }
+
+        private void DeleteVariableGroup()
+        {
+            if (!UserConfirmsDelete(this.SelectedCustomVariableGroup.Name)) { return; }
+
+            LogicBase.Delete<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+
+            this.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
+        }
+
+        private void SaveVariableGroup()
+        {
+            LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+        }  
 
         private void LoadCustomVariableGroups()
         {            
             try
             {
-                this.CustomVariableGroups = new Collection<CustomVariableGroup>(CustomVariableGroupLogic.GetAll().ToList());
+                this.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(CustomVariableGroupLogic.GetAll().ToList());
             }
             catch (SocketException ex)
             {

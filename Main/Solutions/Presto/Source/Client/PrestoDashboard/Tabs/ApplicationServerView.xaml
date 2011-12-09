@@ -19,7 +19,7 @@
             <Label DockPanel.Dock="Top" Content="Application Servers" HorizontalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
                 <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddServerCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete" Command="{Binding DeleteServerCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteServerCommand}" />
             </StackPanel>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding ApplicationServers}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
@@ -33,7 +33,9 @@
             <TextBox Text="{Binding SelectedApplicationServer.IpAddress}"/>
             <Label Content="Future use: "/>
             <TextBox Text=""/>
-            
+
+            <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
+
             <Label Content="Applications"/>            
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplicationServer.Applications}"
@@ -54,7 +56,7 @@
             <Label Content="Custom Variable Groups"/>
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
-                      Height="150">                
+                      Height="100">                
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
                 </DataGrid.Columns>

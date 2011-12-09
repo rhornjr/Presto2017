@@ -115,7 +115,7 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanDelete());
+            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanDeleteApplication());
             this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication());
 
             this.AddTaskCommand  = new RelayCommand(_ => AddTask());
@@ -131,7 +131,7 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplication = this.Applications.Where(app => app.Name == newAppName).FirstOrDefault();
         }
 
-        private bool CanDelete()
+        private bool CanDeleteApplication()
         {            
             return this.SelectedApplication != null;
         }

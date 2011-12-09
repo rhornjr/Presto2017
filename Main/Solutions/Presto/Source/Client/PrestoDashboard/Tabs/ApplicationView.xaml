@@ -20,7 +20,7 @@
             <Label DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>            
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
                 <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete" Command="{Binding DeleteApplicationCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />
             </StackPanel>
             <ListBox ItemsSource="{Binding Applications}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedApplication}"/>

@@ -33,6 +33,11 @@ namespace PrestoViewModel.Tabs
         public ICommand DeleteServerCommand { get; private set; }
 
         /// <summary>
+        /// Gets the save server command.
+        /// </summary>
+        public ICommand SaveServerCommand { get; private set; }
+
+        /// <summary>
         /// Gets the add application command.
         /// </summary>
         public ICommand AddApplicationCommand { get; private set; }
@@ -107,11 +112,12 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddServerCommand    = new RelayCommand(_ => AddServer());
-            this.DeleteServerCommand = new RelayCommand(_ => DeleteServer());
+            this.DeleteServerCommand = new RelayCommand(_ => DeleteServer(), _ => CanDeleteServer());
+            this.SaveServerCommand   = new RelayCommand(_ => SaveServer());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication());
-        }
+        }             
 
         private void AddServer()
         {
@@ -122,6 +128,11 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplicationServer = this.ApplicationServers.Where(server => server.Name == newServerName).FirstOrDefault();
         }
 
+        private bool CanDeleteServer()
+        {
+            return this.SelectedApplicationServer != null;
+        }
+
         private void DeleteServer()
         {
             if (!UserConfirmsDelete(this.SelectedApplicationServer.Name)) { return; }
@@ -129,7 +140,12 @@ namespace PrestoViewModel.Tabs
             LogicBase.Delete<ApplicationServer>(this.SelectedApplicationServer);
 
             this.ApplicationServers.Remove(this.SelectedApplicationServer);
-        }        
+        }
+
+        private void SaveServer()
+        {
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+        }   
 
         private  void AddApplication()
         {

@@ -40,7 +40,7 @@
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplicationServer.Applications}"
                       SelectedItem="{Binding SelectedApplication}"
-                  Height="150">
+                  Height="100">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
                     <DataGridTextColumn Binding="{Binding Path=Version}" Header="Version" Width="100"/>
@@ -48,7 +48,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
             </StackPanel>
@@ -56,12 +56,18 @@
             <Label Content="Custom Variable Groups"/>
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
+                      SelectedItem="{Binding SelectedCustomVariableGroup}"
                       Height="100">                
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-            
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveVariableGroupCommand}" />
+            </StackPanel>
+
         </StackPanel>
 
     </Grid>

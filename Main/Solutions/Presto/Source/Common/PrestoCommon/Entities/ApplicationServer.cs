@@ -8,7 +8,7 @@ namespace PrestoCommon.Entities
     public class ApplicationServer
     {
         private ObservableCollection<Application> _applications;
-        private Collection<CustomVariableGroup> _customVariableGroups;
+        private ObservableCollection<CustomVariableGroup> _customVariableGroups;
 
         /// <summary>
         /// Gets or sets the name.
@@ -42,11 +42,11 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Gets the custom variable groups.
         /// </summary>
-        public Collection<CustomVariableGroup> CustomVariableGroups
+        public ObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
             get
             {
-                if (this._customVariableGroups == null) { this._customVariableGroups = new Collection<CustomVariableGroup>(); }
+                if (this._customVariableGroups == null) { this._customVariableGroups = new ObservableCollection<CustomVariableGroup>(); }
 
                 return this._customVariableGroups;
             }

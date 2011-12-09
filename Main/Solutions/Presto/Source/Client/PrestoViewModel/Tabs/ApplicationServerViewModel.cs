@@ -48,6 +48,16 @@ namespace PrestoViewModel.Tabs
         public ICommand RemoveApplicationCommand { get; private set; }
 
         /// <summary>
+        /// Gets the add variable group command.
+        /// </summary>
+        public ICommand AddVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the remove variable group command.
+        /// </summary>
+        public ICommand RemoveVariableGroupCommand { get; private set; }
+
+        /// <summary>
         /// Gets or sets the application servers.
         /// </summary>
         /// <value>
@@ -80,6 +90,14 @@ namespace PrestoViewModel.Tabs
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServer);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the selected custom variable group.
+        /// </summary>
+        /// <value>
+        /// The selected custom variable group.
+        /// </value>
+        public CustomVariableGroup SelectedCustomVariableGroup { get; set; }
 
         /// <summary>
         /// Gets or sets the selected application.
@@ -117,7 +135,10 @@ namespace PrestoViewModel.Tabs
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication());
-        }             
+
+            this.AddVariableGroupCommand = new RelayCommand(_ => AddVariableGroup());
+            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup());
+        }                
 
         private void AddServer()
         {
@@ -166,6 +187,26 @@ namespace PrestoViewModel.Tabs
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
+
+        private void AddVariableGroup()
+        {
+            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel();
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedApplicationServer.CustomVariableGroups.Add(viewModel.SelectedCustomVariableGroup);
+
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+        }
+
+        private void RemoveVariableGroup()
+        {
+            this.SelectedApplicationServer.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
+
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+        }     
 
         private void LoadApplicationServers()
         {

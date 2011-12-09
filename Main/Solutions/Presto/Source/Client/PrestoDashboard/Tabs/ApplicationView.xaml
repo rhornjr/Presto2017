@@ -16,10 +16,14 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <DockPanel Grid.Column="0">
-            <Label DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>
-            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Applications}" DisplayMemberPath="Name"
-                     SelectedItem="{Binding SelectedApplication}" Height="auto"/>
+        <DockPanel Grid.Column="0" LastChildFill="True">
+            <Label DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>            
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
+                <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete" Command="{Binding DeleteApplicationCommand}" />
+            </StackPanel>
+            <ListBox ItemsSource="{Binding Applications}" DisplayMemberPath="Name"
+                     SelectedItem="{Binding SelectedApplication}"/>
         </DockPanel>
         
         <StackPanel Grid.Column="1">
@@ -43,10 +47,10 @@
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
             </StackPanel>
         </StackPanel>
 

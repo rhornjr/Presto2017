@@ -17,14 +17,24 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationViewModel : ViewModelBase
     {
-        private Collection<Application> _applications;
+        private ObservableCollection<Application> _applications;
         private Application _selectedApplication;
-        private TaskBase _selectedTask;               
+        private TaskBase _selectedTask;
+
+        /// <summary>
+        /// Gets the add application command.
+        /// </summary>
+        public ICommand AddApplicationCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the delete application command.
+        /// </summary>
+        public ICommand DeleteApplicationCommand { get; private set; }
 
         /// <summary>
         /// Gets the add command.
         /// </summary>
-        public ICommand AddCommand { get; private set; }
+        public ICommand AddTaskCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the edit command.
@@ -32,12 +42,12 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The edit command.
         /// </value>
-        public ICommand EditCommand { get; private set; }
+        public ICommand EditTaskCommand { get; private set; }
 
         /// <summary>
         /// Gets the save command.
         /// </summary>
-        public ICommand SaveCommand { get; private set; }
+        public ICommand SaveApplicationCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the applications.
@@ -45,7 +55,7 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The applications.
         /// </value>
-        public Collection<Application> Applications
+        public ObservableCollection<Application> Applications
         {
             get { return this._applications; }
 
@@ -103,9 +113,24 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddCommand  = new RelayCommand(_ => AddTask());
-            this.EditCommand = new RelayCommand(_ => EditTask());
-            this.SaveCommand = new RelayCommand(_ => Save());
+            this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
+            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication());
+            this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication());
+
+            this.AddTaskCommand  = new RelayCommand(_ => AddTask());
+            this.EditTaskCommand = new RelayCommand(_ => EditTask());            
+        }
+
+        private void AddApplication()
+        {
+            this.Applications.Add(new Application() { Name = "New App" });
+
+            this.SelectedApplication = this.Applications.Where(app => app.Name == "New App").FirstOrDefault();
+        }
+
+        private static void DeleteApplication()
+        {
+            throw new NotImplementedException();
         }        
 
         private void AddTask()
@@ -149,7 +174,7 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save(taskViewModel.TaskBase);
         }
 
-        private void Save()
+        private void SaveApplication()
         {
             LogicBase.Save<Application>(this.SelectedApplication);
         }
@@ -158,7 +183,7 @@ namespace PrestoViewModel.Tabs
         {            
             try
             {
-                this.Applications = new Collection<Application>(ApplicationLogic.GetAll().ToList());
+                this.Applications = new ObservableCollection<Application>(ApplicationLogic.GetAll().ToList());
             }
             catch (SocketException ex)
             {

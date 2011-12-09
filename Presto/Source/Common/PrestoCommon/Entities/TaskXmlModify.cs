@@ -64,8 +64,23 @@ namespace PrestoCommon.Entities
         /// Initializes a new instance of the <see cref="TaskXmlModify"/> class.
         /// </summary>
         public TaskXmlModify()
+            : base("", TaskType.XmlModify, 1, 1, false)
+        {}
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskXmlModify"/> class.
+        /// </summary>
+        public TaskXmlModify(string description, byte failureCausesAllStop, int sequence, bool taskSucceeded,
+            string xmlPathAndFileName, string nodeToChange, string attributeKey, string attributeKeyValue,
+            string attributeToChange, string attributeToChangeValue)
+            : base(description, TaskType.XmlModify, failureCausesAllStop, sequence, taskSucceeded)
         {
-            this.PrestoTaskType = TaskType.XmlModify;
+            this.XmlPathAndFileName     = xmlPathAndFileName;
+            this.NodeToChange           = nodeToChange;
+            this.AttributeKey           = attributeKey;
+            this.AttributeKeyValue      = attributeKeyValue;
+            this.AttributeToChange      = attributeToChange;
+            this.AttributeToChangeValue = attributeToChangeValue;
         }
 
         /// <summary>

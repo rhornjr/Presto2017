@@ -7,7 +7,7 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class ApplicationServer
     {
-        private Collection<Application> _applications;
+        private ObservableCollection<Application> _applications;
         private Collection<CustomVariableGroup> _customVariableGroups;
 
         /// <summary>
@@ -29,11 +29,11 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Gets the application.
         /// </summary>
-        public Collection<Application> Applications
+        public ObservableCollection<Application> Applications
         {
             get
             {
-                if (this._applications == null) { this._applications = new Collection<Application>(); }
+                if (this._applications == null) { this._applications = new ObservableCollection<Application>(); }
 
                 return this._applications;
             }

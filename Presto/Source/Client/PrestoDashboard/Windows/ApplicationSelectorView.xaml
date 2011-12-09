@@ -16,8 +16,8 @@
         </DockPanel>
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddCommand}" />
-            <Button Style="{StaticResource StandardButton}" Content="Cancel..." Command="{Binding CancelCommand}" />
+            <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddCommand}" />
+            <Button Style="{StaticResource StandardButton}" Content="Cancel" Command="{Binding CancelCommand}" />
         </StackPanel>
         
     </Grid>

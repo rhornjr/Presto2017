@@ -9,13 +9,14 @@ using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
+using PrestoViewModel.Windows;
 
 namespace PrestoViewModel.Tabs
 {
     /// <summary>
     /// 
     /// </summary>
-    public class CustomVariableViewModel : ViewModelBase
+    public class CustomVariableGroupViewModel : ViewModelBase
     {
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
         private CustomVariableGroup _selectedCustomVariableGroup;
@@ -33,7 +34,22 @@ namespace PrestoViewModel.Tabs
         /// <summary>
         /// Gets the save group command.
         /// </summary>
-        public ICommand SaveGroupCommand { get; private set; }
+        public ICommand SaveVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the add variable command.
+        /// </summary>
+        public ICommand AddVariableCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the edit variable command.
+        /// </summary>
+        public ICommand EditVariableCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the delete variable command.
+        /// </summary>
+        public ICommand DeleteVariableCommand { get; private set; }
 
         /// <summary>
         /// Gets or sets the custom variable groups.
@@ -70,9 +86,17 @@ namespace PrestoViewModel.Tabs
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomVariableViewModel"/> class.
+        /// Gets or sets the selected custom variable.
         /// </summary>
-        public CustomVariableViewModel()
+        /// <value>
+        /// The selected custom variable.
+        /// </value>
+        public CustomVariable SelectedCustomVariable { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomVariableGroupViewModel"/> class.
+        /// </summary>
+        public CustomVariableGroupViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
 
@@ -85,8 +109,41 @@ namespace PrestoViewModel.Tabs
         {
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.DeleteVariableGroupCommand = new RelayCommand(_ => DeleteVariableGroup(), _ => CanDeleteGroup());
-            this.SaveGroupCommand           = new RelayCommand(_ => SaveVariableGroup());
-        }              
+            this.SaveVariableGroupCommand   = new RelayCommand(_ => SaveVariableGroup());
+
+            this.AddVariableCommand    = new RelayCommand(_ => AddVariable());
+            this.EditVariableCommand   = new RelayCommand(_ => EditVariable());
+            this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable());
+        }        
+
+        private void AddVariable()
+        {
+            CustomVariableViewModel viewModel = new CustomVariableViewModel();
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedCustomVariableGroup.CustomVariables.Add(viewModel.CustomVariable);
+
+            LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+        }
+
+        private void EditVariable()
+        {
+            CustomVariableViewModel viewModel = new CustomVariableViewModel(this.SelectedCustomVariable);
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+        }
+
+        private static object DeleteVariable()
+        {
+            throw new NotImplementedException();
+        }
 
         private void AddVariableGroup()
         {

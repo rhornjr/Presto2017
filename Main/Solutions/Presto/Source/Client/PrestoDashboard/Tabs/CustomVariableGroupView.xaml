@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
     <UserControl.DataContext>
-        <Binding Source="{StaticResource CustomVariableViewModel}"/>
+        <Binding Source="{StaticResource CustomVariableGroupViewModel}"/>
     </UserControl.DataContext>
 
     <Grid>
@@ -25,23 +25,32 @@
                      SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
         </DockPanel>
 
-        <StackPanel Grid.Column="1">
+        <DockPanel Grid.Column="1" LastChildFill="True">
+            
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
             <Label Content="Selected Group" HorizontalAlignment="Center"/>
             <Label Content="Name: "/>
             <TextBox Text="{Binding SelectedCustomVariableGroup.Name}"/>
             <Label Content="Custom Variables"/>
+            </StackPanel>
+            
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditVariableCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
+            </StackPanel>
+
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                  ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"
-                  SelectedItem="{Binding SelectedVariable}">
+                  ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"                      
+                  SelectedItem="{Binding SelectedCustomVariable}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="170" />
                     <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveGroupCommand}" />
-            </StackPanel>
-        </StackPanel>
+
+        </DockPanel>
 
     </Grid>
 </UserControl>

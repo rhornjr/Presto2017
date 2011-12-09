@@ -30,7 +30,7 @@
             <TextBox Text="{Binding SelectedApplication.Version}"/>
             <Label Content="Release folder location: "/>
             <TextBox Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
-            <CheckBox Content="Force installation"/>
+            <CheckBox Content="Force installation" IsChecked="{Binding SelectedApplication.ForceInstallation}"/>
             <Label Content="Tasks"/>
             <DataGrid Height="280" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplication.Tasks}"

@@ -35,6 +35,11 @@ namespace PrestoViewModel.Tabs
         public ICommand EditCommand { get; private set; }
 
         /// <summary>
+        /// Gets the save command.
+        /// </summary>
+        public ICommand SaveCommand { get; private set; }
+
+        /// <summary>
         /// Gets or sets the applications.
         /// </summary>
         /// <value>
@@ -100,7 +105,8 @@ namespace PrestoViewModel.Tabs
         {
             this.AddCommand  = new RelayCommand(_ => AddTask());
             this.EditCommand = new RelayCommand(_ => EditTask());
-        }
+            this.SaveCommand = new RelayCommand(_ => Save());
+        }        
 
         private void AddTask()
         {
@@ -141,6 +147,11 @@ namespace PrestoViewModel.Tabs
             if (taskViewModel.UserCanceled) { return; }
 
             LogicBase.Save(taskViewModel.TaskBase);
+        }
+
+        private void Save()
+        {
+            LogicBase.Save<Application>(this.SelectedApplication);
         }
 
         private void LoadApplications()

@@ -78,8 +78,10 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-        public override void Execute()
+        public override void Execute(ApplicationServer applicationServer)
         {
+            if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
+
             using (Process process = new Process())
             {
                 string processOutput = string.Empty;
@@ -92,9 +94,8 @@ namespace PrestoCommon.Entities
                     // output we have to redirect input too. If we don’t, it immediately and silently quits
                     // right after startup."
 
-                    // ToDo: ReplaceVariablesWithValues for the first two lines below.
-                    process.StartInfo.FileName               = this.DosExecutable;
-                    process.StartInfo.Arguments              = this.Parameters;
+                    process.StartInfo.FileName               = applicationServer.ResolveCustomVariable(this.DosExecutable);
+                    process.StartInfo.Arguments              = applicationServer.ResolveCustomVariable(this.Parameters);
                     process.StartInfo.UseShellExecute        = false;
                     process.StartInfo.RedirectStandardError  = true;
                     process.StartInfo.RedirectStandardInput  = true;

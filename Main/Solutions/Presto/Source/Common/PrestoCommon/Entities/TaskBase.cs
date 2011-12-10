@@ -132,7 +132,7 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        public abstract void Execute();
+        public abstract void Execute(ApplicationServer applicationServer);
 
         /// <summary>
         /// Notifies the property changed.

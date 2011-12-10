@@ -61,6 +61,31 @@ namespace PrestoCommon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application installed:
+        ///
+        ///App   : {0}
+        ///Server: {1}
+        ///Start : {2}
+        ///End   : {3}
+        ///
+        ///Result: {4}.
+        /// </summary>
+        internal static string ApplicationInstalled {
+            get {
+                return ResourceManager.GetString("ApplicationInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application {0} will be installed on app server {1}.
+        /// </summary>
+        internal static string AppWillBeInstalledOnAppServer {
+            get {
+                return ResourceManager.GetString("AppWillBeInstalledOnAppServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TaskDOSCommand failed with exit code {0}..
         /// </summary>
         internal static string TaskDosCommandFailedWithExitCode {

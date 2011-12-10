@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
@@ -70,6 +71,34 @@ namespace PrestoCommon.Entities
         public Application()
         {
             this.Tasks = new ObservableCollection<TaskBase>();
-        }        
+        }
+
+        /// <summary>
+        /// Installs this instance.
+        /// </summary>
+        public InstallationResult Install(ApplicationServer applicationServer)
+        {
+            bool atLeastOneTaskFailed = false;
+            int numberOfSuccessfulTasks = 0;
+
+            foreach (TaskBase task in this.Tasks)
+            {
+                task.Execute(applicationServer);
+
+                if (task.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
+
+                if (task.TaskSucceeded == false)
+                {
+                    atLeastOneTaskFailed = true;
+                    if (task.FailureCausesAllStop == 1) { break; }  // No more processing.
+                }
+            }
+
+            if (numberOfSuccessfulTasks < 1) { return InstallationResult.Failure; }
+
+            if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
+
+            return InstallationResult.Success;
+        }
     }
 }

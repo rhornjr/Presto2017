@@ -20,6 +20,9 @@ namespace PrestoCommon.Logic
                                                                        where summary.ApplicationServer.Name.ToUpperInvariant()
                                                                          == serverName.ToUpperInvariant()
                                                                        select summary;
+
+            Database.Ext().Refresh(installationSummaryList, 10);
+
             return installationSummaryList;
         }
     }

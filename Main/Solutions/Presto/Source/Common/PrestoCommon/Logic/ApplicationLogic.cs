@@ -18,6 +18,8 @@ namespace PrestoCommon.Logic
             IEnumerable<Application> apps = from Application app in Database
                                             select app;
 
+            Database.Ext().Refresh(apps, 10);
+
             return apps;
         }
 

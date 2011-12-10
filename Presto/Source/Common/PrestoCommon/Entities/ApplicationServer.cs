@@ -1,4 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
@@ -61,6 +67,73 @@ namespace PrestoCommon.Entities
         public override string ToString()
         {
             return this.Name;
+        }
+
+        /// <summary>
+        /// Resolves the custom variable.
+        /// </summary>
+        /// <param name="unresolvedCustomVariable">The custom variable string.</param>
+        /// <returns></returns>
+        public string ResolveCustomVariable(string unresolvedCustomVariable)
+        {            
+            string customVariableValue = string.Empty;
+
+            foreach (CustomVariableGroup variableGroup in this.CustomVariableGroups)
+            {
+                customVariableValue = variableGroup.ResolveCustomVariable(unresolvedCustomVariable);
+            }
+
+            return customVariableValue;
+        }
+
+        /// <summary>
+        /// Installs the applications.
+        /// </summary>
+        public void InstallApplications()
+        {
+            // Get the list of InstallationStatus entities to validate against our list of apps.                
+            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerName(this.Name);
+
+            // If we find an app that needs to be installed, install it.
+            foreach (Application app in this.Applications)
+            {
+                if (app.ForceInstallation || !InstallationSummaryFoundForApplication(installationSummaryList, app))
+                {
+                    // No installation summary found for this app, so install it (or we're forcing an installation).
+                    LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, app.Name, this.Name));
+
+                    InstallApplication(app);
+                }
+            }
+        }
+
+        private static bool InstallationSummaryFoundForApplication(IEnumerable<InstallationSummary> installationSummaryList, Application app)
+        {           
+            return installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() != null;
+        }
+
+        private void InstallApplication(Application application)
+        {
+            InstallationSummary installationSummary = new InstallationSummary(application, this, DateTime.Now);
+
+            installationSummary.InstallationResult = application.Install(this);
+
+            installationSummary.InstallationEnd = DateTime.Now;
+
+            LogAndSaveInstallationSummary(installationSummary);
+        }
+
+        private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)
+        {
+            LogicBase.Save<InstallationSummary>(installationSummary);
+
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                PrestoCommonResources.ApplicationInstalled,
+                installationSummary.Application.Name,
+                installationSummary.ApplicationServer.Name,
+                installationSummary.InstallationStart.ToString(CultureInfo.CurrentCulture),
+                installationSummary.InstallationEnd.ToString(CultureInfo.CurrentCulture),
+                installationSummary.InstallationResult.ToString()));
         }
     }
 }

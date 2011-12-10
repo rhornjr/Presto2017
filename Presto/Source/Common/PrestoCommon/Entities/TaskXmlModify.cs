@@ -87,36 +87,34 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
-        public override void Execute()
+        public override void Execute(ApplicationServer applicationServer)
         {
-            // ToDo: Resolve custom variables
-            //TaskXmlModify taskXmlModifyOriginal = task as TaskXmlModify;
-            //TaskXmlModify taskXmlModify = GetTaskXmlModifyWithCustomVariablesResolved(taskXmlModifyOriginal);
+            TaskXmlModify taskResolved = GetTaskXmlModifyWithCustomVariablesResolved(applicationServer);
 
-            string taskDetails = ConvertTaskDetailsToString(this);
+            string taskDetails = ConvertTaskDetailsToString(taskResolved);
 
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(this.XmlPathAndFileName);
+                xmlDocument.Load(taskResolved.XmlPathAndFileName);
                 XmlElement rootElement = xmlDocument.DocumentElement;
 
                 XmlNodeList xmlNodes;
 
                 // Get the node that the user wants to modify
-                if (string.IsNullOrEmpty(this.AttributeKey.Trim()))
+                if (string.IsNullOrEmpty(taskResolved.AttributeKey.Trim()))
                 {
                     // No attributes necessary to differentiate this node from any others. Get the matching nodes.
-                    xmlNodes = rootElement.SelectNodes(this.NodeToChange);
+                    xmlNodes = rootElement.SelectNodes(taskResolved.NodeToChange);
                 }
                 else
                 {
                     // Get the nodes with the specified attributes
                     xmlNodes = rootElement.SelectNodes(string.Format(CultureInfo.InvariantCulture,
                                                                        "descendant::{0}[@{1}='{2}']",
-                                                                       this.NodeToChange,
-                                                                       this.AttributeKey,
-                                                                       this.AttributeKeyValue));
+                                                                       taskResolved.NodeToChange,
+                                                                       taskResolved.AttributeKey,
+                                                                       taskResolved.AttributeKeyValue));
                 }
 
                 if (xmlNodes == null)
@@ -129,24 +127,24 @@ namespace PrestoCommon.Entities
                 // Make the change
                 foreach (XmlNode xmlNode in xmlNodes)
                 {
-                    if (string.IsNullOrEmpty(this.AttributeToChange))
+                    if (string.IsNullOrEmpty(taskResolved.AttributeToChange))
                     {
                         // We're not changing an attribute of the node; we're changing the value (InnerText) of the node itself.
-                        xmlNode.InnerText = this.AttributeToChangeValue;
+                        xmlNode.InnerText = taskResolved.AttributeToChangeValue;
                     }
                     else
                     {
-                        if (xmlNode.Attributes[this.AttributeToChange] == null)
+                        if (xmlNode.Attributes[taskResolved.AttributeToChange] == null)
                         {
                             throw new Exception("Can't update Attribute to Change because it does not exist in the file.");
                         }
 
                         // The node has an attribute, so change the attribute's value.
-                        xmlNode.Attributes[this.AttributeToChange].Value = this.AttributeToChangeValue;
+                        xmlNode.Attributes[taskResolved.AttributeToChange].Value = taskResolved.AttributeToChangeValue;
                     }
                 }
 
-                xmlDocument.Save(this.XmlPathAndFileName);
+                xmlDocument.Save(taskResolved.XmlPathAndFileName);
                 xmlDocument = null;
 
                 this.TaskSucceeded = true;
@@ -179,6 +177,20 @@ namespace PrestoCommon.Entities
                                                 taskXmlModify.AttributeToChange,
                                                 taskXmlModify.AttributeToChangeValue);
             return taskDetails;
+        }
+
+        private TaskXmlModify GetTaskXmlModifyWithCustomVariablesResolved(ApplicationServer applicationServer)
+        {
+            TaskXmlModify taskXmlModifyResolved = new TaskXmlModify();
+
+            taskXmlModifyResolved.AttributeKey           = applicationServer.ResolveCustomVariable(this.AttributeKey);
+            taskXmlModifyResolved.AttributeKeyValue      = applicationServer.ResolveCustomVariable(this.AttributeKeyValue);
+            taskXmlModifyResolved.AttributeToChange      = applicationServer.ResolveCustomVariable(this.AttributeToChange);
+            taskXmlModifyResolved.AttributeToChangeValue = applicationServer.ResolveCustomVariable(this.AttributeToChangeValue);
+            taskXmlModifyResolved.NodeToChange           = applicationServer.ResolveCustomVariable(this.NodeToChange);
+            taskXmlModifyResolved.XmlPathAndFileName     = applicationServer.ResolveCustomVariable(this.XmlPathAndFileName);
+
+            return taskXmlModifyResolved;
         }
     }
 }

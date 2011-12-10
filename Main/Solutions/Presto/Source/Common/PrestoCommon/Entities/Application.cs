@@ -9,6 +9,7 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class Application : NotifyPropertyChangedBase
     {
+        private string _name;
         private ObservableCollection<TaskBase> _tasks;
         private DateTime? _forceInstallationTime;
 
@@ -18,7 +19,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this._name; }
+
+            set
+            {
+                this._name = value;
+                NotifyPropertyChanged(() => this.Name);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the version.
@@ -110,6 +120,17 @@ namespace PrestoCommon.Entities
             if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
 
             return InstallationResult.Success;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return this.Name;
         }
     }
 }

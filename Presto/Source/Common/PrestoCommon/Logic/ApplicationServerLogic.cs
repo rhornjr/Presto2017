@@ -19,6 +19,8 @@ namespace PrestoCommon.Logic
             IEnumerable<ApplicationServer> servers = from ApplicationServer server in Database
                                                      select server;
 
+            Database.Ext().Refresh(servers, 10);
+
             return servers;
         }
 

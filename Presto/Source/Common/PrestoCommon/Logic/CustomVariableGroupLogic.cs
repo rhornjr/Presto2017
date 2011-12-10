@@ -18,6 +18,8 @@ namespace PrestoCommon.Logic
             IEnumerable<CustomVariableGroup> groups = from CustomVariableGroup customGroup in Database
                                                       select customGroup;
 
+            Database.Ext().Refresh(groups, 10);
+
             return groups;
         }
     }

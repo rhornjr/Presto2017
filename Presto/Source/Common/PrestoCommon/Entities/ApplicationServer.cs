@@ -111,11 +111,15 @@ namespace PrestoCommon.Entities
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
 
+            IEnumerable<InstallationSummary> appSpecificInstallationSummaryList = installationSummaryList.Where(summary => summary.Application == application);
+
+            if (appSpecificInstallationSummaryList == null || appSpecificInstallationSummaryList.Count() < 1) { return true; }
+
             // If there is no force installation time, then no need to install.
             if (application.ForceInstallationTime == null) { return false; }
 
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install
-            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+            InstallationSummary mostRecentInstallationSummary = appSpecificInstallationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
             if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallationTime) { return true; }
 

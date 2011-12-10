@@ -33,6 +33,11 @@ namespace PrestoViewModel.Tabs
         public ICommand DeleteApplicationCommand { get; private set; }
 
         /// <summary>
+        /// Gets the force installation now command.
+        /// </summary>
+        public ICommand ForceInstallationNowCommand { get; private set; }
+
+        /// <summary>
         /// Gets the add command.
         /// </summary>
         public ICommand AddTaskCommand { get; private set; }
@@ -126,6 +131,13 @@ namespace PrestoViewModel.Tabs
             this.AddTaskCommand    = new RelayCommand(_ => AddTask());
             this.EditTaskCommand   = new RelayCommand(_ => EditTask());
             this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => CanDeleteTask());
+
+            this.ForceInstallationNowCommand = new RelayCommand(_ => ForceInstallationNow());
+        }
+
+        private void ForceInstallationNow()
+        {
+            this.SelectedApplication.ForceInstallationTime = DateTime.Now;
         }             
 
         private void AddApplication()

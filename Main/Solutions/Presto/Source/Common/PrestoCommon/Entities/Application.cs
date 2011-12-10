@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
@@ -6,9 +7,10 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// An application, or product, that gets installed.
     /// </summary>
-    public class Application
+    public class Application : NotifyPropertyChangedBase
     {
         private ObservableCollection<TaskBase> _tasks;
+        private DateTime? _forceInstallationTime;
 
         /// <summary>
         /// Gets or sets the name.
@@ -63,7 +65,16 @@ namespace PrestoCommon.Entities
         /// <value>
         ///     <c>true</c> if [force installation]; otherwise, <c>false</c>.
         /// </value>
-        public bool ForceInstallation { get; set; }
+        public DateTime? ForceInstallationTime
+        {
+            get { return this._forceInstallationTime; }
+
+            set
+            {
+                this._forceInstallationTime = value;
+                NotifyPropertyChanged(() => this.ForceInstallationTime);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Application"/> class.

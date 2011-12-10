@@ -97,14 +97,29 @@ namespace PrestoCommon.Entities
             // If we find an app that needs to be installed, install it.
             foreach (Application app in this.Applications)
             {
-                if (app.ForceInstallation || !InstallationSummaryFoundForApplication(installationSummaryList, app))
+                if (ApplicationShouldBeInstalled(app, installationSummaryList))
                 {
-                    // No installation summary found for this app, so install it (or we're forcing an installation).
                     LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, app.Name, this.Name));
 
                     InstallApplication(app);
                 }
             }
+        }
+
+        private static bool ApplicationShouldBeInstalled(Application application, IEnumerable<InstallationSummary> installationSummaryList)
+        {
+            // First, if this app has never been installed, then it needs to be.
+            if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
+
+            // If there is no force installation time, then no need to install.
+            if (application.ForceInstallationTime == null) { return false; }
+
+            // Check the latest installation. If it's before ForceInstallationTime, then we need to install
+            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+
+            if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallationTime) { return true; }
+
+            return false;
         }
 
         private static bool InstallationSummaryFoundForApplication(IEnumerable<InstallationSummary> installationSummaryList, Application app)

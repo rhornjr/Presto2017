@@ -63,6 +63,7 @@
     <Compile Include="Entities\CustomVariable.cs" />
     <Compile Include="Entities\CustomVariableGroup.cs" />
     <Compile Include="Entities\InstallationSummary.cs" />
+    <Compile Include="Entities\NotifyPropertyChangedBase.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />
     <Compile Include="Entities\TaskXmlModify.cs" />

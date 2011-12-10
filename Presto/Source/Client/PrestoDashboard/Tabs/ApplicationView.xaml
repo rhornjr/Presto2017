@@ -27,16 +27,43 @@
         </DockPanel>
         
         <StackPanel Grid.Column="1">
-            <Label Content="Selected Application" HorizontalAlignment="Center"/>
-            <Label Content="Name: "/>
-            <TextBox Text="{Binding SelectedApplication.Name}"/>
-            <Label Content="Version: "/>
-            <TextBox Text="{Binding SelectedApplication.Version}"/>
-            <Label Content="Release folder location: "/>
-            <TextBox Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
-            <CheckBox Content="Force installation" IsChecked="{Binding SelectedApplication.ForceInstallation}"/>
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Content="Selected Application" HorizontalAlignment="Center"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Content="Name: "/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplication.Name}"/>
+
+                <Label Grid.Column="0" Grid.Row="2" Content="Version: "/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplication.Version}"/>
+
+                <Label Grid.Column="0" Grid.Row="3" Content="Release folder location: "/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
+
+                <Label Grid.Column="0" Grid.Row="4" Content="Force installation time: "/>                    
+
+                <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                    <TextBox Text="{Binding SelectedApplication.ForceInstallationTime}" Width="140"/>
+                    <Button Content="!" Command="{Binding ForceInstallationNowCommand}" Height="20" Width="25" />
+                </StackPanel>
+
+            </Grid>
+                        
             <Label Content="Tasks"/>
-            <DataGrid Height="280" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+            <DataGrid Height="340" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplication.Tasks}"
                   SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>

@@ -1,26 +1,17 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using PrestoCommon.Enums;
+﻿using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// Base class for all tasks
     /// </summary>
-    public abstract class TaskBase : INotifyPropertyChanged
+    public abstract class TaskBase : NotifyPropertyChangedBase
     {
         private string   _description;
         private byte     _failureCausesAllStop;
         private TaskType _taskType;
         private int      _sequence;
-        private bool     _taskSucceeded;
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool     _taskSucceeded;        
 
         /// <summary>
         /// Gets or sets the failure causes all stop.
@@ -132,28 +123,6 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        public abstract void Execute(ApplicationServer applicationServer);
-
-        /// <summary>
-        /// Notifies the property changed.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression">The expression.</param>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected void NotifyPropertyChanged<T>(Expression<Func<T>> expression)
-        {
-            if (this.PropertyChanged == null) { return; }
-
-            string propertyName = GetPropertyName(expression);
-
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private static string GetPropertyName<T>(Expression<Func<T>> expression)
-        {
-            MemberExpression memberExpression = (MemberExpression)expression.Body;
-
-            return memberExpression.Member.Name;
-        }
+        public abstract void Execute(ApplicationServer applicationServer);        
     }
 }

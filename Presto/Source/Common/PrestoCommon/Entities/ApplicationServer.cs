@@ -75,12 +75,12 @@ namespace PrestoCommon.Entities
         /// <param name="unresolvedCustomVariable">The custom variable string.</param>
         /// <returns></returns>
         public string ResolveCustomVariable(string unresolvedCustomVariable)
-        {            
-            string customVariableValue = string.Empty;
+        {
+            string customVariableValue = unresolvedCustomVariable;
 
             foreach (CustomVariableGroup variableGroup in this.CustomVariableGroups)
             {
-                customVariableValue = variableGroup.ResolveCustomVariable(unresolvedCustomVariable);
+                customVariableValue = variableGroup.ResolveCustomVariable(customVariableValue);
             }
 
             return customVariableValue;

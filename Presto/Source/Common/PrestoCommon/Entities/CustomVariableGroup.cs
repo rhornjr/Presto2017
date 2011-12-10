@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -40,18 +42,19 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Resolves the custom variable.
         /// </summary>
-        /// <param name="unresolvedCustomVariable">The custom variable string.</param>
+        /// <param name="rawString">The custom variable string.</param>
         /// <returns></returns>
-        public string ResolveCustomVariable(string unresolvedCustomVariable)
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
+        public string ResolveCustomVariable(string rawString)
         {
             // If the string doesn't contain a custom variable, nothing to do... just return the string.
-            if (!StringHasCustomVariable(unresolvedCustomVariable)) { return unresolvedCustomVariable; }
+            if (!StringHasCustomVariable(rawString)) { return rawString; }
 
             // Custom variables look like this: $(variableKey). So let's add the prefix and suffix to each key.
             string prefix = "$(";
             string suffix = ")";
 
-            StringBuilder stringNew = new StringBuilder(unresolvedCustomVariable);
+            StringBuilder stringNew = new StringBuilder(rawString);
 
             do
             {
@@ -61,19 +64,47 @@ namespace PrestoCommon.Entities
                     stringNew.Replace(prefix + customVariable.Key + suffix, customVariable.Value);
                 }
             }
-            while (StringHasCustomVariable(stringNew.ToString()) == true);
+            while (StringHasCustomVariable(stringNew.ToString()) && ThisCustomVariableGroupContainsTheCustomVariable(stringNew.ToString()));
 
             return stringNew.ToString();
         }
 
+        private bool ThisCustomVariableGroupContainsTheCustomVariable(string stringNew)
+        {
+            // The raw string could be something like this: ServiceName $(site)
+            // This call should return a collection of found custom variables, like $(site), within the raw string.
+            MatchCollection matchCollection = GetCustomVariableStringsWithinBiggerString(stringNew);
+
+            // If this custom variable group can resolve any of these custom variables, return true.
+            foreach (Match match in matchCollection)
+            {
+                string matchValueWithoutPrefixAndSuffix = CustomVariableWithoutPrefixAndSuffix(match.Value);
+                if (this.CustomVariables.Where(customVariable => customVariable.Key == matchValueWithoutPrefixAndSuffix).FirstOrDefault() != null)
+                { return true; }
+            }
+
+            return false;
+        }
+
+        private static string CustomVariableWithoutPrefixAndSuffix(string customVariableString)
+        {
+            // Custom variables look like this: $(variableKey).
+
+            string customVariableKeyWithoutPrefix = customVariableString.Substring(2);
+            string customVariableKeyWithoutPrefixAndSuffix =
+                customVariableKeyWithoutPrefix.Remove(customVariableKeyWithoutPrefix.Length - 1, 1);  // Remove trailing ")"
+
+            return customVariableKeyWithoutPrefixAndSuffix;
+        }
+
         private static bool StringHasCustomVariable(string sourceString)
         {
-            MatchCollection matchCollection = GetMatchCollection(sourceString);
+            MatchCollection matchCollection = GetCustomVariableStringsWithinBiggerString(sourceString);
 
             return matchCollection != null && matchCollection.Count > 0;
         }
 
-        private static MatchCollection GetMatchCollection(string sourceString)
+        private static MatchCollection GetCustomVariableStringsWithinBiggerString(string sourceString)
         {
             // Use a regex to find all custom variables in sourceString. The pattern is $(variableName).
 

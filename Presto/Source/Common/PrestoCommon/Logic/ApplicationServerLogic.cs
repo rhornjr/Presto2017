@@ -31,7 +31,9 @@ namespace PrestoCommon.Logic
         {
             ApplicationServer appServer = (from ApplicationServer server in Database
                                            where server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                                           select server).FirstOrDefault();            
+                                           select server).FirstOrDefault();
+
+            Database.Ext().Refresh(appServer, 10);
 
             return appServer;
         }

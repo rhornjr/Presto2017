@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.Threading;
 using System.Timers;
@@ -35,7 +36,10 @@ namespace PrestoTaskRunner.Logic
 
         private void Initialize()
         {
-            this._timer = new System.Timers.Timer(60000);
+            int timerInterval = Convert.ToInt32(ConfigurationManager.AppSettings["timerInterval"], CultureInfo.InvariantCulture);
+
+            this._timer = new System.Timers.Timer(timerInterval);
+
             this._timer.Elapsed += new ElapsedEventHandler(OnTimerElapsed);            
             this._timer.Start();
         }

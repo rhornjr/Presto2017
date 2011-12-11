@@ -78,6 +78,7 @@
                 <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Import" Command="{Binding ImportTasksCommand}" />                
             </StackPanel>
         </StackPanel>
 

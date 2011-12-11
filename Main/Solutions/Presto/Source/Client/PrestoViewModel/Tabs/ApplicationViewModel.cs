@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
@@ -54,6 +57,11 @@ namespace PrestoViewModel.Tabs
         /// The edit command.
         /// </value>
         public ICommand EditTaskCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the import tasks command.
+        /// </summary>
+        public ICommand ImportTasksCommand { get; private set; }
 
         /// <summary>
         /// Gets the save command.
@@ -125,15 +133,16 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanUpdateDeleteApplication());
-            this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication(), _ => CanUpdateDeleteApplication());
+            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected());
+            this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected());
 
-            this.AddTaskCommand    = new RelayCommand(_ => AddTask(), _ => CanAddTask());
-            this.EditTaskCommand   = new RelayCommand(_ => EditTask(), _ => CanUpdateDeleteTask());
-            this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => CanUpdateDeleteTask());
+            this.AddTaskCommand     = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected());
+            this.EditTaskCommand    = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
+            this.DeleteTaskCommand  = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
+            this.ImportTasksCommand = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected());
 
             this.ForceInstallationNowCommand = new RelayCommand(_ => ForceInstallationNow());
-        }        
+        }             
 
         private void ForceInstallationNow()
         {
@@ -147,11 +156,6 @@ namespace PrestoViewModel.Tabs
             this.Applications.Add(new Application() { Name = newAppName });
 
             this.SelectedApplication = this.Applications.Where(app => app.Name == newAppName).FirstOrDefault();
-        }
-
-        private bool CanUpdateDeleteApplication()
-        {            
-            return this.SelectedApplication != null;
         }
 
         private void DeleteApplication()
@@ -204,14 +208,14 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save(taskViewModel.TaskBase);
         }
 
-        private bool CanAddTask()
+        private bool ApplicationIsSelected()
         {
             return this.SelectedApplication != null;
         }
 
-        private bool CanUpdateDeleteTask()
+        private bool TaskIsSelected()
         {
-            return this.SelectedApplication != null && this.SelectedTask != null;
+            return this.SelectedTask != null;
         }   
 
         private void DeleteTask()
@@ -223,7 +227,23 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplication.Tasks.Remove(this.SelectedTask);
 
             LogicBase.Save<Application>(this.SelectedApplication);
-        }        
+        }
+
+        private static void ImportTasks()
+        {
+            ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = new ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>();
+
+            using (FileStream fileStream = new FileStream(@"c:\temp\Tasks.presto", FileMode.Open))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>));
+                taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
+            }
+
+            foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase in taskBases)
+            {
+                Debug.WriteLine(legacyTaskBase.Description);
+            }
+        }   
 
         private void SaveApplication()
         {

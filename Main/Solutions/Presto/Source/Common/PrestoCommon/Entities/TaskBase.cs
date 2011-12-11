@@ -1,10 +1,14 @@
-﻿using PrestoCommon.Enums;
+﻿using System.Xml.Serialization;
+using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// Base class for all tasks
     /// </summary>
+    [XmlInclude(typeof(TaskCopyFile))]
+    [XmlInclude(typeof(TaskDosCommand))]
+    [XmlInclude(typeof(TaskXmlModify))]
     public abstract class TaskBase : NotifyPropertyChangedBase
     {
         private string   _description;

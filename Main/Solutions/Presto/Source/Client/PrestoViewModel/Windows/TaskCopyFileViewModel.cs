@@ -9,17 +9,17 @@ namespace PrestoViewModel.Windows
     /// <summary>
     /// 
     /// </summary>
-    [TaskTypeAttribute(TaskType.DosCommand)]
-    public class TaskDosCommandViewModel : TaskViewModel
+    [TaskTypeAttribute(TaskType.CopyFile)]
+    public class TaskCopyFileViewModel : TaskViewModel
     {
         /// <summary>
-        /// Gets or sets the task dos command copy. View models will modify this, instead of the real object. We
+        /// Gets or sets the task copy file copy. View models will modify this, instead of the real object. We
         /// don't want to alter the real object unless the user saves.
         /// </summary>
         /// <value>
-        /// The task dos command copy.
+        /// The task copy file copy.
         /// </value>
-        public TaskDosCommand TaskDosCommandCopy { get; set; }
+        public TaskCopyFile TaskCopyFileCopy { get; set; }
 
         /// <summary>
         /// Gets or sets the ok command.
@@ -35,35 +35,35 @@ namespace PrestoViewModel.Windows
         /// <value>
         /// The cancel command.
         /// </value>
-        public ICommand CancelCommand { get; set; }        
+        public ICommand CancelCommand { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TaskDosCommandViewModel"/> class.
+        /// Initializes a new instance of the <see cref="TaskCopyFileViewModel"/> class.
         /// </summary>
-        public TaskDosCommandViewModel()
+        public TaskCopyFileViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
 
-            this.TaskBase           = null;
-            this.TaskDosCommandCopy = new TaskDosCommand();
+            this.TaskBase = null;
+            this.TaskCopyFileCopy = new TaskCopyFile();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TaskDosCommandViewModel"/> class.
+        /// Initializes a new instance of the <see cref="TaskCopyFileViewModel"/> class.
         /// </summary>
-        /// <param name="taskDosCommand">The task dos command.</param>
-        public TaskDosCommandViewModel(TaskDosCommand taskDosCommand)
+        /// <param name="taskCopyFile">The task copy file.</param>
+        public TaskCopyFileViewModel(TaskCopyFile taskCopyFile)
         {
-            if (taskDosCommand == null) { throw new ArgumentNullException("taskDosCommand"); }
+            if (taskCopyFile == null) { throw new ArgumentNullException("taskCopyFile"); }
 
-            if (DesignMode.IsInDesignMode) { return; }
+            if (DesignMode.IsInDesignMode) { return; }            
 
             Initialize();
 
-            this.TaskBase           = taskDosCommand;
-            this.TaskDosCommandCopy = taskDosCommand.CreateCopyFromThis();
+            this.TaskBase          = taskCopyFile;
+            this.TaskCopyFileCopy = taskCopyFile.CreateCopyFromThis();
         }
 
         private void Initialize()
@@ -88,11 +88,11 @@ namespace PrestoViewModel.Windows
         {
             if (this.TaskBase == null)
             {
-                this.TaskBase = TaskDosCommand.Copy(this.TaskDosCommandCopy, new TaskDosCommand());
+                this.TaskBase = TaskCopyFile.Copy(this.TaskCopyFileCopy, new TaskCopyFile());
                 return;
             }
 
-            this.TaskBase = TaskDosCommand.Copy(this.TaskDosCommandCopy, this.TaskBase as TaskDosCommand);
+            this.TaskBase = TaskCopyFile.Copy(this.TaskCopyFileCopy, this.TaskBase as TaskCopyFile);
         }
     }
 }

@@ -158,13 +158,16 @@ namespace PrestoCommon.Entities
 
             if (destination == null) { throw new ArgumentNullException("destination"); }
 
-            destination.Description          = source.Description;
-            destination.DosExecutable        = source.DosExecutable;
-            destination.FailureCausesAllStop = source.FailureCausesAllStop;
-            destination.Parameters           = source.Parameters;
+            // Base class
+            destination.Description          = source.Description;            
+            destination.FailureCausesAllStop = source.FailureCausesAllStop;            
             destination.Sequence             = source.Sequence;
             destination.TaskSucceeded        = source.TaskSucceeded;
             destination.PrestoTaskType             = source.PrestoTaskType;
+
+            // Subclass
+            destination.DosExecutable = source.DosExecutable;
+            destination.Parameters    = source.Parameters;
 
             return destination;
         }

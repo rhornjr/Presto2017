@@ -104,12 +104,30 @@ namespace PrestoViewModel.Tabs
         /// </value>
         public Application SelectedApplication
         {
-            get { return this._selectedApplication; }
+            get
+            {                
+                return this._selectedApplication;                
+            }
 
             set
             {
                 this._selectedApplication = value;
                 this.NotifyPropertyChanged(() => this.SelectedApplication);
+                this.NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected application tasks.
+        /// </summary>
+        public IOrderedEnumerable<TaskBase> SelectedApplicationTasks
+        {
+            // Note: This property was created because sorting wasn't working on the grid that showed the tasks.
+            //       We have this property so we can return the correctly sorted order.
+            get
+            {
+                if (this.SelectedApplication == null || this.SelectedApplication.Tasks == null) { return null; }
+                return this.SelectedApplication.Tasks.OrderBy(task => task.Sequence);
             }
         }
 
@@ -337,6 +355,8 @@ namespace PrestoViewModel.Tabs
             taskToSwap.Sequence += moveAmount * -1;
 
             CorrectTaskSequence();
+
+            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
             // After doing all of this, select the task again so it stays highlighted for the user.
             //this.SelectedTasks.Clear();

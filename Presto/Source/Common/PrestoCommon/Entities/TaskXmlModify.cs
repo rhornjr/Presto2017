@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
+
 namespace PrestoCommon.Entities
 {
     /// <summary>
@@ -232,6 +232,37 @@ namespace PrestoCommon.Entities
             destination.XmlPathAndFileName     = source.XmlPathAndFileName;
 
             return destination;
+        }
+
+        /// <summary>
+        /// Creates the new from legacy task.
+        /// </summary>
+        /// <param name="legacyTaskBase">The legacy task base.</param>
+        /// <returns></returns>
+        public static TaskXmlModify CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase)
+        {
+            if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }
+
+            PrestoCommon.Entities.LegacyPresto.TaskXmlModify legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.TaskXmlModify;
+
+            TaskXmlModify newTask = new TaskXmlModify();
+
+            // Base class
+            newTask.Description          = legacyTask.Description;
+            newTask.FailureCausesAllStop = legacyTask.FailureCausesAllStop;
+            newTask.Sequence             = 0;
+            newTask.TaskSucceeded        = false;
+            newTask.PrestoTaskType       = TaskType.XmlModify;
+
+            // Subclass
+            newTask.AttributeKey           = legacyTask.AttributeKey;
+            newTask.AttributeKeyValue      = legacyTask.AttributeKeyValue;
+            newTask.AttributeToChange      = legacyTask.AttributeToChange;
+            newTask.AttributeToChangeValue = legacyTask.AttributeToChangeValue;
+            newTask.NodeToChange           = legacyTask.NodeToChange;
+            newTask.XmlPathAndFileName     = legacyTask.XmlPathAndFileName;
+
+            return newTask;
         }
     }
 }

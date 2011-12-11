@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
@@ -124,6 +125,34 @@ namespace PrestoCommon.Entities
             destination.SourcePath      = source.SourcePath;
 
             return destination;
+        }
+
+        /// <summary>
+        /// Creates the new from legacy task.
+        /// </summary>
+        /// <param name="legacyTaskBase">The legacy task base.</param>
+        /// <returns></returns>
+        public static TaskCopyFile CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase)
+        {
+            if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }
+
+            PrestoCommon.Entities.LegacyPresto.TaskCopyFile legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.TaskCopyFile;
+
+            TaskCopyFile newTask = new TaskCopyFile();
+
+            // Base class
+            newTask.Description          = legacyTask.Description;
+            newTask.FailureCausesAllStop = legacyTask.FailureCausesAllStop;
+            newTask.Sequence             = 0;
+            newTask.TaskSucceeded        = false;
+            newTask.PrestoTaskType       = TaskType.CopyFile;
+
+            // Subclass
+            newTask.DestinationPath = legacyTask.DestinationPath;
+            newTask.SourceFileName  = legacyTask.SourceFileName;
+            newTask.SourcePath      = legacyTask.SourcePath;
+
+            return newTask;
         }
     }
 }

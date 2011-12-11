@@ -171,5 +171,32 @@ namespace PrestoCommon.Entities
 
             return destination;
         }
+
+        /// <summary>
+        /// Creates the new from legacy task.
+        /// </summary>
+        /// <param name="legacyTaskBase">The legacy task base.</param>
+        /// <returns></returns>
+        public static TaskDosCommand CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase)
+        {
+            if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }
+
+            PrestoCommon.Entities.LegacyPresto.TaskDosCommand legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.TaskDosCommand;
+
+            TaskDosCommand newTask = new TaskDosCommand();
+
+            // Base class
+            newTask.Description          = legacyTask.Description;
+            newTask.FailureCausesAllStop = legacyTask.FailureCausesAllStop;
+            newTask.Sequence             = 0;
+            newTask.TaskSucceeded        = false;
+            newTask.PrestoTaskType       = TaskType.DosCommand;
+
+            // Subclass
+            newTask.DosExecutable = legacyTask.DosExecutable;
+            newTask.Parameters    = legacyTask.Parameters;
+
+            return newTask;
+        }
     }
 }

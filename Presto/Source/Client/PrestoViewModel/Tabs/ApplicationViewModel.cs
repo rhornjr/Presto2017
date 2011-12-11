@@ -125,15 +125,15 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanDeleteApplication());
-            this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication());
+            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => CanUpdateDeleteApplication());
+            this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication(), _ => CanUpdateDeleteApplication());
 
-            this.AddTaskCommand    = new RelayCommand(_ => AddTask());
-            this.EditTaskCommand   = new RelayCommand(_ => EditTask());
-            this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => CanDeleteTask());
+            this.AddTaskCommand    = new RelayCommand(_ => AddTask(), _ => CanAddTask());
+            this.EditTaskCommand   = new RelayCommand(_ => EditTask(), _ => CanUpdateDeleteTask());
+            this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => CanUpdateDeleteTask());
 
             this.ForceInstallationNowCommand = new RelayCommand(_ => ForceInstallationNow());
-        }
+        }        
 
         private void ForceInstallationNow()
         {
@@ -149,7 +149,7 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplication = this.Applications.Where(app => app.Name == newAppName).FirstOrDefault();
         }
 
-        private bool CanDeleteApplication()
+        private bool CanUpdateDeleteApplication()
         {            
             return this.SelectedApplication != null;
         }
@@ -204,9 +204,14 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save(taskViewModel.TaskBase);
         }
 
-        private bool CanDeleteTask()
+        private bool CanAddTask()
         {
-            return this.SelectedTask != null;
+            return this.SelectedApplication != null;
+        }
+
+        private bool CanUpdateDeleteTask()
+        {
+            return this.SelectedApplication != null && this.SelectedTask != null;
         }   
 
         private void DeleteTask()

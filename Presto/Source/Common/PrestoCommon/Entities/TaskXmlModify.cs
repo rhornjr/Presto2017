@@ -192,5 +192,46 @@ namespace PrestoCommon.Entities
 
             return taskXmlModifyResolved;
         }
+
+        /// <summary>
+        /// Creates the copy from this.
+        /// </summary>
+        /// <returns></returns>
+        public TaskXmlModify CreateCopyFromThis()
+        {
+            TaskXmlModify newTaskXmlModify = new TaskXmlModify();
+
+            return Copy(this, newTaskXmlModify);
+        }
+
+        /// <summary>
+        /// Copies the specified source.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="destination">The destination.</param>
+        /// <returns></returns>
+        public static TaskXmlModify Copy(TaskXmlModify source, TaskXmlModify destination)
+        {
+            if (source == null) { return null; }
+
+            if (destination == null) { throw new ArgumentNullException("destination"); }
+
+            // Base class
+            destination.Description          = source.Description;
+            destination.FailureCausesAllStop = source.FailureCausesAllStop;
+            destination.Sequence             = source.Sequence;
+            destination.TaskSucceeded        = source.TaskSucceeded;
+            destination.PrestoTaskType       = source.PrestoTaskType;
+
+            // Subclass
+            destination.AttributeKey           = source.AttributeKey;
+            destination.AttributeKeyValue      = source.AttributeKeyValue;
+            destination.AttributeToChange      = source.AttributeToChange;
+            destination.AttributeToChangeValue = source.AttributeToChangeValue;
+            destination.NodeToChange           = source.NodeToChange;
+            destination.XmlPathAndFileName     = source.XmlPathAndFileName;
+
+            return destination;
+        }
     }
 }

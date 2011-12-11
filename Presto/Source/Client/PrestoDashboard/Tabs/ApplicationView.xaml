@@ -67,7 +67,8 @@
                   ItemsSource="{Binding SelectedApplication.Tasks}"
                   SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50" />
+                    <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"
+                                        SortDirection="Ascending" SortMemberPath="{Binding Path=Sequence}"/>
                     <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>
                     <DataGridTextColumn Binding="{Binding Path=PrestoTaskType}" Header="Type" Width="120"/>
                     <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
@@ -78,7 +79,9 @@
                 <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Import" Command="{Binding ImportTasksCommand}" />                
+                <Button Style="{StaticResource StandardButton}" Content="Import" Command="{Binding ImportTasksCommand}" />
+                <Button Content="^" Width="25" Command="{Binding MoveTaskUpCommand}" />
+                <Button Content="v" Width="25" Command="{Binding MoveTaskDownCommand}" />
             </StackPanel>
         </StackPanel>
 

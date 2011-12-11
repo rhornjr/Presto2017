@@ -64,7 +64,7 @@
                         
             <Label Content="Tasks"/>
             <DataGrid Height="340" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                  ItemsSource="{Binding SelectedApplication.Tasks}"
+                  ItemsSource="{Binding SelectedApplicationTasks}"
                   SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"

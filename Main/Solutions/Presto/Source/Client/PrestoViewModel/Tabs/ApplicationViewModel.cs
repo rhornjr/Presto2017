@@ -65,6 +65,16 @@ namespace PrestoViewModel.Tabs
         public ICommand ImportTasksCommand { get; private set; }
 
         /// <summary>
+        /// Gets the move task up command.
+        /// </summary>
+        public ICommand MoveTaskUpCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the move task down command.
+        /// </summary>
+        public ICommand MoveTaskDownCommand { get; private set; }
+
+        /// <summary>
         /// Gets the save command.
         /// </summary>
         public ICommand SaveApplicationCommand { get; private set; }
@@ -137,10 +147,12 @@ namespace PrestoViewModel.Tabs
             this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected());
             this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected());
 
-            this.AddTaskCommand     = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected());
-            this.EditTaskCommand    = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
-            this.DeleteTaskCommand  = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
-            this.ImportTasksCommand = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected());
+            this.AddTaskCommand      = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected());
+            this.EditTaskCommand     = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
+            this.DeleteTaskCommand   = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
+            this.ImportTasksCommand  = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected());
+            this.MoveTaskUpCommand   = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
+            this.MoveTaskDownCommand = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
 
             this.ForceInstallationNowCommand = new RelayCommand(_ => ForceInstallationNow());
         }             
@@ -298,6 +310,52 @@ namespace PrestoViewModel.Tabs
                 ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseInvalidOperation;
                 LogUtility.LogException(ex);
             }
-        }        
+        }
+
+        private void MoveRowUp()
+        {
+            MoveRow(-1);
+        }
+
+        private void MoveRowDown()
+        {
+            MoveRow(+1);
+        }
+
+        private void MoveRow(int moveAmount)
+        {
+            int sequenceOfSelectedTask = this.SelectedTask.Sequence;
+
+            if (sequenceOfSelectedTask + moveAmount < 1 || sequenceOfSelectedTask + moveAmount > this.SelectedApplication.Tasks.Count - 1)
+            {
+                return;  // Can't move an item before the beginning (or after the end) of the list.
+            }
+
+            TaskBase taskToSwap = this.SelectedApplication.Tasks.Where(task => task.Sequence == this.SelectedTask.Sequence + moveAmount).FirstOrDefault();
+
+            this.SelectedTask.Sequence += moveAmount;
+            taskToSwap.Sequence += moveAmount * -1;
+
+            CorrectTaskSequence();
+
+            // After doing all of this, select the task again so it stays highlighted for the user.
+            //this.SelectedTasks.Clear();
+            //this.SelectedTasks.Add(this.Tasks[sequenceOfSelectedTask + moveAmount]);
+        }
+
+        private void CorrectTaskSequence()
+        {
+            // Loop through the tasks. If the sequence is incorrect, make it correct.            
+            int properSequence = 1;
+            foreach (TaskBase taskBase in this.SelectedApplication.Tasks.OrderBy(task => task.Sequence))
+            {
+                if (taskBase.Sequence != properSequence)
+                {
+                    taskBase.Sequence = properSequence;
+                    LogicBase.Save<TaskBase>(taskBase);
+                }
+                properSequence++;
+            }
+        }
     }
 }

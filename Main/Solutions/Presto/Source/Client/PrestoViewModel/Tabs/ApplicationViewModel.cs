@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -229,7 +230,7 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<Application>(this.SelectedApplication);
         }
 
-        private static void ImportTasks()
+        private void ImportTasks()
         {
             ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = new ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>();
 
@@ -239,10 +240,41 @@ namespace PrestoViewModel.Tabs
                 taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
             }
 
-            foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase in taskBases)
+            foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask in taskBases)
             {
-                Debug.WriteLine(legacyTaskBase.Description);
+                TaskBase task = CreateTaskFromLegacyTask(legacyTask);
+                this.SelectedApplication.Tasks.Add(task);
+            }            
+
+            ApplicationLogic.Save(this.SelectedApplication);
+        }
+
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]
+        private static TaskBase CreateTaskFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask)
+        {
+            Debug.WriteLine(legacyTask.GetType().ToString());
+
+            TaskBase task = null;
+
+            string legacyTaskTypeName = legacyTask.GetType().Name;
+
+            switch (legacyTaskTypeName)
+            {
+                case "TaskCopyFile":
+                    task = TaskCopyFile.CreateNewFromLegacyTask(legacyTask);
+                    break;
+                case "TaskDosCommand":
+                    task = TaskDosCommand.CreateNewFromLegacyTask(legacyTask);
+                    break;
+                case "TaskXmlModify":
+                    task = TaskXmlModify.CreateNewFromLegacyTask(legacyTask);
+                    break;
+                default:
+                    LogUtility.LogWarning("When importing legacy tasks, we encountered a legacy task type that was not expected: " + legacyTaskTypeName);
+                    break;
             }
+
+            return task;
         }   
 
         private void SaveApplication()

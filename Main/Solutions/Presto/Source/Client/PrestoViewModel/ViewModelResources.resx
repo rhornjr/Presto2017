@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApplicationSaved" xml:space="preserve">
+  <data name="ItemSaved" xml:space="preserve">
     <value>{0} saved.</value>
   </data>
   <data name="AppWillBeInstalledOnAppServer" xml:space="preserve">

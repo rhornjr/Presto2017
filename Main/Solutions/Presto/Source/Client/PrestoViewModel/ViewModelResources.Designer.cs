@@ -61,15 +61,6 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} saved..
-        /// </summary>
-        internal static string ApplicationSaved {
-            get {
-                return ResourceManager.GetString("ApplicationSaved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} will be installed on {1}.
         /// </summary>
         internal static string AppWillBeInstalledOnAppServer {
@@ -129,6 +120,15 @@ namespace PrestoViewModel {
         internal static string DatabaseInvalidOperation {
             get {
                 return ResourceManager.GetString("DatabaseInvalidOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} saved..
+        /// </summary>
+        internal static string ItemSaved {
+            get {
+                return ResourceManager.GetString("ItemSaved", resourceCulture);
             }
         }
         

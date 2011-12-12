@@ -355,7 +355,7 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<Application>(this.SelectedApplication);
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ApplicationSaved, this.SelectedApplication);
+                ViewModelResources.ItemSaved, this.SelectedApplication);
         }
 
         private void LoadApplications()

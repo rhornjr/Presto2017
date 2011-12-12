@@ -51,6 +51,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Force..." Command="{Binding ForceApplicationCommand}" />
             </StackPanel>
 
             <Label Content="Custom Variable Groups"/>

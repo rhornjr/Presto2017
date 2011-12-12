@@ -26,6 +26,22 @@ namespace PrestoViewModel
         }
 
         /// <summary>
+        /// Users the chooses yes.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        protected static bool UserChoosesYes(string message)
+        {            
+            if (MessageBox.Show(message, ViewModelResources.ConfirmCaption,
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Users the confirms delete.
         /// </summary>
         /// <param name="nameOfItemToDelete">The item name to delete.</param>

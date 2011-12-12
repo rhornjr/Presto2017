@@ -61,6 +61,24 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} will be installed on {1}.
+        /// </summary>
+        internal static string AppWillBeInstalledOnAppServer {
+            get {
+                return ResourceManager.GetString("AppWillBeInstalledOnAppServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please Confirm.
+        /// </summary>
+        internal static string ConfirmCaption {
+            get {
+                return ResourceManager.GetString("ConfirmCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm Delete.
         /// </summary>
         internal static string ConfirmDeleteCaption {
@@ -75,6 +93,15 @@ namespace PrestoViewModel {
         internal static string ConfirmDeleteMessage {
             get {
                 return ResourceManager.GetString("ConfirmDeleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want {0} to be installed on {1}?.
+        /// </summary>
+        internal static string ConfirmInstallAppOnAppServerMessage {
+            get {
+                return ResourceManager.GetString("ConfirmInstallAppOnAppServerMessage", resourceCulture);
             }
         }
         

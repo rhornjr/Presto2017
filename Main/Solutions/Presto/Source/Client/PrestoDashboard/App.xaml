@@ -9,8 +9,9 @@
         <vmmain:MainWindowViewModel x:Key="MainWindowViewModel"/>
         <vmtab:ApplicationViewModel x:Key="ApplicationViewModel"/>
         <vmtab:ApplicationServerViewModel x:Key="ApplicationServerViewModel"/>
-        <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>        
-        
+        <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>
+        <vmtab:InstallationSummaryViewModel x:Key="InstallationSummaryViewModel"/>        
+
         <Style x:Key="StandardButton" TargetType="Button">
             <Setter Property="Width" Value="70" />
             <Setter Property="Height" Value="25" />

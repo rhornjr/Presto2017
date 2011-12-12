@@ -18,6 +18,7 @@
             <TabItem Header="Apps"><tabs:ApplicationView/></TabItem>
             <TabItem Header="Servers"><tabs:ApplicationServerView/></TabItem>
             <TabItem Header="Variables"><tabs:GlobalVariableView/></TabItem>
+            <TabItem Header="Installs"><tabs:InstallationSummaryView/></TabItem>
         </TabControl>
         <TextBlock Grid.Row="1" Text="{Binding UserMessage}" Foreground="Red" TextWrapping="Wrap" Margin="2"/>
     </Grid>

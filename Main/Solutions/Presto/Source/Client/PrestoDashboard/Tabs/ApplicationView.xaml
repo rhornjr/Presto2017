@@ -80,8 +80,8 @@
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Import" Command="{Binding ImportTasksCommand}" />
-                <Button Content="^" Width="25" Command="{Binding MoveTaskUpCommand}" />
-                <Button Content="v" Width="25" Command="{Binding MoveTaskDownCommand}" />
+                <Button Content="^" Height="25" Width="25" Command="{Binding MoveTaskUpCommand}" />
+                <Button Content="v" Height="25" Width="25" Command="{Binding MoveTaskDownCommand}" />
             </StackPanel>
         </StackPanel>
 

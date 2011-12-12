@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace PrestoViewModel
 {
@@ -32,7 +33,7 @@ namespace PrestoViewModel
         /// <returns></returns>
         protected static bool UserChoosesYes(string message)
         {            
-            if (MessageBox.Show(message, ViewModelResources.ConfirmCaption,
+            if (System.Windows.MessageBox.Show(message, ViewModelResources.ConfirmCaption,
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
                 return false;
@@ -50,13 +51,29 @@ namespace PrestoViewModel
         {
             string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ConfirmDeleteMessage, nameOfItemToDelete);
 
-            if (MessageBox.Show(message, ViewModelResources.ConfirmDeleteCaption,
+            if (System.Windows.MessageBox.Show(message, ViewModelResources.ConfirmDeleteCaption,
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
                 return false;
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets the file path and name from user.
+        /// </summary>
+        /// <returns></returns>
+        protected static string GetFilePathAndNameFromUser()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = @"c:\temp\";
+
+                if (openFileDialog.ShowDialog() == DialogResult.Cancel) { return null; }
+
+                return openFileDialog.FileName;
+            }
         }
 
         /// <summary>

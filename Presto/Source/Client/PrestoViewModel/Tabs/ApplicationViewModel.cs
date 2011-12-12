@@ -290,7 +290,11 @@ namespace PrestoViewModel.Tabs
         {
             ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = new ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>();
 
-            using (FileStream fileStream = new FileStream(@"c:\temp\Tasks.presto", FileMode.Open))
+            string filePathAndName = GetFilePathAndNameFromUser();
+
+            if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>));
                 taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
@@ -330,16 +334,28 @@ namespace PrestoViewModel.Tabs
                     task = TaskXmlModify.CreateNewFromLegacyTask(legacyTask);
                     break;
                 default:
-                    LogUtility.LogWarning("When importing legacy tasks, we encountered a legacy task type that was not expected: " + legacyTaskTypeName);
+                    LogUnexpectedLegacyTask(legacyTaskTypeName);
                     break;
             }
 
             return task;
-        }   
+        }
+
+        private static void LogUnexpectedLegacyTask(string legacyTaskTypeName)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.UnexpectedLegacyTask, legacyTaskTypeName);
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = message;
+
+            LogUtility.LogWarning(message);
+        }
 
         private void SaveApplication()
         {
             LogicBase.Save<Application>(this.SelectedApplication);
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ApplicationSaved, this.SelectedApplication);
         }
 
         private void LoadApplications()

@@ -209,6 +209,7 @@ namespace PrestoViewModel.Tabs
             if (taskViewModel.UserCanceled) { return; }
 
             this.SelectedApplication.Tasks.Add(taskViewModel.TaskBase);
+            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
             ApplicationLogic.Save(this.SelectedApplication);
         }
@@ -253,11 +254,20 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedTask.Description)) { return; }
 
-            LogicBase.Delete<TaskBase>(this.SelectedTask);
+            try
+            {
+                LogicBase.Delete<TaskBase>(this.SelectedTask);
 
-            this.SelectedApplication.Tasks.Remove(this.SelectedTask);
+                this.SelectedApplication.Tasks.Remove(this.SelectedTask);
+                NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
-            LogicBase.Save<Application>(this.SelectedApplication);
+                LogicBase.Save<Application>(this.SelectedApplication);
+            }
+            catch (Exception ex)
+            {
+                LogUtility.LogException(ex);
+                ViewModelUtility.MainWindowViewModel.UserMessage = ex.Message;
+            }
         }
 
         private void ImportTasks()
@@ -280,6 +290,7 @@ namespace PrestoViewModel.Tabs
             }            
 
             ApplicationLogic.Save(this.SelectedApplication);
+            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]

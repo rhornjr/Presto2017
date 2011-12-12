@@ -48,6 +48,11 @@ namespace PrestoViewModel.Tabs
         public ICommand RemoveApplicationCommand { get; private set; }
 
         /// <summary>
+        /// Gets the force application command.
+        /// </summary>
+        public ICommand ForceApplicationCommand { get; private set; }
+
+        /// <summary>
         /// Gets the add variable group command.
         /// </summary>
         public ICommand AddVariableGroupCommand { get; private set; }
@@ -134,10 +139,26 @@ namespace PrestoViewModel.Tabs
             this.SaveServerCommand   = new RelayCommand(_ => SaveServer());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => CanRemoveApplication());
+            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ApplicationIsSelected());
+            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => ApplicationIsSelected());
 
-            this.AddVariableGroupCommand = new RelayCommand(_ => AddVariableGroup());
-            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => CanRemoveVariableGroup());
+            this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
+            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
+        }
+
+        private void ForceApplication()
+        {
+            string message = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ConfirmInstallAppOnAppServerMessage, this.SelectedApplication, this.SelectedApplicationServer);
+
+            if (!UserChoosesYes(message)) { return; }
+
+            this.SelectedApplicationServer.ApplicationToForceInstall = this.SelectedApplication;
+            
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.AppWillBeInstalledOnAppServer, this.SelectedApplication, this.SelectedApplicationServer);
         }                   
 
         private void AddServer()
@@ -181,7 +202,7 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
 
-        private bool CanRemoveApplication()
+        private bool ApplicationIsSelected()
         {
             return this.SelectedApplication != null;
         }
@@ -206,7 +227,7 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
 
-        private bool CanRemoveVariableGroup()
+        private bool VariableGroupIsSelected()
         {
             return this.SelectedCustomVariableGroup != null;
         }     

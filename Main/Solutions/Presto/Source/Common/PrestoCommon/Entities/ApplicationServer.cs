@@ -46,6 +46,14 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
+        /// Gets or sets the application to force install.
+        /// </summary>
+        /// <value>
+        /// The application to force install.
+        /// </value>
+        public Application ApplicationToForceInstall { get; set; }
+
+        /// <summary>
         /// Gets the custom variable groups.
         /// </summary>
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
@@ -106,10 +114,17 @@ namespace PrestoCommon.Entities
             }
         }
 
-        private static bool ApplicationShouldBeInstalled(Application application, IEnumerable<InstallationSummary> installationSummaryList)
+        private bool ApplicationShouldBeInstalled(Application application, IEnumerable<InstallationSummary> installationSummaryList)
         {
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
+
+            if (this.ApplicationToForceInstall != null && this.ApplicationToForceInstall.Name == application.Name)
+            {
+                this.ApplicationToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
+                LogicBase.Save<ApplicationServer>(this);
+                return true;
+            }
 
             IEnumerable<InstallationSummary> appSpecificInstallationSummaryList = installationSummaryList.Where(summary => summary.Application == application);
 

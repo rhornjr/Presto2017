@@ -32,7 +32,7 @@
         </StackPanel>
         
         <StackPanel Grid.Row="1">
-            <Button Content="Refresh" Style="{StaticResource StandardButton}"/>
+            <Button Content="Refresh" Style="{StaticResource StandardButton}" Command="{Binding RefreshCommand}" />
         </StackPanel>
         
     </Grid>

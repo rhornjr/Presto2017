@@ -1,4 +1,6 @@
-﻿using PrestoViewModel.Misc;
+﻿using System;
+using System.Globalization;
+using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel
@@ -30,7 +32,7 @@ namespace PrestoViewModel
 
             set
             {
-                this._userMessage = value;
+                this._userMessage = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", DateTime.Now.ToString(), value);
                 this.NotifyPropertyChanged(() => this.UserMessage);
             }
         }

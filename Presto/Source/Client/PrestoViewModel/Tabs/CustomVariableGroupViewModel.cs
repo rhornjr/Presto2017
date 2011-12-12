@@ -184,6 +184,9 @@ namespace PrestoViewModel.Tabs
         private void SaveVariableGroup()
         {
             LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemSaved, this.SelectedCustomVariableGroup.Name);
         }  
 
         private void LoadCustomVariableGroups()

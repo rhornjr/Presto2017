@@ -187,6 +187,9 @@ namespace PrestoViewModel.Tabs
         private void SaveServer()
         {
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemSaved, this.SelectedApplicationServer.Name);
         }   
 
         private  void AddApplication()

@@ -8,9 +8,9 @@ namespace PrestoCommon.Enums
     public enum TaskType
     {
         CopyFile,
-        DosCommand,
-        Installer,
-        XmlModify
+        DosCommand,        
+        XmlModify,
+        //Installer  // Will enable this if we ever need it again.
     }
     #pragma warning restore 1591
 }

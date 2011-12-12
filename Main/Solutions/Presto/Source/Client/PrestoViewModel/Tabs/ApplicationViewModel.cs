@@ -208,7 +208,20 @@ namespace PrestoViewModel.Tabs
 
             if (taskViewModel.UserCanceled) { return; }
 
+            int sequence = 1;  // default
+
+            if (this.SelectedTask != null)
+            {
+                // The user has a row selected, grab that sequence, minus 1, to have the new task before it.
+                sequence = this.SelectedTask.Sequence - 1;
+            }
+
+            taskViewModel.TaskBase.Sequence = sequence;
+
             this.SelectedApplication.Tasks.Add(taskViewModel.TaskBase);
+
+            CorrectTaskSequence();
+
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
             ApplicationLogic.Save(this.SelectedApplication);
@@ -259,6 +272,9 @@ namespace PrestoViewModel.Tabs
                 LogicBase.Delete<TaskBase>(this.SelectedTask);
 
                 this.SelectedApplication.Tasks.Remove(this.SelectedTask);
+
+                CorrectTaskSequence();
+
                 NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
                 LogicBase.Save<Application>(this.SelectedApplication);

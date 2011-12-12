@@ -270,10 +270,13 @@ namespace PrestoViewModel.Tabs
                 taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
             }
 
+            int sequence = 1;
             foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask in taskBases)
             {
                 TaskBase task = CreateTaskFromLegacyTask(legacyTask);
+                task.Sequence = sequence;
                 this.SelectedApplication.Tasks.Add(task);
+                sequence++;
             }            
 
             ApplicationLogic.Save(this.SelectedApplication);

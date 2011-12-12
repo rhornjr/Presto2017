@@ -106,16 +106,21 @@ namespace PrestoCommon.Entities
 
                     process.WaitForExit();
 
-                    if (process.ExitCode == 0)
-                    {
-                        this.TaskSucceeded = true;
-                        return;                        
-                    }
+                    // Now I see why I had this commented before. When we run a DOS command, it can return a non-zero exit
+                    // code, even though everything is ok. For example, if we need to delete files in a directory, but that
+                    // directory doesn't exist, then who cares. All is good. So we either need to make sure all DOS commands
+                    // have an exit code of 0 (maybe by checking the the directory exists first), or just ignore the exit code.
+                    //if (process.ExitCode == 0)
+                    //{
+                    //    this.TaskSucceeded = true;
+                    //    return;                        
+                    //}
 
-                    this.TaskSucceeded = false;
-                    LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
-                        PrestoCommonResources.TaskDosCommandFailedWithExitCode,
-                        process.ExitCode.ToString(CultureInfo.CurrentCulture)));
+                    this.TaskSucceeded = true;
+
+                    //LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
+                    //    PrestoCommonResources.TaskDosCommandFailedWithExitCode,
+                    //    process.ExitCode.ToString(CultureInfo.CurrentCulture)));
                 }
                 catch (Exception ex)
                 {

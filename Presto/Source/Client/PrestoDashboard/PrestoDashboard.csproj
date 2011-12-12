@@ -79,6 +79,9 @@
     <Compile Include="Tabs\CustomVariableGroupView.xaml.cs">
       <DependentUpon>CustomVariableGroupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tabs\InstallationSummaryView.xaml.cs">
+      <DependentUpon>InstallationSummaryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ApplicationSelectorView.xaml.cs">
       <DependentUpon>ApplicationSelectorView.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tabs\CustomVariableGroupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tabs\InstallationSummaryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

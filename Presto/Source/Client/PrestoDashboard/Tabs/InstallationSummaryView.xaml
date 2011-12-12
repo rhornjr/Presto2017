@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="PrestoDashboard.Tabs.InstallationSummaryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="700">
+
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource InstallationSummaryViewModel}"/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding InstallationSummaryList}"
+                      SelectedItem="{Binding SelectedInstallationSummary}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="150"/>
+                    <DataGridTextColumn Binding="{Binding Path=Application}" Header="Application" Width="150"/>
+                    <DataGridTextColumn Binding="{Binding Path=InstallationStart}" Header="Start" Width="150"
+                                        SortDirection="Ascending" SortMemberPath="{Binding Path=InstallationStart}"/>
+                    <DataGridTextColumn Binding="{Binding Path=InstallationEnd}" Header="End" Width="150"/>
+                    <DataGridTextColumn Binding="{Binding Path=InstallationResult}" Header="Result" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1">
+            <Button Content="Refresh" Style="{StaticResource StandardButton}"/>
+        </StackPanel>
+        
+    </Grid>
+    
+</UserControl>

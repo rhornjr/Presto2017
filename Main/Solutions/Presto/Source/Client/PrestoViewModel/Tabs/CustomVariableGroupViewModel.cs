@@ -22,6 +22,16 @@ namespace PrestoViewModel.Tabs
         private CustomVariableGroup _selectedCustomVariableGroup;
 
         /// <summary>
+        /// Gets the add application command.
+        /// </summary>
+        public ICommand AddApplicationCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the remove application command.
+        /// </summary>
+        public ICommand RemoveApplicationCommand { get; private set; }
+
+        /// <summary>
         /// Gets the add variable group command.
         /// </summary>
         public ICommand AddVariableGroupCommand { get; private set; }
@@ -29,7 +39,7 @@ namespace PrestoViewModel.Tabs
         /// <summary>
         /// Gets the delete variable group command.
         /// </summary>
-        public ICommand DeleteVariableGroupCommand { get; private set; }
+        public ICommand DeleteVariableGroupCommand { get; private set; }        
 
         /// <summary>
         /// Gets the save group command.
@@ -107,14 +117,41 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
+            this.AddApplicationCommand    = new RelayCommand(_ => AddApplication(), _ => CustomVariableGroupIsSelected());
+            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => CustomVariableGroupIsSelected());
+
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
-            this.DeleteVariableGroupCommand = new RelayCommand(_ => DeleteVariableGroup(), _ => CanDeleteGroup());
+            this.DeleteVariableGroupCommand = new RelayCommand(_ => DeleteVariableGroup(), _ => CustomVariableGroupIsSelected());
             this.SaveVariableGroupCommand   = new RelayCommand(_ => SaveVariableGroup());
 
             this.AddVariableCommand    = new RelayCommand(_ => AddVariable());
             this.EditVariableCommand   = new RelayCommand(_ => EditVariable());
-            this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable(), _ => CanDeleteCustomVariable());
+            this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable(), _ => CustomVariableIsSelected());
         }        
+
+        private void AddApplication()
+        {
+            ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedCustomVariableGroup.Application = viewModel.SelectedApplication;
+
+            // ToDo: I had to do this for now because I couldn't have CustomVariableGroup derive from NotifyPropertyChangedBase
+            //       or I'd get an unsupported hierarchy change with db4o. When I get a chance to start with a fresh DB,
+            //       have all the entities derive from EntityBase, and have EntityBase derive from NotifyPropertyChangedBase.
+            //       EntityBase will give us a placeholder for future implementation, if necessary.
+            //       May want to consider a strategy for dealing with this issue if we need to change the class hierarchy of
+            //       something.
+            NotifyPropertyChanged(() => this.SelectedCustomVariableGroup);
+        }
+
+        private void RemoveApplication()
+        {
+            this.SelectedCustomVariableGroup.Application = null;
+        }
 
         private void AddVariable()
         {
@@ -140,7 +177,7 @@ namespace PrestoViewModel.Tabs
             LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
         }
 
-        private bool CanDeleteCustomVariable()
+        private bool CustomVariableIsSelected()
         {
             return this.SelectedCustomVariable != null;
         }
@@ -167,7 +204,7 @@ namespace PrestoViewModel.Tabs
             this.SelectedCustomVariableGroup = this.CustomVariableGroups.Where(group => group.Name == newGroupName).FirstOrDefault();
         }
 
-        private bool CanDeleteGroup()
+        private bool CustomVariableGroupIsSelected()
         {
             return this.SelectedCustomVariableGroup != null;
         }

@@ -124,6 +124,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installation summary list refreshed..
+        /// </summary>
+        internal static string InstallationListRefreshed {
+            get {
+                return ResourceManager.GetString("InstallationListRefreshed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} saved..
         /// </summary>
         internal static string ItemSaved {

@@ -84,14 +84,7 @@ namespace PrestoCommon.Entities
         /// <returns></returns>
         public string ResolveCustomVariable(string unresolvedCustomVariable)
         {
-            string customVariableValue = unresolvedCustomVariable;
-
-            foreach (CustomVariableGroup variableGroup in this.CustomVariableGroups)
-            {
-                customVariableValue = variableGroup.ResolveCustomVariable(customVariableValue);
-            }
-
-            return customVariableValue;
+            return CustomVariableGroup.ResolveCustomVariable(unresolvedCustomVariable, this.CustomVariableGroups);
         }
 
         /// <summary>
@@ -116,6 +109,8 @@ namespace PrestoCommon.Entities
 
         private bool ApplicationShouldBeInstalled(Application application, IEnumerable<InstallationSummary> installationSummaryList)
         {
+            // ToDo: Log all these decisions for debugging.
+
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
 

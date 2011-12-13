@@ -87,9 +87,9 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
-        public override void Execute(ApplicationServer applicationServer)
+        public override void Execute(ApplicationServer applicationServer, Application application)
         {
-            TaskXmlModify taskResolved = GetTaskXmlModifyWithCustomVariablesResolved(applicationServer);
+            TaskXmlModify taskResolved = GetTaskXmlModifyWithCustomVariablesResolved(applicationServer, application);
 
             string taskDetails = ConvertTaskDetailsToString(taskResolved);
 
@@ -179,16 +179,16 @@ namespace PrestoCommon.Entities
             return taskDetails;
         }
 
-        private TaskXmlModify GetTaskXmlModifyWithCustomVariablesResolved(ApplicationServer applicationServer)
+        private TaskXmlModify GetTaskXmlModifyWithCustomVariablesResolved(ApplicationServer applicationServer, Application application)
         {
             TaskXmlModify taskXmlModifyResolved = new TaskXmlModify();
 
-            taskXmlModifyResolved.AttributeKey           = applicationServer.ResolveCustomVariable(this.AttributeKey);
-            taskXmlModifyResolved.AttributeKeyValue      = applicationServer.ResolveCustomVariable(this.AttributeKeyValue);
-            taskXmlModifyResolved.AttributeToChange      = applicationServer.ResolveCustomVariable(this.AttributeToChange);
-            taskXmlModifyResolved.AttributeToChangeValue = applicationServer.ResolveCustomVariable(this.AttributeToChangeValue);
-            taskXmlModifyResolved.NodeToChange           = applicationServer.ResolveCustomVariable(this.NodeToChange);
-            taskXmlModifyResolved.XmlPathAndFileName     = applicationServer.ResolveCustomVariable(this.XmlPathAndFileName);
+            taskXmlModifyResolved.AttributeKey           = CustomVariableGroup.ResolveCustomVariable(this.AttributeKey, applicationServer, application);
+            taskXmlModifyResolved.AttributeKeyValue      = CustomVariableGroup.ResolveCustomVariable(this.AttributeKeyValue, applicationServer, application);
+            taskXmlModifyResolved.AttributeToChange      = CustomVariableGroup.ResolveCustomVariable(this.AttributeToChange, applicationServer, application);
+            taskXmlModifyResolved.AttributeToChangeValue = CustomVariableGroup.ResolveCustomVariable(this.AttributeToChangeValue, applicationServer, application);
+            taskXmlModifyResolved.NodeToChange           = CustomVariableGroup.ResolveCustomVariable(this.NodeToChange, applicationServer, application);
+            taskXmlModifyResolved.XmlPathAndFileName     = CustomVariableGroup.ResolveCustomVariable(this.XmlPathAndFileName, applicationServer, application);
 
             return taskXmlModifyResolved;
         }

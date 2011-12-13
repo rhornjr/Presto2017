@@ -131,6 +131,9 @@ namespace PrestoViewModel.Tabs
 
         private void AddApplication()
         {
+            // ToDo: Need to check first to see if the selected custom variable group is associated with an app server.
+            //       If so, don't do this. A group can only be associated with an app or server, not both.
+
             ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);

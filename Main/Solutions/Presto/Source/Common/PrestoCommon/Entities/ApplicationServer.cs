@@ -78,16 +78,6 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
-        /// Resolves the custom variable.
-        /// </summary>
-        /// <param name="unresolvedCustomVariable">The custom variable string.</param>
-        /// <returns></returns>
-        public string ResolveCustomVariable(string unresolvedCustomVariable)
-        {
-            return CustomVariableGroup.ResolveCustomVariable(unresolvedCustomVariable, this.CustomVariableGroups);
-        }
-
-        /// <summary>
         /// Installs the applications.
         /// </summary>
         public void InstallApplications()

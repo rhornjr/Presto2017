@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
@@ -102,9 +103,14 @@ namespace PrestoCommon.Entities
             bool atLeastOneTaskFailed = false;
             int numberOfSuccessfulTasks = 0;
 
-            foreach (TaskBase task in this.Tasks)
+            // Note: We do a ToList() here because we get a "collection was modified" exception otherwise. The reason we
+            //       get the exception is because, somewhere else in this processing, we make this call:
+            //       CustomVariableGroupLogic.Get(application.Name)
+            //       That method does a refresh on the CustomVariableGroup, which contains an app, which contains the tasks.
+            //       Good times.
+            foreach (TaskBase task in this.Tasks.ToList())
             {
-                task.Execute(applicationServer);
+                task.Execute(applicationServer, this);
 
                 if (task.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
 

@@ -40,9 +40,10 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         /// <param name="applicationServer"></param>
+        /// <param name="application"></param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Desc")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogInformation(System.String)")]
-        public override void Execute(ApplicationServer applicationServer)
+        public override void Execute(ApplicationServer applicationServer, Application application)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
@@ -53,9 +54,9 @@ namespace PrestoCommon.Entities
 
             try
             {
-                sourcePath      = applicationServer.ResolveCustomVariable(this.SourcePath);
-                sourceFileName  = applicationServer.ResolveCustomVariable(this.SourceFileName);
-                destinationPath = applicationServer.ResolveCustomVariable(this.DestinationPath);
+                sourcePath      = CustomVariableGroup.ResolveCustomVariable(this.SourcePath, applicationServer, application);
+                sourceFileName  = CustomVariableGroup.ResolveCustomVariable(this.SourceFileName, applicationServer, application);
+                destinationPath = CustomVariableGroup.ResolveCustomVariable(this.DestinationPath, applicationServer, application);
 
                 List<string> listOfFilesToCopy = new List<string>();
 

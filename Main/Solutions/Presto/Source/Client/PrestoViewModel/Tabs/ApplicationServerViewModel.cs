@@ -225,6 +225,13 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
+            // Servers shouldn't reference custom variable groups that are associated with an application.
+            if (viewModel.SelectedCustomVariableGroup.Application != null)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.CannotUseGroup;
+                return;
+            }
+
             this.SelectedApplicationServer.CustomVariableGroups.Add(viewModel.SelectedCustomVariableGroup);
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);

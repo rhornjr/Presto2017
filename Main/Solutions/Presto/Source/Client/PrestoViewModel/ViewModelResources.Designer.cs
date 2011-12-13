@@ -70,6 +70,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The selected custom variable group cannot be associated with a server because it&apos;s already associated with an application..
+        /// </summary>
+        internal static string CannotUseGroup {
+            get {
+                return ResourceManager.GetString("CannotUseGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please Confirm.
         /// </summary>
         internal static string ConfirmCaption {

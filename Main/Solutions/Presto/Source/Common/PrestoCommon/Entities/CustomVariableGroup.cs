@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -7,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using PrestoCommon.Logic;
 
 namespace PrestoCommon.Entities
 {
@@ -77,21 +77,29 @@ namespace PrestoCommon.Entities
         /// Resolves the custom variable.
         /// </summary>
         /// <param name="rawString">The raw string.</param>
-        /// <param name="customVariableGroups">The custom variable groups.</param>
+        /// <param name="applicationServer">The application server.</param>
+        /// <param name="application">The application.</param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public static string ResolveCustomVariable(string rawString, IEnumerable customVariableGroups)
+        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, Application application)
         {
-            if (customVariableGroups == null) { throw new ArgumentNullException("customVariableGroups"); }
+            if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
+            if (application       == null) { throw new ArgumentNullException("application"); }
 
             if (!StringHasCustomVariable(rawString)) { return rawString; }
 
             List<CustomVariable> allCustomVariables = new List<CustomVariable>();
 
-            foreach(CustomVariableGroup customVariableGroup in customVariableGroups)
+            // First, get all custom variables associated with the app server.
+            foreach (CustomVariableGroup customVariableGroup in applicationServer.CustomVariableGroups)
             {
                 allCustomVariables.AddRange(customVariableGroup.CustomVariables);
             }
+
+            // Get the custom variable group associated with this *application*.
+            CustomVariableGroup appGroup = CustomVariableGroupLogic.Get(application.Name);
+
+            if (appGroup != null && appGroup.CustomVariables != null) { allCustomVariables.AddRange(appGroup.CustomVariables); }
 
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
             {

@@ -1,14 +1,10 @@
-﻿using System.Xml.Serialization;
-using PrestoCommon.Enums;
+﻿using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// Base class for all tasks
     /// </summary>
-    [XmlInclude(typeof(TaskCopyFile))]
-    [XmlInclude(typeof(TaskDosCommand))]
-    [XmlInclude(typeof(TaskXmlModify))]
     public abstract class TaskBase : NotifyPropertyChangedBase
     {
         private string   _description;
@@ -127,7 +123,7 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        public abstract void Execute(ApplicationServer applicationServer);
+        public abstract void Execute(ApplicationServer applicationServer, Application application);
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

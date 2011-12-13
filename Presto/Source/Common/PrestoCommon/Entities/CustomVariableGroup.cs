@@ -3,6 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using System.Globalization;
 
 namespace PrestoCommon.Entities
 {
@@ -53,10 +57,57 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Resolves the custom variable.
         /// </summary>
-        /// <param name="rawString">The custom variable string.</param>
+        /// <param name="rawString">The raw string.</param>
+        /// <param name="customVariableGroups">The custom variable groups.</param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public string ResolveCustomVariable(string rawString)
+        public static string ResolveCustomVariable(string rawString, IEnumerable customVariableGroups)
+        {
+            if (customVariableGroups == null) { throw new ArgumentNullException("customVariableGroups"); }
+
+            if (!StringHasCustomVariable(rawString)) { return rawString; }
+
+            List<CustomVariable> allCustomVariables = new List<CustomVariable>();
+
+            foreach(CustomVariableGroup customVariableGroup in customVariableGroups)
+            {
+                allCustomVariables.AddRange(customVariableGroup.CustomVariables);
+            }
+
+            if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
+            {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture,
+                    "{0} contains a custom variable that does not exist in the list of custom variables.", rawString));
+            }
+
+            return ResolveCustomVariable(rawString, allCustomVariables);
+        }
+
+        private static bool CustomVariableExistsInListOfAllCustomVariables(string stringNew, IEnumerable<CustomVariable> allCustomVariables)
+        {
+            // The raw string could be something like this: ServiceName $(site)
+            // This call should return a collection of found custom variables, like $(site), within the raw string.
+            MatchCollection matchCollection = GetCustomVariableStringsWithinBiggerString(stringNew);
+
+            // If this custom variable group can resolve any of these custom variables, return true.
+            foreach (Match match in matchCollection)
+            {
+                string matchValueWithoutPrefixAndSuffix = CustomVariableWithoutPrefixAndSuffix(match.Value);
+                if (allCustomVariables.Where(customVariable => customVariable.Key == matchValueWithoutPrefixAndSuffix).FirstOrDefault() != null)
+                { return true; }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Resolves the custom variable.
+        /// </summary>
+        /// <param name="rawString">The custom variable string.</param>
+        /// <param name="allCustomVariables">All custom variables.</param>
+        /// <returns></returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
+        private static string ResolveCustomVariable(string rawString, IEnumerable<CustomVariable> allCustomVariables)
         {
             // If the string doesn't contain a custom variable, nothing to do... just return the string.
             if (!StringHasCustomVariable(rawString)) { return rawString; }
@@ -69,33 +120,16 @@ namespace PrestoCommon.Entities
 
             do
             {
-                foreach (CustomVariable customVariable in this.CustomVariables)
+                foreach (CustomVariable customVariable in allCustomVariables)
                 {
                     // customVariable.Value could actually contain more custom variables. That's why we need to keep looping.
                     stringNew.Replace(prefix + customVariable.Key + suffix, customVariable.Value);
                 }
             }
-            while (StringHasCustomVariable(stringNew.ToString()) && ThisCustomVariableGroupContainsTheCustomVariable(stringNew.ToString()));
+            while (StringHasCustomVariable(stringNew.ToString()));
 
             return stringNew.ToString();
-        }
-
-        private bool ThisCustomVariableGroupContainsTheCustomVariable(string stringNew)
-        {
-            // The raw string could be something like this: ServiceName $(site)
-            // This call should return a collection of found custom variables, like $(site), within the raw string.
-            MatchCollection matchCollection = GetCustomVariableStringsWithinBiggerString(stringNew);
-
-            // If this custom variable group can resolve any of these custom variables, return true.
-            foreach (Match match in matchCollection)
-            {
-                string matchValueWithoutPrefixAndSuffix = CustomVariableWithoutPrefixAndSuffix(match.Value);
-                if (this.CustomVariables.Where(customVariable => customVariable.Key == matchValueWithoutPrefixAndSuffix).FirstOrDefault() != null)
-                { return true; }
-            }
-
-            return false;
-        }
+        }        
 
         private static string CustomVariableWithoutPrefixAndSuffix(string customVariableString)
         {

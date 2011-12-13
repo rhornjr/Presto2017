@@ -46,6 +46,9 @@ namespace PrestoCommon.Misc
 
         private static void Log(string message, EventLogEntryType entryType)
         {
+            // Note: I got an error that the security log was inaccessible. To get around it, I ran the app as administrator
+            //       just once, then I could run it from within VS.
+
             EventLog.WriteEntry(GetSource(), message, entryType);
 
             // If we're running a console app, also write the message to the console window.

@@ -18,8 +18,7 @@
 
         <StackPanel Grid.Column="0">
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding InstallationSummaryList}"
-                      SelectedItem="{Binding SelectedInstallationSummary}">
+                      ItemsSource="{Binding InstallationSummaryList}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="150"/>
                     <DataGridTextColumn Binding="{Binding Path=Application}" Header="Application" Width="150"/>

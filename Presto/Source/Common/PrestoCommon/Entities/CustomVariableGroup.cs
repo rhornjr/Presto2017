@@ -1,20 +1,21 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using System.Globalization;
 
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// Container for <see cref="CustomVariable"/>s
     /// </summary>
-    public class CustomVariableGroup
+    public class CustomVariableGroup // : NotifyPropertyChangedBase
     {
+        //private Application _application;
         private ObservableCollection<CustomVariable> _customVariables;
 
         /// <summary>
@@ -24,6 +25,24 @@ namespace PrestoCommon.Entities
         /// The name.
         /// </value>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application that's associated with this custom variable group. If an application
+        /// is associated with a custom variable group, then only that application will be able to use it.
+        /// </summary>
+        /// <value>
+        /// The application.
+        /// </value>
+        public Application Application { get; set; }
+        //{
+        //    get { return this._application; }
+
+        //    set
+        //    {
+        //        this._application = value;
+        //        NotifyPropertyChanged(() => this.Application);
+        //    }
+        //}
 
         /// <summary>
         /// Gets or sets the custom variables.

@@ -144,4 +144,7 @@
   <data name="UnexpectedLegacyTask" xml:space="preserve">
     <value>When importing legacy tasks, we encountered a legacy task type that was not expected: {0}.</value>
   </data>
+  <data name="InstallationListRefreshed" xml:space="preserve">
+    <value>Installation summary list refreshed.</value>
+  </data>
 </root>

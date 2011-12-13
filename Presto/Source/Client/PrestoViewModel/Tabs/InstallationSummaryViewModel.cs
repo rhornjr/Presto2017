@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
+using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Tabs
@@ -58,6 +59,8 @@ namespace PrestoViewModel.Tabs
         private void Refresh()
         {
             this.LoadInstallationSummaryList();
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.InstallationListRefreshed;
         }
     }
 }

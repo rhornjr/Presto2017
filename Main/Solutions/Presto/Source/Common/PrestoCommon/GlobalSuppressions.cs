@@ -10,3 +10,4 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Activatable", Scope = "type", Target = "PrestoCommon.Entities.ActivatableEntity")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Activatable", Scope = "type", Target = "PrestoCommon.Misc.ActivatableCollection`1")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Qa", Scope = "member", Target = "PrestoCommon.Enums.DeploymentEnvironment.#Qa")]

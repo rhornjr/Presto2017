@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -9,6 +10,7 @@ using System.Net.Sockets;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
+using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
@@ -25,6 +27,23 @@ namespace PrestoViewModel.Tabs
         private ObservableCollection<Application> _applications;
         private Application _selectedApplication;
         private TaskBase _selectedTask;
+        private List<DeploymentEnvironment> _deploymentEnvironments;
+
+        /// <summary>
+        /// Gets the deployment environments.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<DeploymentEnvironment> DeploymentEnvironments
+        {
+            get
+            {
+                if (this._deploymentEnvironments == null)
+                {
+                    this._deploymentEnvironments = Enum.GetValues(typeof(DeploymentEnvironment)).Cast<DeploymentEnvironment>().ToList();
+                }
+                return this._deploymentEnvironments;
+            }
+        }
 
         /// <summary>
         /// Gets the add application command.

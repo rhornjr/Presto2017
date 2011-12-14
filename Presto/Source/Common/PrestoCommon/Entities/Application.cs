@@ -13,6 +13,7 @@ namespace PrestoCommon.Entities
         private string _name;
         private ObservableCollection<TaskBase> _tasks;
         private DateTime? _forceInstallationTime;
+        private DeploymentEnvironment _forceInstallationEnvironment;
 
         /// <summary>
         /// Gets or sets the name.
@@ -84,6 +85,23 @@ namespace PrestoCommon.Entities
             {
                 this._forceInstallationTime = value;
                 NotifyPropertyChanged(() => this.ForceInstallationTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the force installation environment.
+        /// </summary>
+        /// <value>
+        /// The force installation environment.
+        /// </value>
+        public DeploymentEnvironment ForceInstallationEnvironment
+        {
+            get { return this._forceInstallationEnvironment; }
+
+            set
+            {
+                this._forceInstallationEnvironment = value;
+                NotifyPropertyChanged(() => this.ForceInstallationEnvironment);
             }
         }
 

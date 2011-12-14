@@ -58,6 +58,7 @@
                 <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
                     <TextBox Text="{Binding SelectedApplication.ForceInstallationTime}" Width="140"/>
                     <Button Content="!" Command="{Binding ForceInstallationNowCommand}" Height="20" Width="25" />
+                    <ComboBox ItemsSource="{Binding DeploymentEnvironments}" Width="125"/>
                 </StackPanel>
 
             </Grid>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 
@@ -31,6 +32,14 @@ namespace PrestoCommon.Entities
         /// The IP address.
         /// </value>
         public string IpAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the deployment environment.
+        /// </summary>
+        /// <value>
+        /// The deployment environment.
+        /// </value>
+        public DeploymentEnvironment DeploymentEnvironment { get; set; }
 
         /// <summary>
         /// Gets the application.
@@ -121,7 +130,8 @@ namespace PrestoCommon.Entities
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install
             InstallationSummary mostRecentInstallationSummary = appSpecificInstallationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
-            if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallationTime) { return true; }
+            if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallationTime &&
+                application.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
 
             return false;
         }

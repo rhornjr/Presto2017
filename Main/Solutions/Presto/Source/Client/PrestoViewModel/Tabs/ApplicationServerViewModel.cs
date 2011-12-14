@@ -135,8 +135,8 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddServerCommand    = new RelayCommand(_ => AddServer());
-            this.DeleteServerCommand = new RelayCommand(_ => DeleteServer(), _ => CanDeleteServer());
-            this.SaveServerCommand   = new RelayCommand(_ => SaveServer());
+            this.DeleteServerCommand = new RelayCommand(_ => DeleteServer(), _ => AppServerIsSelected());
+            this.SaveServerCommand   = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ApplicationIsSelected());
@@ -170,7 +170,7 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplicationServer = this.ApplicationServers.Where(server => server.Name == newServerName).FirstOrDefault();
         }
 
-        private bool CanDeleteServer()
+        private bool AppServerIsSelected()
         {
             return this.SelectedApplicationServer != null;
         }

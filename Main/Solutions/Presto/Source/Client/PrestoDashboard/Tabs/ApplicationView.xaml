@@ -74,15 +74,19 @@
                     <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportTasksCommand}" />
-                <Button Content="^" Height="25" Width="25" Command="{Binding MoveTaskUpCommand}" />
-                <Button Content="v" Height="25" Width="25" Command="{Binding MoveTaskDownCommand}" />
-            </StackPanel>
+            <DockPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportTasksCommand}" />                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">                    
+                    <Button Content="^" Height="25" Width="25" Command="{Binding MoveTaskUpCommand}" />
+                    <Button Content="v" Height="25" Width="25" Command="{Binding MoveTaskDownCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
+                </StackPanel>
+            </DockPanel>
         </StackPanel>
 
     </Grid>

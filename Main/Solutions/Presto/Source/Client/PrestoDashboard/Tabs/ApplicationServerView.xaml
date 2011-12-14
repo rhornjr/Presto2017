@@ -26,21 +26,33 @@
         </DockPanel>
 
         <StackPanel Grid.Column="1">
-            <Label Content="Selected Application" HorizontalAlignment="Center"/>
-            <Label Content="Name: "/>
-            <TextBox Text="{Binding SelectedApplicationServer.Name}"/>
-            <Label Content="IP Address: "/>
-            <TextBox Text="{Binding SelectedApplicationServer.IpAddress}"/>
-            <Label Content="Future use: "/>
-            <TextBox Text=""/>
+            <Label Content="Selected Application Server" HorizontalAlignment="Center"/>
+                        
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Content="Name: "/>
+                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SelectedApplicationServer.Name}"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Content="IP Address: "/>
+                <TextBox  Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplicationServer.IpAddress}"/>
+            </Grid>
 
             <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
 
             <Label Content="Applications"/>            
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                  ItemsSource="{Binding SelectedApplicationServer.Applications}"
+                      ItemsSource="{Binding SelectedApplicationServer.Applications}"
                       SelectedItem="{Binding SelectedApplication}"
-                  Height="100">
+                      Height="150">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
                     <DataGridTextColumn Binding="{Binding Path=Version}" Header="Version" Width="100"/>
@@ -58,7 +70,7 @@
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
                       SelectedItem="{Binding SelectedCustomVariableGroup}"
-                      Height="100">                
+                      Height="150">                
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
                 </DataGrid.Columns>

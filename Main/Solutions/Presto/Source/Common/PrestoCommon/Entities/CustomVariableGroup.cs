@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using PrestoCommon.Logic;
 
 namespace PrestoCommon.Entities
@@ -33,6 +34,7 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The application.
         /// </value>
+        [XmlIgnore]  // This is here for exporting custom variable groups. Application.Tasks is read only, so it couldn't serialize.
         public Application Application { get; set; }
         //{
         //    get { return this._application; }

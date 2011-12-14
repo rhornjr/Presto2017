@@ -91,6 +91,9 @@
     <Compile Include="Windows\CustomVariableView.xaml.cs">
       <DependentUpon>CustomVariableView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ForceInstallationView.xaml.cs">
+      <DependentUpon>ForceInstallationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\TaskCopyFileView.xaml.cs">
       <DependentUpon>TaskCopyFileView.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\CustomVariableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ForceInstallationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

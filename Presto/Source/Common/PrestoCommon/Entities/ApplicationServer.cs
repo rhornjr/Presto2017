@@ -125,13 +125,13 @@ namespace PrestoCommon.Entities
             if (appSpecificInstallationSummaryList == null || appSpecificInstallationSummaryList.Count() < 1) { return true; }
 
             // If there is no force installation time, then no need to install.
-            if (application.ForceInstallationTime == null) { return false; }
+            if (application.ForceInstallation.ForceInstallationTime == null) { return false; }
 
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install
             InstallationSummary mostRecentInstallationSummary = appSpecificInstallationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
-            if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallationTime &&
-                application.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
+            if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallation.ForceInstallationTime &&
+                application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
 
             return false;
         }

@@ -62,6 +62,8 @@
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\CustomVariable.cs" />
     <Compile Include="Entities\CustomVariableGroup.cs" />
+    <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Entities\ForceInstallation.cs" />
     <Compile Include="Entities\InstallationSummary.cs" />
     <Compile Include="Entities\LegacyPresto\PrestoTasks.cs" />
     <Compile Include="Entities\LegacyPresto\TaskBase.cs" />

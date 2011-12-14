@@ -53,12 +53,11 @@
                 <Label Grid.Column="0" Grid.Row="3" Content="Release folder location: "/>
                 <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
 
-                <Label Grid.Column="0" Grid.Row="4" Content="Force installation time: "/>                    
+                <Label Grid.Column="0" Grid.Row="4" Content="Force installation: "/>                    
 
                 <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
-                    <TextBox Text="{Binding SelectedApplication.ForceInstallationTime}" Width="140"/>
-                    <Button Content="!" Command="{Binding ForceInstallationNowCommand}" Height="20" Width="25" />
-                    <ComboBox ItemsSource="{Binding DeploymentEnvironments}" Width="125"/>
+                    <Label Content="{Binding SelectedApplication.ForceInstallation}" Width="280"/>
+                    <Button Content="..." Height="25" Width="25" Command="{Binding ForceInstallationCommand}" />
                 </StackPanel>
 
             </Grid>

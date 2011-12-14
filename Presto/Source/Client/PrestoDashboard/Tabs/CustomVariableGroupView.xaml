@@ -34,6 +34,7 @@
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -54,6 +55,9 @@
                         <Button Content="..." Width="25" Height="25" Command="{Binding AddApplicationCommand}"/>
                         <Button Content="X" Width="25" Height="25" Command="{Binding RemoveApplicationCommand}"/>
                     </StackPanel>
+
+                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
+
                 </Grid>
                 
             </StackPanel>
@@ -61,8 +65,7 @@
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditVariableCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableCommand}" />                
             </StackPanel>
 
             <StackPanel>

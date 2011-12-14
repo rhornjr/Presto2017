@@ -150,4 +150,7 @@
   <data name="CannotUseGroup" xml:space="preserve">
     <value>The selected custom variable group cannot be associated with a server because it's already associated with an application.</value>
   </data>
+  <data name="ItemExported" xml:space="preserve">
+    <value>{0} has been exported.</value>
+  </data>
 </root>

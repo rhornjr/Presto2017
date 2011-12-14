@@ -142,6 +142,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} has been exported..
+        /// </summary>
+        internal static string ItemExported {
+            get {
+                return ResourceManager.GetString("ItemExported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} saved..
         /// </summary>
         internal static string ItemSaved {

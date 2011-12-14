@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
@@ -39,7 +41,17 @@ namespace PrestoViewModel.Tabs
         /// <summary>
         /// Gets the delete variable group command.
         /// </summary>
-        public ICommand DeleteVariableGroupCommand { get; private set; }        
+        public ICommand DeleteVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the import variable group command.
+        /// </summary>
+        public ICommand ImportVariableGroupCommand { get; private set; }        
+
+        /// <summary>
+        /// Gets the export variable group command.
+        /// </summary>
+        public ICommand ExportVariableGroupCommand { get; private set; }        
 
         /// <summary>
         /// Gets the save group command.
@@ -123,6 +135,8 @@ namespace PrestoViewModel.Tabs
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.DeleteVariableGroupCommand = new RelayCommand(_ => DeleteVariableGroup(), _ => CustomVariableGroupIsSelected());
             this.SaveVariableGroupCommand   = new RelayCommand(_ => SaveVariableGroup(), _ => CustomVariableGroupIsSelected());
+            this.ExportVariableGroupCommand = new RelayCommand(_ => ExportVariableGroup(), _ => CustomVariableGroupIsSelected());
+            this.ImportVariableGroupCommand = new RelayCommand(_ => ImportVariableGroup());
 
             this.AddVariableCommand    = new RelayCommand(_ => AddVariable());
             this.EditVariableCommand   = new RelayCommand(_ => EditVariable());
@@ -227,7 +241,42 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedCustomVariableGroup.Name);
-        }  
+        }
+
+        private void ImportVariableGroup()
+        {
+            string filePathAndName = GetFilePathAndNameFromUser();
+
+            if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
+
+            CustomVariableGroup customVariableGroup;
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
+                customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+            }
+
+            ApplicationLogic.Save(customVariableGroup);
+
+            this.CustomVariableGroups.Add(customVariableGroup);
+        }
+
+        private void ExportVariableGroup()
+        {
+            string filePathAndName = SaveFilePathAndNameFromUser(this.SelectedCustomVariableGroup.Name + ".CustomVariableGroup");
+
+            if (filePathAndName == null) { return; }
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Create))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
+                xmlSerializer.Serialize(fileStream, this.SelectedCustomVariableGroup);
+            }
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemExported, this.SelectedCustomVariableGroup.Name);
+        }        
 
         private void LoadCustomVariableGroups()
         {            

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
@@ -13,6 +14,8 @@ namespace PrestoViewModel
     /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
+        private static string lastDialogDirectory;
+
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
@@ -68,11 +71,34 @@ namespace PrestoViewModel
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = @"c:\temp\";
+                openFileDialog.InitialDirectory = lastDialogDirectory;
 
                 if (openFileDialog.ShowDialog() == DialogResult.Cancel) { return null; }
 
+                lastDialogDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+
                 return openFileDialog.FileName;
+            }
+        }
+
+        /// <summary>
+        /// Saves the file path and name from user.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        protected static string SaveFilePathAndNameFromUser(string fileName)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.FileName = fileName;
+                saveFileDialog.CheckFileExists = false;
+                saveFileDialog.InitialDirectory = lastDialogDirectory;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.Cancel) { return null; }
+
+                lastDialogDirectory = Path.GetDirectoryName(saveFileDialog.FileName);
+
+                return saveFileDialog.FileName;
             }
         }
 

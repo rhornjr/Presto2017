@@ -17,12 +17,18 @@
 
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
-                <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddVariableGroupCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportVariableGroupCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" />
+                </StackPanel>
             </StackPanel>
-            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"
-                     SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
+                <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"
+                         SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
         </DockPanel>
 
         <DockPanel Grid.Column="1" LastChildFill="True">

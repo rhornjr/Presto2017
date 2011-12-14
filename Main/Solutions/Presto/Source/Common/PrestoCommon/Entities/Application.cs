@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using PrestoCommon.Enums;
 
@@ -11,9 +10,8 @@ namespace PrestoCommon.Entities
     public class Application : NotifyPropertyChangedBase
     {
         private string _name;
-        private ObservableCollection<TaskBase> _tasks;
-        private DateTime? _forceInstallationTime;
-        private DeploymentEnvironment _forceInstallationEnvironment;
+        private ForceInstallation _forceInstallation;
+        private ObservableCollection<TaskBase> _tasks;        
 
         /// <summary>
         /// Gets or sets the name.
@@ -69,39 +67,19 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to force an installation.
-        /// Normally an app will only get installed on servers when there is a new version of the app.
-        /// If we want the same version of the app installed again (like an update to QA), the set this
-        /// to true so an installation occurs.
+        /// Gets or sets the force installation.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if [force installation]; otherwise, <c>false</c>.
+        /// The force installation.
         /// </value>
-        public DateTime? ForceInstallationTime
+        public ForceInstallation ForceInstallation
         {
-            get { return this._forceInstallationTime; }
+            get { return this._forceInstallation; }
 
             set
             {
-                this._forceInstallationTime = value;
-                NotifyPropertyChanged(() => this.ForceInstallationTime);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the force installation environment.
-        /// </summary>
-        /// <value>
-        /// The force installation environment.
-        /// </value>
-        public DeploymentEnvironment ForceInstallationEnvironment
-        {
-            get { return this._forceInstallationEnvironment; }
-
-            set
-            {
-                this._forceInstallationEnvironment = value;
-                NotifyPropertyChanged(() => this.ForceInstallationEnvironment);
+                this._forceInstallation = value;
+                NotifyPropertyChanged(() => this.ForceInstallation);
             }
         }
 

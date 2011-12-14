@@ -85,6 +85,7 @@
     <Compile Include="Windows\ApplicationSelectorViewModel.cs" />
     <Compile Include="Windows\CustomVariableGroupSelectorViewModel.cs" />
     <Compile Include="Windows\CustomVariableViewModel.cs" />
+    <Compile Include="Windows\ForceInstallationViewModel.cs" />
     <Compile Include="Windows\TaskCopyFileViewModel.cs" />
     <Compile Include="Windows\TaskDosCommandViewModel.cs" />
     <Compile Include="Windows\TaskTypeSelectorViewModel.cs" />

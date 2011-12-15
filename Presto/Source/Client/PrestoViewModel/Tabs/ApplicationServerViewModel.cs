@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
@@ -18,6 +21,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
+        private List<DeploymentEnvironment> _deploymentEnvironments;
         private ObservableCollection<ApplicationServer> _applicationServers;
         private ApplicationServer _selectedApplicationServer;
         private Application _selectedApplication;
@@ -61,6 +65,22 @@ namespace PrestoViewModel.Tabs
         /// Gets the remove variable group command.
         /// </summary>
         public ICommand RemoveVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the deployment environments.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<DeploymentEnvironment> DeploymentEnvironments
+        {
+            get
+            {
+                if (this._deploymentEnvironments == null)
+                {
+                    this._deploymentEnvironments = Enum.GetValues(typeof(DeploymentEnvironment)).Cast<DeploymentEnvironment>().ToList();
+                }
+                return this._deploymentEnvironments;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the application servers.

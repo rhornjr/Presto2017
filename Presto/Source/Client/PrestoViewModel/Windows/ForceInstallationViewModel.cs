@@ -64,10 +64,20 @@ namespace PrestoViewModel.Windows
                 if (this._deploymentEnvironments == null)
                 {
                     this._deploymentEnvironments = Enum.GetValues(typeof(DeploymentEnvironment)).Cast<DeploymentEnvironment>().ToList();
+                    this._deploymentEnvironments.Remove(DeploymentEnvironment.Unknown);  // Don't let Unknown be an option.
+                    this.SelectedDeploymentEnvironment = this._deploymentEnvironments[0];  // Set selected to first as default
                 }
                 return this._deploymentEnvironments;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the selected deployment environment.
+        /// </summary>
+        /// <value>
+        /// The selected deployment environment.
+        /// </value>
+        public DeploymentEnvironment SelectedDeploymentEnvironment { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ForceInstallationViewModel"/> class.
@@ -83,13 +93,19 @@ namespace PrestoViewModel.Windows
         {
             this.ForceInstallation = new ForceInstallation();
 
-            this.OkCommand                   = new RelayCommand(_ => Save());
+            this.OkCommand                   = new RelayCommand(_ => Save(), _ => ForceInstallationTimeIsValid());
             this.CancelCommand               = new RelayCommand(_ => Cancel());
             this.ForceInstallationNowCommand = new RelayCommand(_ => ForceInstallationNow());
         }
 
+        private bool ForceInstallationTimeIsValid()
+        {
+            return this.ForceInstallation.ForceInstallationTime != null;
+        }
+
         private void Save()
         {
+            this.ForceInstallation.ForceInstallationEnvironment = this.SelectedDeploymentEnvironment;
             this.Close();
         }
 

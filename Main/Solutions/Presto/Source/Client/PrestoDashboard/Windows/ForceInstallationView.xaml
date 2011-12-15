@@ -4,7 +4,7 @@
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Title="ForceInstallationView" Width="300">
+        Title="ForceInstallationView">
     <Grid Margin="5" HorizontalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -14,13 +14,13 @@
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
             <Label Content="Force time:" Width="85" />
-            <TextBox Text="{Binding ForceInstallation.ForceInstallationTime}" Width="140"/>
+            <TextBox Text="{Binding ForceInstallation.ForceInstallationTime}" Width="160"/>
             <Button Content="!" Command="{Binding ForceInstallationNowCommand}" Height="20" Width="25" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
             <Label Content="Environment:" Width="85" />
-            <ComboBox ItemsSource="{Binding DeploymentEnvironments}" Width="165"/>
+            <ComboBox ItemsSource="{Binding DeploymentEnvironments}" SelectedItem="{Binding SelectedDeploymentEnvironment}" Width="185"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Height="35">

@@ -42,9 +42,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architecture", "Architectur
 EndProject
 Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "PrestoArchitecture", "Architecture\PrestoArchitecture\PrestoArchitecture.modelproj", "{46E7415A-4162-4CA9-8AD1-85085DA23D21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfUpdatingServiceHost", "Source\Server\SelfUpdatingServiceHost\SelfUpdatingServiceHost.csproj", "{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
 		SccLocalPath0 = .
@@ -76,6 +78,10 @@ Global
 		SccProjectTopLevelParentUniqueName7 = Presto.sln
 		SccProjectName7 = Architecture/PrestoArchitecture
 		SccLocalPath7 = Architecture\\PrestoArchitecture
+		SccProjectUniqueName8 = Source\\Server\\SelfUpdatingServiceHost\\SelfUpdatingServiceHost.csproj
+		SccProjectTopLevelParentUniqueName8 = Presto.sln
+		SccProjectName8 = Source/Server/SelfUpdatingServiceHost
+		SccLocalPath8 = Source\\Server\\SelfUpdatingServiceHost
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -156,6 +162,16 @@ Global
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|x86.ActiveCfg = Release|Any CPU
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|x86.ActiveCfg = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|x86.Build.0 = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|Any CPU.ActiveCfg = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|Mixed Platforms.Build.0 = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|x86.ActiveCfg = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,6 +186,7 @@ Global
 		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
 		{A5CD34E5-46A5-4EF4-AADA-AC4A2868C3A6} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
 		{038990D2-3F29-4D89-97A3-A11BC53D937E} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
 		{235D7E4B-CC01-4F82-9F25-E9DF4D81F87B} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
 		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0} = {D399A7C6-4F03-44BE-B634-F5E54FC48B9C}
 		{3C7DAE5E-BDED-4B41-9392-59E5D8CEC11F} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}

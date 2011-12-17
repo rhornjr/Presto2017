@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection;
 using System.Configuration;
+using System.Xml.Serialization;
 
 namespace SelfUpdatingServiceHost
 {
@@ -25,9 +26,9 @@ namespace SelfUpdatingServiceHost
 
         public void Start()
         {
-            this._appName = ConfigurationManager.AppSettings["AppName"];
+            this._appName          = ConfigurationManager.AppSettings["AppName"];
             string thisServicePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            this._runningAppPath = Path.Combine(thisServicePath, this._appName);
+            this._runningAppPath   = Path.Combine(thisServicePath, this._appName);
             this._sourceBinaryPath = ConfigurationManager.AppSettings["SourceBinaryPath"];
 
             //DeleteFiles();
@@ -47,20 +48,57 @@ namespace SelfUpdatingServiceHost
             try
             {
                 // Check for new binaries. If new, copy the files and restart the app domain.            
-                if (!NewAppVersionReady()) { return; }
+                UpdaterManifest updaterManifest = GetUpdaterManifest();
+                if (VersionHasBeenInstalled(updaterManifest)) { return; }
+
                 DeleteFiles();
                 CopyFiles();
+
+                UpdateMostRecentlyInstalledVersion(updaterManifest);
+
                 RestartAppDomain();
             }
             finally
             {
                 Monitor.Exit(_locker);
             }
+        }        
+
+        private UpdaterManifest GetUpdaterManifest()
+        {
+            string filePathAndName = Path.Combine(this._sourceBinaryPath, this._appName + ".UpdaterManifest");
+
+            if (!File.Exists(filePathAndName)) { return null; }
+
+            UpdaterManifest updaterManifest;
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdaterManifest));
+                updaterManifest = xmlSerializer.Deserialize(fileStream) as UpdaterManifest;
+            }
+
+            return updaterManifest;
         }
 
-        private bool NewAppVersionReady()
+        private bool VersionHasBeenInstalled(UpdaterManifest updaterManifest)
         {
-            return File.Exists(Path.Combine(@"c:\temp\", "snuh.txt"));
+            string mostRecentlyInstalledVersion = ConfigurationManager.AppSettings["MostRecentlyInstalledVersion"];
+          
+            return updaterManifest.Version == mostRecentlyInstalledVersion;
+        }
+
+        private void UpdateMostRecentlyInstalledVersion(UpdaterManifest updaterManifest)
+        {
+            // This doesn't work when running within the VS debugger. This is because VS updates the vshost.exe.config.
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            config.AppSettings.Settings["MostRecentlyInstalledVersion"].Value = updaterManifest.Version;
+
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
         private void RestartAppDomain()
@@ -79,7 +117,7 @@ namespace SelfUpdatingServiceHost
 
             foreach (string file in Directory.GetFiles(this._sourceBinaryPath))
             {
-                string fileName = Path.GetFileName(file);
+                string fileName        = Path.GetFileName(file);
                 string destinationFile = Path.Combine(this._runningAppPath, fileName);
                 File.Copy(file, destinationFile, true);
             }
@@ -105,13 +143,13 @@ namespace SelfUpdatingServiceHost
             }
 
             string configFile = Path.Combine(_runningAppPath, this._appName + ".exe.config");
-            string cachePath = Path.Combine(_runningAppPath, "_cache");
-            string assembly = Path.Combine(_runningAppPath, this._appName + ".exe");
+            string cachePath  = Path.Combine(_runningAppPath, "_cache");
+            string assembly   = Path.Combine(_runningAppPath, this._appName + ".exe");
 
-            AppDomainSetup appDomainSetup = new AppDomainSetup();
-            appDomainSetup.ApplicationName = this._appName;
-            appDomainSetup.ShadowCopyFiles = "true";  // Note: not a bool.
-            appDomainSetup.CachePath = cachePath;
+            AppDomainSetup appDomainSetup    = new AppDomainSetup();
+            appDomainSetup.ApplicationName   = this._appName;
+            appDomainSetup.ShadowCopyFiles   = "true";  // Note: not a bool.
+            appDomainSetup.CachePath         = cachePath;
             appDomainSetup.ConfigurationFile = configFile;
 
             this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);

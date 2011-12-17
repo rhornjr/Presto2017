@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdaterController.cs" />
+    <Compile Include="UpdaterManifest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SelfUpdatingService.resx">

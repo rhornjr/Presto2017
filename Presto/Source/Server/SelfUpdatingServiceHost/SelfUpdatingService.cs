@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceProcess;
+using PrestoCommon.Misc;
 
 namespace SelfUpdatingServiceHost
 {
     public partial class SelfUpdatingService : ServiceBase
     {
+        UpdaterController _updaterController;
+
         public SelfUpdatingService()
         {
             InitializeComponent();
@@ -34,7 +37,7 @@ namespace SelfUpdatingServiceHost
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LogUtility.LogException(ex);
 
                 if (Environment.UserInteractive)
                 {
@@ -47,14 +50,8 @@ namespace SelfUpdatingServiceHost
 
         protected override void OnStart(string[] args)
         {
-            using (UpdaterController updaterController = new UpdaterController())
-            {
-                updaterController.Start();
-            }
-        }
-
-        protected override void OnStop()
-        {
+            _updaterController = new UpdaterController();
+            _updaterController.Start();
         }
     }
 }

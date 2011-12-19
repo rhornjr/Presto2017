@@ -1,42 +1,55 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using PrestoCommon.Misc;
 
 namespace SelfUpdatingServiceHost
 {
     public class UpdaterController : IDisposable
     {
+        private bool _initialRunningOfAppOccurred;
         private AppDomain _appDomain;
         private string _appName;
         private string _runningAppPath;
         private string _sourceBinaryPath;
         private Timer _timer;
         private AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
-        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _tokenSource;
 
         private static readonly object _locker = new object();
 
         public void Start()
+        {
+            InitializeVariables();
+
+            int checkForNewBinariesInterval = Convert.ToInt32(ConfigurationManager.AppSettings["CheckForNewBinariesInterval"], CultureInfo.InvariantCulture);
+
+            this._timer = new Timer(this.Process, this._autoResetEvent, 0, checkForNewBinariesInterval);
+        }
+
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UpdaterController")]
+        private void InitializeVariables()
         {
             this._appName          = ConfigurationManager.AppSettings["AppName"];
             string thisServicePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             this._runningAppPath   = Path.Combine(thisServicePath, this._appName);
             this._sourceBinaryPath = ConfigurationManager.AppSettings["SourceBinaryPath"];
 
-            //DeleteFiles();
-            CopyFiles();
-
-            LoadApp();
-
-            int checkForNewBinariesInterval = Convert.ToInt32(ConfigurationManager.AppSettings["CheckForNewBinariesInterval"], CultureInfo.InvariantCulture);
-
-            this._timer = new Timer(this.Process, this._autoResetEvent, checkForNewBinariesInterval, checkForNewBinariesInterval);
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                "UpdaterController initialized." + Environment.NewLine +
+                "App name: {0}" + Environment.NewLine +
+                "Running path: {1}" + Environment.NewLine +
+                "Source binary path: {2}",
+                this._appName,
+                this._runningAppPath,
+                this._sourceBinaryPath));
         }
 
         private void Process(object stateInfo)
@@ -47,26 +60,51 @@ namespace SelfUpdatingServiceHost
             {
                 // Check for new binaries. If new, copy the files and restart the app domain.            
                 UpdaterManifest updaterManifest = GetUpdaterManifest();
-                if (VersionHasBeenInstalled(updaterManifest)) { return; }
+                if (VersionHasBeenInstalled(updaterManifest))
+                {
+                    IfAppNotRunningThenRunApp();
+                    return;
+                }                
 
                 DeleteFiles();
                 CopyFiles();
 
-                UpdateMostRecentlyInstalledVersion(updaterManifest);
-
+                UpdateMostRecentlyInstalledVersionInAppConfig(updaterManifest);
+                this._initialRunningOfAppOccurred = true;
                 RestartAppDomain();
+            }
+            catch (Exception ex)
+            {
+                LogUtility.LogException(ex);
+                if (this._timer != null) { this._timer.Dispose(); }
             }
             finally
             {
                 Monitor.Exit(_locker);
             }
+        }
+
+        private void IfAppNotRunningThenRunApp()
+        {
+            if (this._initialRunningOfAppOccurred) { return; }
+
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                "Loading and running {0} for the first time...",
+                this._appName));
+
+            LoadApp();
+
+            this._initialRunningOfAppOccurred = true;
         }        
 
         private UpdaterManifest GetUpdaterManifest()
         {
             string filePathAndName = Path.Combine(this._sourceBinaryPath, this._appName + ".UpdaterManifest");
 
-            if (!File.Exists(filePathAndName)) { return null; }
+            if (!File.Exists(filePathAndName))
+            {
+                throw new FileNotFoundException("The updater manifest file was not found. This file is necessary for the program to run.", filePathAndName);
+            }
 
             UpdaterManifest updaterManifest;
 
@@ -79,14 +117,25 @@ namespace SelfUpdatingServiceHost
             return updaterManifest;
         }
 
-        private static bool VersionHasBeenInstalled(UpdaterManifest updaterManifest)
+        private bool VersionHasBeenInstalled(UpdaterManifest updaterManifest)
         {
             string mostRecentlyInstalledVersion = ConfigurationManager.AppSettings["MostRecentlyInstalledVersion"];
-          
-            return updaterManifest.Version == mostRecentlyInstalledVersion;
+
+            if (updaterManifest.Version != mostRecentlyInstalledVersion)
+            {
+                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                    "New version ({0}) of {1} detected. Old version was {2}. App will be updated and restarted.",
+                    updaterManifest.Version,
+                    this._appName,
+                    mostRecentlyInstalledVersion));
+
+                return false;
+            }
+
+            return true;
         }
 
-        private static void UpdateMostRecentlyInstalledVersion(UpdaterManifest updaterManifest)
+        private static void UpdateMostRecentlyInstalledVersionInAppConfig(UpdaterManifest updaterManifest)
         {
             // This doesn't work when running within the VS debugger. This is because VS updates the vshost.exe.config.
 
@@ -101,8 +150,8 @@ namespace SelfUpdatingServiceHost
 
         private void RestartAppDomain()
         {
-            this._tokenSource.Cancel();
-            //AppDomain.Unload(this._appDomain);
+            if (this._tokenSource != null) { this._tokenSource.Cancel(); }
+            //AppDomain.Unload(this._appDomain);  // ToDo: In testing, this wasn't necessary. Should this still be done to keep things clean (ie: good clean-up)?
             LoadApp();
         }
 
@@ -110,8 +159,18 @@ namespace SelfUpdatingServiceHost
         {
             if (!Directory.Exists(this._runningAppPath))
             {
+                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                    "Running app path did not exist. Creating it: {0}",
+                    this._runningAppPath));
                 Directory.CreateDirectory(this._runningAppPath);
             }
+
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                "Copying files." + Environment.NewLine +
+                "From: {0}" + Environment.NewLine +
+                "To: {1}",
+                this._sourceBinaryPath,
+                this._runningAppPath));
 
             foreach (string file in Directory.GetFiles(this._sourceBinaryPath))
             {
@@ -124,6 +183,10 @@ namespace SelfUpdatingServiceHost
         private void DeleteFiles()
         {
             if (!Directory.Exists(this._runningAppPath)) { return; }
+
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                "Deleting all files in {0}",
+                this._runningAppPath));
 
             foreach (string file in Directory.GetFiles(this._runningAppPath))
             {

@@ -17,6 +17,12 @@
             {
                 components.Dispose();
             }
+
+            if (disposing && (_updaterController != null))
+            {
+                _updaterController.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -9,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace SelfUpdatingServiceHost
 {
-    public class UpdaterController
+    public class UpdaterController : IDisposable
     {
         private AppDomain _appDomain;
         private string _appName;
@@ -33,7 +34,7 @@ namespace SelfUpdatingServiceHost
 
             LoadApp();
 
-            int checkForNewBinariesInterval = Convert.ToInt32(ConfigurationManager.AppSettings["CheckForNewBinariesInterval"]);
+            int checkForNewBinariesInterval = Convert.ToInt32(ConfigurationManager.AppSettings["CheckForNewBinariesInterval"], CultureInfo.InvariantCulture);
 
             this._timer = new Timer(this.Process, this._autoResetEvent, checkForNewBinariesInterval, checkForNewBinariesInterval);
         }
@@ -78,14 +79,14 @@ namespace SelfUpdatingServiceHost
             return updaterManifest;
         }
 
-        private bool VersionHasBeenInstalled(UpdaterManifest updaterManifest)
+        private static bool VersionHasBeenInstalled(UpdaterManifest updaterManifest)
         {
             string mostRecentlyInstalledVersion = ConfigurationManager.AppSettings["MostRecentlyInstalledVersion"];
           
             return updaterManifest.Version == mostRecentlyInstalledVersion;
         }
 
-        private void UpdateMostRecentlyInstalledVersion(UpdaterManifest updaterManifest)
+        private static void UpdateMostRecentlyInstalledVersion(UpdaterManifest updaterManifest)
         {
             // This doesn't work when running within the VS debugger. This is because VS updates the vshost.exe.config.
 
@@ -164,6 +165,23 @@ namespace SelfUpdatingServiceHost
                     Debug.WriteLine(ex.ToString());
                 }
             }, _tokenSource.Token);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing == false) { return; }
+
+            if (this._timer != null) { this._timer.Dispose(); }
+
+            if (this._autoResetEvent != null) { this._autoResetEvent.Dispose(); }
+
+            if (this._tokenSource != null) { this._tokenSource.Dispose(); }
         }
     }
 }

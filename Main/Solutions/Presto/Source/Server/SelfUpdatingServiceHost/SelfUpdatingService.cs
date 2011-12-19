@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceProcess;
 
 namespace SelfUpdatingServiceHost
@@ -12,22 +13,24 @@ namespace SelfUpdatingServiceHost
 
         #region [Main]
 
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)")]
         private static void Main(string[] args)
-        {
-            SelfUpdatingService selfUpdatingService = new SelfUpdatingService();
-
+        {            
             try
             {
-                if (!Environment.UserInteractive)
+                using (SelfUpdatingService selfUpdatingService = new SelfUpdatingService())
                 {
-                    Run(selfUpdatingService);
-                    return;
-                }
+                    if (!Environment.UserInteractive)
+                    {
+                        Run(selfUpdatingService);
+                        return;
+                    }
 
-                // Run service as console app
-                selfUpdatingService.OnStart(args);
-                Console.WriteLine("Service started. Press any key to exit.");
-                Console.ReadKey();
+                    // Run service as console app
+                    selfUpdatingService.OnStart(args);
+                    Console.WriteLine("Service started. Press any key to exit.");
+                    Console.ReadKey();
+                }
             }
             catch (Exception ex)
             {
@@ -38,19 +41,16 @@ namespace SelfUpdatingServiceHost
                     Console.ReadKey();
                 }
             }
-            finally
-            {
-                selfUpdatingService.OnStop();
-            }
         }
 
         #endregion
 
         protected override void OnStart(string[] args)
         {
-            UpdaterController updaterController = new UpdaterController();
-
-            updaterController.Start();
+            using (UpdaterController updaterController = new UpdaterController())
+            {
+                updaterController.Start();
+            }
         }
 
         protected override void OnStop()

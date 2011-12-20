@@ -5,15 +5,27 @@ namespace PrestoCommon.Entities
     /// An application can be installed multiple times on any given app server. Using the canonical exmaple, each
     /// instance needs to be the same as the others except for installation path, and one or more custom variables.
     /// </summary>
-    public class ApplicationWithOverrideVariableGroup
+    public class ApplicationWithOverrideVariableGroup : EntityBase
     {
+        private Application _application;
+        private CustomVariableGroup _customVariableGroup;
+
         /// <summary>
         /// Gets or sets the application.
         /// </summary>
         /// <value>
         /// The application.
         /// </value>
-        public Application Application { get; set; }
+        public Application Application
+        {
+            get { return this._application; }
+
+            set
+            {
+                this._application = value;
+                NotifyPropertyChanged(() => this.Application);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the custom variable group.
@@ -21,6 +33,15 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The custom variable group.
         /// </value>
-        public CustomVariableGroup CustomVariableGroup { get; set; }
+        public CustomVariableGroup CustomVariableGroup
+        {
+            get { return this._customVariableGroup; }
+
+            set
+            {
+                this._customVariableGroup = value;
+                NotifyPropertyChanged(() => this.CustomVariableGroup);
+            }
+        }
     }
 }

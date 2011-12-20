@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Base class for all tasks
     /// </summary>
-    public abstract class TaskBase : NotifyPropertyChangedBase
+    public abstract class TaskBase : EntityBase
     {
         private string   _description;
         private byte     _failureCausesAllStop;

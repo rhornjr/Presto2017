@@ -6,7 +6,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// A record of an installation for an <see cref="Application"/> on an <see cref="ApplicationServer"/>
     /// </summary>
-    public class InstallationSummary
+    public class InstallationSummary : EntityBase
     {
         /// <summary>
         /// Gets or sets the application server.

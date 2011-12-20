@@ -101,7 +101,7 @@ namespace PrestoCommon.Entities
                 {
                     LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
 
-                    InstallApplication(appWithGroup.Application);
+                    InstallApplication(appWithGroup);
                 }
             }
         }
@@ -141,11 +141,11 @@ namespace PrestoCommon.Entities
             return installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() != null;
         }
 
-        private void InstallApplication(Application application)
+        private void InstallApplication(ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            InstallationSummary installationSummary = new InstallationSummary(application, this, DateTime.Now);
+            InstallationSummary installationSummary = new InstallationSummary(appWithGroup.Application, this, DateTime.Now);
 
-            installationSummary.InstallationResult = application.Install(this);
+            installationSummary.InstallationResult = appWithGroup.Install(this);
 
             installationSummary.InstallationEnd = DateTime.Now;
 

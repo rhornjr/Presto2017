@@ -80,13 +80,13 @@ namespace PrestoCommon.Entities
         /// </summary>
         /// <param name="rawString">The raw string.</param>
         /// <param name="applicationServer">The application server.</param>
-        /// <param name="application">The application.</param>
+        /// <param name="applicationWithOverrideVariableGroup">The application with override variable group.</param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, Application application)
+        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
-            if (application       == null) { throw new ArgumentNullException("application"); }
+            if (applicationWithOverrideVariableGroup == null) { throw new ArgumentNullException("applicationWithOverrideVariableGroup"); }
 
             if (!StringHasCustomVariable(rawString)) { return rawString; }
 
@@ -99,9 +99,12 @@ namespace PrestoCommon.Entities
             }
 
             // Get the custom variable group associated with this *application*.
-            CustomVariableGroup appGroup = CustomVariableGroupLogic.Get(application.Name);
+            CustomVariableGroup appGroup = CustomVariableGroupLogic.Get(applicationWithOverrideVariableGroup.Application.Name);
 
             if (appGroup != null && appGroup.CustomVariables != null) { allCustomVariables.AddRange(appGroup.CustomVariables); }
+
+            // Add the override custom variables. If they already exist in our list, replace them.
+            AddRangeOverride(allCustomVariables, applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables.ToList());
 
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
             {
@@ -110,6 +113,21 @@ namespace PrestoCommon.Entities
             }
 
             return ResolveCustomVariable(rawString, allCustomVariables);
+        }
+
+        private static void AddRangeOverride(List<CustomVariable> allCustomVariables, List<CustomVariable> newCustomVariables)
+        {
+            // Add the new custom variables to the list, overwriting any duplicates.
+
+            // First, remove duplicates.
+            foreach (CustomVariable newCustomVariable in newCustomVariables)
+            {
+                CustomVariable customVariable = allCustomVariables.Where(variable => variable.Key == newCustomVariable.Key).FirstOrDefault();
+                if (customVariable != null) { allCustomVariables.Remove(customVariable); }
+            }
+
+            // Now add all the new variables.
+            allCustomVariables.AddRange(newCustomVariables);
         }
 
         private static bool CustomVariableExistsInListOfAllCustomVariables(string stringNew, IEnumerable<CustomVariable> allCustomVariables)

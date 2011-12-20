@@ -78,7 +78,7 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-        public override void Execute(ApplicationServer applicationServer, Application application)
+        public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
@@ -94,8 +94,8 @@ namespace PrestoCommon.Entities
                     // output we have to redirect input too. If we don’t, it immediately and silently quits
                     // right after startup."
 
-                    process.StartInfo.FileName               = CustomVariableGroup.ResolveCustomVariable(this.DosExecutable, applicationServer, application);
-                    process.StartInfo.Arguments              = CustomVariableGroup.ResolveCustomVariable(this.Parameters, applicationServer, application);
+                    process.StartInfo.FileName               = CustomVariableGroup.ResolveCustomVariable(this.DosExecutable, applicationServer, applicationWithOverrideVariableGroup);
+                    process.StartInfo.Arguments              = CustomVariableGroup.ResolveCustomVariable(this.Parameters, applicationServer, applicationWithOverrideVariableGroup);
                     process.StartInfo.UseShellExecute        = false;
                     process.StartInfo.RedirectStandardError  = true;
                     process.StartInfo.RedirectStandardInput  = true;
@@ -168,7 +168,7 @@ namespace PrestoCommon.Entities
             destination.FailureCausesAllStop = source.FailureCausesAllStop;            
             destination.Sequence             = source.Sequence;
             destination.TaskSucceeded        = source.TaskSucceeded;
-            destination.PrestoTaskType             = source.PrestoTaskType;
+            destination.PrestoTaskType       = source.PrestoTaskType;
 
             // Subclass
             destination.DosExecutable = source.DosExecutable;

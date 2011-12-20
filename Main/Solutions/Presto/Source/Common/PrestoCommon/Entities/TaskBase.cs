@@ -123,7 +123,7 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        public abstract void Execute(ApplicationServer applicationServer, Application application);
+        public abstract void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup);
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

@@ -1,4 +1,6 @@
-﻿
+﻿using System.Linq;
+using PrestoCommon.Enums;
+
 namespace PrestoCommon.Entities
 {
     /// <summary>
@@ -42,6 +44,39 @@ namespace PrestoCommon.Entities
                 this._customVariableGroup = value;
                 NotifyPropertyChanged(() => this.CustomVariableGroup);
             }
+        }
+
+        /// <summary>
+        /// Installs this instance.
+        /// </summary>
+        public InstallationResult Install(ApplicationServer applicationServer)
+        {
+            bool atLeastOneTaskFailed = false;
+            int numberOfSuccessfulTasks = 0;
+
+            // Note: We do a ToList() here because we get a "collection was modified" exception otherwise. The reason we
+            //       get the exception is because, somewhere else in this processing, we make this call:
+            //       CustomVariableGroupLogic.Get(application.Name)
+            //       That method does a refresh on the CustomVariableGroup, which contains an app, which contains the tasks.
+            //       Good times.
+            foreach (TaskBase task in this.Application.Tasks.ToList())
+            {
+                task.Execute(applicationServer, this);
+
+                if (task.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
+
+                if (task.TaskSucceeded == false)
+                {
+                    atLeastOneTaskFailed = true;
+                    if (task.FailureCausesAllStop == 1) { break; }  // No more processing.
+                }
+            }
+
+            if (numberOfSuccessfulTasks < 1) { return InstallationResult.Failure; }
+
+            if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
+
+            return InstallationResult.Success;
         }
     }
 }

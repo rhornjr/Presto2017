@@ -7,7 +7,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// An application, or product, that gets installed.
     /// </summary>
-    public class Application : NotifyPropertyChangedBase
+    public class Application : EntityBase
     {
         private string _name;
         private ForceInstallation _forceInstallation;

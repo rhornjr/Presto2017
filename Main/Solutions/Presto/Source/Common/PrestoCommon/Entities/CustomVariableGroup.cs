@@ -14,9 +14,9 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Container for <see cref="CustomVariable"/>s
     /// </summary>
-    public class CustomVariableGroup // : NotifyPropertyChangedBase
+    public class CustomVariableGroup : EntityBase
     {
-        //private Application _application;
+        private Application _application;
         private ObservableCollection<CustomVariable> _customVariables;
 
         /// <summary>
@@ -35,16 +35,16 @@ namespace PrestoCommon.Entities
         /// The application.
         /// </value>
         [XmlIgnore]  // This is here for exporting custom variable groups. Application.Tasks is read only, so it couldn't serialize.
-        public Application Application { get; set; }
-        //{
-        //    get { return this._application; }
+        public Application Application
+        {
+            get { return this._application; }
 
-        //    set
-        //    {
-        //        this._application = value;
-        //        NotifyPropertyChanged(() => this.Application);
-        //    }
-        //}
+            set
+            {
+                this._application = value;
+                NotifyPropertyChanged(() => this.Application);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the custom variables.

@@ -4,7 +4,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Custom Variable
     /// </summary>
-    public class CustomVariable
+    public class CustomVariable : EntityBase
     {
         /// <summary>
         /// Gets or sets the key.

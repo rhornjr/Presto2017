@@ -47,6 +47,11 @@ namespace PrestoViewModel.Tabs
         public ICommand AddApplicationCommand { get; private set; }
 
         /// <summary>
+        /// Gets the edit application command.
+        /// </summary>
+        public ICommand EditApplicationCommand { get; private set; }
+
+        /// <summary>
         /// Gets the remove application command.
         /// </summary>
         public ICommand RemoveApplicationCommand { get; private set; }
@@ -159,12 +164,13 @@ namespace PrestoViewModel.Tabs
             this.SaveServerCommand   = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
+            this.EditApplicationCommand   = new RelayCommand(_ => EditApplication(), _ => ApplicationIsSelected());
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ApplicationIsSelected());
             this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => ApplicationIsSelected());
 
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
-        }
+        }        
 
         private void ForceApplication()
         {
@@ -212,7 +218,7 @@ namespace PrestoViewModel.Tabs
                 ViewModelResources.ItemSaved, this.SelectedApplicationServer.Name);
         }   
 
-        private  void AddApplication()
+        private void AddApplication()
         {
             ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
 
@@ -221,6 +227,19 @@ namespace PrestoViewModel.Tabs
             if (viewModel.UserCanceled) { return; }
 
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(new ApplicationWithOverrideVariableGroup() { Application = viewModel.SelectedApplication });
+
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+        }
+
+        private void EditApplication()
+        {
+            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel();
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedApplicationWithOverrideGroup.CustomVariableGroup = viewModel.SelectedCustomVariableGroup;
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }

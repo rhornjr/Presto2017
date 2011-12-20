@@ -12,7 +12,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// ApplicationServer entity
     /// </summary>
-    public class ApplicationServer
+    public class ApplicationServer : EntityBase
     {
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _applicationsWithOverrideGroup;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;

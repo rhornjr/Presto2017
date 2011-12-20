@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
@@ -108,8 +109,10 @@ namespace PrestoCommon.Entities
 
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture,
-                    "{0} contains a custom variable that does not exist in the list of custom variables.", rawString));
+                string message = string.Format(CultureInfo.CurrentCulture,
+                    "{0} contains a custom variable that does not exist in the list of custom variables.", rawString);
+                LogUtility.LogWarning(message);
+                throw new ArgumentException(message);
             }
 
             return ResolveCustomVariable(rawString, allCustomVariables);

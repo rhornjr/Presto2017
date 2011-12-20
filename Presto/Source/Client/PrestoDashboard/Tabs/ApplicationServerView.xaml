@@ -56,13 +56,13 @@
 
             <Label Content="Applications"/>            
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedApplicationServer.Applications}"
-                      SelectedItem="{Binding SelectedApplication}"
+                      ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
+                      SelectedItem="{Binding SelectedApplicationWithOverrideGroup}"
                       Height="150">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="150" />
-                    <DataGridTextColumn Binding="{Binding Path=Version}" Header="Version" Width="100"/>
-                    <DataGridTextColumn Binding="{Binding Path=ReleaseFolderLocation}" Header="Location" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding Path=Application.Name}" Header="Name" Width="150" />
+                    <DataGridTextColumn Binding="{Binding Path=Application.Version}" Header="Version" Width="100"/>
+                    <DataGridTextColumn Binding="{Binding Path=CustomVariableGroup.Name}" Header="Override Group" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
             

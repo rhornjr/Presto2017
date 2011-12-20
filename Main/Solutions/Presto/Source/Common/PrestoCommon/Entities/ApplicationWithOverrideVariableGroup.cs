@@ -59,16 +59,16 @@ namespace PrestoCommon.Entities
             //       CustomVariableGroupLogic.Get(application.Name)
             //       That method does a refresh on the CustomVariableGroup, which contains an app, which contains the tasks.
             //       Good times.
-            foreach (TaskBase task in this.Application.Tasks.ToList())
+            foreach (TaskBase taskBase in this.Application.Tasks.ToList().OrderBy(task => task.Sequence))
             {
-                task.Execute(applicationServer, this);
+                taskBase.Execute(applicationServer, this);
 
-                if (task.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
+                if (taskBase.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
 
-                if (task.TaskSucceeded == false)
+                if (taskBase.TaskSucceeded == false)
                 {
                     atLeastOneTaskFailed = true;
-                    if (task.FailureCausesAllStop == 1) { break; }  // No more processing.
+                    if (taskBase.FailureCausesAllStop == 1) { break; }  // No more processing.
                 }
             }
 

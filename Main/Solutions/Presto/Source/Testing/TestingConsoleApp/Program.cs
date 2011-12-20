@@ -251,7 +251,7 @@ namespace TestingConsoleApp
             }
 
             //server.IpAddress += "x";
-            server.Applications.Add(application);
+            server.ApplicationsWithOverrideGroup.Add(new ApplicationWithOverrideVariableGroup() { Application = application });
             //server.Applications.Add(new Application() { Name = "Presto", ReleaseFolderLocation = "somewhere", Version = "2.0" });
 
             //db.Commit();
@@ -403,9 +403,9 @@ namespace TestingConsoleApp
                 i++;
                 LogServerInfo(server, i.ToString());
 
-                foreach (Application app in server.Applications)
+                foreach (ApplicationWithOverrideVariableGroup appWithGroup in server.ApplicationsWithOverrideGroup)
                 {
-                    Console.WriteLine("-- {0}", app.Name);
+                    Console.WriteLine("-- {0}", appWithGroup.Application.Name);
                 }
             }
 

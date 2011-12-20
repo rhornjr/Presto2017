@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
+    <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
     <Compile Include="Entities\CustomVariable.cs" />
     <Compile Include="Entities\CustomVariableGroup.cs" />
     <Compile Include="Entities\EntityBase.cs" />

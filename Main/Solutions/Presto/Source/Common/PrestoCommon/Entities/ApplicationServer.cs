@@ -14,7 +14,7 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class ApplicationServer
     {
-        private ObservableCollection<Application> _applications;
+        private ObservableCollection<ApplicationWithOverrideVariableGroup> _applicationsWithOverrideGroup;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Gets the application.
         /// </summary>
-        public ObservableCollection<Application> Applications
+        public ObservableCollection<ApplicationWithOverrideVariableGroup> ApplicationsWithOverrideGroup
         {
             get
             {
-                if (this._applications == null) { this._applications = new ObservableCollection<Application>(); }
+                if (this._applicationsWithOverrideGroup == null) { this._applicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>(); }
 
-                return this._applications;
+                return this._applicationsWithOverrideGroup;
             }
         }
 
@@ -95,13 +95,13 @@ namespace PrestoCommon.Entities
             IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerName(this.Name);
 
             // If we find an app that needs to be installed, install it.
-            foreach (Application app in this.Applications)
+            foreach (ApplicationWithOverrideVariableGroup appWithGroup in this.ApplicationsWithOverrideGroup)
             {
-                if (ApplicationShouldBeInstalled(app, installationSummaryList))
+                if (ApplicationShouldBeInstalled(appWithGroup.Application, installationSummaryList))
                 {
-                    LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, app.Name, this.Name));
+                    LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
 
-                    InstallApplication(app);
+                    InstallApplication(appWithGroup.Application);
                 }
             }
         }

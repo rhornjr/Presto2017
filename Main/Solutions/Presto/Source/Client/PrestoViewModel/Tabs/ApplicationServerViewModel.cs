@@ -24,7 +24,7 @@ namespace PrestoViewModel.Tabs
         private List<DeploymentEnvironment> _deploymentEnvironments;
         private ObservableCollection<ApplicationServer> _applicationServers;
         private ApplicationServer _selectedApplicationServer;
-        private Application _selectedApplication;
+        private ApplicationWithOverrideVariableGroup _selectedApplicationWithOverrideGroup;
 
         /// <summary>
         /// Gets the add server command.
@@ -130,14 +130,14 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The selected application.
         /// </value>
-        public Application SelectedApplication
+        public ApplicationWithOverrideVariableGroup SelectedApplicationWithOverrideGroup
         {
-            get { return this._selectedApplication; }
+            get { return this._selectedApplicationWithOverrideGroup; }
 
             set
             {
-                this._selectedApplication = value;
-                this.NotifyPropertyChanged(() => this.SelectedApplication);
+                this._selectedApplicationWithOverrideGroup = value;
+                this.NotifyPropertyChanged(() => this.SelectedApplicationWithOverrideGroup);
             }
         }
 
@@ -169,16 +169,16 @@ namespace PrestoViewModel.Tabs
         private void ForceApplication()
         {
             string message = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ConfirmInstallAppOnAppServerMessage, this.SelectedApplication, this.SelectedApplicationServer);
+                ViewModelResources.ConfirmInstallAppOnAppServerMessage, this.SelectedApplicationWithOverrideGroup, this.SelectedApplicationServer);
 
             if (!UserChoosesYes(message)) { return; }
 
-            this.SelectedApplicationServer.ApplicationToForceInstall = this.SelectedApplication;
+            this.SelectedApplicationServer.ApplicationToForceInstall = this.SelectedApplicationWithOverrideGroup.Application;
             
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.AppWillBeInstalledOnAppServer, this.SelectedApplication, this.SelectedApplicationServer);
+                ViewModelResources.AppWillBeInstalledOnAppServer, this.SelectedApplicationWithOverrideGroup, this.SelectedApplicationServer);
         }                   
 
         private void AddServer()
@@ -220,19 +220,19 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
-            this.SelectedApplicationServer.Applications.Add(viewModel.SelectedApplication);
+            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(new ApplicationWithOverrideVariableGroup() { Application = viewModel.SelectedApplication });
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
 
         private bool ApplicationIsSelected()
         {
-            return this.SelectedApplication != null;
+            return this.SelectedApplicationWithOverrideGroup != null;
         }
 
         private void RemoveApplication()
         {
-            this.SelectedApplicationServer.Applications.Remove(this.SelectedApplication);
+            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(this.SelectedApplicationWithOverrideGroup);
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }                

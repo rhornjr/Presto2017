@@ -67,7 +67,8 @@ namespace PrestoCommon.Entities
                 foreach (string fileToCopy in listOfFilesToCopy)
                 {
                     fileNameOnly = fileToCopy.Substring(fileToCopy.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1);  // Get just the file name
-                    File.Copy(fileToCopy, destinationPath + @"\" + fileNameOnly, true);
+                    if (!destinationPath.EndsWith(@"\", StringComparison.OrdinalIgnoreCase)) { destinationPath += @"\"; }
+                    File.Copy(fileToCopy, destinationPath + fileNameOnly, true);
                 }
 
                 this.TaskSucceeded = true;

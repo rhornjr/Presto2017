@@ -76,6 +76,7 @@
     <Compile Include="Tabs\ApplicationViewModel.cs" />
     <Compile Include="Tabs\CustomVariableGroupViewModel.cs" />
     <Compile Include="Tabs\InstallationSummaryViewModel.cs" />
+    <Compile Include="Tabs\LogMessageViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelResources.Designer.cs">
       <AutoGen>True</AutoGen>

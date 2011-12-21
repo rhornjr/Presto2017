@@ -160,6 +160,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log message list refreshed..
+        /// </summary>
+        internal static string LogMessagesRefreshed {
+            get {
+                return ResourceManager.GetString("LogMessagesRefreshed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to When importing legacy tasks, we encountered a legacy task type that was not expected: {0}..
         /// </summary>
         internal static string UnexpectedLegacyTask {

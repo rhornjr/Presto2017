@@ -153,4 +153,7 @@
   <data name="ItemExported" xml:space="preserve">
     <value>{0} has been exported.</value>
   </data>
+  <data name="LogMessagesRefreshed" xml:space="preserve">
+    <value>Log message list refreshed.</value>
+  </data>
 </root>

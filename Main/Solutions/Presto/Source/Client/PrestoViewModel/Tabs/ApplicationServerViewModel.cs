@@ -180,8 +180,9 @@ namespace PrestoViewModel.Tabs
             if (!UserChoosesYes(message)) { return; }
 
             LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
-                "{0} selected to be installed.",
-                this.SelectedApplicationWithOverrideGroup));
+                "{0} selected to be installed on {1}.",
+                this.SelectedApplicationWithOverrideGroup,
+                this.SelectedApplicationServer));
 
             this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = this.SelectedApplicationWithOverrideGroup;
             

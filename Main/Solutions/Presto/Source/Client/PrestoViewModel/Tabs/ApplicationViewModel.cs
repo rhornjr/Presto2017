@@ -287,13 +287,15 @@ namespace PrestoViewModel.Tabs
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
-            if (viewModel.UserCanceled) { return; }
-
-            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
-                "{0} selected to be installed.",
-                this.SelectedApplication));
+            if (viewModel.UserCanceled) { return; }            
 
             this.SelectedApplication.ForceInstallation = viewModel.ForceInstallation;
+
+            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+                "{0} selected to be installed in {1} at {2}.",
+                this.SelectedApplication,
+                this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
+                this.SelectedApplication.ForceInstallation.ForceInstallationTime.ToString()));
         }   
 
         private void ImportTasks()

@@ -25,14 +25,15 @@
                      SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
         </DockPanel>
 
-        <StackPanel Grid.Column="1">
-            <Label Content="Selected Application Server" HorizontalAlignment="Center"/>
+        <DockPanel Grid.Column="1" LastChildFill="True">            
                         
-            <Grid>
+            <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -40,55 +41,71 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Content="Name: "/>
-                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SelectedApplicationServer.Name}"/>
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Content="Selected Application Server" HorizontalAlignment="Center"/>
+                
+                <Label Grid.Column="0" Grid.Row="1" Content="Name: "/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplicationServer.Name}"/>
 
-                <Label Grid.Column="0" Grid.Row="1" Content="IP Address: "/>
-                <TextBox  Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplicationServer.IpAddress}"/>
+                <Label Grid.Column="0" Grid.Row="2" Content="IP Address: "/>
+                <TextBox  Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplicationServer.IpAddress}"/>
 
-                <Label Grid.Column="0" Grid.Row="2" Content="Environment: "/>
-                <ComboBox Grid.Column="1" Grid.Row="2" ItemsSource="{Binding DeploymentEnvironments}"
+                <Label Grid.Column="0" Grid.Row="3" Content="Environment: "/>
+                <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding DeploymentEnvironments}"
                           SelectedItem="{Binding SelectedApplicationServer.DeploymentEnvironment}" Width="185"
                           HorizontalAlignment="Left"/>
-            </Grid>
 
-            <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
-
-            <Label Content="Applications"/>            
-            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
-                      SelectedItem="{Binding SelectedApplicationWithOverrideGroup}"
-                      Height="150">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Application.Name}" Header="Name" Width="150" />
-                    <DataGridTextColumn Binding="{Binding Path=Application.Version}" Header="Version" Width="100"/>
-                    <DataGridTextColumn Binding="{Binding Path=CustomVariableGroup.Name}" Header="Override Group" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                <Button Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
+            </Grid>                        
             
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Force..." Command="{Binding ForceApplicationCommand}" />
-            </StackPanel>
+            <DockPanel DockPanel.Dock="Bottom">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="Custom Variable Groups:"/>
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                          ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
+                          SelectedItem="{Binding SelectedCustomVariableGroup}"
+                          Height="125">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
+                        <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveVariableGroupCommand}" />
+                    </StackPanel>
+                </Grid>
+            </DockPanel>                       
 
-            <Label Content="Custom Variable Groups"/>
-            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
-                      SelectedItem="{Binding SelectedCustomVariableGroup}"
-                      Height="125">                
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
-                </DataGrid.Columns>
-            </DataGrid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Applications:"/>
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                          ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
+                          SelectedItem="{Binding SelectedApplicationWithOverrideGroup}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Application.Name}" Header="Name" Width="150" />
+                        <DataGridTextColumn Binding="{Binding Path=Application.Version}" Header="Version" Width="100"/>
+                        <DataGridTextColumn Binding="{Binding Path=CustomVariableGroup.Name}" Header="Override Group" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveVariableGroupCommand}" />
-            </StackPanel>
-
-        </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Force..." Command="{Binding ForceApplicationCommand}" />
+                </StackPanel>
+            </Grid>
+            
+        </DockPanel>
 
     </Grid>
 </UserControl>

@@ -14,6 +14,7 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class ApplicationServer : EntityBase
     {
+        private string _name;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _applicationsWithOverrideGroup;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
 
@@ -23,7 +24,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this._name; }
+
+            set
+            {
+                this._name = value;
+                NotifyPropertyChanged(() => this.Name);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the IP address.
@@ -108,7 +118,7 @@ namespace PrestoCommon.Entities
             // ToDo: installationSummaryList needs to also be by custom group as well.
 
             // Get the list of InstallationStatus entities to see if we've ever installed this app.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerNameAndAppVersion(this.Name, appWithGroup);
+            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerNameAppVersionAndGroup(this.Name, appWithGroup);
 
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
@@ -118,17 +128,13 @@ namespace PrestoCommon.Entities
                 this.ApplicationWithGroupToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
                 LogicBase.Save<ApplicationServer>(this);
                 return true;
-            }            
-
-            IEnumerable<InstallationSummary> appSpecificInstallationSummaryList = installationSummaryList.Where(summary => summary.Application == appWithGroup.Application);
-
-            if (appSpecificInstallationSummaryList == null || appSpecificInstallationSummaryList.Count() < 1) { return true; }
+            }
 
             // If there is no force installation time, then no need to install.
             if (appWithGroup.Application.ForceInstallation == null || appWithGroup.Application.ForceInstallation.ForceInstallationTime == null) { return false; }
 
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install
-            InstallationSummary mostRecentInstallationSummary = appSpecificInstallationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
             if (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
@@ -152,14 +158,9 @@ namespace PrestoCommon.Entities
             return false;
         }
 
-        private static bool InstallationSummaryFoundForApplication(IEnumerable<InstallationSummary> installationSummaryList, Application app)
-        {           
-            return installationSummaryList.Where(summary => summary.Application.Name == app.Name).FirstOrDefault() != null;
-        }
-
         private void InstallApplication(ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            InstallationSummary installationSummary = new InstallationSummary(appWithGroup.Application, this, DateTime.Now);
+            InstallationSummary installationSummary = new InstallationSummary(appWithGroup, this, DateTime.Now);
 
             installationSummary.InstallationResult = appWithGroup.Install(this);
 
@@ -174,7 +175,7 @@ namespace PrestoCommon.Entities
 
             LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoCommonResources.ApplicationInstalled,
-                installationSummary.Application.Name,
+                installationSummary.ApplicationWithOverrideVariableGroup.ToString(),
                 installationSummary.ApplicationServer.Name,
                 installationSummary.InstallationStart.ToString(CultureInfo.CurrentCulture),
                 installationSummary.InstallationEnd.ToString(CultureInfo.CurrentCulture),

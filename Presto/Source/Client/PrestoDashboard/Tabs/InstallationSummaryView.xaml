@@ -21,7 +21,7 @@
                       ItemsSource="{Binding InstallationSummaryList}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="150"/>
-                    <DataGridTextColumn Binding="{Binding Path=Application}" Header="Application" Width="150"/>
+                    <DataGridTextColumn Binding="{Binding Path=ApplicationWithOverrideVariableGroup}" Header="Application" Width="150"/>
                     <DataGridTextColumn Binding="{Binding Path=InstallationStart}" Header="Start" Width="150"
                                         SortDirection="Ascending" SortMemberPath="{Binding Path=InstallationStart}"/>
                     <DataGridTextColumn Binding="{Binding Path=InstallationEnd}" Header="End" Width="150"/>

@@ -16,22 +16,25 @@ namespace PrestoCommon.Logic
         /// <param name="serverName">Name of the server.</param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        public static IEnumerable<InstallationSummary> GetByServerNameAndAppVersion(string serverName, ApplicationWithOverrideVariableGroup appWithGroup)
+        public static IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            IEnumerable<InstallationSummary> installationSummaryList = from InstallationSummary summary in Database
-                                                                       where summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                                                                          && summary.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
-                                                                          && summary.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()
-                                                                       select summary;
+            IEnumerable<InstallationSummary> installationSummaryList =
+                from InstallationSummary summary in Database
+                where summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
+                  && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
+                  && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()
+                select summary;
 
             Database.Ext().Refresh(installationSummaryList, 10);
 
-            //if (appWithGroup.CustomVariableGroup == null)
-            //{
-            //    return installationSummaryList.Where(summary => summary.
-            //}
+            if (appWithGroup.CustomVariableGroup == null)
+            {
+                return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup == null);
+            }
 
-            return installationSummaryList;
+            return installationSummaryList.Where(summary =>
+                summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup != null &&
+                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name);
         }
 
         /// <summary>

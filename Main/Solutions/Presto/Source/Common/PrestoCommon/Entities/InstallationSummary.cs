@@ -4,7 +4,7 @@ using PrestoCommon.Enums;
 namespace PrestoCommon.Entities
 {
     /// <summary>
-    /// A record of an installation for an <see cref="Application"/> on an <see cref="ApplicationServer"/>
+    /// A record of an installation for an <see cref="ApplicationWithOverrideVariableGroup"/> on an <see cref="ApplicationServer"/>
     /// </summary>
     public class InstallationSummary : EntityBase
     {
@@ -22,7 +22,7 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The application.
         /// </value>
-        public Application Application { get; set; }
+        public ApplicationWithOverrideVariableGroup ApplicationWithOverrideVariableGroup { get; set; }
 
         /// <summary>
         /// Gets or sets the installation start.
@@ -51,14 +51,14 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="InstallationSummary"/> class.
         /// </summary>
-        /// <param name="application">The application.</param>
+        /// <param name="applicationWithOverrideVariableGroup">The application.</param>
         /// <param name="applicationServer">The application server.</param>
         /// <param name="startTime">The start time.</param>
-        public InstallationSummary(Application application, ApplicationServer applicationServer, DateTime startTime)
+        public InstallationSummary(ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup, ApplicationServer applicationServer, DateTime startTime)
         {
-            this.Application       = application;
-            this.ApplicationServer = applicationServer;
-            this.InstallationStart = startTime;
+            this.ApplicationWithOverrideVariableGroup = applicationWithOverrideVariableGroup;
+            this.ApplicationServer                    = applicationServer;
+            this.InstallationStart                    = startTime;
         }
     }
 }

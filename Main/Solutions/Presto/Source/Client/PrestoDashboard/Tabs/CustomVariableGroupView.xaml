@@ -74,9 +74,13 @@
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableCommand}" />                
             </StackPanel>
 
-            <StackPanel>
-                <Label Content="Custom Variables" HorizontalAlignment="Center"/>            
-                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Custom Variables" HorizontalAlignment="Center"/>            
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"                      
                       SelectedItem="{Binding SelectedCustomVariable}">
                     <DataGrid.Columns>
@@ -84,7 +88,7 @@
                         <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </StackPanel>
+            </Grid>
                 
         </DockPanel>
 

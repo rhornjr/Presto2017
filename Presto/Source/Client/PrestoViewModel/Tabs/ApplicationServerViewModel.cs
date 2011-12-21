@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
-using System.Security.Principal;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
@@ -180,10 +179,9 @@ namespace PrestoViewModel.Tabs
 
             if (!UserChoosesYes(message)) { return; }
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
-                "{0} selected to be installed by {1}.",
-                this.SelectedApplicationWithOverrideGroup,
-                WindowsIdentity.GetCurrent().Name));
+            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+                "{0} selected to be installed.",
+                this.SelectedApplicationWithOverrideGroup));
 
             this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = this.SelectedApplicationWithOverrideGroup;
             

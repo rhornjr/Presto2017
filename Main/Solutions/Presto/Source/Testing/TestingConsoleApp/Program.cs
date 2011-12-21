@@ -269,7 +269,6 @@ namespace TestingConsoleApp
             Application application = new Application();
 
             application.Name                  = "Derating";
-            application.ReleaseFolderLocation = @"\\sys02\h\etc...\";
             application.Version               = "1.0.0.0";
 
             // The DOS command below writes NULL to the file. This is somewhat like the touch command in Linux.

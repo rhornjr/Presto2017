@@ -14,15 +14,22 @@ namespace PrestoCommon.Logic
         /// Gets the name of the by server.
         /// </summary>
         /// <param name="serverName">Name of the server.</param>
+        /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        public static IEnumerable<InstallationSummary> GetByServerName(string serverName)
+        public static IEnumerable<InstallationSummary> GetByServerNameAndAppVersion(string serverName, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             IEnumerable<InstallationSummary> installationSummaryList = from InstallationSummary summary in Database
-                                                                       where summary.ApplicationServer.Name.ToUpperInvariant()
-                                                                         == serverName.ToUpperInvariant()
+                                                                       where summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
+                                                                          && summary.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
+                                                                          && summary.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()
                                                                        select summary;
 
             Database.Ext().Refresh(installationSummaryList, 10);
+
+            //if (appWithGroup.CustomVariableGroup == null)
+            //{
+            //    return installationSummaryList.Where(summary => summary.
+            //}
 
             return installationSummaryList;
         }

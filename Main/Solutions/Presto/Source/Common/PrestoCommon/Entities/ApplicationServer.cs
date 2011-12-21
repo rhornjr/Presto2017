@@ -90,36 +90,35 @@ namespace PrestoCommon.Entities
         /// Installs the applications.
         /// </summary>
         public void InstallApplications()
-        {
-            // Get the list of InstallationStatus entities to validate against our list of apps.                
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerName(this.Name);
-
+        {            
             // If we find an app that needs to be installed, install it.
             foreach (ApplicationWithOverrideVariableGroup appWithGroup in this.ApplicationsWithOverrideGroup)
             {
-                if (ApplicationShouldBeInstalled(appWithGroup, installationSummaryList))
-                {
-                    LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
+                if (!ApplicationShouldBeInstalled(appWithGroup)) { continue; }
 
-                    InstallApplication(appWithGroup);
-                }
+                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
+                InstallApplication(appWithGroup);
             }
         }
 
-        private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup, IEnumerable<InstallationSummary> installationSummaryList)
+        private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup)
         {
             // ToDo: Log all these decisions for debugging.
+
+            // ToDo: installationSummaryList needs to also be by custom group as well.
+
+            // Get the list of InstallationStatus entities to see if we've ever installed this app.
+            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerNameAndAppVersion(this.Name, appWithGroup);
 
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
 
-            if (this.ApplicationWithGroupToForceInstall != null && this.ApplicationWithGroupToForceInstall.Application.Name == appWithGroup.Application.Name &&
-                this.ApplicationWithGroupToForceInstall.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name)
+            if (ForceInstallIsThisAppWithGroup(appWithGroup))
             {
                 this.ApplicationWithGroupToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
                 LogicBase.Save<ApplicationServer>(this);
                 return true;
-            }
+            }            
 
             IEnumerable<InstallationSummary> appSpecificInstallationSummaryList = installationSummaryList.Where(summary => summary.Application == appWithGroup.Application);
 
@@ -133,6 +132,22 @@ namespace PrestoCommon.Entities
 
             if (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
+
+            return false;
+        }
+
+        private bool ForceInstallIsThisAppWithGroup(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            if (this.ApplicationWithGroupToForceInstall != null && this.ApplicationWithGroupToForceInstall.Application.Name == appWithGroup.Application.Name &&
+                this.ApplicationWithGroupToForceInstall.Application.Version == appWithGroup.Application.Version)
+            {
+                // If there is a custom variable group, those need to be equal as well.
+                if ((this.ApplicationWithGroupToForceInstall.CustomVariableGroup == null && appWithGroup.CustomVariableGroup == null) ||
+                    this.ApplicationWithGroupToForceInstall.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name)
+                {
+                    return true;
+                }
+            }
 
             return false;
         }

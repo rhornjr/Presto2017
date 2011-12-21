@@ -87,7 +87,11 @@ namespace PrestoCommon.Entities
         /// </returns>
         public override string ToString()
         {
-            return this.Application.Name + " with " + this.CustomVariableGroup.Name;
+            string groupNameSuffix = string.Empty;
+
+            if (this.CustomVariableGroup != null) { groupNameSuffix = " with " + this.CustomVariableGroup.Name; }
+
+            return this.Application.Name + groupNameSuffix;
         }
     }
 }

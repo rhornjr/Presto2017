@@ -155,14 +155,6 @@ namespace PrestoViewModel.Tabs
             if (viewModel.UserCanceled) { return; }
 
             this.SelectedCustomVariableGroup.Application = viewModel.SelectedApplication;
-
-            // ToDo: I had to do this for now because I couldn't have CustomVariableGroup derive from NotifyPropertyChangedBase
-            //       or I'd get an unsupported hierarchy change with db4o. When I get a chance to start with a fresh DB,
-            //       have all the entities derive from EntityBase, and have EntityBase derive from NotifyPropertyChangedBase.
-            //       EntityBase will give us a placeholder for future implementation, if necessary.
-            //       May want to consider a strategy for dealing with this issue if we need to change the class hierarchy of
-            //       something.
-            NotifyPropertyChanged(() => this.SelectedCustomVariableGroup);
         }
 
         private void RemoveApplication()

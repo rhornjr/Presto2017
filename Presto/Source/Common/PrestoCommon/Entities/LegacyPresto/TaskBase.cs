@@ -53,7 +53,6 @@ namespace PrestoCommon.Entities.LegacyPresto
         /// </summary>
         public TaskBase()
         {
-            // ToDo: Remove this. Did it to pass code analysis.
             this.TaskItemId = null;
         }
 

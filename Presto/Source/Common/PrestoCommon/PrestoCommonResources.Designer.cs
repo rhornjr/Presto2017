@@ -61,14 +61,7 @@ namespace PrestoCommon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Application installed:
-        ///
-        ///App   : {0}
-        ///Server: {1}
-        ///Start : {2}
-        ///End   : {3}
-        ///
-        ///Result: {4}.
+        ///   Looks up a localized string similar to {0} installed on {1}, from {2} to {3}. Result: {4}.
         /// </summary>
         internal static string ApplicationInstalled {
             get {

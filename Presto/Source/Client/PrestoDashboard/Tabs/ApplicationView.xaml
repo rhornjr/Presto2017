@@ -25,10 +25,10 @@
             <ListBox ItemsSource="{Binding Applications}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedApplication}"/>
         </DockPanel>
-        
-        <StackPanel Grid.Column="1">
+
+        <DockPanel Grid.Column="1" LastChildFill="True">
             
-            <Grid>
+            <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
@@ -57,20 +57,8 @@
                 </StackPanel>
 
             </Grid>
-                        
-            <Label Content="Tasks"/>
-            <DataGrid Height="365" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                  ItemsSource="{Binding SelectedApplicationTasks}"
-                  SelectedItem="{Binding SelectedTask}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"
-                                        SortDirection="Ascending" SortMemberPath="{Binding Path=Sequence}"/>
-                    <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>
-                    <DataGridTextColumn Binding="{Binding Path=PrestoTaskType}" Header="Type" Width="120"/>
-                    <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
-                </DataGrid.Columns>
-            </DataGrid>
-            <DockPanel>
+                                    
+            <DockPanel DockPanel.Dock="Bottom" Height="40">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
@@ -83,7 +71,26 @@
                     <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
                 </StackPanel>
             </DockPanel>
-        </StackPanel>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Tasks:"/>
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding SelectedApplicationTasks}"
+                      SelectedItem="{Binding SelectedTask}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"
+                                            SortDirection="Ascending" SortMemberPath="{Binding Path=Sequence}"/>
+                        <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Path=PrestoTaskType}" Header="Type" Width="120"/>
+                        <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+            </DockPanel>
 
     </Grid>
 </UserControl>

@@ -17,6 +17,7 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class CustomVariableGroup : EntityBase
     {
+        private string _name;
         private Application _application;
         private ObservableCollection<CustomVariable> _customVariables;
 
@@ -26,7 +27,16 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this._name; }
+
+            set
+            {
+                this._name = value;
+                NotifyPropertyChanged(() => this.Name);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the application that's associated with this custom variable group. If an application

@@ -37,14 +37,6 @@ namespace PrestoCommon.Entities
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the release folder location.
-        /// </summary>
-        /// <value>
-        /// The release folder location.
-        /// </value>
-        public string ReleaseFolderLocation { get; set; }
-
-        /// <summary>
         /// Gets or sets the tasks.
         /// </summary>
         /// <value>

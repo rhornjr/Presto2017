@@ -284,7 +284,7 @@ namespace PrestoViewModel.Tabs
 
         private void ForceInstallation()
         {
-            ForceInstallationViewModel viewModel = new ForceInstallationViewModel();
+            ForceInstallationViewModel viewModel = new ForceInstallationViewModel(this.SelectedApplication.ForceInstallation);
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 

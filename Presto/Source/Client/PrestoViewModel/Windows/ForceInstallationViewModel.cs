@@ -15,6 +15,7 @@ namespace PrestoViewModel.Windows
     public class ForceInstallationViewModel : ViewModelBase
     {
         private List<DeploymentEnvironment> _deploymentEnvironments;
+        private DeploymentEnvironment _selectedDeploymentEnvironment;
 
         /// <summary>
         /// Gets a value indicating whether [user canceled].
@@ -65,7 +66,7 @@ namespace PrestoViewModel.Windows
                 {
                     this._deploymentEnvironments = Enum.GetValues(typeof(DeploymentEnvironment)).Cast<DeploymentEnvironment>().ToList();
                     this._deploymentEnvironments.Remove(DeploymentEnvironment.Unknown);  // Don't let Unknown be an option.
-                    this.SelectedDeploymentEnvironment = this._deploymentEnvironments[0];  // Set selected to first as default
+                    if (this.SelectedDeploymentEnvironment == DeploymentEnvironment.Unknown) { this.SelectedDeploymentEnvironment = this._deploymentEnvironments[0]; } // Set selected to first as default
                 }
                 return this._deploymentEnvironments;
             }
@@ -77,14 +78,26 @@ namespace PrestoViewModel.Windows
         /// <value>
         /// The selected deployment environment.
         /// </value>
-        public DeploymentEnvironment SelectedDeploymentEnvironment { get; set; }
+        public DeploymentEnvironment SelectedDeploymentEnvironment
+        {
+            get { return this._selectedDeploymentEnvironment; }
+
+            set
+            {
+                this._selectedDeploymentEnvironment = value;
+                NotifyPropertyChanged(() => this.SelectedDeploymentEnvironment);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ForceInstallationViewModel"/> class.
         /// </summary>
-        public ForceInstallationViewModel()
+        public ForceInstallationViewModel(ForceInstallation forceInstallation)
         {
             if (DesignMode.IsInDesignMode) { return; }
+
+            // Set the default environment to whatever was used last.
+            if (forceInstallation != null) { this.SelectedDeploymentEnvironment = forceInstallation.ForceInstallationEnvironment; }
 
             Initialize();            
         }

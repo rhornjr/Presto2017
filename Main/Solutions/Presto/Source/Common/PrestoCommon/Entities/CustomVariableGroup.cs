@@ -115,7 +115,7 @@ namespace PrestoCommon.Entities
             if (appGroup != null && appGroup.CustomVariables != null) { allCustomVariables.AddRange(appGroup.CustomVariables); }
 
             // Add the override custom variables. If they already exist in our list, replace them.
-            AddRangeOverride(allCustomVariables, applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables.ToList());
+            AddRangeOverride(allCustomVariables, applicationWithOverrideVariableGroup);
 
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
             {
@@ -128,9 +128,16 @@ namespace PrestoCommon.Entities
             return ResolveCustomVariable(rawString, allCustomVariables);
         }
 
-        private static void AddRangeOverride(List<CustomVariable> allCustomVariables, List<CustomVariable> newCustomVariables)
+        private static void AddRangeOverride(List<CustomVariable> allCustomVariables, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
+            if (applicationWithOverrideVariableGroup.CustomVariableGroup == null || applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables == null)
+            {
+                return;  // No custom variable group to add to main list.
+            }
+
             // Add the new custom variables to the list, overwriting any duplicates.
+
+            List<CustomVariable> newCustomVariables = applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables.ToList();
 
             // First, remove duplicates.
             foreach (CustomVariable newCustomVariable in newCustomVariables)

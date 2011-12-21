@@ -183,6 +183,12 @@ namespace PrestoCommon.Entities
         {
             TaskXmlModify taskXmlModifyResolved = new TaskXmlModify();
 
+            taskXmlModifyResolved.Description          = this.Description;
+            taskXmlModifyResolved.FailureCausesAllStop = this.FailureCausesAllStop;
+            taskXmlModifyResolved.PrestoTaskType       = this.PrestoTaskType;
+            taskXmlModifyResolved.Sequence             = this.Sequence;
+            taskXmlModifyResolved.TaskSucceeded        = this.TaskSucceeded;
+
             taskXmlModifyResolved.AttributeKey           = CustomVariableGroup.ResolveCustomVariable(this.AttributeKey, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.AttributeKeyValue      = CustomVariableGroup.ResolveCustomVariable(this.AttributeKeyValue, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.AttributeToChange      = CustomVariableGroup.ResolveCustomVariable(this.AttributeToChange, applicationServer, applicationWithOverrideVariableGroup);

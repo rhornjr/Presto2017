@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Security.Principal;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -290,10 +289,9 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
-                "{0} selected to be installed by {1}.",
-                this.SelectedApplication,
-                WindowsIdentity.GetCurrent().Name));
+            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+                "{0} selected to be installed.",
+                this.SelectedApplication));
 
             this.SelectedApplication.ForceInstallation = viewModel.ForceInstallation;
         }   

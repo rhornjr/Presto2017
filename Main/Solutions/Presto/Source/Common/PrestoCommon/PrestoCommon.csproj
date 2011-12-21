@@ -72,6 +72,7 @@
     <Compile Include="Entities\LegacyPresto\TaskDosCommand.cs" />
     <Compile Include="Entities\LegacyPresto\TaskMsi.cs" />
     <Compile Include="Entities\LegacyPresto\TaskXmlModify.cs" />
+    <Compile Include="Entities\LogMessage.cs" />
     <Compile Include="Entities\NotifyPropertyChangedBase.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskCopyFile.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />
+    <Compile Include="Logic\LogMessageLogic.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>

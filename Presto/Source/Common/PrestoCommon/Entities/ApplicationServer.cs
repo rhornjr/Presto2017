@@ -55,12 +55,12 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
-        /// Gets or sets the application to force install.
+        /// Gets or sets the application with group to force install.
         /// </summary>
         /// <value>
-        /// The application to force install.
+        /// The application with group to force install.
         /// </value>
-        public Application ApplicationToForceInstall { get; set; }
+        public ApplicationWithOverrideVariableGroup ApplicationWithGroupToForceInstall { get; set; }
 
         /// <summary>
         /// Gets the custom variable groups.
@@ -97,7 +97,7 @@ namespace PrestoCommon.Entities
             // If we find an app that needs to be installed, install it.
             foreach (ApplicationWithOverrideVariableGroup appWithGroup in this.ApplicationsWithOverrideGroup)
             {
-                if (ApplicationShouldBeInstalled(appWithGroup.Application, installationSummaryList))
+                if (ApplicationShouldBeInstalled(appWithGroup, installationSummaryList))
                 {
                     LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
 
@@ -106,32 +106,33 @@ namespace PrestoCommon.Entities
             }
         }
 
-        private bool ApplicationShouldBeInstalled(Application application, IEnumerable<InstallationSummary> installationSummaryList)
+        private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup, IEnumerable<InstallationSummary> installationSummaryList)
         {
             // ToDo: Log all these decisions for debugging.
 
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
 
-            if (this.ApplicationToForceInstall != null && this.ApplicationToForceInstall.Name == application.Name)
+            if (this.ApplicationWithGroupToForceInstall != null && this.ApplicationWithGroupToForceInstall.Application.Name == appWithGroup.Application.Name &&
+                this.ApplicationWithGroupToForceInstall.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name)
             {
-                this.ApplicationToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
+                this.ApplicationWithGroupToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
                 LogicBase.Save<ApplicationServer>(this);
                 return true;
             }
 
-            IEnumerable<InstallationSummary> appSpecificInstallationSummaryList = installationSummaryList.Where(summary => summary.Application == application);
+            IEnumerable<InstallationSummary> appSpecificInstallationSummaryList = installationSummaryList.Where(summary => summary.Application == appWithGroup.Application);
 
             if (appSpecificInstallationSummaryList == null || appSpecificInstallationSummaryList.Count() < 1) { return true; }
 
             // If there is no force installation time, then no need to install.
-            if (application.ForceInstallation == null || application.ForceInstallation.ForceInstallationTime == null) { return false; }
+            if (appWithGroup.Application.ForceInstallation == null || appWithGroup.Application.ForceInstallation.ForceInstallationTime == null) { return false; }
 
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install
             InstallationSummary mostRecentInstallationSummary = appSpecificInstallationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
-            if (mostRecentInstallationSummary.InstallationStart < application.ForceInstallation.ForceInstallationTime &&
-                application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
+            if (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
+                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
 
             return false;
         }

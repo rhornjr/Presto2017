@@ -179,7 +179,7 @@ namespace PrestoViewModel.Tabs
 
             if (!UserChoosesYes(message)) { return; }
 
-            this.SelectedApplicationServer.ApplicationToForceInstall = this.SelectedApplicationWithOverrideGroup.Application;
+            this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = this.SelectedApplicationWithOverrideGroup;
             
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
 

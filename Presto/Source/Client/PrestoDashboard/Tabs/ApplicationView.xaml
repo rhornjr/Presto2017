@@ -34,7 +34,6 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -50,12 +49,9 @@
                 <Label Grid.Column="0" Grid.Row="2" Content="Version: "/>
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplication.Version}"/>
 
-                <Label Grid.Column="0" Grid.Row="3" Content="Release folder location: "/>
-                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding SelectedApplication.ReleaseFolderLocation}"/>
+                <Label Grid.Column="0" Grid.Row="3" Content="Force installation: "/>                    
 
-                <Label Grid.Column="0" Grid.Row="4" Content="Force installation: "/>                    
-
-                <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
                     <Label Content="{Binding SelectedApplication.ForceInstallation}" Width="280"/>
                     <Button Content="..." Height="25" Width="25" Command="{Binding ForceInstallationCommand}" />
                 </StackPanel>
@@ -63,7 +59,7 @@
             </Grid>
                         
             <Label Content="Tasks"/>
-            <DataGrid Height="340" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+            <DataGrid Height="365" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   ItemsSource="{Binding SelectedApplicationTasks}"
                   SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>

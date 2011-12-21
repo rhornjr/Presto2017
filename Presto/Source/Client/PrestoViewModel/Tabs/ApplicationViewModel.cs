@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Principal;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -165,7 +166,7 @@ namespace PrestoViewModel.Tabs
             this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected());
             this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected());
 
-            this.ForceInstallationCommand = new RelayCommand(_ => GetForceInstallation(), _ => ApplicationIsSelected());
+            this.ForceInstallationCommand = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected());
 
             this.AddTaskCommand      = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected());
             this.EditTaskCommand     = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
@@ -281,13 +282,18 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        private void GetForceInstallation()
+        private void ForceInstallation()
         {
             ForceInstallationViewModel viewModel = new ForceInstallationViewModel();
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
             if (viewModel.UserCanceled) { return; }
+
+            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                "{0} selected to be installed by {1}.",
+                this.SelectedApplication,
+                WindowsIdentity.GetCurrent().Name));
 
             this.SelectedApplication.ForceInstallation = viewModel.ForceInstallation;
         }   

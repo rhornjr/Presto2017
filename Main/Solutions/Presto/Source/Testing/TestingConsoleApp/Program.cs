@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Linq;
 using PrestoCommon.Entities;
+using SelfUpdatingServiceHost;
 
 namespace TestingConsoleApp
 {
@@ -18,7 +21,7 @@ namespace TestingConsoleApp
         {
             try
             {
-                Console.WriteLine("(R)ead, (W)rite, (B)oth, (C)reate objects, E(x)it");
+                Console.WriteLine("(R)ead, (W)rite, (B)oth, (C)reate objects, (U)pdater manifest, E(x)it");
                 ConsoleKey key = Console.ReadKey().Key;
 
                 switch (key)
@@ -42,6 +45,10 @@ namespace TestingConsoleApp
                         TestReadFromDatabase();
                         PressAnyKeyToExit();
                         break;
+                    case ConsoleKey.U:
+                        SerializeUpdaterManifest();
+                        PressAnyKeyToExit();
+                        break;
                     default:
                         break;
                 }                                               
@@ -50,6 +57,21 @@ namespace TestingConsoleApp
             {
                 Console.WriteLine(ex.ToString());
             }            
+        }
+
+        private static void SerializeUpdaterManifest()
+        {
+            UpdaterManifest updaterManifest = new UpdaterManifest();
+
+            updaterManifest.Version = "1.0.0.0";
+
+            string filePathAndName = @"c:\temp\Derating.UpdaterManifest";
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Create))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdaterManifest));
+                xmlSerializer.Serialize(fileStream, updaterManifest);
+            }
         }
 
         private static void PressAnyKeyToExit()

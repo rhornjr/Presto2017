@@ -68,6 +68,10 @@
       <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
       <Name>PrestoCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Server\SelfUpdatingServiceHost\SelfUpdatingServiceHost.csproj">
+      <Project>{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}</Project>
+      <Name>SelfUpdatingServiceHost</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

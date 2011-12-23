@@ -3,11 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
     <UserControl.DataContext>
         <Binding Source="{StaticResource CustomVariableGroupViewModel}"/>
     </UserControl.DataContext>
+
+    <!-- This works for the initial sort, but when members get added to the collection
+         the sort doesn't get updated. That's because CollectionViewSource doesn't 
+         implement INotifyPropertyChanged. -->
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="SortedGroups" Source="{Binding CustomVariableGroups}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,7 +39,8 @@
                     <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" />
                 </StackPanel>
             </StackPanel>
-                <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"
+                <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource SortedGroups}}"
+                         DisplayMemberPath="Name"
                          SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
         </DockPanel>
 
@@ -84,7 +97,7 @@
                       ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"                      
                       SelectedItem="{Binding SelectedCustomVariable}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="170" />
+                        <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="170"/>
                         <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>

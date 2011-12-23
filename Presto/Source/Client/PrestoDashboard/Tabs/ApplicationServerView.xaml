@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
     <UserControl.DataContext>
@@ -102,7 +103,8 @@
                 <Label Grid.Row="0" Content="Applications:"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                           ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
-                          SelectedItem="{Binding SelectedApplicationWithOverrideGroup}">
+                          ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedApplicationsWithOverrideGroup}"
+                          SelectionMode="Extended">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Application.Name}" Header="Name" Width="150" />
                         <DataGridTextColumn Binding="{Binding Path=Application.Version}" Header="Version" Width="100"/>
@@ -114,6 +116,8 @@
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Force..." Command="{Binding ForceApplicationCommand}" />
                 </StackPanel>
             </Grid>

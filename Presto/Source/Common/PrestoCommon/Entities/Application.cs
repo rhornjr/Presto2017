@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Xml.Serialization;
 
 namespace PrestoCommon.Entities
 {
@@ -42,6 +43,7 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The tasks.
         /// </value>
+        [XmlIgnore]
         public ObservableCollection<TaskBase> Tasks
         {
             get

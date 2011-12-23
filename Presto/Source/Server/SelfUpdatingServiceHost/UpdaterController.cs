@@ -203,17 +203,25 @@ namespace SelfUpdatingServiceHost
                 CopyFiles();
             }
 
-            string configFile = Path.Combine(_runningAppPath, this._appName + ".exe.config");
-            string cachePath  = Path.Combine(_runningAppPath, "_cache");
-            string assembly   = Path.Combine(_runningAppPath, this._appName + ".exe");
+            string configFile   = Path.Combine(_runningAppPath, this._appName + ".exe.config");
+            string cachePath    = Path.Combine(_runningAppPath, "_cache");
+            string assemblyName = Path.Combine(_runningAppPath, this._appName + ".exe");
 
             AppDomainSetup appDomainSetup    = new AppDomainSetup();
-            appDomainSetup.ApplicationName   = this._appName;
+            appDomainSetup.ApplicationName = this._appName;
+            //appDomainSetup.ApplicationBase   = _runningAppPath;
             appDomainSetup.ShadowCopyFiles   = "true";  // Note: not a bool.
             appDomainSetup.CachePath         = cachePath;
             appDomainSetup.ConfigurationFile = configFile;
 
+            //PermissionSet permissionSet = new PermissionSet(PermissionState.Unrestricted);
+            //permissionSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, this._sourceBinaryPath));
+            //permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
+
+            //this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup, AppDomain.CurrentDomain.PermissionSet);
             this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);
+
+            // ToDo: See comments at the bottom of this file for a better way to load/run/manage the app domain.            
 
             this._tokenSource = new CancellationTokenSource();
 
@@ -221,7 +229,7 @@ namespace SelfUpdatingServiceHost
             {
                 try
                 {
-                    this._appDomain.ExecuteAssembly(assembly);
+                    this._appDomain.ExecuteAssembly(assemblyName);
                 }
                 catch (AppDomainUnloadedException ex)
                 {
@@ -248,3 +256,17 @@ namespace SelfUpdatingServiceHost
         }
     }
 }
+
+// ToDo: This may be the preferred approach (instead of this._appDomain.ExecuteAssembly(assemblyName);). If we instead use
+//       CreateInstanceFromAndUnwrap(), then we have a proxy (the prestoTaskRunnerService instance) with which we can
+//       talk. That means we can call Stop(), or other methods to tell the PTR to elegantly shut down. The one problem with
+//       this is that this self-updating app must have a reference to the PTR. That's not generic and won't be usable that
+//       way for other apps that want to automatically restart.
+// Note: Didn't do this just yet because there are other priorities at the moment. Need to look into this.
+// Note: http://stackoverflow.com/questions/88717/loading-dlls-into-a-separate-appdomain shows a short, clean example, and says
+//       this: As far as I know PrestoTaskRunnerService has to inherit from MarshalByRefObject. That might be a problem,
+//       because PrestoTaskRunnerService derives from ServiceBase, but PrestoTaskRunnerService shouldn't even be a service.
+//       We'll need to change that to be a simple exe or console app.
+//Type type = typeof(PrestoTaskRunnerService);
+//PrestoTaskRunnerService prestoTaskRunnerService = (PrestoTaskRunnerService)this._appDomain.CreateInstanceFromAndUnwrap(assemblyName, type.FullName);
+//prestoTaskRunnerService.Stop();

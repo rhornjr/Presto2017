@@ -2,13 +2,25 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
     <UserControl.DataContext>
         <Binding Source="{StaticResource ApplicationServerViewModel}"/>
-    </UserControl.DataContext>
+    </UserControl.DataContext>    
 
+    <!-- This works for the initial sort, but when members get added to the collection
+         the sort doesn't get updated. That's because CollectionViewSource doesn't 
+         implement INotifyPropertyChanged. -->
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="SortedServers" Source="{Binding ApplicationServers}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>            
+        </CollectionViewSource>
+    </UserControl.Resources>    
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -21,7 +33,8 @@
                 <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddServerCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteServerCommand}" />
             </StackPanel>
-            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding ApplicationServers}" DisplayMemberPath="Name"
+
+            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource SortedServers}}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
         </DockPanel>
 

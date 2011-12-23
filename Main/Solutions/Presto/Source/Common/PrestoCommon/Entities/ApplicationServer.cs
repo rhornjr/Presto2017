@@ -115,8 +115,6 @@ namespace PrestoCommon.Entities
         {
             // ToDo: Log all these decisions for debugging.
 
-            // ToDo: installationSummaryList needs to also be by custom group as well.
-
             // Get the list of InstallationStatus entities to see if we've ever installed this app.
             IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerNameAppVersionAndGroup(this.Name, appWithGroup);
 

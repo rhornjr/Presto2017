@@ -139,7 +139,7 @@ namespace PrestoCommon.Entities
 
             List<CustomVariable> newCustomVariables = applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables.ToList();
 
-            // First, remove duplicates.
+            // First, remove variables that are the same as the new/override variables.
             foreach (CustomVariable newCustomVariable in newCustomVariables)
             {
                 CustomVariable customVariable = allCustomVariables.Where(variable => variable.Key == newCustomVariable.Key).FirstOrDefault();

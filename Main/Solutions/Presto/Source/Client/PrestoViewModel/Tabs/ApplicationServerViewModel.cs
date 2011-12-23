@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
 using PrestoCommon.Logic;
@@ -24,7 +26,7 @@ namespace PrestoViewModel.Tabs
         private List<DeploymentEnvironment> _deploymentEnvironments;
         private ObservableCollection<ApplicationServer> _applicationServers;
         private ApplicationServer _selectedApplicationServer;
-        private ApplicationWithOverrideVariableGroup _selectedApplicationWithOverrideGroup;
+        private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
 
         /// <summary>
         /// Gets the add server command.
@@ -55,6 +57,16 @@ namespace PrestoViewModel.Tabs
         /// Gets the remove application command.
         /// </summary>
         public ICommand RemoveApplicationCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the import application command.
+        /// </summary>
+        public ICommand ImportApplicationCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the export application command.
+        /// </summary>
+        public ICommand ExportApplicationCommand { get; private set; }
 
         /// <summary>
         /// Gets the force application command.
@@ -135,14 +147,15 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The selected application.
         /// </value>
-        public ApplicationWithOverrideVariableGroup SelectedApplicationWithOverrideGroup
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public ObservableCollection<ApplicationWithOverrideVariableGroup> SelectedApplicationsWithOverrideGroup
         {
-            get { return this._selectedApplicationWithOverrideGroup; }
+            get { return this._selectedApplicationsWithOverrideGroup; }
 
             set
             {
-                this._selectedApplicationWithOverrideGroup = value;
-                this.NotifyPropertyChanged(() => this.SelectedApplicationWithOverrideGroup);
+                this._selectedApplicationsWithOverrideGroup = value;
+                this.NotifyPropertyChanged(() => this.SelectedApplicationsWithOverrideGroup);
             }
         }
 
@@ -164,32 +177,78 @@ namespace PrestoViewModel.Tabs
             this.SaveServerCommand   = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.EditApplicationCommand   = new RelayCommand(_ => EditApplication(), _ => ApplicationIsSelected());
-            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ApplicationIsSelected());
-            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => ApplicationIsSelected());
+            this.EditApplicationCommand   = new RelayCommand(_ => EditApplication(), _ => ExactlyOneApplicationIsSelected());
+            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ExactlyOneApplicationIsSelected());
+            this.ImportApplicationCommand = new RelayCommand(_ => ImportApplication(), _ => AppServerIsSelected());
+            this.ExportApplicationCommand = new RelayCommand(_ => ExportApplication(), _ => AtLeastOneApplicationIsSelected());
+            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => ExactlyOneApplicationIsSelected());
 
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
+        }
+
+        private void ExportApplication()
+        {
+            string filePathAndName = SaveFilePathAndNameFromUser(".AppsWithGroup");
+
+            if (filePathAndName == null) { return; }
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Create))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ApplicationWithOverrideVariableGroup>));
+                xmlSerializer.Serialize(fileStream, this.SelectedApplicationsWithOverrideGroup.ToList());
+            }
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemExported, filePathAndName);
+        }
+
+        private void ImportApplication()
+        {
+            string filePathAndName = GetFilePathAndNameFromUser();
+
+            if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
+
+            List<ApplicationWithOverrideVariableGroup> applicationsWithOverrideVariableGroup;
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ApplicationWithOverrideVariableGroup>));
+                applicationsWithOverrideVariableGroup = xmlSerializer.Deserialize(fileStream) as List<ApplicationWithOverrideVariableGroup>;
+            }
+
+            foreach (ApplicationWithOverrideVariableGroup group in applicationsWithOverrideVariableGroup)
+            {
+                ApplicationWithOverrideVariableGroup groupFromDatabase =
+                    ApplicationWithOverrideVariableGroupLogic.GetByAppNameAndGroupName(group.Application.Name, group.CustomVariableGroup.Name);
+                this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(groupFromDatabase);
+            }
+
+            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }        
 
         private void ForceApplication()
         {
+            ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
+
+            if (selectedAppWithGroup == null) { return; }
+
             string message = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ConfirmInstallAppOnAppServerMessage, this.SelectedApplicationWithOverrideGroup, this.SelectedApplicationServer);
+                ViewModelResources.ConfirmInstallAppOnAppServerMessage, selectedAppWithGroup, this.SelectedApplicationServer);
 
             if (!UserChoosesYes(message)) { return; }
 
             LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
                 "{0} selected to be installed on {1}.",
-                this.SelectedApplicationWithOverrideGroup,
+                selectedAppWithGroup,
                 this.SelectedApplicationServer));
 
-            this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = this.SelectedApplicationWithOverrideGroup;
+            this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = selectedAppWithGroup;
             
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.AppWillBeInstalledOnAppServer, this.SelectedApplicationWithOverrideGroup, this.SelectedApplicationServer);
+                ViewModelResources.AppWillBeInstalledOnAppServer, selectedAppWithGroup, this.SelectedApplicationServer);
         }                   
 
         private void AddServer()
@@ -249,28 +308,52 @@ namespace PrestoViewModel.Tabs
 
         private void EditApplication()
         {
+            ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
+
+            if (selectedAppWithGroup == null) { return; }
+
             CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel();
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
             if (viewModel.UserCanceled) { return; }
 
-            this.SelectedApplicationWithOverrideGroup.CustomVariableGroup = viewModel.SelectedCustomVariableGroup;
+            selectedAppWithGroup.CustomVariableGroup = viewModel.SelectedCustomVariableGroup;
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
         }
 
-        private bool ApplicationIsSelected()
+        private bool ExactlyOneApplicationIsSelected()
         {
-            return this.SelectedApplicationWithOverrideGroup != null;
+            return this.SelectedApplicationsWithOverrideGroup != null && this.SelectedApplicationsWithOverrideGroup.Count == 1;
+        }
+
+        private bool AtLeastOneApplicationIsSelected()
+        {
+            return this.SelectedApplicationsWithOverrideGroup != null && this.SelectedApplicationsWithOverrideGroup.Count >= 1;
         }
 
         private void RemoveApplication()
         {
-            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(this.SelectedApplicationWithOverrideGroup);
+            ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
+
+            if (selectedAppWithGroup == null) { return; }
+
+            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
 
             LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
-        }                
+        }
+
+        private ApplicationWithOverrideVariableGroup GetSelectedAppWithGroupWhereOnlyOneIsSelected()
+        {
+            if (this.SelectedApplicationsWithOverrideGroup == null || this.SelectedApplicationsWithOverrideGroup.Count != 1)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = "To perform the requested action, please select exactly one row.";
+                return null;
+            }
+            
+            return this.SelectedApplicationsWithOverrideGroup[0];
+        }
 
         private void AddVariableGroup()
         {

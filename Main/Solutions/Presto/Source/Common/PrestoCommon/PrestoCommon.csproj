@@ -84,6 +84,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
+    <Compile Include="Logic\ApplicationWithOverrideVariableGroupLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />

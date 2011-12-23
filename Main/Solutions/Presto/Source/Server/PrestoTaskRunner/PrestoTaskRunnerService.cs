@@ -30,11 +30,14 @@ namespace PrestoTaskProcessor
             {
                 _prestoTaskRunnerService = new PrestoTaskRunnerService();
 
-                if (!Environment.UserInteractive)
-                {
-                    Run(_prestoTaskRunnerService);
-                    return;
-                }
+                // Can't run this as a service because the outer service (SelfUpdatingServiceHost) is already running as a service.
+                // If we try to run this as a service, we get this error:
+                // Service cannot be started. An instance of the service is already running
+                //if (!Environment.UserInteractive)
+                //{
+                //    Run(_prestoTaskRunnerService);
+                //    return;
+                //}
 
                 // Run service as console app
                 _prestoTaskRunnerService.OnStart(args);

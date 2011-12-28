@@ -30,7 +30,7 @@ namespace PrestoCommon.Logic
         {
             LogMessage logMessage = new LogMessage(message, DateTime.Now, WindowsIdentity.GetCurrent().Name);
 
-            DataAccessFactory.GetDataInterface<ILogMessageData>().SaveLogMessage(logMessage);
+            LogicBase.Save<LogMessage>(logMessage);
         }
     }
 }

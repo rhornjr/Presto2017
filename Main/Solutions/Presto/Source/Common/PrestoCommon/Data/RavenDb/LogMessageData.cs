@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 using Raven.Client;
@@ -20,19 +20,14 @@ namespace PrestoCommon.Data.RavenDb
         {
             using (IDocumentSession session = Database.OpenSession())
             {
-                return session.Advanced.LuceneQuery<LogMessage>()
-                    .OrderBy("MessageCreatedTime")  // ToDo: This needs to be DESC
+                return session.Query<LogMessage>()
+                    .OrderByDescending(logMessage => logMessage.MessageCreatedTime)
                     .Take(numberToRetrieve);
-            }
-        }
 
-        /// <summary>
-        /// Saves the log message.
-        /// </summary>
-        /// <param name="logMessage">The log message.</param>
-        public void SaveLogMessage(LogMessage logMessage)
-        {
-            throw new NotImplementedException();
+                //return session.Advanced.LuceneQuery<LogMessage>()
+                //    .OrderBy("-MessageCreatedTime")
+                //    .Take(numberToRetrieve);
+            }
         }
     }
 }

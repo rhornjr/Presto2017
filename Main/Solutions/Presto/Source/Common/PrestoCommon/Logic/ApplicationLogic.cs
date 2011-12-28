@@ -18,14 +18,5 @@ namespace PrestoCommon.Logic
         {
             return DataAccessFactory.GetDataInterface<IApplicationData>().GetAll();
         }
-
-        /// <summary>
-        /// Saves the specified application.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        public static void Save(Application application)
-        {
-            DataAccessFactory.GetDataInterface<IApplicationData>().Save(application);
-        }
     }
 }

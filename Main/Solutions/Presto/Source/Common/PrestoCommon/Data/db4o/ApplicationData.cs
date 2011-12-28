@@ -23,15 +23,5 @@ namespace PrestoCommon.Data.db4o
 
             return apps;
         }
-
-        /// <summary>
-        /// Saves the specified application.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        public void Save(Application application)
-        {
-            Database.Store(application);
-            Database.Commit();
-        }
     }
 }

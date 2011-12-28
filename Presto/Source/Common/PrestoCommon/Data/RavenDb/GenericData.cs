@@ -1,5 +1,4 @@
-﻿using System;
-using PrestoCommon.Data.Interfaces;
+﻿using PrestoCommon.Data.Interfaces;
 using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
@@ -30,7 +29,11 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="objectToDelete">The object to delete.</param>
         public void Delete<T>(T objectToDelete)
         {
-            throw new NotImplementedException();
+            using (IDocumentSession session = Database.OpenSession())
+            {
+                session.Delete(objectToDelete);
+                session.SaveChanges();
+            }
         }
     }
 }

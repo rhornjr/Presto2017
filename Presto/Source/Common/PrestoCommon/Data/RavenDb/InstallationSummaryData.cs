@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 using Raven.Client;
@@ -19,7 +19,24 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            throw new NotImplementedException();
+            using (IDocumentSession session = Database.OpenSession())
+            {
+                IEnumerable<InstallationSummary> installationSummaryList =
+                    session.Query<InstallationSummary>()
+                    .Where(summary =>
+                        summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
+                        && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
+                        && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant());
+
+                if (appWithGroup.CustomVariableGroup == null)
+                {
+                    return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup == null);
+                }
+
+                return installationSummaryList.Where(summary =>
+                    summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup != null &&
+                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name);
+            }
         }
 
         /// <summary>
@@ -31,8 +48,8 @@ namespace PrestoCommon.Data.RavenDb
         {
             using (IDocumentSession session = Database.OpenSession())
             {
-                return session.Advanced.LuceneQuery<InstallationSummary>()
-                    .OrderBy("InstallationStart")  // ToDo: This needs to be DESC
+                return session.Query<InstallationSummary>()
+                    .OrderByDescending(summary => summary.InstallationStart)
                     .Take(numberToRetrieve);
             }
         }

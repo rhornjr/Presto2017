@@ -219,7 +219,7 @@ namespace PrestoViewModel.Tabs
 
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
-            ApplicationLogic.Save(this.SelectedApplication);
+            LogicBase.Save(this.SelectedApplication);
         }
 
         private static TaskViewModel GetTaskViewModel()
@@ -321,7 +321,7 @@ namespace PrestoViewModel.Tabs
                 sequence++;
             }            
 
-            ApplicationLogic.Save(this.SelectedApplication);
+            LogicBase.Save(this.SelectedApplication);
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
         }
 

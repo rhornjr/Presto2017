@@ -13,11 +13,5 @@ namespace PrestoCommon.Data.Interfaces
         /// </summary>
         /// <returns></returns>
         IEnumerable<Application> GetAll();
-
-        /// <summary>
-        /// Saves the specified application.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        void Save(Application application);
     }
 }

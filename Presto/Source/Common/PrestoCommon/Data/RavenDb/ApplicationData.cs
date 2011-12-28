@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 using Raven.Client;
@@ -19,17 +18,8 @@ namespace PrestoCommon.Data.RavenDb
         {
             using (IDocumentSession session = Database.OpenSession())
             {
-                return session.Load<Application>();
+                return session.Query<Application>();
             }
-        }
-
-        /// <summary>
-        /// Saves the specified application.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        public void Save(Application application)
-        {
-            throw new NotImplementedException();
         }
     }
 }

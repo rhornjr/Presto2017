@@ -26,15 +26,5 @@ namespace PrestoCommon.Data.db4o
 
             return logMessages;
         }
-
-        /// <summary>
-        /// Saves the log message.
-        /// </summary>
-        /// <param name="logMessage">The log message.</param>
-        public void SaveLogMessage(LogMessage logMessage)
-        {
-            Database.Store(logMessage);
-            Database.Commit();
-        }
     }
 }

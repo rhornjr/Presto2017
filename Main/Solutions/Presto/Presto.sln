@@ -49,6 +49,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MvvmFramework", "MvvmFramew
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSelectBehavior", "Source\MvvmFramework\MultiSelectBehavior\MultiSelectBehavior.csproj", "{9E41ADBA-A55C-4F71-BF0A-463C82334B13}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDb", "RavenDb", "{B59FBDF3-226E-4F6B-B564-6F795AA85689}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll = Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 10
@@ -208,6 +216,7 @@ Global
 		{038990D2-3F29-4D89-97A3-A11BC53D937E} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
 		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
 		{235D7E4B-CC01-4F82-9F25-E9DF4D81F87B} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
+		{B59FBDF3-226E-4F6B-B564-6F795AA85689} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
 		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0} = {D399A7C6-4F03-44BE-B634-F5E54FC48B9C}
 		{3C7DAE5E-BDED-4B41-9392-59E5D8CEC11F} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}

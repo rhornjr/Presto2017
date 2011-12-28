@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Db4objects.Db4o.Linq;
+using PrestoCommon.Data;
+using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
@@ -8,7 +8,7 @@ namespace PrestoCommon.Logic
     /// <summary>
     /// 
     /// </summary>
-    public class CustomVariableGroupLogic : LogicBase
+    public static class CustomVariableGroupLogic
     {
         /// <summary>
         /// Gets all.
@@ -16,12 +16,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static IEnumerable<CustomVariableGroup> GetAll()
         {
-            IEnumerable<CustomVariableGroup> groups = from CustomVariableGroup customGroup in Database
-                                                      select customGroup;
-
-            Database.Ext().Refresh(groups, 10);
-
-            return groups;
+            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetAll();
         }
 
         /// <summary>
@@ -31,15 +26,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static CustomVariableGroup Get(string applicationName)
         {
-            CustomVariableGroup group = (from CustomVariableGroup customGroup in Database
-                                         where customGroup.Application != null && customGroup.Application.Name == applicationName
-                                         select customGroup).FirstOrDefault();
-
-            if (group == null) { return null; }
-
-            Database.Ext().Refresh(group, 10);
-
-            return group;
+            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByName(applicationName);
         }
     }
 }

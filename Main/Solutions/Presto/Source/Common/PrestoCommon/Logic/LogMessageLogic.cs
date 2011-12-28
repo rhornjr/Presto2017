@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using Db4objects.Db4o.Linq;
+using PrestoCommon.Data;
+using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
@@ -10,7 +10,7 @@ namespace PrestoCommon.Logic
     /// <summary>
     /// 
     /// </summary>
-    public class LogMessageLogic : LogicBase
+    public static class LogMessageLogic
     {
         /// <summary>
         /// Gets the most recent by created time.
@@ -19,13 +19,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static IEnumerable<LogMessage> GetMostRecentByCreatedTime(int numberToRetrieve)
         {
-            IEnumerable<LogMessage> logMessages = (from LogMessage logMessage in Database
-                                                   orderby logMessage.MessageCreatedTime descending
-                                                   select logMessage).Take(numberToRetrieve);
-
-            Database.Ext().Refresh(logMessages, 10);
-
-            return logMessages;
+            return DataAccessFactory.GetDataInterface<ILogMessageData>().GetMostRecentByCreatedTime(numberToRetrieve);
         }
 
         /// <summary>
@@ -36,8 +30,7 @@ namespace PrestoCommon.Logic
         {
             LogMessage logMessage = new LogMessage(message, DateTime.Now, WindowsIdentity.GetCurrent().Name);
 
-            Database.Store(logMessage);
-            Database.Commit();
+            DataAccessFactory.GetDataInterface<ILogMessageData>().SaveLogMessage(logMessage);
         }
     }
 }

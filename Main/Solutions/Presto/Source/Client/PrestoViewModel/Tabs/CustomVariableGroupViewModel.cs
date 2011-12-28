@@ -249,7 +249,7 @@ namespace PrestoViewModel.Tabs
                 customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
             }
 
-            ApplicationLogic.Save(customVariableGroup);
+            LogicBase.Save(customVariableGroup);            
 
             this.CustomVariableGroups.Add(customVariableGroup);
         }

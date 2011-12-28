@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Db4objects.Db4o.Linq;
+using PrestoCommon.Data;
+using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
@@ -7,7 +8,7 @@ namespace PrestoCommon.Logic
     /// <summary>
     /// 
     /// </summary>
-    public class ApplicationLogic : LogicBase
+    public static class ApplicationLogic
     {
         /// <summary>
         /// Gets all.
@@ -15,12 +16,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static IEnumerable<Application> GetAll()
         {
-            IEnumerable<Application> apps = from Application app in Database
-                                            select app;
-
-            Database.Ext().Refresh(apps, 10);
-
-            return apps;
+            return DataAccessFactory.GetDataInterface<IApplicationData>().GetAll();
         }
 
         /// <summary>
@@ -29,8 +25,7 @@ namespace PrestoCommon.Logic
         /// <param name="application">The application.</param>
         public static void Save(Application application)
         {
-            Database.Store(application);
-            Database.Commit();
+            DataAccessFactory.GetDataInterface<IApplicationData>().Save(application);
         }
     }
 }

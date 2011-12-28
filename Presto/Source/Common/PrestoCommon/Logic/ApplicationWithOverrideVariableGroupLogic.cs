@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Db4objects.Db4o.Linq;
+﻿using PrestoCommon.Data;
+using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
@@ -7,7 +7,7 @@ namespace PrestoCommon.Logic
     /// <summary>
     /// 
     /// </summary>
-    public class ApplicationWithOverrideVariableGroupLogic : LogicBase
+    public static class ApplicationWithOverrideVariableGroupLogic
     {
         /// <summary>
         /// Gets the name of the by.
@@ -17,15 +17,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static ApplicationWithOverrideVariableGroup GetByAppNameAndGroupName(string appName, string groupName)
         {
-            ApplicationWithOverrideVariableGroup appOverrideGroup =
-                (from ApplicationWithOverrideVariableGroup appGroup in Database
-                 where appGroup.Application.Name.ToUpperInvariant() == appName.ToUpperInvariant()
-                    && appGroup.CustomVariableGroup.Name.ToUpperInvariant() == groupName.ToUpperInvariant()
-                 select appGroup).FirstOrDefault();
-
-            Database.Ext().Refresh(appOverrideGroup, 10);
-
-            return appOverrideGroup;
+            return DataAccessFactory.GetDataInterface<IApplicationWithOverrideVariableGroupData>().GetByAppNameAndGroupName(appName, groupName);
         }
     }
 }

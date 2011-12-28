@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Db4objects.Db4o.Linq;
+using PrestoCommon.Data;
+using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
@@ -8,7 +8,7 @@ namespace PrestoCommon.Logic
     /// <summary>
     /// 
     /// </summary>
-    public class InstallationSummaryLogic : LogicBase
+    public static class InstallationSummaryLogic
     {
         /// <summary>
         /// Gets the name of the by server.
@@ -18,23 +18,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            IEnumerable<InstallationSummary> installationSummaryList =
-                from InstallationSummary summary in Database
-                where summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                  && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
-                  && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()
-                select summary;
-
-            Database.Ext().Refresh(installationSummaryList, 10);
-
-            if (appWithGroup.CustomVariableGroup == null)
-            {
-                return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup == null);
-            }
-
-            return installationSummaryList.Where(summary =>
-                summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup != null &&
-                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name);
+            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetByServerNameAppVersionAndGroup(serverName, appWithGroup);
         }
 
         /// <summary>
@@ -44,13 +28,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
         {
-            IEnumerable<InstallationSummary> installationSummaryList = (from InstallationSummary summary in Database
-                                                                        orderby summary.InstallationStart descending
-                                                                        select summary).Take(numberToRetrieve);
-
-            Database.Ext().Refresh(installationSummaryList, 10);
-
-            return installationSummaryList;
+            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetMostRecentByStartTime(numberToRetrieve);
         }
     }
 }

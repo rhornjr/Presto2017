@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Db4objects.Db4o.Linq;
+using PrestoCommon.Data;
+using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Logic
@@ -8,7 +8,7 @@ namespace PrestoCommon.Logic
     /// <summary>
     /// 
     /// </summary>
-    public class ApplicationServerLogic : LogicBase
+    public static class ApplicationServerLogic
     {
         /// <summary>
         /// Gets all.
@@ -16,12 +16,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static IEnumerable<ApplicationServer> GetAll()
         {
-            IEnumerable<ApplicationServer> servers = from ApplicationServer server in Database
-                                                     select server;
-
-            Database.Ext().Refresh(servers, 10);
-
-            return servers;
+            return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetAll();
         }
 
         /// <summary>
@@ -31,13 +26,7 @@ namespace PrestoCommon.Logic
         /// <returns></returns>
         public static ApplicationServer GetByName(string serverName)
         {
-            ApplicationServer appServer = (from ApplicationServer server in Database
-                                           where server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                                           select server).FirstOrDefault();
-
-            Database.Ext().Refresh(appServer, 10);
-
-            return appServer;
+            return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetByName(serverName);
         }
     }
 }

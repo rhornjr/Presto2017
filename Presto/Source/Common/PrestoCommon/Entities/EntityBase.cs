@@ -8,5 +8,13 @@ namespace PrestoCommon.Entities
     {
         // Did this now so we don't have to change the inheritance
         // hierarchy later.
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
+        public string Id { get; set; }  // Required field for all objects with RavenDB.
     }
 }

@@ -19,7 +19,7 @@ namespace PrestoCommon.Entities
     {
         private string _name;
         private Application _application;
-        private ObservableCollection<CustomVariable> _customVariables;
+        private ObservableCollection<CustomVariable> _customVariables;        
 
         /// <summary>
         /// Gets or sets the name.
@@ -72,6 +72,11 @@ namespace PrestoCommon.Entities
                     this._customVariables = new ObservableCollection<CustomVariable>();
                 }
                 return this._customVariables;
+            }
+
+            private set
+            {
+                this._customVariables = value;
             }
         }
 

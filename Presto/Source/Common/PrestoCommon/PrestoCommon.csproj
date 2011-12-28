@@ -48,6 +48,18 @@
     <Reference Include="Db4objects.Db4o.Linq">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\db4o\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Abstractions-3.5">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight-3.5">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -74,6 +86,13 @@
     <Compile Include="Data\Interfaces\IGenericData.cs" />
     <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
     <Compile Include="Data\Interfaces\ILogMessageData.cs" />
+    <Compile Include="Data\RavenDb\ApplicationData.cs" />
+    <Compile Include="Data\RavenDb\ApplicationServerData.cs" />
+    <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
+    <Compile Include="Data\RavenDb\DataAccessLayerBase.cs" />
+    <Compile Include="Data\RavenDb\GenericData.cs" />
+    <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
+    <Compile Include="Data\RavenDb\LogMessageData.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
@@ -124,9 +143,7 @@
       <LastGenOutput>PrestoCommonResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\RavenDb\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

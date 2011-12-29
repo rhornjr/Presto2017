@@ -62,6 +62,8 @@ namespace PrestoCommon.Entities
 
                 return this._applicationsWithOverrideGroup;
             }
+
+            private set { this._applicationsWithOverrideGroup = value; }
         }
 
         /// <summary>
@@ -83,6 +85,8 @@ namespace PrestoCommon.Entities
 
                 return this._customVariableGroups;
             }
+
+            private set { this._customVariableGroups = value; }
         }
 
         /// <summary>

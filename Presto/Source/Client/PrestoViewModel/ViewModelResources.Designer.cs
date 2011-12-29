@@ -142,6 +142,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} was not saved because another user has changed it..
+        /// </summary>
+        internal static string ItemCannotBeSavedConcurrency {
+            get {
+                return ResourceManager.GetString("ItemCannotBeSavedConcurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} has been exported..
         /// </summary>
         internal static string ItemExported {

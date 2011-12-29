@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
-using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -18,12 +17,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public ApplicationWithOverrideVariableGroup GetByAppNameAndGroupName(string appName, string groupName)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<ApplicationWithOverrideVariableGroup>()
-                    .Where(appGroup => appGroup.Application.Name.ToUpperInvariant() == appName.ToUpperInvariant()
-                        && appGroup.CustomVariableGroup.Name.ToUpperInvariant() == groupName.ToUpperInvariant()).FirstOrDefault();
-            }
+            return Session.Query<ApplicationWithOverrideVariableGroup>()
+                .Where(appGroup => appGroup.Application.Name.ToUpperInvariant() == appName.ToUpperInvariant()
+                    && appGroup.CustomVariableGroup.Name.ToUpperInvariant() == groupName.ToUpperInvariant()).FirstOrDefault();
         }
     }
 }

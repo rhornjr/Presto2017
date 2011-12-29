@@ -1,5 +1,5 @@
-﻿using PrestoCommon.Data.Interfaces;
-using Raven.Client;
+﻿using System;
+using PrestoCommon.Data.Interfaces;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -15,11 +15,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="objectToSave">The object to save.</param>
         public void Save<T>(T objectToSave)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                session.Store(objectToSave);
-                session.SaveChanges();
-            }
+            Guid eTag = (Guid)Session.Advanced.GetEtagFor(objectToSave);
+            Session.Store(objectToSave, eTag);
+            Session.SaveChanges();
         }
 
         /// <summary>
@@ -29,11 +27,8 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="objectToDelete">The object to delete.</param>
         public void Delete<T>(T objectToDelete)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                session.Delete(objectToDelete);
-                session.SaveChanges();
-            }
+            Session.Delete(objectToDelete);
+            Session.SaveChanges();
         }
     }
 }

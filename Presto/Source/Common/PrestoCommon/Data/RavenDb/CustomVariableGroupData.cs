@@ -2,7 +2,6 @@
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
-using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -17,10 +16,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<CustomVariableGroup> GetAll()
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<CustomVariableGroup>();
-            }
+            return Session.Query<CustomVariableGroup>();
         }
 
         /// <summary>
@@ -30,11 +26,8 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public CustomVariableGroup GetByName(string applicationName)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<CustomVariableGroup>()
-                    .Where(customGroup => customGroup.Application != null && customGroup.Application.Name == applicationName).FirstOrDefault();
-            }
+            return Session.Query<CustomVariableGroup>()
+                .Where(customGroup => customGroup.Application != null && customGroup.Application.Name == applicationName).FirstOrDefault();
         }
     }
 }

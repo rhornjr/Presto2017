@@ -2,7 +2,6 @@
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
-using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -19,24 +18,21 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            using (IDocumentSession session = Database.OpenSession())
+            IEnumerable<InstallationSummary> installationSummaryList =
+                Session.Query<InstallationSummary>()
+                .Where(summary =>
+                    summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
+                    && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
+                    && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant());
+
+            if (appWithGroup.CustomVariableGroup == null)
             {
-                IEnumerable<InstallationSummary> installationSummaryList =
-                    session.Query<InstallationSummary>()
-                    .Where(summary =>
-                        summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                        && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
-                        && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant());
-
-                if (appWithGroup.CustomVariableGroup == null)
-                {
-                    return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup == null);
-                }
-
-                return installationSummaryList.Where(summary =>
-                    summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup != null &&
-                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name);
+                return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup == null);
             }
+
+            return installationSummaryList.Where(summary =>
+                summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup != null &&
+                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name);
         }
 
         /// <summary>
@@ -46,12 +42,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<InstallationSummary>()
-                    .OrderByDescending(summary => summary.InstallationStart)
-                    .Take(numberToRetrieve);
-            }
+            return Session.Query<InstallationSummary>()
+                .OrderByDescending(summary => summary.InstallationStart)
+                .Take(numberToRetrieve);
         }
     }
 }

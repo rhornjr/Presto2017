@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
-using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -16,10 +15,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<Application> GetAll()
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<Application>();
-            }
+            return Session.Query<Application>();
         }
     }
 }

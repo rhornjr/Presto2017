@@ -12,6 +12,7 @@ using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
+using Raven.Abstractions.Exceptions;
 
 namespace PrestoViewModel.Tabs
 {
@@ -229,7 +230,16 @@ namespace PrestoViewModel.Tabs
 
         private void SaveVariableGroup()
         {
-            LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+            try
+            {
+                LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+            }
+            catch (ConcurrencyException)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedCustomVariableGroup.Name);
+                return;
+            }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedCustomVariableGroup.Name);

@@ -2,7 +2,6 @@
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
-using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -18,16 +17,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<LogMessage> GetMostRecentByCreatedTime(int numberToRetrieve)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<LogMessage>()
-                    .OrderByDescending(logMessage => logMessage.MessageCreatedTime)
-                    .Take(numberToRetrieve);
-
-                //return session.Advanced.LuceneQuery<LogMessage>()
-                //    .OrderBy("-MessageCreatedTime")
-                //    .Take(numberToRetrieve);
-            }
+            return Session.Query<LogMessage>()
+                .OrderByDescending(logMessage => logMessage.MessageCreatedTime)
+                .Take(numberToRetrieve);
         }
     }
 }

@@ -18,12 +18,12 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            IEnumerable<InstallationSummary> installationSummaryList =
-                Session.Query<InstallationSummary>()
+            IEnumerable<InstallationSummary> installationSummaryList = QueryAndCacheEtags(session => session.Query<InstallationSummary>()
                 .Where(summary =>
                     summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
                     && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
-                    && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant());
+                    && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()))
+                    .Cast<InstallationSummary>();
 
             if (appWithGroup.CustomVariableGroup == null)
             {
@@ -42,9 +42,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
         {
-            return Session.Query<InstallationSummary>()
+            return QueryAndCacheEtags(session => session.Query<InstallationSummary>()
                 .OrderByDescending(summary => summary.InstallationStart)
-                .Take(numberToRetrieve);
+                .Take(numberToRetrieve)).Cast<InstallationSummary>();
         }
     }
 }

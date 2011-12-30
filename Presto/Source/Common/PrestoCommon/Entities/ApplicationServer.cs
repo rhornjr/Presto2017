@@ -128,7 +128,7 @@ namespace PrestoCommon.Entities
             if (ForceInstallIsThisAppWithGroup(appWithGroup))
             {
                 this.ApplicationWithGroupToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
-                LogicBase.Save<ApplicationServer>(this);
+                LogicBase.Save(this);
                 return true;
             }
 
@@ -173,7 +173,7 @@ namespace PrestoCommon.Entities
 
         private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)
         {
-            LogicBase.Save<InstallationSummary>(installationSummary);
+            LogicBase.Save(installationSummary);
 
             LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoCommonResources.ApplicationInstalled,

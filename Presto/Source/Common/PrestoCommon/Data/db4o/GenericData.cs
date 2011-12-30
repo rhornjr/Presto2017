@@ -1,4 +1,5 @@
 ﻿using PrestoCommon.Data.Interfaces;
+using PrestoCommon.Entities;
 
 namespace PrestoCommon.Data.db4o
 {
@@ -10,9 +11,8 @@ namespace PrestoCommon.Data.db4o
         /// <summary>
         /// Saves the specified object to save.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="objectToSave">The object to save.</param>
-        public void Save<T>(T objectToSave)
+        public void Save(EntityBase objectToSave)
         {
             Database.Store(objectToSave);
             Database.Commit();
@@ -21,9 +21,8 @@ namespace PrestoCommon.Data.db4o
         /// <summary>
         /// Deletes the specified object to delete.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="objectToDelete">The object to delete.</param>
-        public void Delete<T>(T objectToDelete)
+        public void Delete(EntityBase objectToDelete)
         {
             Database.Delete(objectToDelete);
             Database.Commit();

@@ -15,6 +15,7 @@ using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
+using Raven.Abstractions.Exceptions;
 
 namespace PrestoViewModel.Tabs
 {
@@ -37,6 +38,11 @@ namespace PrestoViewModel.Tabs
         /// Gets the delete server command.
         /// </summary>
         public ICommand DeleteServerCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the refresh servers command.
+        /// </summary>
+        public ICommand RefreshServersCommand { get; private set; }
 
         /// <summary>
         /// Gets the save server command.
@@ -172,9 +178,10 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddServerCommand    = new RelayCommand(_ => AddServer());
-            this.DeleteServerCommand = new RelayCommand(_ => DeleteServer(), _ => AppServerIsSelected());
-            this.SaveServerCommand   = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected());
+            this.AddServerCommand      = new RelayCommand(_ => AddServer());
+            this.DeleteServerCommand   = new RelayCommand(_ => DeleteServer(), _ => AppServerIsSelected());
+            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected());
+            this.RefreshServersCommand = new RelayCommand(_ => RefreshServers());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
             this.EditApplicationCommand   = new RelayCommand(_ => EditApplication(), _ => ExactlyOneApplicationIsSelected());
@@ -185,7 +192,7 @@ namespace PrestoViewModel.Tabs
 
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
-        }
+        }        
 
         private void ExportApplication()
         {
@@ -224,7 +231,7 @@ namespace PrestoViewModel.Tabs
                 this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(groupFromDatabase);
             }
 
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            SaveServer();
         }        
 
         private void ForceApplication()
@@ -244,8 +251,8 @@ namespace PrestoViewModel.Tabs
                 this.SelectedApplicationServer));
 
             this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = selectedAppWithGroup;
-            
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+
+            SaveServer();
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.AppWillBeInstalledOnAppServer, selectedAppWithGroup, this.SelectedApplicationServer);
@@ -269,17 +276,35 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedApplicationServer.Name)) { return; }
 
-            LogicBase.Delete<ApplicationServer>(this.SelectedApplicationServer);
+            LogicBase.Delete(this.SelectedApplicationServer);
 
             this.ApplicationServers.Remove(this.SelectedApplicationServer);
         }
 
-        private void SaveServer()
+        private void RefreshServers()
         {
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            this.LoadApplicationServers();
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
+        }
+
+        private bool SaveServer()
+        {                        
+            try
+            {
+                LogicBase.Save(this.SelectedApplicationServer);
+            }
+            catch (ConcurrencyException)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplicationServer.Name);
+                return false;
+            }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedApplicationServer.Name);
+
+            return true;
         }   
 
         private void AddApplication()
@@ -303,7 +328,7 @@ namespace PrestoViewModel.Tabs
                 newApplicationWithOverrideVariableGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroup;
             }
 
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            SaveServer();
         }
 
         private void EditApplication()
@@ -320,7 +345,7 @@ namespace PrestoViewModel.Tabs
 
             selectedAppWithGroup.CustomVariableGroup = viewModel.SelectedCustomVariableGroup;
 
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            SaveServer();
         }
 
         private bool ExactlyOneApplicationIsSelected()
@@ -341,7 +366,7 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
 
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            SaveServer();
         }
 
         private ApplicationWithOverrideVariableGroup GetSelectedAppWithGroupWhereOnlyOneIsSelected()
@@ -372,7 +397,7 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedApplicationServer.CustomVariableGroups.Add(viewModel.SelectedCustomVariableGroup);
 
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            SaveServer();
         }
 
         private bool VariableGroupIsSelected()
@@ -384,7 +409,7 @@ namespace PrestoViewModel.Tabs
         {
             this.SelectedApplicationServer.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
 
-            LogicBase.Save<ApplicationServer>(this.SelectedApplicationServer);
+            SaveServer();
         }     
 
         private void LoadApplicationServers()

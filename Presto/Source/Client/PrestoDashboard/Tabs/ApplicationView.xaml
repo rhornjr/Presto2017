@@ -30,9 +30,14 @@
         
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>            
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="40" HorizontalAlignment="Center">
-                <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshApplicationsCommand}" />
+                </StackPanel>
             </StackPanel>
             <ListBox ItemsSource="{Binding Source={StaticResource SortedApplications}}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedApplication}"/>

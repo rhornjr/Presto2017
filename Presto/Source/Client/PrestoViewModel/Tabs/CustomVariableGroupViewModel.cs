@@ -235,7 +235,7 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedCustomVariableGroup.Name)) { return; }
 
-            LogicBase.Delete<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+            LogicBase.Delete(this.SelectedCustomVariableGroup);
 
             this.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
         }
@@ -244,7 +244,7 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                LogicBase.Save<CustomVariableGroup>(this.SelectedCustomVariableGroup);
+                LogicBase.Save(this.SelectedCustomVariableGroup);
             }
             catch (ConcurrencyException)
             {
@@ -297,6 +297,8 @@ namespace PrestoViewModel.Tabs
         private void RefreshVariableGroup()
         {
             this.LoadCustomVariableGroups();
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
         }   
 
         private void LoadCustomVariableGroups()

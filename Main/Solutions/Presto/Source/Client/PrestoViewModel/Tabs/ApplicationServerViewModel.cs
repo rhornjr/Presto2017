@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -418,15 +417,10 @@ namespace PrestoViewModel.Tabs
             {
                 this.ApplicationServers = new ObservableCollection<ApplicationServer>(ApplicationServerLogic.GetAll().ToList());
             }
-            catch (SocketException ex)
+            catch (Exception ex)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseConnectionFailureMessage;
                 LogUtility.LogException(ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseInvalidOperation;
-                LogUtility.LogException(ex);
+                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
             }
         }
     }

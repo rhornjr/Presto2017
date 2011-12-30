@@ -38,7 +38,6 @@ namespace PrestoCommon.Misc
             if (Environment.UserInteractive)
             {
                 Console.WriteLine(ex.ToString());
-                return;
             }
 
             EventLog.WriteEntry(GetSource(), ex.ToString(), EventLogEntryType.Error);

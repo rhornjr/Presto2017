@@ -1,5 +1,4 @@
-﻿using System;
-using PrestoCommon.Data.Interfaces;
+﻿using PrestoCommon.Data.Interfaces;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -15,8 +14,8 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="objectToSave">The object to save.</param>
         public void Save<T>(T objectToSave)
         {
-            Guid eTag = (Guid)Session.Advanced.GetEtagFor(objectToSave);
-            Session.Store(objectToSave, eTag);
+            //Guid eTag = (Guid)Session.Advanced.GetEtagFor(objectToSave);
+            Session.Store(objectToSave);
             Session.SaveChanges();
         }
 

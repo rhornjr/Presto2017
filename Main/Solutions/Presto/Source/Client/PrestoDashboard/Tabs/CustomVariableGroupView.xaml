@@ -29,7 +29,7 @@
 
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="120" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />
@@ -37,6 +37,9 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportVariableGroupCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshVariableGroupCommand}" />
                 </StackPanel>
             </StackPanel>
                 <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource SortedGroups}}"

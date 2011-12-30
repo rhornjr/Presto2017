@@ -35,6 +35,7 @@ namespace PrestoCommon.Data.RavenDb
 
             try
             {
+                //documentStore.ConnectionStringName = "RavenDb";  // See app.config for why this is commented.                
                 documentStore.Url = databaseUrl;
                 documentStore.Initialize();
             }

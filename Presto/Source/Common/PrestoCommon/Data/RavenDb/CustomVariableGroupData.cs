@@ -16,7 +16,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<CustomVariableGroup> GetAll()
         {
-            return Session.Query<CustomVariableGroup>();
+            return Session.Query<CustomVariableGroup>().Customize(x => x.WaitForNonStaleResults());
         }
 
         /// <summary>

@@ -1,8 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -48,7 +50,15 @@ namespace PrestoViewModel.Tabs
 
         private void LoadInstallationSummaryList()
         {
-            this.InstallationSummaryList = new Collection<InstallationSummary>(InstallationSummaryLogic.GetMostRecentByStartTime(50).ToList());
+            try
+            {
+                this.InstallationSummaryList = new Collection<InstallationSummary>(InstallationSummaryLogic.GetMostRecentByStartTime(50).ToList());
+            }
+            catch (Exception ex)
+            {
+                LogUtility.LogException(ex);
+                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
+            }
         }
 
         private void Initialize()

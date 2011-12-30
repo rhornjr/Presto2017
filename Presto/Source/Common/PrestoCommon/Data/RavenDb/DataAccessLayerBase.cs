@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using PrestoCommon.Entities;
 using Raven.Client;
@@ -132,14 +131,11 @@ namespace PrestoCommon.Data.RavenDb
 
         private static DocumentStore GetDatabase()
         {
-            string databaseUrl = ConfigurationManager.AppSettings["databaseUrl"];            
-
             DocumentStore documentStore = new DocumentStore();
 
             try
             {
-                //documentStore.ConnectionStringName = "RavenDb";  // See app.config for why this is commented.                
-                documentStore.Url = databaseUrl;
+                documentStore.ConnectionStringName = "RavenDb";
                 documentStore.Initialize();
             }
             catch

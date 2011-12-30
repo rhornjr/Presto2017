@@ -63,6 +63,7 @@ namespace PrestoCommon.Entities
         /// <value>
         /// The custom variables.
         /// </value>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Deserialization")]
         public ObservableCollection<CustomVariable> CustomVariables
         {
             get
@@ -74,7 +75,7 @@ namespace PrestoCommon.Entities
                 return this._customVariables;
             }
 
-            private set
+            set
             {
                 this._customVariables = value;
             }

@@ -261,21 +261,23 @@ namespace PrestoViewModel.Tabs
 
         private void ImportVariableGroup()
         {
-            string filePathAndName = GetFilePathAndNameFromUser();
+            string[] filePathAndNames = GetFilePathAndNamesFromUser();
 
-            if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
+            if (filePathAndNames.Count() < 1) { return; }
 
             CustomVariableGroup customVariableGroup;
 
-            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+            foreach (string filePathAndName in filePathAndNames)
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
-                customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+                using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
+                    customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+                }
+
+                LogicBase.Save(customVariableGroup);
+                this.CustomVariableGroups.Add(customVariableGroup);
             }
-
-            LogicBase.Save(customVariableGroup);            
-
-            this.CustomVariableGroups.Add(customVariableGroup);
         }
 
         private void ExportVariableGroup()

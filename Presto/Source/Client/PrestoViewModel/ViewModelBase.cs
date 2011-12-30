@@ -82,6 +82,25 @@ namespace PrestoViewModel
         }
 
         /// <summary>
+        /// Gets the file path and names from user.
+        /// </summary>
+        /// <returns></returns>
+        protected static string[] GetFilePathAndNamesFromUser()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = lastDialogDirectory;
+                openFileDialog.Multiselect = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.Cancel) { return null; }
+
+                lastDialogDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+
+                return openFileDialog.FileNames;
+            }
+        }
+
+        /// <summary>
         /// Saves the file path and name from user.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>

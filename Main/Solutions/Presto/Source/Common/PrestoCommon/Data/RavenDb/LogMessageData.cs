@@ -17,9 +17,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<LogMessage> GetMostRecentByCreatedTime(int numberToRetrieve)
         {
-            return Session.Query<LogMessage>()
+            return QueryAndCacheEtags(session => session.Query<LogMessage>()
                 .OrderByDescending(logMessage => logMessage.MessageCreatedTime)
-                .Take(numberToRetrieve);
+                .Take(numberToRetrieve)).Cast<LogMessage>();
         }
     }
 }

@@ -17,9 +17,10 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public ApplicationWithOverrideVariableGroup GetByAppNameAndGroupName(string appName, string groupName)
         {
-            return Session.Query<ApplicationWithOverrideVariableGroup>()
+            return QuerySingleResultAndCacheEtag(session => session.Query<ApplicationWithOverrideVariableGroup>()
                 .Where(appGroup => appGroup.Application.Name.ToUpperInvariant() == appName.ToUpperInvariant()
-                    && appGroup.CustomVariableGroup.Name.ToUpperInvariant() == groupName.ToUpperInvariant()).FirstOrDefault();
+                    && appGroup.CustomVariableGroup.Name.ToUpperInvariant() == groupName.ToUpperInvariant()).FirstOrDefault())
+                as ApplicationWithOverrideVariableGroup;
         }
     }
 }

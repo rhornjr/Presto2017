@@ -16,7 +16,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<CustomVariableGroup> GetAll()
         {
-            return Session.Query<CustomVariableGroup>().Customize(x => x.WaitForNonStaleResults());
+            return QueryAndCacheEtags(session => session.Query<CustomVariableGroup>()).Cast<CustomVariableGroup>();
         }
 
         /// <summary>
@@ -26,8 +26,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public CustomVariableGroup GetByName(string applicationName)
         {
-            return Session.Query<CustomVariableGroup>()
-                .Where(customGroup => customGroup.Application != null && customGroup.Application.Name == applicationName).FirstOrDefault();
+            return QuerySingleResultAndCacheEtag(session => session.Query<CustomVariableGroup>()
+                .Where(customGroup => customGroup.Application != null && customGroup.Application.Name == applicationName).FirstOrDefault())
+                as CustomVariableGroup;
         }
     }
 }

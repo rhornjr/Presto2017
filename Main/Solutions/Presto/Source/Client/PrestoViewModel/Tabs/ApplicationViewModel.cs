@@ -14,6 +14,7 @@ using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
+using Raven.Abstractions.Exceptions;
 
 namespace PrestoViewModel.Tabs
 {
@@ -35,6 +36,11 @@ namespace PrestoViewModel.Tabs
         /// Gets the delete application command.
         /// </summary>
         public ICommand DeleteApplicationCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the refresh applications command.
+        /// </summary>
+        public ICommand RefreshApplicationsCommand { get; private set; }
 
         /// <summary>
         /// Gets the force installation command.
@@ -161,9 +167,10 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected());
-            this.SaveApplicationCommand   = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected());
+            this.AddApplicationCommand      = new RelayCommand(_ => AddApplication());
+            this.DeleteApplicationCommand   = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected());
+            this.RefreshApplicationsCommand = new RelayCommand(_ => RefreshApplications());
+            this.SaveApplicationCommand     = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected());
 
             this.ForceInstallationCommand = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected());
 
@@ -173,6 +180,13 @@ namespace PrestoViewModel.Tabs
             this.ImportTasksCommand  = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected());
             this.MoveTaskUpCommand   = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
             this.MoveTaskDownCommand = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
+        }
+
+        private void RefreshApplications()
+        {
+            this.LoadApplications();
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
         }                                   
 
         private void AddApplication()
@@ -188,7 +202,7 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedApplication.Name)) { return; }
 
-            LogicBase.Delete<Application>(this.SelectedApplication);
+            LogicBase.Delete(this.SelectedApplication);
             
             this.Applications.Remove(this.SelectedApplication);
         }        
@@ -219,7 +233,7 @@ namespace PrestoViewModel.Tabs
 
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
-            LogicBase.Save(this.SelectedApplication);
+            SaveApplication();
         }
 
         private static TaskViewModel GetTaskViewModel()
@@ -264,7 +278,7 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                LogicBase.Delete<TaskBase>(this.SelectedTask);
+                LogicBase.Delete(this.SelectedTask);
 
                 this.SelectedApplication.Tasks.Remove(this.SelectedTask);
 
@@ -272,7 +286,7 @@ namespace PrestoViewModel.Tabs
 
                 NotifyPropertyChanged(() => this.SelectedApplicationTasks);
 
-                LogicBase.Save<Application>(this.SelectedApplication);
+                SaveApplication();
             }
             catch (Exception ex)
             {
@@ -319,9 +333,9 @@ namespace PrestoViewModel.Tabs
                 task.Sequence = sequence;
                 this.SelectedApplication.Tasks.Add(task);
                 sequence++;
-            }            
+            }
 
-            LogicBase.Save(this.SelectedApplication);
+            SaveApplication();
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
         }
 
@@ -362,12 +376,23 @@ namespace PrestoViewModel.Tabs
             LogUtility.LogWarning(message);
         }
 
-        private void SaveApplication()
-        {
-            LogicBase.Save<Application>(this.SelectedApplication);
+        private bool SaveApplication()
+        {                        
+            try
+            {
+                LogicBase.Save(this.SelectedApplication);
+            }
+            catch (ConcurrencyException)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplication);
+                return false;
+            }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedApplication);
+
+            return true;
         }
 
         private void LoadApplications()
@@ -430,7 +455,7 @@ namespace PrestoViewModel.Tabs
                 if (taskBase.Sequence != properSequence)
                 {
                     taskBase.Sequence = properSequence;
-                    LogicBase.Save<TaskBase>(taskBase);
+                    LogicBase.Save(taskBase);
                 }
                 properSequence++;
             }

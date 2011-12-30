@@ -1,4 +1,7 @@
-﻿using PrestoCommon.Data.Interfaces;
+﻿using System;
+using PrestoCommon.Data.Interfaces;
+using PrestoCommon.Entities;
+using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -10,24 +13,39 @@ namespace PrestoCommon.Data.RavenDb
         /// <summary>
         /// Saves the specified object to save.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="objectToSave">The object to save.</param>
-        public void Save<T>(T objectToSave)
+        public void Save(EntityBase objectToSave)
         {
-            //Guid eTag = (Guid)Session.Advanced.GetEtagFor(objectToSave);
-            Session.Store(objectToSave);
-            Session.SaveChanges();
+            if (objectToSave == null) { throw new ArgumentNullException("objectToSave"); }
+
+            Guid eTag = Guid.Empty;
+
+            if (objectToSave.Id != null)
+            {
+                eTag = RetrieveEtagFromCache(objectToSave);
+            }
+
+            using (IDocumentSession session = GetOptimisticSession())
+            {
+                session.Store(objectToSave, eTag);
+                session.SaveChanges();
+                CacheEtag(objectToSave, session);  // We have a new eTag after saving.
+            }
         }
 
         /// <summary>
         /// Deletes the specified object to delete.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="objectToDelete">The object to delete.</param>
-        public void Delete<T>(T objectToDelete)
+        public void Delete(EntityBase objectToDelete)
         {
-            Session.Delete(objectToDelete);
-            Session.SaveChanges();
+            if (objectToDelete == null) { throw new ArgumentNullException("objectToDelete"); }
+
+            using (IDocumentSession session = Database.OpenSession())
+            {
+                session.Advanced.DatabaseCommands.Delete(objectToDelete.Id, RetrieveEtagFromCache(objectToDelete));
+                session.SaveChanges();
+            }
         }
     }
 }

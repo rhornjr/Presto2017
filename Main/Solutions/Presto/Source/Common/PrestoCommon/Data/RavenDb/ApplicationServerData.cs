@@ -16,7 +16,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<ApplicationServer> GetAll()
         {
-            return Session.Query<ApplicationServer>();
+            return QueryAndCacheEtags(session => session.Query<ApplicationServer>()).Cast<ApplicationServer>();
         }
 
         /// <summary>
@@ -26,8 +26,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public ApplicationServer GetByName(string serverName)
         {
-            return Session.Query<ApplicationServer>()
-                .Where(server => server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()).FirstOrDefault();
+            return QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
+                .Where(server => server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()).FirstOrDefault())
+                as ApplicationServer;
         }
     }
 }

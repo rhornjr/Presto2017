@@ -26,8 +26,9 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public ApplicationServer GetByName(string serverName)
         {
+            // Note: RavenDB queries are case-insensitive, so no ToUpper() conversion is necessary here.
             return QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
-                .Where(server => server.Name.ToUpperInvariant() == serverName.ToUpperInvariant()).FirstOrDefault())
+                .Where(server => server.Name == serverName).FirstOrDefault())
                 as ApplicationServer;
         }
     }

@@ -27,7 +27,6 @@ namespace PrestoCommon.Data
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             
-            // Note: objects will not be null if no types are found. An empty list will be returned.
             T theObject = (from t in assembly.GetTypes()
                            where t.GetInterfaces().Contains(typeof(T))
                              && t.GetConstructor(Type.EmptyTypes) != null

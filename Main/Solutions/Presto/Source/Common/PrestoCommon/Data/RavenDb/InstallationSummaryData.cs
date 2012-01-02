@@ -20,9 +20,9 @@ namespace PrestoCommon.Data.RavenDb
         {
             IEnumerable<InstallationSummary> installationSummaryList = QueryAndCacheEtags(session => session.Query<InstallationSummary>()
                 .Where(summary =>
-                    summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
-                    && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
-                    && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()))
+                    summary.ApplicationServer.Name == serverName
+                    && summary.ApplicationWithOverrideVariableGroup.Application.Name == appWithGroup.Application.Name
+                    && summary.ApplicationWithOverrideVariableGroup.Application.Version == appWithGroup.Application.Version))
                     .Cast<InstallationSummary>();
 
             if (appWithGroup.CustomVariableGroup == null)

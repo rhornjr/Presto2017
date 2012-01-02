@@ -162,15 +162,15 @@ namespace PrestoCommon.Entities
             // This call should return a collection of found custom variables, like $(site), within the raw string.
             MatchCollection matchCollection = GetCustomVariableStringsWithinBiggerString(stringNew);
 
-            // If this custom variable group can resolve any of these custom variables, return true.
+            // If this custom variable group can't resolve any of these custom variables, return false.
             foreach (Match match in matchCollection)
             {
                 string matchValueWithoutPrefixAndSuffix = CustomVariableWithoutPrefixAndSuffix(match.Value);
-                if (allCustomVariables.Where(customVariable => customVariable.Key == matchValueWithoutPrefixAndSuffix).FirstOrDefault() != null)
-                { return true; }
+                if (allCustomVariables.Where(customVariable => customVariable.Key == matchValueWithoutPrefixAndSuffix).FirstOrDefault() == null)
+                { return false; }
             }
 
-            return false;
+            return true;
         }
 
         /// <summary>

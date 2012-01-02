@@ -65,7 +65,7 @@ namespace TestingConsoleApp
 
             updaterManifest.Version = "1.0.0.0";
 
-            string filePathAndName = @"c:\temp\Derating.UpdaterManifest";
+            string filePathAndName = @"c:\temp\PrestoTaskRunner.UpdaterManifest";
 
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Create))
             {

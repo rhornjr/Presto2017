@@ -308,24 +308,13 @@ namespace PrestoViewModel.Tabs
 
         private void AddApplication()
         {
-            // First, select the app.
-            ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
+            ApplicationWithGroupViewModel viewModel = new ApplicationWithGroupViewModel();
+
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
             if (viewModel.UserCanceled) { return; }
 
-            ApplicationWithOverrideVariableGroup newApplicationWithOverrideVariableGroup =
-                new ApplicationWithOverrideVariableGroup() { Application = viewModel.SelectedApplication };
-
-            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(newApplicationWithOverrideVariableGroup);
-
-            // Next, select the group.
-            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel();
-            MainWindowViewModel.ViewLoader.ShowDialog(groupViewModel);            
-
-            if (!groupViewModel.UserCanceled)
-            {
-                newApplicationWithOverrideVariableGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroup;
-            }
+            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(viewModel.ApplicationWithGroup);
 
             SaveServer();
         }
@@ -336,13 +325,11 @@ namespace PrestoViewModel.Tabs
 
             if (selectedAppWithGroup == null) { return; }
 
-            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel();
+            ApplicationWithGroupViewModel viewModel = new ApplicationWithGroupViewModel(selectedAppWithGroup);
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
             if (viewModel.UserCanceled) { return; }
-
-            selectedAppWithGroup.CustomVariableGroup = viewModel.SelectedCustomVariableGroup;
 
             SaveServer();
         }

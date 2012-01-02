@@ -9,8 +9,26 @@ namespace PrestoCommon.Entities
     /// </summary>
     public class ApplicationWithOverrideVariableGroup : EntityBase
     {
+        private bool _enabled;
         private Application _application;
         private CustomVariableGroup _customVariableGroup;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="ApplicationWithOverrideVariableGroup"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool Enabled
+        {
+            get { return this._enabled; }
+
+            set
+            {
+                this._enabled = value;
+                NotifyPropertyChanged(() => this.Enabled);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the application.

@@ -86,6 +86,7 @@
       <DependentUpon>ViewModelResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Windows\ApplicationSelectorViewModel.cs" />
+    <Compile Include="Windows\ApplicationWithGroupViewModel.cs" />
     <Compile Include="Windows\CustomVariableGroupSelectorViewModel.cs" />
     <Compile Include="Windows\CustomVariableViewModel.cs" />
     <Compile Include="Windows\ForceInstallationViewModel.cs" />

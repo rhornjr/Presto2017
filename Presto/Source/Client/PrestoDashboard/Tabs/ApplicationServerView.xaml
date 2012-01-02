@@ -114,6 +114,7 @@
                         <DataGridTextColumn Binding="{Binding Path=Application.Name}" Header="Name" Width="150" />
                         <DataGridTextColumn Binding="{Binding Path=Application.Version}" Header="Version" Width="100"/>
                         <DataGridTextColumn Binding="{Binding Path=CustomVariableGroup.Name}" Header="Override Group" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Path=Enabled}" Header="Enabled" Width="60"/>
                     </DataGrid.Columns>
                 </DataGrid>
 

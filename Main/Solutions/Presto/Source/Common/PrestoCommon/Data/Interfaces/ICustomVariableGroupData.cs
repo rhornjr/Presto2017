@@ -15,10 +15,17 @@ namespace PrestoCommon.Data.Interfaces
         IEnumerable<CustomVariableGroup> GetAll();
 
         /// <summary>
+        /// Gets the name of the by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        CustomVariableGroup GetByName(string name);
+
+        /// <summary>
         /// Gets the specified application name.
         /// </summary>
         /// <param name="applicationName">Name of the application.</param>
         /// <returns></returns>
-        CustomVariableGroup GetByName(string applicationName);
+        CustomVariableGroup GetByApplicationName(string applicationName);
     }
 }

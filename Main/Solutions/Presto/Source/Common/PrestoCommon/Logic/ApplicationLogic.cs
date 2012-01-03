@@ -18,5 +18,15 @@ namespace PrestoCommon.Logic
         {
             return DataAccessFactory.GetDataInterface<IApplicationData>().GetAll();
         }
+
+        /// <summary>
+        /// Gets the name of the by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static Application GetByName(string name)
+        {
+            return DataAccessFactory.GetDataInterface<IApplicationData>().GetByName(name);
+        }
     }
 }

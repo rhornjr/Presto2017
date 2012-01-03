@@ -26,11 +26,29 @@ namespace PrestoCommon.Data.db4o
         }
 
         /// <summary>
+        /// Gets the name of the by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public CustomVariableGroup GetByName(string name)
+        {
+            CustomVariableGroup group = (from CustomVariableGroup customGroup in Database
+                                         where customGroup.Name == name
+                                         select customGroup).FirstOrDefault();
+
+            if (group == null) { return null; }
+
+            Database.Ext().Refresh(group, 10);
+
+            return group;
+        }
+
+        /// <summary>
         /// Gets the specified application name.
         /// </summary>
         /// <param name="applicationName">Name of the application.</param>
         /// <returns></returns>
-        public CustomVariableGroup GetByName(string applicationName)
+        public CustomVariableGroup GetByApplicationName(string applicationName)
         {
             CustomVariableGroup group = (from CustomVariableGroup customGroup in Database
                                          where customGroup.Application != null && customGroup.Application.Name == applicationName
@@ -41,6 +59,6 @@ namespace PrestoCommon.Data.db4o
             Database.Ext().Refresh(group, 10);
 
             return group;
-        }
+        }        
     }
 }

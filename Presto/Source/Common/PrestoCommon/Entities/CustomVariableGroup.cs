@@ -116,7 +116,7 @@ namespace PrestoCommon.Entities
             }
 
             // Get the custom variable group associated with this *application*.
-            CustomVariableGroup appGroup = CustomVariableGroupLogic.Get(applicationWithOverrideVariableGroup.Application.Name);
+            CustomVariableGroup appGroup = CustomVariableGroupLogic.GetByApplicationName(applicationWithOverrideVariableGroup.Application.Name);
 
             if (appGroup != null && appGroup.CustomVariables != null) { allCustomVariables.AddRange(appGroup.CustomVariables); }
 

@@ -223,11 +223,21 @@ namespace PrestoViewModel.Tabs
                 applicationsWithOverrideVariableGroup = xmlSerializer.Deserialize(fileStream) as List<ApplicationWithOverrideVariableGroup>;
             }
 
-            foreach (ApplicationWithOverrideVariableGroup group in applicationsWithOverrideVariableGroup)
+            // When importing, get the apps and custom variable groups from the DB. We'll use those to populate the properties.            
+            foreach (ApplicationWithOverrideVariableGroup importedGroup in applicationsWithOverrideVariableGroup)
             {
-                ApplicationWithOverrideVariableGroup groupFromDatabase =
-                    ApplicationWithOverrideVariableGroupLogic.GetByAppNameAndGroupName(group.Application.Name, group.CustomVariableGroup.Name);
-                this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(groupFromDatabase);
+                importedGroup.Enabled = false;  // default
+
+                Application appFromDb = ApplicationLogic.GetByName(importedGroup.Application.Name);
+                importedGroup.Application = appFromDb;
+
+                if (importedGroup.CustomVariableGroup != null)
+                {
+                    CustomVariableGroup groupFromDb = CustomVariableGroupLogic.GetByName(importedGroup.CustomVariableGroup.Name);
+                    importedGroup.CustomVariableGroup = groupFromDb;
+                }
+
+                this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(importedGroup);
             }
 
             SaveServer();

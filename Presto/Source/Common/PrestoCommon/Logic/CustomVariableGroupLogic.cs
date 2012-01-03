@@ -20,13 +20,23 @@ namespace PrestoCommon.Logic
         }
 
         /// <summary>
+        /// Gets the name of the by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static CustomVariableGroup GetByName(string name)
+        {
+            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByName(name);
+        }
+
+        /// <summary>
         /// Gets the CustomVariableGroup by the specified application name.
         /// </summary>
         /// <param name="applicationName">Name of the application.</param>
         /// <returns></returns>
-        public static CustomVariableGroup Get(string applicationName)
+        public static CustomVariableGroup GetByApplicationName(string applicationName)
         {
-            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByName(applicationName);
+            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByApplicationName(applicationName);
         }
     }
 }

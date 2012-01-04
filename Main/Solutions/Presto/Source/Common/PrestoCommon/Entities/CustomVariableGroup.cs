@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 
@@ -39,6 +40,14 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
+        /// Gets or sets the application id.
+        /// </summary>
+        /// <value>
+        /// The application id.
+        /// </value>
+        public string ApplicationId { get; set; }  // For RavenDB, grrrr...
+
+        /// <summary>
         /// Gets or sets the application that's associated with this custom variable group. If an application
         /// is associated with a custom variable group, then only that application will be able to use it.
         /// </summary>
@@ -46,6 +55,7 @@ namespace PrestoCommon.Entities
         /// The application.
         /// </value>
         [XmlIgnore]  // This is here for exporting custom variable groups. Application.Tasks is read only, so it couldn't serialize.
+        [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public Application Application
         {
             get { return this._application; }

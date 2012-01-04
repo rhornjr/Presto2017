@@ -243,7 +243,7 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                LogicBase.Save(this.SelectedCustomVariableGroup);
+                CustomVariableGroupLogic.Save(this.SelectedCustomVariableGroup);
             }
             catch (ConcurrencyException)
             {

@@ -82,5 +82,14 @@ namespace PrestoCommon.Data.db4o
             // Only RavenDB needs this.
             throw new System.NotImplementedException();
         }
+
+        /// <summary>
+        /// Saves the specified custom variable group.
+        /// </summary>
+        /// <param name="customVariableGroup">The custom variable group.</param>
+        public void Save(CustomVariableGroup customVariableGroup)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(customVariableGroup);
+        }
     }
 }

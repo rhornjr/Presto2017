@@ -59,6 +59,28 @@ namespace PrestoCommon.Data.db4o
             Database.Ext().Refresh(group, 10);
 
             return group;
-        }        
+        }
+
+        /// <summary>
+        /// Gets the by ids.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns></returns>
+        public List<CustomVariableGroup> GetByIds(List<string> ids)
+        {
+            // Only RavenDB needs this.
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public CustomVariableGroup GetById(string id)
+        {
+            // Only RavenDB needs this.
+            throw new System.NotImplementedException();
+        }
     }
 }

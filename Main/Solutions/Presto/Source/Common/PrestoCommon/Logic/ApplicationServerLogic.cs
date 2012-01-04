@@ -28,5 +28,14 @@ namespace PrestoCommon.Logic
         {
             return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetByName(serverName);
         }
+
+        /// <summary>
+        /// Saves the specified application server.
+        /// </summary>
+        /// <param name="applicationServer">The application server.</param>
+        public static void Save(ApplicationServer applicationServer)
+        {
+            DataAccessFactory.GetDataInterface<IApplicationServerData>().Save(applicationServer);
+        }
     }
 }

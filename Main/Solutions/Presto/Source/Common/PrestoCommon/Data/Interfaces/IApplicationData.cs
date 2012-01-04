@@ -20,5 +20,12 @@ namespace PrestoCommon.Data.Interfaces
         /// <param name="name">The name.</param>
         /// <returns></returns>
         Application GetByName(string name);
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        Application GetById(string id);
     }
 }

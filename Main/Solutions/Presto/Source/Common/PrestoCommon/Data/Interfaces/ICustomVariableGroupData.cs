@@ -27,5 +27,19 @@ namespace PrestoCommon.Data.Interfaces
         /// <param name="applicationName">Name of the application.</param>
         /// <returns></returns>
         CustomVariableGroup GetByApplicationName(string applicationName);
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        CustomVariableGroup GetById(string id);
+
+        /// <summary>
+        /// Gets the by ids.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns></returns>
+        List<CustomVariableGroup> GetByIds(List<string> ids);
     }
 }

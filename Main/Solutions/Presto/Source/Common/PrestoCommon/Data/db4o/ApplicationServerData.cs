@@ -40,5 +40,14 @@ namespace PrestoCommon.Data.db4o
 
             return appServer;
         }
+
+        /// <summary>
+        /// Saves the specified application server.
+        /// </summary>
+        /// <param name="applicationServer">The application server.</param>
+        public void Save(ApplicationServer applicationServer)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(applicationServer);
+        }
     }
 }

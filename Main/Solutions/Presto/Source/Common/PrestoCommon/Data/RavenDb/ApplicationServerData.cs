@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
@@ -16,7 +18,25 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<ApplicationServer> GetAll()
         {
-            return QueryAndCacheEtags(session => session.Query<ApplicationServer>()).Cast<ApplicationServer>();
+            //return QueryAndCacheEtags(session => session.Query<ApplicationServer>()).Cast<ApplicationServer>();
+
+            IEnumerable<ApplicationServer> appServers = QueryAndCacheEtags(session => 
+                session.Advanced.LuceneQuery<ApplicationServer>()
+                .Include(appServer => appServer.CustomVariableGroupIds)).Cast<ApplicationServer>();
+
+            foreach (ApplicationServer appServer in appServers)
+            {
+                appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
+                    DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByIds(appServer.CustomVariableGroupIds));
+
+                foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
+                {
+                    appGroup.Application         = DataAccessFactory.GetDataInterface<IApplicationData>().GetById(appGroup.ApplicationId);
+                    appGroup.CustomVariableGroup = DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(appGroup.CustomVariableGroupId);                    
+                }
+            }            
+
+            return appServers;
         }
 
         /// <summary>
@@ -30,6 +50,31 @@ namespace PrestoCommon.Data.RavenDb
             return QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
                 .Where(server => server.Name == serverName).FirstOrDefault())
                 as ApplicationServer;
+        }
+
+        /// <summary>
+        /// Saves the specified application server.
+        /// </summary>
+        /// <param name="applicationServer">The application server.</param>
+        public void Save(ApplicationServer applicationServer)
+        {
+            if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
+
+            // For each group, set its ApplicationId and CustomVariableGroupId.
+            foreach (ApplicationWithOverrideVariableGroup appGroup in applicationServer.ApplicationsWithOverrideGroup)
+            {
+                appGroup.ApplicationId = appGroup.Application.Id;
+                if (appGroup.CustomVariableGroup != null) { appGroup.CustomVariableGroupId = appGroup.CustomVariableGroup.Id; }
+            }
+
+            // For each group, add its ID to the ID list.
+            applicationServer.CustomVariableGroupIds = new List<string>();
+            foreach (CustomVariableGroup customGroup in applicationServer.CustomVariableGroups)
+            {
+                applicationServer.CustomVariableGroupIds.Add(customGroup.Id);
+            }
+
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(applicationServer);
         }
     }
 }

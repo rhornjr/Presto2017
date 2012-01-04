@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json;
 using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
@@ -63,7 +65,7 @@ namespace PrestoCommon.Entities
                 return this._applicationsWithOverrideGroup;
             }
 
-            private set { this._applicationsWithOverrideGroup = value; }
+            set { this._applicationsWithOverrideGroup = value; }
         }
 
         /// <summary>
@@ -75,8 +77,20 @@ namespace PrestoCommon.Entities
         public ApplicationWithOverrideVariableGroup ApplicationWithGroupToForceInstall { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom variable group ids.
+        /// </summary>
+        /// <value>
+        /// The custom variable group ids.
+        /// </value>
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB, grrrr...
+
+        /// <summary>
         /// Gets the custom variable groups.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
             get
@@ -86,7 +100,7 @@ namespace PrestoCommon.Entities
                 return this._customVariableGroups;
             }
 
-            private set { this._customVariableGroups = value; }
+            set { this._customVariableGroups = value; }
         }
 
         /// <summary>

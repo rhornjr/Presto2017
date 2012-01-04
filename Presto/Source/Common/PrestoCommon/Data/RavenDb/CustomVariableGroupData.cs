@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
@@ -17,7 +18,16 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<CustomVariableGroup> GetAll()
         {
-            return QueryAndCacheEtags(session => session.Query<CustomVariableGroup>()).Cast<CustomVariableGroup>();
+            IEnumerable<CustomVariableGroup> customGroups = QueryAndCacheEtags(session => session.Query<CustomVariableGroup>()).Cast<CustomVariableGroup>();
+
+            foreach (CustomVariableGroup customGroup in customGroups)
+            {
+                if (string.IsNullOrWhiteSpace(customGroup.ApplicationId)) { continue; }
+
+                customGroup.Application = DataAccessFactory.GetDataInterface<IApplicationData>().GetById(customGroup.ApplicationId);
+            }
+
+            return customGroups;
         }        
 
         /// <summary>
@@ -79,6 +89,22 @@ namespace PrestoCommon.Data.RavenDb
             }
 
             return customVariableGroups;
+        }
+
+        /// <summary>
+        /// Saves the specified custom variable group.
+        /// </summary>
+        /// <param name="customVariableGroup">The custom variable group.</param>
+        public void Save(CustomVariableGroup customVariableGroup)
+        {
+            if (customVariableGroup == null) { throw new ArgumentNullException("customVariableGroup"); }
+
+            if (customVariableGroup.Application != null)
+            {
+                customVariableGroup.ApplicationId = customVariableGroup.Application.Id;
+            }
+
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(customVariableGroup);
         }
     }
 }

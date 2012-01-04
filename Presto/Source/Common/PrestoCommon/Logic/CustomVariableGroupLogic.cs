@@ -38,5 +38,14 @@ namespace PrestoCommon.Logic
         {
             return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByApplicationName(applicationName);
         }
+
+        /// <summary>
+        /// Saves the specified custom variable group.
+        /// </summary>
+        /// <param name="customVariableGroup">The custom variable group.</param>
+        public static void Save(CustomVariableGroup customVariableGroup)
+        {
+            DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().Save(customVariableGroup);
+        }
     }
 }

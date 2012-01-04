@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Newtonsoft.Json;
 using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
@@ -31,11 +32,20 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
+        /// Gets or sets the application id.
+        /// </summary>
+        /// <value>
+        /// The application id.
+        /// </value>
+        public string ApplicationId { get; set; }  // For RavenDB, grrrr...
+
+        /// <summary>
         /// Gets or sets the application.
         /// </summary>
         /// <value>
         /// The application.
         /// </value>
+        [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public Application Application
         {
             get { return this._application; }
@@ -48,11 +58,20 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
+        /// Gets or sets the custom variable group id.
+        /// </summary>
+        /// <value>
+        /// The custom variable group id.
+        /// </value>
+        public string CustomVariableGroupId { get; set; }  // For RavenDB, grrrr...
+
+        /// <summary>
         /// Gets or sets the custom variable group.
         /// </summary>
         /// <value>
         /// The custom variable group.
         /// </value>
+        [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public CustomVariableGroup CustomVariableGroup
         {
             get { return this._customVariableGroup; }

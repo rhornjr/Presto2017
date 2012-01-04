@@ -301,7 +301,7 @@ namespace PrestoViewModel.Tabs
         {                        
             try
             {
-                LogicBase.Save(this.SelectedApplicationServer);
+                ApplicationServerLogic.Save(this.SelectedApplicationServer);
             }
             catch (ConcurrencyException)
             {

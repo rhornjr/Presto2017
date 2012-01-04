@@ -40,5 +40,16 @@ namespace PrestoCommon.Data.db4o
 
             return application;
         }
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public Application GetById(string id)
+        {
+            // Only RavenDB needs this.
+            throw new System.NotImplementedException();
+        }
     }
 }

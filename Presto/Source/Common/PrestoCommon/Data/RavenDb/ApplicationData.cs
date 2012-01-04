@@ -2,6 +2,7 @@
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
+using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -29,6 +30,19 @@ namespace PrestoCommon.Data.RavenDb
             return QuerySingleResultAndCacheEtag(session => session.Query<Application>()
                 .Where(app => app.Name == name).FirstOrDefault())
                 as Application;
+        }
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public Application GetById(string id)
+        {
+            using (IDocumentSession session = Database.OpenSession())
+            {
+                return session.Query<Application>().Where(app => app.Id == id).FirstOrDefault();
+            }
         }
     }
 }

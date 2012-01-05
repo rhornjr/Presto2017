@@ -42,7 +42,7 @@ namespace PrestoCommon.Data.RavenDb
                 .Where(server => server.Name == serverName).FirstOrDefault())
                 as ApplicationServer;
 
-            HydrateApplicationServer(appServer);
+            if (appServer != null) { HydrateApplicationServer(appServer); }
 
             return appServer;
         }
@@ -58,7 +58,7 @@ namespace PrestoCommon.Data.RavenDb
                 .Where(server => server.Id == serverId).FirstOrDefault())
                 as ApplicationServer;
 
-            HydrateApplicationServer(appServer);
+            if (appServer != null) { HydrateApplicationServer(appServer); }
 
             return appServer;
         }

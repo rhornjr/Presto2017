@@ -230,7 +230,7 @@ namespace PrestoViewModel.Tabs
 
             CorrectTaskSequence();
 
-            ApplicationLogic.Save(this.SelectedApplication);
+            SaveApplication();
 
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
         }
@@ -258,7 +258,7 @@ namespace PrestoViewModel.Tabs
 
             if (taskViewModel.UserCanceled) { return; }
 
-            TaskLogic.Save(taskViewModel.TaskBase);
+            SaveApplication();
         }
 
         private bool ApplicationIsSelected()
@@ -283,7 +283,7 @@ namespace PrestoViewModel.Tabs
 
                 CorrectTaskSequence();
 
-                ApplicationLogic.Save(this.SelectedApplication);
+                SaveApplication();
 
                 NotifyPropertyChanged(() => this.SelectedApplicationTasks);
             }

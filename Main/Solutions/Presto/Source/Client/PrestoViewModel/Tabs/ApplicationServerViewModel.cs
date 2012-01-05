@@ -229,6 +229,13 @@ namespace PrestoViewModel.Tabs
                 importedGroup.Enabled = false;  // default
 
                 Application appFromDb = ApplicationLogic.GetByName(importedGroup.Application.Name);
+
+                if (appFromDb == null)
+                {
+                    CannotImportGroup(importedGroup);
+                    return;
+                }
+
                 importedGroup.Application = appFromDb;
 
                 if (importedGroup.CustomVariableGroup != null)
@@ -241,6 +248,14 @@ namespace PrestoViewModel.Tabs
             }
 
             SaveServer();
+        }
+
+        private static void CannotImportGroup(ApplicationWithOverrideVariableGroup importedGroup)
+        {
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                "{0} could not be imported because the application ({1}) with which it is associated does not exist.",
+                importedGroup.ToString(),
+                importedGroup.Application.Name);
         }        
 
         private void ForceApplication()

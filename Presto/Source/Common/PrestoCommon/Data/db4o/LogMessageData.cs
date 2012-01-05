@@ -26,5 +26,14 @@ namespace PrestoCommon.Data.db4o
 
             return logMessages;
         }
+
+        /// <summary>
+        /// Saves the specified log message.
+        /// </summary>
+        /// <param name="logMessage">The log message.</param>
+        public void Save(LogMessage logMessage)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(logMessage);
+        }
     }
 }

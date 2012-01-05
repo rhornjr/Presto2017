@@ -275,7 +275,7 @@ namespace PrestoViewModel.Tabs
                 }
 
                 customVariableGroup.Id = null;  // This is new.
-                LogicBase.Save(customVariableGroup);
+                CustomVariableGroupLogic.Save(customVariableGroup);
                 this.CustomVariableGroups.Add(customVariableGroup);
             }
         }

@@ -51,5 +51,14 @@ namespace PrestoCommon.Data.db4o
             // Only RavenDB needs this.
             throw new System.NotImplementedException();
         }
+
+        /// <summary>
+        /// Saves the specified application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        public void Save(Application application)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(application);
+        }
     }
 }

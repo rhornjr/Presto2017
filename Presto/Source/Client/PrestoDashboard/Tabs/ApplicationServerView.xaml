@@ -44,7 +44,7 @@
                      SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
         </DockPanel>
 
-        <DockPanel Grid.Column="1" LastChildFill="True">            
+        <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding AppServerIsSelected}">            
                         
             <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>

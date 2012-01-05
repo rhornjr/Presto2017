@@ -24,7 +24,18 @@ namespace PrestoViewModel.Tabs
     {
         private ObservableCollection<Application> _applications;
         private Application _selectedApplication;
-        private TaskBase _selectedTask;                
+        private TaskBase _selectedTask;
+
+        /// <summary>
+        /// Gets a value indicating whether [application is selected].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [application is selected]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ApplicationIsSelected
+        {
+            get { return this.SelectedApplication != null; }
+        }
 
         /// <summary>
         /// Gets the add application command.
@@ -110,8 +121,8 @@ namespace PrestoViewModel.Tabs
         public Application SelectedApplication
         {
             get
-            {                
-                return this._selectedApplication;                
+            {
+                return this._selectedApplication;
             }
 
             set
@@ -119,6 +130,7 @@ namespace PrestoViewModel.Tabs
                 this._selectedApplication = value;
                 this.NotifyPropertyChanged(() => this.SelectedApplication);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+                this.NotifyPropertyChanged(() => this.ApplicationIsSelected);
             }
         }
 
@@ -166,18 +178,18 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddApplicationCommand      = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand   = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected());
+            this.AddApplicationCommand = new RelayCommand(_ => AddApplication());
+            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected);
             this.RefreshApplicationsCommand = new RelayCommand(_ => RefreshApplications());
-            this.SaveApplicationCommand     = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected());
+            this.SaveApplicationCommand = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected);
 
-            this.ForceInstallationCommand = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected());
+            this.ForceInstallationCommand = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected);
 
-            this.AddTaskCommand      = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected());
-            this.EditTaskCommand     = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
-            this.DeleteTaskCommand   = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
-            this.ImportTasksCommand  = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected());
-            this.MoveTaskUpCommand   = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
+            this.AddTaskCommand = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected);
+            this.EditTaskCommand = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
+            this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
+            this.ImportTasksCommand = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected);
+            this.MoveTaskUpCommand = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
             this.MoveTaskDownCommand = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
         }
 
@@ -186,7 +198,7 @@ namespace PrestoViewModel.Tabs
             this.LoadApplications();
 
             ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
-        }                                   
+        }
 
         private void AddApplication()
         {
@@ -202,9 +214,9 @@ namespace PrestoViewModel.Tabs
             if (!UserConfirmsDelete(this.SelectedApplication.Name)) { return; }
 
             LogicBase.Delete(this.SelectedApplication);
-            
+
             this.Applications.Remove(this.SelectedApplication);
-        }        
+        }
 
         private void AddTask()
         {
@@ -241,7 +253,7 @@ namespace PrestoViewModel.Tabs
 
             MainWindowViewModel.ViewLoader.ShowDialog(selectorViewModel);
 
-            if (selectorViewModel.UserHitCancel == true) { return null; }            
+            if (selectorViewModel.UserHitCancel == true) { return null; }
 
             TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(selectorViewModel.SelectedTaskType);
 
@@ -261,15 +273,10 @@ namespace PrestoViewModel.Tabs
             SaveApplication();
         }
 
-        private bool ApplicationIsSelected()
-        {
-            return this.SelectedApplication != null;
-        }
-
         private bool TaskIsSelected()
         {
             return this.SelectedTask != null;
-        }   
+        }
 
         private void DeleteTask()
         {
@@ -300,7 +307,7 @@ namespace PrestoViewModel.Tabs
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
-            if (viewModel.UserCanceled) { return; }            
+            if (viewModel.UserCanceled) { return; }
 
             this.SelectedApplication.ForceInstallation = viewModel.ForceInstallation;
 
@@ -309,7 +316,7 @@ namespace PrestoViewModel.Tabs
                 this.SelectedApplication,
                 this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
                 this.SelectedApplication.ForceInstallation.ForceInstallationTime.ToString()));
-        }   
+        }
 
         private void ImportTasks()
         {
@@ -332,7 +339,7 @@ namespace PrestoViewModel.Tabs
                 TaskBase highestSequenceTask = this.SelectedApplication.Tasks.OrderByDescending(task => task.Sequence).FirstOrDefault();
                 sequence = highestSequenceTask.Sequence + 1;
             }
-            
+
             foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask in taskBases)
             {
                 TaskBase task = CreateTaskFromLegacyTask(legacyTask);
@@ -384,7 +391,7 @@ namespace PrestoViewModel.Tabs
         }
 
         private bool SaveApplication()
-        {                        
+        {
             try
             {
                 ApplicationLogic.Save(this.SelectedApplication);
@@ -403,7 +410,7 @@ namespace PrestoViewModel.Tabs
         }
 
         private void LoadApplications()
-        {            
+        {
             try
             {
                 this.Applications = new ObservableCollection<Application>(ApplicationLogic.GetAll().ToList());
@@ -452,10 +459,10 @@ namespace PrestoViewModel.Tabs
             {
                 if (taskBase.Sequence != properSequence)
                 {
-                    taskBase.Sequence = properSequence;                    
+                    taskBase.Sequence = properSequence;
                 }
                 properSequence++;
-            }            
+            }
         }
     }
 }

@@ -108,7 +108,7 @@ namespace SelfUpdatingServiceHost
 
             UpdaterManifest updaterManifest;
 
-            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdaterManifest));
                 updaterManifest = xmlSerializer.Deserialize(fileStream) as UpdaterManifest;

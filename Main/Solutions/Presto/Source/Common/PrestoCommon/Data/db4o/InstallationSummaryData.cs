@@ -14,14 +14,14 @@ namespace PrestoCommon.Data.db4o
         /// <summary>
         /// Gets the by server name app version and group.
         /// </summary>
-        /// <param name="serverName">Name of the server.</param>
+        /// <param name="appServer">The app server.</param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        public IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
+        public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
         {
             IEnumerable<InstallationSummary> installationSummaryList =
                 from InstallationSummary summary in Database
-                where summary.ApplicationServer.Name.ToUpperInvariant() == serverName.ToUpperInvariant()
+                where summary.ApplicationServer.Name.ToUpperInvariant() == appServer.Name.ToUpperInvariant()
                   && summary.ApplicationWithOverrideVariableGroup.Application.Name.ToUpperInvariant() == appWithGroup.Application.Name.ToUpperInvariant()
                   && summary.ApplicationWithOverrideVariableGroup.Application.Version.ToUpperInvariant() == appWithGroup.Application.Version.ToUpperInvariant()
                 select summary;
@@ -52,6 +52,15 @@ namespace PrestoCommon.Data.db4o
             Database.Ext().Refresh(installationSummaryList, 10);
 
             return installationSummaryList;
+        }
+
+        /// <summary>
+        /// Saves the specified installation summary.
+        /// </summary>
+        /// <param name="installationSummary">The installation summary.</param>
+        public void Save(InstallationSummary installationSummary)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(installationSummary);
         }
     }
 }

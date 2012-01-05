@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
@@ -9,11 +10,20 @@ namespace PrestoCommon.Entities
     public class InstallationSummary : EntityBase
     {
         /// <summary>
+        /// Gets or sets the application server id.
+        /// </summary>
+        /// <value>
+        /// The application server id.
+        /// </value>
+        public string ApplicationServerId { get; set; }
+
+        /// <summary>
         /// Gets or sets the application server.
         /// </summary>
         /// <value>
         /// The application server.
         /// </value>
+        [JsonIgnore]
         public ApplicationServer ApplicationServer { get; set; }
 
         /// <summary>

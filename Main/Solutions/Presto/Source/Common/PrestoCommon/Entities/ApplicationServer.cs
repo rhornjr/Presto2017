@@ -136,24 +136,23 @@ namespace PrestoCommon.Entities
             if (appWithGroup.Enabled == false) { return false; }
 
             // Get the list of InstallationStatus entities to see if we've ever installed this app.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerNameAppVersionAndGroup(this.Name, appWithGroup);
+            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(this, appWithGroup);
 
             // First, if this app has never been installed, then it needs to be.
             if (installationSummaryList == null || installationSummaryList.Count() < 1) { return true; }
 
-            if (ForceInstallIsThisAppWithGroup(appWithGroup))
-            {
-                this.ApplicationWithGroupToForceInstall = null;  // Remove the app as force installing so we don't keep repeatedly installing it.
-                LogicBase.Save(this);
+            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+
+            if (ForceInstallIsThisAppWithGroup(appWithGroup) &&
+                mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime)
+            {                
                 return true;
             }
 
             // If there is no force installation time, then no need to install.
             if (appWithGroup.Application.ForceInstallation == null || appWithGroup.Application.ForceInstallation.ForceInstallationTime == null) { return false; }
 
-            // Check the latest installation. If it's before ForceInstallationTime, then we need to install
-            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
-
+            // Check the latest installation. If it's before ForceInstallationTime, then we need to install            
             if (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment) { return true; }
 
@@ -189,7 +188,7 @@ namespace PrestoCommon.Entities
 
         private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)
         {
-            LogicBase.Save(installationSummary);
+            InstallationSummaryLogic.Save(installationSummary);
 
             LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoCommonResources.ApplicationInstalled,

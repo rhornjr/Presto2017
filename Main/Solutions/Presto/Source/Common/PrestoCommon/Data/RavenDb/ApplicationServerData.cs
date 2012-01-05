@@ -18,26 +18,17 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<ApplicationServer> GetAll()
         {
-            //return QueryAndCacheEtags(session => session.Query<ApplicationServer>()).Cast<ApplicationServer>();
-
             IEnumerable<ApplicationServer> appServers = QueryAndCacheEtags(session => 
                 session.Advanced.LuceneQuery<ApplicationServer>()
                 .Include(appServer => appServer.CustomVariableGroupIds)).Cast<ApplicationServer>();
 
             foreach (ApplicationServer appServer in appServers)
             {
-                appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
-                    DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByIds(appServer.CustomVariableGroupIds));
-
-                foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
-                {
-                    appGroup.Application         = DataAccessFactory.GetDataInterface<IApplicationData>().GetById(appGroup.ApplicationId);
-                    appGroup.CustomVariableGroup = DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(appGroup.CustomVariableGroupId);                    
-                }
+                HydrateApplicationServer(appServer);
             }            
 
             return appServers;
-        }
+        }        
 
         /// <summary>
         /// Gets the name of the by.
@@ -47,9 +38,53 @@ namespace PrestoCommon.Data.RavenDb
         public ApplicationServer GetByName(string serverName)
         {
             // Note: RavenDB queries are case-insensitive, so no ToUpper() conversion is necessary here.
-            return QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
+            ApplicationServer appServer = QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
                 .Where(server => server.Name == serverName).FirstOrDefault())
                 as ApplicationServer;
+
+            HydrateApplicationServer(appServer);
+
+            return appServer;
+        }
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="serverId">The server id.</param>
+        /// <returns></returns>
+        public ApplicationServer GetById(string serverId)
+        {
+            ApplicationServer appServer = QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
+                .Where(server => server.Id == serverId).FirstOrDefault())
+                as ApplicationServer;
+
+            HydrateApplicationServer(appServer);
+
+            return appServer;
+        }
+
+        private static void HydrateApplicationServer(ApplicationServer appServer)
+        {
+            appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
+                DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByIds(appServer.CustomVariableGroupIds));
+
+            foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
+            {
+                appGroup.Application = DataAccessFactory.GetDataInterface<IApplicationData>().GetById(appGroup.ApplicationId);
+                appGroup.CustomVariableGroup = DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(appGroup.CustomVariableGroupId);
+            }
+
+            if (appServer.ApplicationWithGroupToForceInstall != null)
+            {
+                appServer.ApplicationWithGroupToForceInstall.Application =
+                    DataAccessFactory.GetDataInterface<IApplicationData>().GetById(appServer.ApplicationWithGroupToForceInstall.ApplicationId);
+            }
+
+            if (appServer.ApplicationWithGroupToForceInstall != null && appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId != null)
+            {
+                appServer.ApplicationWithGroupToForceInstall.CustomVariableGroup =
+                    DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId);
+            }
         }
 
         /// <summary>

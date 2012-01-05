@@ -124,7 +124,7 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (entityBase == null) { throw new ArgumentNullException("entityBase"); }
 
-            if (!_entityIdAndEtagMapping.ContainsKey(entityBase.Id)) { return Guid.Empty; }
+            if (entityBase.Id == null || !_entityIdAndEtagMapping.ContainsKey(entityBase.Id)) { return Guid.Empty; }
 
             return _entityIdAndEtagMapping[entityBase.Id];
         }

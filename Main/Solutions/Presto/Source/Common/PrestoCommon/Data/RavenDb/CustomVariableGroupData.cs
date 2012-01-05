@@ -45,12 +45,12 @@ namespace PrestoCommon.Data.RavenDb
         /// <summary>
         /// Gets the specified application name.
         /// </summary>
-        /// <param name="applicationName">Name of the application.</param>
+        /// <param name="application"></param>
         /// <returns></returns>
-        public CustomVariableGroup GetByApplicationName(string applicationName)
+        public CustomVariableGroup GetByApplication(Application application)
         {
             return QuerySingleResultAndCacheEtag(session => session.Query<CustomVariableGroup>()
-                .Where(customGroup => customGroup.Application != null && customGroup.Application.Name == applicationName).FirstOrDefault())
+                .Where(customGroup =>  customGroup.ApplicationId == application.Id).FirstOrDefault())
                 as CustomVariableGroup;
         }
 

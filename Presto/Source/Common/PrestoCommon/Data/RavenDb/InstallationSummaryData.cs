@@ -51,6 +51,12 @@ namespace PrestoCommon.Data.RavenDb
                 summary.ApplicationServer = DataAccessFactory.GetDataInterface<IApplicationServerData>().GetById(summary.ApplicationServerId);
                 summary.ApplicationWithOverrideVariableGroup.Application =
                     DataAccessFactory.GetDataInterface<IApplicationData>().GetById(summary.ApplicationWithOverrideVariableGroup.ApplicationId);
+
+                if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null)
+                {
+                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
+                        DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
+                }
             }
 
             return installationSummaries;

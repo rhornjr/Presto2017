@@ -288,7 +288,7 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = selectedAppWithGroup;
 
-            SaveServer();
+            if (SaveServer() == false) { return; }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.AppWillBeInstalledOnAppServer, selectedAppWithGroup, this.SelectedApplicationServer);

@@ -24,9 +24,9 @@ namespace PrestoCommon.Data.Interfaces
         /// <summary>
         /// Gets the specified application name.
         /// </summary>
-        /// <param name="applicationName">Name of the application.</param>
+        /// <param name="application">The application.</param>
         /// <returns></returns>
-        CustomVariableGroup GetByApplicationName(string applicationName);
+        CustomVariableGroup GetByApplication(Application application);
 
         /// <summary>
         /// Gets the by id.

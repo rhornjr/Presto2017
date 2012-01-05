@@ -127,6 +127,12 @@ namespace PrestoCommon.Entities
                 LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
                 InstallApplication(appWithGroup);
             }
+
+            if (this.ApplicationWithGroupToForceInstall != null)
+            {
+                this.ApplicationWithGroupToForceInstall = null;  // Remove so we don't install again.
+                ApplicationServerLogic.Save(this);
+            }
         }
 
         private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup)
@@ -143,11 +149,11 @@ namespace PrestoCommon.Entities
 
             InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
-            if (ForceInstallIsThisAppWithGroup(appWithGroup) &&
-                mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime)
-            {                
-                return true;
-            }
+            //     ****  This is forcing an APPLICATION SERVER / APP GROUP instance ****
+
+            if (ForceInstallIsThisAppWithGroup(appWithGroup)) { return true; }
+
+            //     ****  This is forcing an APPLICATION  ****
 
             // If there is no force installation time, then no need to install.
             if (appWithGroup.Application.ForceInstallation == null || appWithGroup.Application.ForceInstallation.ForceInstallationTime == null) { return false; }

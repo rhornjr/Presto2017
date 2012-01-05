@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
+using PrestoCommon.Misc;
 using Raven.Client;
 
 namespace PrestoCommon.Data.RavenDb
@@ -40,6 +42,18 @@ namespace PrestoCommon.Data.RavenDb
         public void Delete(EntityBase objectToDelete)
         {
             if (objectToDelete == null) { throw new ArgumentNullException("objectToDelete"); }
+
+            // Can't delete an object that doesn't have an ID. If this ever happens, it's probably because
+            // a user created an object, never saved it, and is trying to delete it.
+            if (objectToDelete.Id == null)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture,
+                    "Attempted to delete an object that doesn't have an ID. Ignoring delete. Note: This usually happens when " +
+                    "a user creates an object, never saved it, and is trying to delete it. Object as string: {0}",
+                    objectToDelete.ToString());
+                LogUtility.LogWarning(message);
+                return;
+            }
 
             using (IDocumentSession session = Database.OpenSession())
             {

@@ -46,12 +46,12 @@ namespace PrestoCommon.Data.db4o
         /// <summary>
         /// Gets the specified application name.
         /// </summary>
-        /// <param name="applicationName">Name of the application.</param>
+        /// <param name="application">The application.</param>
         /// <returns></returns>
-        public CustomVariableGroup GetByApplicationName(string applicationName)
+        public CustomVariableGroup GetByApplication(Application application)
         {
             CustomVariableGroup group = (from CustomVariableGroup customGroup in Database
-                                         where customGroup.Application != null && customGroup.Application.Name == applicationName
+                                         where customGroup.Application != null && customGroup.Application.Name == application.Name
                                          select customGroup).FirstOrDefault();
 
             if (group == null) { return null; }

@@ -11,10 +11,10 @@ namespace PrestoCommon.Data.Interfaces
         /// <summary>
         /// Gets the by server name app version and group.
         /// </summary>
-        /// <param name="serverName">Name of the server.</param>
+        /// <param name="appServer">The app server.</param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, ApplicationWithOverrideVariableGroup appWithGroup);
+        IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup);
 
         /// <summary>
         /// Gets the most recent by start time.
@@ -22,5 +22,11 @@ namespace PrestoCommon.Data.Interfaces
         /// <param name="numberToRetrieve">The number to retrieve.</param>
         /// <returns></returns>
         IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve);
+
+        /// <summary>
+        /// Saves the specified installation summary.
+        /// </summary>
+        /// <param name="installationSummary">The installation summary.</param>
+        void Save(InstallationSummary installationSummary);
     }
 }

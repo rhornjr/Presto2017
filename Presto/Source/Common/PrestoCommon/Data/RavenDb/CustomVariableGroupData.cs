@@ -82,9 +82,9 @@ namespace PrestoCommon.Data.RavenDb
             {
                 foreach (string id in ids)
                 {
-                    customVariableGroups.Add(session.Query<CustomVariableGroup>()
-                        .Where(group => group.Id == id)
-                        .FirstOrDefault());
+                    CustomVariableGroup customGroup = session.Query<CustomVariableGroup>()
+                        .Where(group => group.Id == id).FirstOrDefault();
+                    if (customGroup != null) { customVariableGroups.Add(customGroup); }
                 }
             }
 

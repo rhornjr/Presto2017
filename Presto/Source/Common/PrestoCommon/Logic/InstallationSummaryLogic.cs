@@ -13,12 +13,12 @@ namespace PrestoCommon.Logic
         /// <summary>
         /// Gets the name of the by server.
         /// </summary>
-        /// <param name="serverName">Name of the server.</param>
+        /// <param name="appServer">The app server.</param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        public static IEnumerable<InstallationSummary> GetByServerNameAppVersionAndGroup(string serverName, ApplicationWithOverrideVariableGroup appWithGroup)
+        public static IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetByServerNameAppVersionAndGroup(serverName, appWithGroup);
+            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetByServerAppAndGroup(appServer, appWithGroup);
         }
 
         /// <summary>
@@ -29,6 +29,15 @@ namespace PrestoCommon.Logic
         public static IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
         {
             return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetMostRecentByStartTime(numberToRetrieve);
+        }
+
+        /// <summary>
+        /// Saves the specified installation summary.
+        /// </summary>
+        /// <param name="installationSummary">The installation summary.</param>
+        public static void Save(InstallationSummary installationSummary)
+        {
+            DataAccessFactory.GetDataInterface<IInstallationSummaryData>().Save(installationSummary);
         }
     }
 }

@@ -230,9 +230,9 @@ namespace PrestoViewModel.Tabs
 
             CorrectTaskSequence();
 
-            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+            ApplicationLogic.Save(this.SelectedApplication);
 
-            SaveApplication();
+            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
         }
 
         private static TaskViewModel GetTaskViewModel()
@@ -277,15 +277,15 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                LogicBase.Delete(this.SelectedTask);
+                // Note: We don't actually delete the task; we just save the application in its new state (without the task).
 
                 this.SelectedApplication.Tasks.Remove(this.SelectedTask);
 
                 CorrectTaskSequence();
 
-                NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+                ApplicationLogic.Save(this.SelectedApplication);
 
-                SaveApplication();
+                NotifyPropertyChanged(() => this.SelectedApplicationTasks);
             }
             catch (Exception ex)
             {
@@ -325,10 +325,18 @@ namespace PrestoViewModel.Tabs
                 taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
             }
 
-            int sequence = 1;
+            // Start the sequence after the highest existing sequence.
+            int sequence = 1;  // default if no tasks exist
+            if (this.SelectedApplication.Tasks != null && this.SelectedApplication.Tasks.Count > 0)
+            {
+                TaskBase highestSequenceTask = this.SelectedApplication.Tasks.OrderByDescending(task => task.Sequence).FirstOrDefault();
+                sequence = highestSequenceTask.Sequence + 1;
+            }
+            
             foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask in taskBases)
             {
                 TaskBase task = CreateTaskFromLegacyTask(legacyTask);
+                task.Id = null;  // new
                 task.Sequence = sequence;
                 this.SelectedApplication.Tasks.Add(task);
                 sequence++;
@@ -434,10 +442,6 @@ namespace PrestoViewModel.Tabs
             CorrectTaskSequence();
 
             NotifyPropertyChanged(() => this.SelectedApplicationTasks);
-
-            // After doing all of this, select the task again so it stays highlighted for the user.
-            //this.SelectedTasks.Clear();
-            //this.SelectedTasks.Add(this.Tasks[sequenceOfSelectedTask + moveAmount]);
         }
 
         private void CorrectTaskSequence()
@@ -448,11 +452,10 @@ namespace PrestoViewModel.Tabs
             {
                 if (taskBase.Sequence != properSequence)
                 {
-                    taskBase.Sequence = properSequence;
-                    TaskLogic.Save(taskBase);
+                    taskBase.Sequence = properSequence;                    
                 }
                 properSequence++;
-            }
+            }            
         }
     }
 }

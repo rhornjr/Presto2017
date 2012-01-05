@@ -21,5 +21,14 @@ namespace PrestoCommon.Data.RavenDb
                 .OrderByDescending(logMessage => logMessage.MessageCreatedTime)
                 .Take(numberToRetrieve)).Cast<LogMessage>();
         }
+
+        /// <summary>
+        /// Saves the specified log message.
+        /// </summary>
+        /// <param name="logMessage">The log message.</param>
+        public void Save(LogMessage logMessage)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(logMessage);
+        }
     }
 }

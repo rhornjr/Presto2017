@@ -27,5 +27,11 @@ namespace PrestoCommon.Data.Interfaces
         /// <param name="id">The id.</param>
         /// <returns></returns>
         Application GetById(string id);
+
+        /// <summary>
+        /// Saves the specified application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        void Save(Application application);
     }
 }

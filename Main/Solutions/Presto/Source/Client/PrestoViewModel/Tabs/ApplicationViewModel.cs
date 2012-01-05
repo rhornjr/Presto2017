@@ -258,7 +258,7 @@ namespace PrestoViewModel.Tabs
 
             if (taskViewModel.UserCanceled) { return; }
 
-            LogicBase.Save(taskViewModel.TaskBase);
+            TaskLogic.Save(taskViewModel.TaskBase);
         }
 
         private bool ApplicationIsSelected()
@@ -379,7 +379,7 @@ namespace PrestoViewModel.Tabs
         {                        
             try
             {
-                LogicBase.Save(this.SelectedApplication);
+                ApplicationLogic.Save(this.SelectedApplication);
             }
             catch (ConcurrencyException)
             {
@@ -449,7 +449,7 @@ namespace PrestoViewModel.Tabs
                 if (taskBase.Sequence != properSequence)
                 {
                     taskBase.Sequence = properSequence;
-                    LogicBase.Save(taskBase);
+                    TaskLogic.Save(taskBase);
                 }
                 properSequence++;
             }

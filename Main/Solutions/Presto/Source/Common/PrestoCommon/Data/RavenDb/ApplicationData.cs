@@ -44,5 +44,14 @@ namespace PrestoCommon.Data.RavenDb
                 return session.Query<Application>().Where(app => app.Id == id).FirstOrDefault();
             }
         }
+
+        /// <summary>
+        /// Saves the specified application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        public void Save(Application application)
+        {
+            DataAccessFactory.GetDataInterface<IGenericData>().Save(application);
+        }
     }
 }

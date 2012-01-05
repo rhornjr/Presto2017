@@ -47,7 +47,7 @@
                          SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
         </DockPanel>
 
-        <DockPanel Grid.Column="1" LastChildFill="True">
+        <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding CustomVariableGroupIsSelected}">
             
             <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
 

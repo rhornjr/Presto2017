@@ -43,7 +43,7 @@
                      SelectedItem="{Binding SelectedApplication}"/>
         </DockPanel>
 
-        <DockPanel Grid.Column="1" LastChildFill="True">
+        <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding ApplicationIsSelected}">
             
             <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>

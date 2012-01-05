@@ -29,6 +29,17 @@ namespace PrestoViewModel.Tabs
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
 
         /// <summary>
+        /// Gets a value indicating whether [app server is selected].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [app server is selected]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AppServerIsSelected
+        {
+            get { return this.SelectedApplicationServer != null; }
+        }
+
+        /// <summary>
         /// Gets the add server command.
         /// </summary>
         public ICommand AddServerCommand { get; private set; }
@@ -135,6 +146,7 @@ namespace PrestoViewModel.Tabs
             {
                 this._selectedApplicationServer = value;
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServer);
+                this.NotifyPropertyChanged(() => this.AppServerIsSelected);
             }
         }
 
@@ -178,14 +190,14 @@ namespace PrestoViewModel.Tabs
         private void Initialize()
         {
             this.AddServerCommand      = new RelayCommand(_ => AddServer());
-            this.DeleteServerCommand   = new RelayCommand(_ => DeleteServer(), _ => AppServerIsSelected());
-            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected());
+            this.DeleteServerCommand   = new RelayCommand(_ => DeleteServer(), _ => AppServerIsSelected);
+            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected);
             this.RefreshServersCommand = new RelayCommand(_ => RefreshServers());
 
             this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
             this.EditApplicationCommand   = new RelayCommand(_ => EditApplication(), _ => ExactlyOneApplicationIsSelected());
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ExactlyOneApplicationIsSelected());
-            this.ImportApplicationCommand = new RelayCommand(_ => ImportApplication(), _ => AppServerIsSelected());
+            this.ImportApplicationCommand = new RelayCommand(_ => ImportApplication(), _ => AppServerIsSelected);
             this.ExportApplicationCommand = new RelayCommand(_ => ExportApplication(), _ => AtLeastOneApplicationIsSelected());
             this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => ExactlyOneApplicationIsSelected());
 
@@ -289,12 +301,7 @@ namespace PrestoViewModel.Tabs
             this.ApplicationServers.Add(new ApplicationServer() { Name = newServerName });
 
             this.SelectedApplicationServer = this.ApplicationServers.Where(server => server.Name == newServerName).FirstOrDefault();
-        }
-
-        private bool AppServerIsSelected()
-        {
-            return this.SelectedApplicationServer != null;
-        }
+        }        
 
         private void DeleteServer()
         {

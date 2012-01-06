@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogUtility.cs" />
     <Compile Include="SelfUpdatingService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -72,12 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\PrestoCommon\PrestoCommon.csproj">
-      <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
-      <Name>PrestoCommon</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

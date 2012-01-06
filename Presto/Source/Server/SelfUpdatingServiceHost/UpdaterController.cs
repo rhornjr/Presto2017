@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -8,7 +7,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using PrestoCommon.Misc;
 
 namespace SelfUpdatingServiceHost
 {
@@ -75,6 +73,8 @@ namespace SelfUpdatingServiceHost
             }
             catch (Exception ex)
             {
+                // ToDo: Consider leaving the timer intact. Maybe the exception is that the manifest file is locked.
+                //       For things like that, we want to try processing again.
                 LogUtility.LogException(ex);
                 if (this._timer != null) { this._timer.Dispose(); }
             }
@@ -229,11 +229,14 @@ namespace SelfUpdatingServiceHost
             {
                 try
                 {
+                    // Note: If we get an error like this here: Could not load file or assembly PrestoCommon...,
+                    //       that's because we're running in the VS debugger. To make this work, add a reference
+                    //       to PrestoCommon *only while debugging*, OR run SelfUpdatingServiceHost.exe within the debug folder.
                     this._appDomain.ExecuteAssembly(assemblyName);
                 }
-                catch (AppDomainUnloadedException ex)
+                catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.ToString());
+                    LogUtility.LogException(ex);
                 }
             }, _tokenSource.Token);
         }

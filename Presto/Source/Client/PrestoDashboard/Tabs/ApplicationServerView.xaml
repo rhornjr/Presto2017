@@ -65,14 +65,19 @@
                 <Label Grid.Column="0" Grid.Row="1" Content="Name: "/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplicationServer.Name}"/>
 
-                <Label Grid.Column="0" Grid.Row="2" Content="IP Address: "/>
-                <TextBox  Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplicationServer.IpAddress}"/>
+                <Label Grid.Column="0" Grid.Row="2" Content="Description: "/>
+                <TextBox  Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplicationServer.Description}"/>
 
                 <Label Grid.Column="0" Grid.Row="3" Content="Environment: "/>
-                <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding DeploymentEnvironments}"
-                          SelectedItem="{Binding SelectedApplicationServer.DeploymentEnvironment}" Width="185"
-                          HorizontalAlignment="Left"/>
 
+                <DockPanel Grid.Column="1" Grid.Row="3">
+                    <ComboBox ItemsSource="{Binding DeploymentEnvironments}"
+                              SelectedItem="{Binding SelectedApplicationServer.DeploymentEnvironment}" Width="110"
+                              HorizontalAlignment="Left"/>
+                    <CheckBox Content="Enable debug logging" IsChecked="{Binding SelectedApplicationServer.EnableDebugLogging}"
+                              FlowDirection="RightToLeft" VerticalAlignment="Center"/>
+                </DockPanel>
+                
                 <Button Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
             </Grid>                        
             

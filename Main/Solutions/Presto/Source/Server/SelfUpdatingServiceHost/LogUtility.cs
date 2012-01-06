@@ -2,25 +2,16 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace PrestoCommon.Misc
+namespace SelfUpdatingServiceHost
 {
+    // Note: This class was copied from Presto.Common. We can't use Presto references in this app because Presto Task Runner
+    //       would use Presto.Common in this app's folder, and not the one in the Presto Task Runner folder.
+
     /// <summary>
     /// Quick and dirty logger to get us going
     /// </summary>
     public static class LogUtility
     {
-        /// <summary>
-        /// Logs the debug.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="debugLoggingEnabled">if set to <c>true</c> [debug logging enabled].</param>
-        public static void LogDebug(string message, bool debugLoggingEnabled)
-        {
-            if (debugLoggingEnabled == false) { return; }
-
-            Log(message, EventLogEntryType.Information);
-        }
-
         /// <summary>
         /// Logs the information.
         /// </summary>

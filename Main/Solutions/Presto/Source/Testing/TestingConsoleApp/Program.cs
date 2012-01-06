@@ -312,12 +312,12 @@ namespace TestingConsoleApp
         {
             for (int i = 10; i <= 24; i++)
             {
-                ApplicationServer server = new ApplicationServer() { Name = "PbgAppMesD" + i, IpAddress = "10.1.2." + i };
+                ApplicationServer server = new ApplicationServer() { Name = "PbgAppMesD" + i, Description = "10.1.2." + i };
                 db.Store(server);
             }
 
             // For testing on my laptop
-            ApplicationServer laptop = new ApplicationServer() { Name = "DellXps", IpAddress = "10.0.0.3" };
+            ApplicationServer laptop = new ApplicationServer() { Name = "DellXps", Description = "10.0.0.3" };
             db.Store(laptop);
         }
 
@@ -441,7 +441,7 @@ namespace TestingConsoleApp
                 return;
             }
 
-            Console.WriteLine(string.Format("{0}: {1} - {2}", description, server.Name, server.IpAddress));
+            Console.WriteLine(string.Format("{0}: {1} - {2}", description, server.Name, server.Description));
         }
 
         private static IObjectContainer GetDatabase()

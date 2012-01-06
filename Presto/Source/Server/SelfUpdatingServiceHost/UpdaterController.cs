@@ -196,8 +196,6 @@ namespace SelfUpdatingServiceHost
 
         private void LoadApp()
         {
-            // Load UpdatedConsoleApp in an app domain here.
-
             if (!Directory.Exists(this._runningAppPath))
             {
                 CopyFiles();
@@ -208,18 +206,16 @@ namespace SelfUpdatingServiceHost
             string assemblyName = Path.Combine(_runningAppPath, this._appName + ".exe");
 
             AppDomainSetup appDomainSetup    = new AppDomainSetup();
-            appDomainSetup.ApplicationName = this._appName;
-            //appDomainSetup.ApplicationBase   = _runningAppPath;
+            appDomainSetup.ApplicationName   = this._appName;
             appDomainSetup.ShadowCopyFiles   = "true";  // Note: not a bool.
             appDomainSetup.CachePath         = cachePath;
             appDomainSetup.ConfigurationFile = configFile;
+            
+            // We need this when we call ExecuteAssembly() below. This allows us to have the self-updating service host *NOT* reference PrestoCommon.
+            //appDomainSetup.PrivateBinPath    = this._runningAppPath;  // This works too. Can fall back to this if there are any issues with ApplicationBase.
+            appDomainSetup.ApplicationBase = this._runningAppPath;
 
-            //PermissionSet permissionSet = new PermissionSet(PermissionState.Unrestricted);
-            //permissionSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, this._sourceBinaryPath));
-            //permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-
-            //this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup, AppDomain.CurrentDomain.PermissionSet);
-            this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);
+            this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);            
 
             // ToDo: See comments at the bottom of this file for a better way to load/run/manage the app domain.            
 
@@ -229,9 +225,6 @@ namespace SelfUpdatingServiceHost
             {
                 try
                 {
-                    // Note: If we get an error like this here: Could not load file or assembly PrestoCommon...,
-                    //       that's because we're running in the VS debugger. To make this work, add a reference
-                    //       to PrestoCommon *only while debugging*, OR run SelfUpdatingServiceHost.exe within the debug folder.
                     this._appDomain.ExecuteAssembly(assemblyName);
                 }
                 catch (Exception ex)

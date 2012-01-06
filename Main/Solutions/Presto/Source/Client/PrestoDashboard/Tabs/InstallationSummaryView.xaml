@@ -16,7 +16,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0">
+        <DockPanel Grid.Column="0">
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding InstallationSummaryList}">
                 <DataGrid.Columns>
@@ -28,7 +28,7 @@
                     <DataGridTextColumn Binding="{Binding Path=InstallationResult}" Header="Result" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
+        </DockPanel>
         
         <StackPanel Grid.Row="1">
             <Button Content="Refresh" Style="{StaticResource StandardButton}" Command="{Binding RefreshCommand}" />

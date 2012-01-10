@@ -62,34 +62,12 @@ namespace PrestoCommon.Data.db4o
         }
 
         /// <summary>
-        /// Gets the by ids.
-        /// </summary>
-        /// <param name="groupIds">The group ids.</param>
-        /// <returns></returns>
-        public IEnumerable<CustomVariableGroup> GetByIds(IEnumerable<string> groupIds)
-        {
-            // Only RavenDB needs this.
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        public CustomVariableGroup GetById(string id)
-        {
-            // Only RavenDB needs this.
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
         /// Saves the specified custom variable group.
         /// </summary>
         /// <param name="customVariableGroup">The custom variable group.</param>
         public void Save(CustomVariableGroup customVariableGroup)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(customVariableGroup);
+            new GenericData().Save(customVariableGroup);
         }
     }
 }

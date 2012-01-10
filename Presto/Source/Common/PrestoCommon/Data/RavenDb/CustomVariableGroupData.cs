@@ -75,49 +75,6 @@ namespace PrestoCommon.Data.RavenDb
             });
         }
 
-        /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        public CustomVariableGroup GetById(string id)
-        {
-            return ExecuteQuery<CustomVariableGroup>(() =>
-            {
-                CustomVariableGroup customVariableGroup = 
-                    QuerySingleResultAndCacheEtag(session => session.Query<CustomVariableGroup>()
-                        .Include(x => x.ApplicationId)
-                        .Where(group => group.Id == id).FirstOrDefault()) as CustomVariableGroup;
-
-                HydrateApplication(customVariableGroup);
-
-                return customVariableGroup;
-            });
-        }
-
-        /// <summary>
-        /// Gets the by ids.
-        /// </summary>
-        /// <param name="groupIds">The group ids.</param>
-        /// <returns></returns>
-        public IEnumerable<CustomVariableGroup> GetByIds(IEnumerable<string> groupIds)
-        {
-            return ExecuteQuery<IEnumerable<CustomVariableGroup>>(() =>
-            {
-                IEnumerable<CustomVariableGroup> customGroups = QueryAndCacheEtags(
-                    session => session.Query<CustomVariableGroup>()
-                        .Include(x => x.ApplicationId)
-                        .Where(group => group.Id.In<string>(groupIds))).Cast<CustomVariableGroup>();
-
-                foreach (CustomVariableGroup customGroup in customGroups)
-                {
-                    HydrateApplication(customGroup);
-                }
-
-                return customGroups;
-            });
-        }
-
         private static void HydrateApplication(CustomVariableGroup customVariableGroup)
         {
             if (customVariableGroup == null) { return; }

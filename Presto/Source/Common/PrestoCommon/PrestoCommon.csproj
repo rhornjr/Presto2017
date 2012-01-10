@@ -73,7 +73,6 @@
     <Compile Include="Data\DataAccessFactory.cs" />
     <Compile Include="Data\db4o\ApplicationData.cs" />
     <Compile Include="Data\db4o\ApplicationServerData.cs" />
-    <Compile Include="Data\db4o\ApplicationWithOverrideVariableGroupData.cs" />
     <Compile Include="Data\db4o\CustomVariableGroupData.cs" />
     <Compile Include="Data\db4o\DataAccessLayerBase.cs" />
     <Compile Include="Data\db4o\GenericData.cs" />
@@ -82,7 +81,6 @@
     <Compile Include="Data\db4o\TaskData.cs" />
     <Compile Include="Data\Interfaces\IApplicationData.cs" />
     <Compile Include="Data\Interfaces\IApplicationServerData.cs" />
-    <Compile Include="Data\Interfaces\IApplicationWithOverrideVariableGroupData.cs" />
     <Compile Include="Data\Interfaces\ICustomVariableGroupData.cs" />
     <Compile Include="Data\Interfaces\IGenericData.cs" />
     <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
@@ -90,7 +88,6 @@
     <Compile Include="Data\Interfaces\ITaskData.cs" />
     <Compile Include="Data\RavenDb\ApplicationData.cs" />
     <Compile Include="Data\RavenDb\ApplicationServerData.cs" />
-    <Compile Include="Data\RavenDb\ApplicationWithOverrideVariableGroupData.cs" />
     <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
     <Compile Include="Data\RavenDb\DataAccessLayerBase.cs" />
     <Compile Include="Data\RavenDb\GenericData.cs" />
@@ -123,7 +120,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
-    <Compile Include="Logic\ApplicationWithOverrideVariableGroupLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />

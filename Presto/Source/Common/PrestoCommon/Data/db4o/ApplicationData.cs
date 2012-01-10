@@ -68,7 +68,7 @@ namespace PrestoCommon.Data.db4o
         /// <param name="application">The application.</param>
         public void Save(Application application)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(application);
+            new GenericData().Save(application);
         }        
     }
 }

@@ -29,20 +29,6 @@ namespace PrestoCommon.Data.Interfaces
         CustomVariableGroup GetByApplication(Application application);
 
         /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        CustomVariableGroup GetById(string id);
-
-        /// <summary>
-        /// Gets the by ids.
-        /// </summary>
-        /// <param name="groupIds">The group ids.</param>
-        /// <returns></returns>
-        IEnumerable<CustomVariableGroup> GetByIds(IEnumerable<string> groupIds);
-
-        /// <summary>
         /// Saves the specified custom variable group.
         /// </summary>
         /// <param name="customVariableGroup">The custom variable group.</param>

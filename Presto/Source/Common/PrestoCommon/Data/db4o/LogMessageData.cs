@@ -33,7 +33,7 @@ namespace PrestoCommon.Data.db4o
         /// <param name="logMessage">The log message.</param>
         public void Save(LogMessage logMessage)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(logMessage);
+            new GenericData().Save(logMessage);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace PrestoCommon.Data.db4o
         /// <param name="taskBase">The task base.</param>
         public void Save(TaskBase taskBase)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(taskBase);
+            new GenericData().Save(taskBase);
         }
     }
 }

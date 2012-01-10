@@ -53,12 +53,22 @@ namespace PrestoCommon.Data.db4o
         }
 
         /// <summary>
+        /// Gets the by ids.
+        /// </summary>
+        /// <param name="appIds">The app ids.</param>
+        /// <returns></returns>
+        public IEnumerable<Application> GetByIds(IEnumerable<string> appIds)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
         /// Saves the specified application.
         /// </summary>
         /// <param name="application">The application.</param>
         public void Save(Application application)
         {
             DataAccessFactory.GetDataInterface<IGenericData>().Save(application);
-        }
+        }        
     }
 }

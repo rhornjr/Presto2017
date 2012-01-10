@@ -64,9 +64,9 @@ namespace PrestoCommon.Data.db4o
         /// <summary>
         /// Gets the by ids.
         /// </summary>
-        /// <param name="ids">The ids.</param>
+        /// <param name="groupIds">The group ids.</param>
         /// <returns></returns>
-        public List<CustomVariableGroup> GetByIds(List<string> ids)
+        public IEnumerable<CustomVariableGroup> GetByIds(IEnumerable<string> groupIds)
         {
             // Only RavenDB needs this.
             throw new System.NotImplementedException();

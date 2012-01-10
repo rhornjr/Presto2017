@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
+using Raven.Client.Linq;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -18,16 +20,35 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<ApplicationServer> GetAll()
         {
-            IEnumerable<ApplicationServer> appServers = QueryAndCacheEtags(session => 
-                session.Advanced.LuceneQuery<ApplicationServer>()
-                .Include(appServer => appServer.CustomVariableGroupIds)).Cast<ApplicationServer>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            foreach (ApplicationServer appServer in appServers)
+            try
             {
-                HydrateApplicationServer(appServer);
-            }            
+                return ExecuteQuery<IEnumerable<ApplicationServer>>(() =>
+                {
+                    IEnumerable<ApplicationServer> appServers = QueryAndCacheEtags(session =>
+                        session.Advanced.LuceneQuery<ApplicationServer>()
+                        .Include(x => x.CustomVariableGroupIds)
+                        .Include(x => x.ApplicationIdsForAllAppWithGroups)
+                        .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                        .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
+                        .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
+                        ).Cast<ApplicationServer>();
 
-            return appServers;
+                    foreach (ApplicationServer appServer in appServers)
+                    {
+                        HydrateApplicationServer(appServer);
+                    }
+
+                    return appServers;
+                });
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Debug.WriteLine("ApplicationServerData.GetAll(): " + stopwatch.ElapsedMilliseconds);
+            }
         }        
 
         /// <summary>
@@ -38,13 +59,23 @@ namespace PrestoCommon.Data.RavenDb
         public ApplicationServer GetByName(string serverName)
         {
             // Note: RavenDB queries are case-insensitive, so no ToUpper() conversion is necessary here.
-            ApplicationServer appServer = QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
-                .Where(server => server.Name == serverName).FirstOrDefault())
-                as ApplicationServer;
 
-            if (appServer != null) { HydrateApplicationServer(appServer); }
+            return ExecuteQuery<ApplicationServer>(() =>
+            {
+                ApplicationServer appServer = QuerySingleResultAndCacheEtag(session =>
+                    session.Query<ApplicationServer>()
+                    .Include(x => x.CustomVariableGroupIds)
+                    .Include(x => x.ApplicationIdsForAllAppWithGroups)
+                    .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                    .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
+                    .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
+                    .Where(server => server.Name == serverName).FirstOrDefault())
+                    as ApplicationServer;
 
-            return appServer;
+                if (appServer != null) { HydrateApplicationServer(appServer); }
+
+                return appServer;
+            });            
         }
 
         /// <summary>
@@ -54,36 +85,70 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public ApplicationServer GetById(string serverId)
         {
-            ApplicationServer appServer = QuerySingleResultAndCacheEtag(session => session.Query<ApplicationServer>()
-                .Where(server => server.Id == serverId).FirstOrDefault())
-                as ApplicationServer;
+            return ExecuteQuery<ApplicationServer>(() =>
+            {
+                ApplicationServer appServer = QuerySingleResultAndCacheEtag(session =>
+                    session.Query<ApplicationServer>()
+                    .Include(x => x.CustomVariableGroupIds)
+                    .Include(x => x.ApplicationIdsForAllAppWithGroups)
+                    .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                    .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
+                    .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
+                    .Where(server => server.Id == serverId).FirstOrDefault()                    
+                    ) as ApplicationServer;
 
-            if (appServer != null) { HydrateApplicationServer(appServer); }
+                if (appServer != null) { HydrateApplicationServer(appServer); }
 
-            return appServer;
+                return appServer;
+            });
+        }
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="serverIds">The server ids.</param>
+        /// <returns></returns>
+        public IEnumerable<ApplicationServer> GetByIds(IEnumerable<string> serverIds)
+        {
+            // ToDo: Should we hydrate each app server here?
+
+            return ExecuteQuery<IEnumerable<ApplicationServer>>(() =>
+                QueryAndCacheEtags(
+                    session => session.Query<ApplicationServer>()
+                    .Where(server => server.Id.In<string>(serverIds))).Cast<ApplicationServer>());
         }
 
         private static void HydrateApplicationServer(ApplicationServer appServer)
         {
-            appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
-                DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByIds(appServer.CustomVariableGroupIds));
+            // Not using this, at least for now, because it increased the NumberOfRequests on the session...
+            //appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
+            //    QueryAndCacheEtags(session => session.Load<CustomVariableGroup>(appServer.CustomVariableGroupIds)).Cast<CustomVariableGroup>());
+
+            // ... however, this kept the NumberOfRequests to just one. Not sure why the difference.
+            appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>();
+            foreach (string groupId in appServer.CustomVariableGroupIds)
+            {                
+                appServer.CustomVariableGroups.Add(QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
+            }
 
             foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
             {
-                appGroup.Application = DataAccessFactory.GetDataInterface<IApplicationData>().GetById(appGroup.ApplicationId);
-                appGroup.CustomVariableGroup = DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(appGroup.CustomVariableGroupId);
+                appGroup.Application = QuerySingleResultAndCacheEtag(session => session.Load<Application>(appGroup.ApplicationId)) as Application;
+                if (appGroup.CustomVariableGroupId == null) { continue; }
+                appGroup.CustomVariableGroup = QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
             }
 
             if (appServer.ApplicationWithGroupToForceInstall != null)
             {
                 appServer.ApplicationWithGroupToForceInstall.Application =
-                    DataAccessFactory.GetDataInterface<IApplicationData>().GetById(appServer.ApplicationWithGroupToForceInstall.ApplicationId);
+                    QuerySingleResultAndCacheEtag(session => session.Load<Application>(appServer.ApplicationWithGroupToForceInstall.ApplicationId)) as Application;
             }
 
             if (appServer.ApplicationWithGroupToForceInstall != null && appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId != null)
             {
                 appServer.ApplicationWithGroupToForceInstall.CustomVariableGroup =
-                    DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId);
+                    QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId))
+                    as CustomVariableGroup;
             }
         }
 
@@ -95,21 +160,31 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
+            applicationServer.ApplicationIdsForAllAppWithGroups         = new List<string>();
+            applicationServer.CustomVariableGroupIdsForAllAppWithGroups = new List<string>();
+            applicationServer.CustomVariableGroupIds                    = new List<string>();
+
             // For each group, set its ApplicationId and CustomVariableGroupId.
             foreach (ApplicationWithOverrideVariableGroup appGroup in applicationServer.ApplicationsWithOverrideGroup)
             {
+                applicationServer.ApplicationIdsForAllAppWithGroups.Add(appGroup.Application.Id);
                 appGroup.ApplicationId = appGroup.Application.Id;
-                if (appGroup.CustomVariableGroup != null) { appGroup.CustomVariableGroupId = appGroup.CustomVariableGroup.Id; }
+
+                appGroup.CustomVariableGroupId = null;  // It's possible that the group was deleted, so clear it.
+                if (appGroup.CustomVariableGroup != null)
+                {
+                    applicationServer.CustomVariableGroupIdsForAllAppWithGroups.Add(appGroup.CustomVariableGroup.Id);
+                    appGroup.CustomVariableGroupId = appGroup.CustomVariableGroup.Id;
+                }
             }
 
-            // For each group, add its ID to the ID list.
-            applicationServer.CustomVariableGroupIds = new List<string>();
+            // For each group, add its ID to the ID list.            
             foreach (CustomVariableGroup customGroup in applicationServer.CustomVariableGroups)
             {
                 applicationServer.CustomVariableGroupIds.Add(customGroup.Id);
             }
 
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(applicationServer);
+            new GenericData().Save(applicationServer);
         }
     }
 }

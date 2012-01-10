@@ -60,7 +60,7 @@ namespace PrestoCommon.Data.db4o
         /// <param name="installationSummary">The installation summary.</param>
         public void Save(InstallationSummary installationSummary)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(installationSummary);
+            new GenericData().Save(installationSummary);
         }
     }
 }

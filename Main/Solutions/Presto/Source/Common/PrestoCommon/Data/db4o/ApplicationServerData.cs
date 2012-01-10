@@ -42,32 +42,12 @@ namespace PrestoCommon.Data.db4o
         }
 
         /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="serverId">The server id.</param>
-        /// <returns></returns>
-        public ApplicationServer GetById(string serverId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets the by ids.
-        /// </summary>
-        /// <param name="serverIds">The server ids.</param>
-        /// <returns></returns>
-        public IEnumerable<ApplicationServer> GetByIds(IEnumerable<string> serverIds)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
         /// Saves the specified application server.
         /// </summary>
         /// <param name="applicationServer">The application server.</param>
         public void Save(ApplicationServer applicationServer)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(applicationServer);
+            new GenericData().Save(applicationServer);
         }        
     }
 }

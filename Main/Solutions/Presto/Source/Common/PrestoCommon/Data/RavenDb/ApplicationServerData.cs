@@ -78,46 +78,6 @@ namespace PrestoCommon.Data.RavenDb
             });            
         }
 
-        /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="serverId">The server id.</param>
-        /// <returns></returns>
-        public ApplicationServer GetById(string serverId)
-        {
-            return ExecuteQuery<ApplicationServer>(() =>
-            {
-                ApplicationServer appServer = QuerySingleResultAndCacheEtag(session =>
-                    session.Query<ApplicationServer>()
-                    .Include(x => x.CustomVariableGroupIds)
-                    .Include(x => x.ApplicationIdsForAllAppWithGroups)
-                    .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                    .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
-                    .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
-                    .Where(server => server.Id == serverId).FirstOrDefault()                    
-                    ) as ApplicationServer;
-
-                if (appServer != null) { HydrateApplicationServer(appServer); }
-
-                return appServer;
-            });
-        }
-
-        /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="serverIds">The server ids.</param>
-        /// <returns></returns>
-        public IEnumerable<ApplicationServer> GetByIds(IEnumerable<string> serverIds)
-        {
-            // ToDo: Should we hydrate each app server here?
-
-            return ExecuteQuery<IEnumerable<ApplicationServer>>(() =>
-                QueryAndCacheEtags(
-                    session => session.Query<ApplicationServer>()
-                    .Where(server => server.Id.In<string>(serverIds))).Cast<ApplicationServer>());
-        }
-
         private static void HydrateApplicationServer(ApplicationServer appServer)
         {
             // Not using this, at least for now, because it increased the NumberOfRequests on the session...

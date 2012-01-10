@@ -95,6 +95,22 @@ namespace PrestoCommon.Entities
         public ApplicationWithOverrideVariableGroup ApplicationWithGroupToForceInstall { get; set; }
 
         /// <summary>
+        /// Gets or sets the application ids.
+        /// </summary>
+        /// <value>
+        /// The application ids.
+        /// </value>
+        public List<string> ApplicationIdsForAllAppWithGroups { get; set; }  // For RavenDB
+
+        /// <summary>
+        /// Gets or sets the custom variable group ids for all app with groups.
+        /// </summary>
+        /// <value>
+        /// The custom variable group ids for all app with groups.
+        /// </value>
+        public List<string> CustomVariableGroupIdsForAllAppWithGroups { get; set; }  // For RavenDB
+
+        /// <summary>
         /// Gets or sets the custom variable group ids.
         /// </summary>
         /// <value>
@@ -102,7 +118,7 @@ namespace PrestoCommon.Entities
         /// </value>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB, grrrr...
+        public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
         /// <summary>
         /// Gets the custom variable groups.

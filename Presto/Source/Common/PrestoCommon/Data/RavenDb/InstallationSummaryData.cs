@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
@@ -19,19 +20,22 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            IEnumerable<InstallationSummary> installationSummaryList = QueryAndCacheEtags(session => session.Query<InstallationSummary>()
-                .Where(summary => summary.ApplicationServerId == appServer.Id
-                        && summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id))
-                .Cast<InstallationSummary>();
-
-            if (appWithGroup.CustomVariableGroup == null)
+            return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
             {
-                return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null);
-            }
+                IEnumerable<InstallationSummary> installationSummaryList = QueryAndCacheEtags(session => session.Query<InstallationSummary>()
+                    .Where(summary => summary.ApplicationServerId == appServer.Id
+                            && summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id))
+                    .Cast<InstallationSummary>();
 
-            return installationSummaryList.Where(summary =>
-                summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
-                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId);
+                if (appWithGroup.CustomVariableGroup == null)
+                {
+                    return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null);
+                }
+
+                return installationSummaryList.Where(summary =>
+                    summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
+                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId);
+            });
         }
 
         /// <summary>
@@ -41,25 +45,47 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
         {
-            IEnumerable<InstallationSummary> installationSummaries =
-                QueryAndCacheEtags(session => session.Query<InstallationSummary>()
-                .OrderByDescending(summary => summary.InstallationStart)
-                .Take(numberToRetrieve)).Cast<InstallationSummary>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            foreach (InstallationSummary summary in installationSummaries)
+            try
             {
-                summary.ApplicationServer = DataAccessFactory.GetDataInterface<IApplicationServerData>().GetById(summary.ApplicationServerId);
-                summary.ApplicationWithOverrideVariableGroup.Application =
-                    DataAccessFactory.GetDataInterface<IApplicationData>().GetById(summary.ApplicationWithOverrideVariableGroup.ApplicationId);
-
-                if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null)
+                return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
                 {
-                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
-                        DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
-                }
-            }
+                    IEnumerable<InstallationSummary> installationSummaries =
+                        QueryAndCacheEtags(session => session.Advanced.LuceneQuery<InstallationSummary>()
+                        .Include(x => x.ApplicationServerId)
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
+                        .OrderByDescending(summary => summary.InstallationStart)
+                        .Take(numberToRetrieve)).Cast<InstallationSummary>().ToList();
 
-            return installationSummaries;
+                    // Note: We use session.Load() below so that we get the information from the session, and not another trip to the DB.
+                    foreach (InstallationSummary summary in installationSummaries)
+                    {
+                        summary.ApplicationServer =
+                            QuerySingleResultAndCacheEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
+                            as ApplicationServer;
+
+                        summary.ApplicationWithOverrideVariableGroup.Application =
+                            QuerySingleResultAndCacheEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
+                            as Application;
+
+                        if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { continue; }
+
+                        summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
+                            QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+                            as CustomVariableGroup;
+                    }
+
+                    return installationSummaries;
+                });
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Debug.WriteLine("InstallationSummaryData.GetMostRecentByStartTime(): " + stopwatch.ElapsedMilliseconds);
+            }
         }
 
         /// <summary>
@@ -72,7 +98,7 @@ namespace PrestoCommon.Data.RavenDb
 
             installationSummary.ApplicationServerId = installationSummary.ApplicationServer.Id;
 
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(installationSummary);
-        }
+            new GenericData().Save(installationSummary);
+        }       
     }
 }

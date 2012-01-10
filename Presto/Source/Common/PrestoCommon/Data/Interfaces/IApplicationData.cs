@@ -29,6 +29,13 @@ namespace PrestoCommon.Data.Interfaces
         Application GetById(string id);
 
         /// <summary>
+        /// Gets the by ids.
+        /// </summary>
+        /// <param name="appIds">The app ids.</param>
+        /// <returns></returns>
+        IEnumerable<Application> GetByIds(IEnumerable<string> appIds);
+
+        /// <summary>
         /// Saves the specified application.
         /// </summary>
         /// <param name="application">The application.</param>

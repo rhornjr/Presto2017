@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using PrestoCommon.Entities;
 using Raven.Client;
@@ -12,21 +13,20 @@ namespace PrestoCommon.Data.RavenDb
     /// </summary>
     public abstract class DataAccessLayerBase
     {
-        private static Dictionary<string, Guid> _entityIdAndEtagMapping;
+        private static Dictionary<string, Guid> _entityIdAndEtagMapping = new Dictionary<string, Guid>();
+        private static DocumentStore _database = GetDatabase();
+
+        [ThreadStatic]
+        private static IDocumentSession _session;
+
+        private bool _isInitialDalInstance;  // This is the DAL method called by the logic class (not other DAL methods).
 
         /// <summary>
         /// Gets the database.
         /// </summary>
-        protected static DocumentStore Database { get; private set; }
-
-        // ToDo: Take care of this.
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
-        static DataAccessLayerBase()
+        protected static DocumentStore Database
         {
-            if (Database != null) { return; }
-
-            _entityIdAndEtagMapping = new Dictionary<string, Guid>();
-            Database = GetDatabase();
+            get { return _database; }
         }
 
         /// <summary>
@@ -43,6 +43,50 @@ namespace PrestoCommon.Data.RavenDb
         }
 
         /// <summary>
+        /// Sets as initial dal instance and create session.
+        /// </summary>
+        public void SetAsInitialDalInstanceAndCreateSession()
+        {
+            _isInitialDalInstance = true;
+            _session = Database.OpenSession();
+        }
+
+        /// <summary>
+        /// Closes the session.
+        /// </summary>
+        protected void CloseSession()
+        {
+            // Only close the session for the instance that opened it originally.
+            if (_isInitialDalInstance == true)
+            {
+                _session.Dispose();
+                _session = null;
+            }
+        }
+
+        /// <summary>
+        /// Executes the query.
+        /// </summary>
+        /// <param name="func">The action.</param>
+        protected T ExecuteQuery<T>(Func<T> func)
+        {
+            // ToDo: I believe this method is now unnecessary. If we add the try/finally to QuerySingleResultAndCacheEtag()
+            //       and QueryAndCacheEtags(), then the DAL methods can just call those directly, instead of going through
+            //       this method.
+            if (func == null) { throw new ArgumentNullException("func"); }
+
+            try
+            {
+                return func.Invoke();
+            }
+            finally
+            {
+                Debug.WriteLine("Number of requests just before closing session: " + _session.Advanced.NumberOfRequests);
+                CloseSession();
+            }
+        }
+
+        /// <summary>
         /// Queries the single result and cache etags.
         /// </summary>
         /// <param name="func">The func.</param>
@@ -51,13 +95,10 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (func == null) { throw new ArgumentNullException("func"); }
 
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                EntityBase entity = func.Invoke(session);
-                if (entity == null) { return null; }
-                CacheEtag(entity, session);
-                return entity;
-            }
+            EntityBase entity = func.Invoke(_session);
+            if (entity == null) { return null; }
+            CacheEtag(entity, _session);
+            return entity;
         }
 
         /// <summary>
@@ -71,12 +112,9 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (func == null) { throw new ArgumentNullException("func"); }
 
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                IEnumerable<EntityBase> entities = func.Invoke(session);
-                CacheEtags(entities, session);
-                return entities;
-            }
+            IEnumerable<EntityBase> entities = func.Invoke(_session);
+            CacheEtags(entities, _session);
+            return entities;
         }
 
         /// <summary>

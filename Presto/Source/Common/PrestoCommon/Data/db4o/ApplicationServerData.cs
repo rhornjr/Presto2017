@@ -52,6 +52,16 @@ namespace PrestoCommon.Data.db4o
         }
 
         /// <summary>
+        /// Gets the by ids.
+        /// </summary>
+        /// <param name="serverIds">The server ids.</param>
+        /// <returns></returns>
+        public IEnumerable<ApplicationServer> GetByIds(IEnumerable<string> serverIds)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
         /// Saves the specified application server.
         /// </summary>
         /// <param name="applicationServer">The application server.</param>

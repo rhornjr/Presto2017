@@ -313,7 +313,7 @@ namespace PrestoViewModel.Tabs
         }
 
         private void RefreshServers()
-        {
+        {            
             this.LoadApplicationServers();
 
             ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";

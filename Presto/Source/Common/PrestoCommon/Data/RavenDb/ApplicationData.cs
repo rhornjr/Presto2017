@@ -2,7 +2,7 @@
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
-using Raven.Client;
+using Raven.Client.Linq;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -17,7 +17,8 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<Application> GetAll()
         {
-            return QueryAndCacheEtags(session => session.Query<Application>()).Cast<Application>();
+            return ExecuteQuery<IEnumerable<Application>>(() =>
+                QueryAndCacheEtags(session => session.Query<Application>()).Cast<Application>());
         }
 
         /// <summary>
@@ -27,9 +28,10 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public Application GetByName(string name)
         {
-            return QuerySingleResultAndCacheEtag(session => session.Query<Application>()
+            return ExecuteQuery<Application>(() =>
+                QuerySingleResultAndCacheEtag(session => session.Query<Application>()
                 .Where(app => app.Name == name).FirstOrDefault())
-                as Application;
+                as Application);
         }
 
         /// <summary>
@@ -39,10 +41,23 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public Application GetById(string id)
         {
-            using (IDocumentSession session = Database.OpenSession())
-            {
-                return session.Query<Application>().Where(app => app.Id == id).FirstOrDefault();
-            }
+            return ExecuteQuery<Application>(() =>
+                QuerySingleResultAndCacheEtag(session => session.Query<Application>()
+                .Where(app => app.Id == id).FirstOrDefault())
+                as Application);
+        }
+
+        /// <summary>
+        /// Gets the by ids.
+        /// </summary>
+        /// <param name="appIds">The app ids.</param>
+        /// <returns></returns>
+        public IEnumerable<Application> GetByIds(IEnumerable<string> appIds)
+        {
+            return ExecuteQuery<IEnumerable<Application>>(() =>
+                QueryAndCacheEtags(
+                session => session.Query<Application>()
+                .Where(app => app.Id.In<string>(appIds))).Cast<Application>());
         }
 
         /// <summary>
@@ -51,7 +66,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="application">The application.</param>
         public void Save(Application application)
         {
-            DataAccessFactory.GetDataInterface<IGenericData>().Save(application);
+            new GenericData().Save(application);
         }
     }
 }

@@ -38,9 +38,9 @@ namespace PrestoCommon.Data.Interfaces
         /// <summary>
         /// Gets the by ids.
         /// </summary>
-        /// <param name="ids">The ids.</param>
+        /// <param name="groupIds">The group ids.</param>
         /// <returns></returns>
-        List<CustomVariableGroup> GetByIds(List<string> ids);
+        IEnumerable<CustomVariableGroup> GetByIds(IEnumerable<string> groupIds);
 
         /// <summary>
         /// Saves the specified custom variable group.

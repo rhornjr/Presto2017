@@ -348,6 +348,12 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(viewModel.ApplicationWithGroup);
 
+            string message = string.Format(CultureInfo.CurrentCulture,
+                "{0} was just added with the enabled property set to {1} on {2}.",
+                viewModel.ApplicationWithGroup.ToString(), viewModel.ApplicationWithGroup.Enabled, this.SelectedApplicationServer.Name);
+
+            LogMessageLogic.SaveLogMessage(message);
+
             SaveServer();
         }
 
@@ -357,11 +363,22 @@ namespace PrestoViewModel.Tabs
 
             if (selectedAppWithGroup == null) { return; }
 
+            // If the user changes the enabled property, we need to log that.
+            bool originalEnabledValue = selectedAppWithGroup.Enabled;
+
             ApplicationWithGroupViewModel viewModel = new ApplicationWithGroupViewModel(selectedAppWithGroup);
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
             if (viewModel.UserCanceled) { return; }
+
+            if (originalEnabledValue != selectedAppWithGroup.Enabled)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture,
+                    "For {0}, the enabled property was changed from {1} to {2} on {3}",
+                    selectedAppWithGroup.ToString(), originalEnabledValue, selectedAppWithGroup.Enabled, this.SelectedApplicationServer.Name);
+                LogMessageLogic.SaveLogMessage(message);
+            }
 
             SaveServer();
         }
@@ -377,12 +394,20 @@ namespace PrestoViewModel.Tabs
         }
 
         private void RemoveApplication()
-        {
+        {           
             ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
+
+            if (!UserConfirmsDelete(selectedAppWithGroup.ToString())) { return; }
 
             if (selectedAppWithGroup == null) { return; }
 
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
+
+            string message = string.Format(CultureInfo.CurrentCulture,
+                "{0} was just removed from {1}.",
+                selectedAppWithGroup.ToString(), this.SelectedApplicationServer.Name);
+
+            LogMessageLogic.SaveLogMessage(message);
 
             SaveServer();
         }

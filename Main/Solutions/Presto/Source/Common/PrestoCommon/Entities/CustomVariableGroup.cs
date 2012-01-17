@@ -134,12 +134,7 @@ namespace PrestoCommon.Entities
             AddRangeOverride(allCustomVariables, applicationWithOverrideVariableGroup);
 
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
-            {
-                string message = string.Format(CultureInfo.CurrentCulture,
-                    "{0} contains a custom variable that does not exist in the list of custom variables.", rawString);
-                LogUtility.LogWarning(message);
-                throw new ArgumentException(message);
-            }
+            { LogMissingVariableAndThrow(rawString); }
 
             return ResolveCustomVariable(rawString, allCustomVariables);
         }
@@ -203,6 +198,11 @@ namespace PrestoCommon.Entities
 
             do
             {
+                // Since we can actually introduce new custom variables, we need to check if a new
+                // variable exists in the list. (A new custom variable can reference yet another custom variable.)
+                if (!CustomVariableExistsInListOfAllCustomVariables(stringNew.ToString(), allCustomVariables))
+                { LogMissingVariableAndThrow(stringNew.ToString()); }
+
                 foreach (CustomVariable customVariable in allCustomVariables)
                 {
                     // customVariable.Value could actually contain more custom variables. That's why we need to keep looping.
@@ -212,6 +212,14 @@ namespace PrestoCommon.Entities
             while (StringHasCustomVariable(stringNew.ToString()));
 
             return stringNew.ToString();
+        }
+
+        private static void LogMissingVariableAndThrow(string rawString)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture,
+                    "{0} contains a custom variable that does not exist in the list of custom variables.", rawString);
+            LogUtility.LogWarning(message);
+            throw new ArgumentException(message);
         }        
 
         private static string CustomVariableWithoutPrefixAndSuffix(string customVariableString)

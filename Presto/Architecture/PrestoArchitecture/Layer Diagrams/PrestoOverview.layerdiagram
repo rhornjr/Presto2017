@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="83611eaa-daac-4066-882d-0700c1285f41" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
   <layers>
-    <layer Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" name="Presto Database Server&#xD;&#xA;(db4o)">
+    <layer Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" name="Presto Database Server">
       <childLayers>
         <layer Id="5647707b-390d-4f7f-a631-007fa13c5bcb" name="Task" />
         <layer Id="e1d778df-d7b8-4fb5-87d5-dc9d6a8a2959" name="Application Server" />

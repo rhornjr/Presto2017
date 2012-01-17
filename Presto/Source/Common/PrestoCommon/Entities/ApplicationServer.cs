@@ -222,12 +222,15 @@ namespace PrestoCommon.Entities
             if (this.ApplicationWithGroupToForceInstall != null && this.ApplicationWithGroupToForceInstall.Application.Name == appWithGroup.Application.Name &&
                 this.ApplicationWithGroupToForceInstall.Application.Version == appWithGroup.Application.Version)
             {
-                // If there is a custom variable group, those need to be equal as well.
-                if ((this.ApplicationWithGroupToForceInstall.CustomVariableGroup == null && appWithGroup.CustomVariableGroup == null) ||
-                    this.ApplicationWithGroupToForceInstall.CustomVariableGroup.Name == appWithGroup.CustomVariableGroup.Name)
-                {
-                    forceInstallIsThisAppWithGroup = true;
-                }
+                // If there is a custom variable group, those need to be equal as well, by being null, or...
+                if ((this.ApplicationWithGroupToForceInstall.CustomVariableGroup == null && appWithGroup.CustomVariableGroup == null))
+                { forceInstallIsThisAppWithGroup = true; }
+
+                // ... by having the same group.
+                if (this.ApplicationWithGroupToForceInstall.CustomVariableGroup != null &&
+                    appWithGroup.CustomVariableGroup != null &&
+                    this.ApplicationWithGroupToForceInstall.CustomVariableGroup.Id == appWithGroup.CustomVariableGroup.Id)
+                { forceInstallIsThisAppWithGroup = true; }
             }
 
             LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,

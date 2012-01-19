@@ -158,7 +158,7 @@ namespace PrestoCommon.Entities
             {
                 if (!ApplicationShouldBeInstalled(appWithGroup)) { continue; }
 
-                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup.Application.Name, this.Name));
+                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup, this.Name));
                 InstallApplication(appWithGroup);
             }
 

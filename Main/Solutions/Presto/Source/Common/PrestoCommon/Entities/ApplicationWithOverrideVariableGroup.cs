@@ -124,15 +124,15 @@ namespace PrestoCommon.Entities
         /// </returns>
         public override string ToString()
         {
-            string appName = string.Empty;
+            string appAndVersion = string.Empty;
 
-            if (this.Application != null) { appName = this.Application.Name; }
+            if (this.Application != null) { appAndVersion = this.Application.Name + " " + this.Application.Version; }            
 
             string groupNameSuffix = string.Empty;
 
             if (this.CustomVariableGroup != null) { groupNameSuffix = " with " + this.CustomVariableGroup.Name; }
 
-            return appName + groupNameSuffix;
+            return appAndVersion + groupNameSuffix;
         }
     }
 }

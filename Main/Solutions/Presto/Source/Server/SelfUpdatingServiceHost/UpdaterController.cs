@@ -5,8 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
+using PrestoServerCommon.Interfaces;
 
 namespace SelfUpdatingServiceHost
 {
@@ -16,10 +16,11 @@ namespace SelfUpdatingServiceHost
         private AppDomain _appDomain;
         private string _appName;
         private string _runningAppPath;
+        private string _fullyQualifiedClassName;
         private string _sourceBinaryPath;
         private Timer _timer;
         private AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
-        private CancellationTokenSource _tokenSource;
+        private IStartStop _startStopControllerToRun;
 
         private static readonly object _locker = new object();
 
@@ -35,10 +36,11 @@ namespace SelfUpdatingServiceHost
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UpdaterController")]
         private void InitializeVariables()
         {
-            this._appName          = ConfigurationManager.AppSettings["AppName"];
-            string thisServicePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            this._runningAppPath   = Path.Combine(thisServicePath, this._appName);
-            this._sourceBinaryPath = ConfigurationManager.AppSettings["SourceBinaryPath"];
+            this._appName                 = ConfigurationManager.AppSettings["AppName"];
+            string thisServicePath        = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            this._runningAppPath          = Path.Combine(thisServicePath, this._appName);
+            this._fullyQualifiedClassName = ConfigurationManager.AppSettings["FullyQualifiedClassName"];
+            this._sourceBinaryPath        = ConfigurationManager.AppSettings["SourceBinaryPath"];
 
             LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 "UpdaterController initialized." + Environment.NewLine +
@@ -92,7 +94,7 @@ namespace SelfUpdatingServiceHost
                 "Loading and running {0} for the first time...",
                 this._appName));
 
-            LoadApp();
+            StartApp();
 
             this._initialRunningOfAppOccurred = true;
         }        
@@ -150,10 +152,9 @@ namespace SelfUpdatingServiceHost
 
         private void RestartAppDomain()
         {
-            if (this._tokenSource != null) { this._tokenSource.Cancel(); }
-            //AppDomain.Unload(this._appDomain);  // ToDo: In testing, this wasn't necessary. Should this still be done to keep things clean (ie: good clean-up)?
-            LoadApp();
-        }
+            StopApp();
+            StartApp();
+        }        
 
         private void CopyFiles()
         {
@@ -194,12 +195,9 @@ namespace SelfUpdatingServiceHost
             }
         }
 
-        private void LoadApp()
+        private void StartApp()
         {
-            if (!Directory.Exists(this._runningAppPath))
-            {
-                CopyFiles();
-            }
+            if (!Directory.Exists(this._runningAppPath)) { CopyFiles(); }
 
             string configFile   = Path.Combine(_runningAppPath, this._appName + ".exe.config");
             string cachePath    = Path.Combine(_runningAppPath, "_cache");
@@ -211,27 +209,32 @@ namespace SelfUpdatingServiceHost
             appDomainSetup.CachePath         = cachePath;
             appDomainSetup.ConfigurationFile = configFile;
             
-            // We need this when we call ExecuteAssembly() below. This allows us to have the self-updating service host *NOT* reference PrestoCommon.
+            // We need this when we run the app domain. This allows us to have the self-updating service host *NOT* reference PrestoCommon.
             //appDomainSetup.PrivateBinPath    = this._runningAppPath;  // This works too. Can fall back to this if there are any issues with ApplicationBase.
             appDomainSetup.ApplicationBase = this._runningAppPath;
+            
+            this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);
+            this._startStopControllerToRun = (IStartStop)this._appDomain.CreateInstanceFromAndUnwrap(assemblyName, this._fullyQualifiedClassName);
+            LogUtility.LogInformation("Created app domain.");
 
-            this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);            
+            this._startStopControllerToRun.Start();
+            LogUtility.LogInformation("Started app.");
+        }
 
-            // ToDo: See comments at the bottom of this file for a better way to load/run/manage the app domain.            
+        private void StopApp()
+        {
+            if (this._startStopControllerToRun != null)
+            {                
+                this._startStopControllerToRun.Stop();
+                LogUtility.LogInformation("Stopped app.");
+            }
 
-            this._tokenSource = new CancellationTokenSource();
-
-            Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    this._appDomain.ExecuteAssembly(assemblyName);
-                }
-                catch (Exception ex)
-                {
-                    LogUtility.LogException(ex);
-                }
-            }, _tokenSource.Token);
+            if (this._appDomain != null)
+            {                
+                // If we don't do this, the old app domain keeps running.
+                AppDomain.Unload(this._appDomain);
+                LogUtility.LogInformation("Unloaded app domain.");
+            }
         }
 
         public void Dispose()
@@ -247,22 +250,6 @@ namespace SelfUpdatingServiceHost
             if (this._timer != null) { this._timer.Dispose(); }
 
             if (this._autoResetEvent != null) { this._autoResetEvent.Dispose(); }
-
-            if (this._tokenSource != null) { this._tokenSource.Dispose(); }
         }
     }
 }
-
-// ToDo: This may be the preferred approach (instead of this._appDomain.ExecuteAssembly(assemblyName);). If we instead use
-//       CreateInstanceFromAndUnwrap(), then we have a proxy (the prestoTaskRunnerService instance) with which we can
-//       talk. That means we can call Stop(), or other methods to tell the PTR to elegantly shut down. The one problem with
-//       this is that this self-updating app must have a reference to the PTR. That's not generic and won't be usable that
-//       way for other apps that want to automatically restart.
-// Note: Didn't do this just yet because there are other priorities at the moment. Need to look into this.
-// Note: http://stackoverflow.com/questions/88717/loading-dlls-into-a-separate-appdomain shows a short, clean example, and says
-//       this: As far as I know PrestoTaskRunnerService has to inherit from MarshalByRefObject. That might be a problem,
-//       because PrestoTaskRunnerService derives from ServiceBase, but PrestoTaskRunnerService shouldn't even be a service.
-//       We'll need to change that to be a simple exe or console app.
-//Type type = typeof(PrestoTaskRunnerService);
-//PrestoTaskRunnerService prestoTaskRunnerService = (PrestoTaskRunnerService)this._appDomain.CreateInstanceFromAndUnwrap(assemblyName, type.FullName);
-//prestoTaskRunnerService.Stop();

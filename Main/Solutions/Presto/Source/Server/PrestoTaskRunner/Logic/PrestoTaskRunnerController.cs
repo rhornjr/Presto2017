@@ -6,13 +6,14 @@ using System.Timers;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using PrestoServerCommon.Interfaces;
 
 namespace PrestoTaskRunner.Logic
 {
     /// <summary>
     /// Main controller for the logic within the presto task runner service
     /// </summary>
-    public class PrestoTaskRunnerController : IDisposable
+    public class PrestoTaskRunnerController : MarshalByRefObject, IStartStop, IDisposable
     {
         private System.Timers.Timer _timer;
         private static readonly object _locker = new object();

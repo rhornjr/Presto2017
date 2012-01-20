@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
+using Raven.Client.Linq;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -53,12 +54,13 @@ namespace PrestoCommon.Data.RavenDb
                 return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
                 {
                     IEnumerable<InstallationSummary> installationSummaries =
-                        QueryAndCacheEtags(session => session.Advanced.LuceneQuery<InstallationSummary>()
+                        QueryAndCacheEtags(session => session.Query<InstallationSummary>()
                         .Include(x => x.ApplicationServerId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
-                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
-                        .OrderByDescending(summary => summary.InstallationStart)
-                        .Take(numberToRetrieve)).Cast<InstallationSummary>().ToList();
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)                        
+                        .OrderByDescending(summary => summary.InstallationStart)                        
+                        .Take(numberToRetrieve)
+                        ).Cast<InstallationSummary>().ToList();
 
                     // Note: We use session.Load() below so that we get the information from the session, and not another trip to the DB.
                     foreach (InstallationSummary summary in installationSummaries)

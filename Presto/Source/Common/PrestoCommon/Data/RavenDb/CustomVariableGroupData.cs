@@ -21,7 +21,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<CustomVariableGroup>>(() =>
             {
                 IEnumerable<CustomVariableGroup> customGroups =
-                    QueryAndCacheEtags(session => session.Advanced.LuceneQuery<CustomVariableGroup>()
+                    QueryAndCacheEtags(session => session.Query<CustomVariableGroup>()
                     .Include(x => x.ApplicationId)).Cast<CustomVariableGroup>();
 
                 foreach (CustomVariableGroup customGroup in customGroups)

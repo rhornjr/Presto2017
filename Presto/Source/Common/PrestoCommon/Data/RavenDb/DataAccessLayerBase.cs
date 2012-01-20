@@ -43,12 +43,12 @@ namespace PrestoCommon.Data.RavenDb
         }
 
         /// <summary>
-        /// Sets as initial dal instance and create session.
+        /// Sets this instance as the initial DAL instance and creates the session.
         /// </summary>
         public void SetAsInitialDalInstanceAndCreateSession()
         {
             _isInitialDalInstance = true;
-            _session = Database.OpenSession();
+            _session = Database.OpenSession();            
         }
 
         /// <summary>
@@ -168,13 +168,23 @@ namespace PrestoCommon.Data.RavenDb
         }
 
         private static DocumentStore GetDatabase()
-        {
-            DocumentStore documentStore = new DocumentStore();
+        {            
+            DocumentStore documentStore = new DocumentStore();            
 
             try
             {
-                documentStore.ConnectionStringName = "RavenDb";
-                documentStore.Initialize();
+                documentStore.Conventions.MaxNumberOfRequestsPerSession = int.MaxValue;  // * See notes below.
+                documentStore.ConnectionStringName = "RavenDb";                
+                documentStore.Initialize();                
+
+                // *By default, Raven sets the max requests to 128. That makes queries, like getting the 50 most recent installation
+                // summaries, not work. When the limit is 128, queries are only evaluated against the first 128 documents
+                // in a table. Not cool.
+                // Note: This still didn't work when I was using a Lucene query:
+                //         session.Advanced.LuceneQuery<InstallationSummary>()
+                //       I had to do this:
+                //         using Raven.Client.Linq;
+                //         session.Query<InstallationSummary>()
             }
             catch
             {

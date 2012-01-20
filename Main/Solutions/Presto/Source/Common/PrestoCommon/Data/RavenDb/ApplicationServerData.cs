@@ -28,7 +28,7 @@ namespace PrestoCommon.Data.RavenDb
                 return ExecuteQuery<IEnumerable<ApplicationServer>>(() =>
                 {
                     IEnumerable<ApplicationServer> appServers = QueryAndCacheEtags(session =>
-                        session.Advanced.LuceneQuery<ApplicationServer>()
+                        session.Query<ApplicationServer>()
                         .Include(x => x.CustomVariableGroupIds)
                         .Include(x => x.ApplicationIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)

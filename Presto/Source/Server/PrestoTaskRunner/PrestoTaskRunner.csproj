@@ -94,6 +94,10 @@
       <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
       <Name>PrestoCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrestoServerCommon\PrestoServerCommon.csproj">
+      <Project>{2F01965F-4A1E-455C-9975-A17BF129EBD0}</Project>
+      <Name>PrestoServerCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

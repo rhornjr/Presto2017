@@ -71,7 +71,7 @@ namespace PrestoCommon.Misc
 
         private static string GetSource()
         {
-            return Assembly.GetEntryAssembly().GetName().Name;
+            return Assembly.GetExecutingAssembly().GetName().Name;
         }
     }
 }

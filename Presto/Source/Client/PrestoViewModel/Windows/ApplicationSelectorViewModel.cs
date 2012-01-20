@@ -104,7 +104,7 @@ namespace PrestoViewModel.Windows
         {
             try
             {
-                this.Applications = new Collection<Application>(ApplicationLogic.GetAll().ToList());
+                this.Applications = new Collection<Application>(ApplicationLogic.GetAll().OrderBy(x => x.Name).ToList());
             }
             catch (SocketException ex)
             {

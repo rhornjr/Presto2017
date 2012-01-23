@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -24,7 +26,8 @@ namespace PrestoViewModel.Tabs
     {
         private ObservableCollection<Application> _applications;
         private Application _selectedApplication;
-        private TaskBase _selectedTask;
+        //private TaskBase _selectedTask;
+        private ObservableCollection<TaskBase> _selectedTasks = new ObservableCollection<TaskBase>();
 
         /// <summary>
         /// Gets a value indicating whether [application is selected].
@@ -74,6 +77,16 @@ namespace PrestoViewModel.Tabs
         /// The edit command.
         /// </value>
         public ICommand EditTaskCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the import legacy tasks command.
+        /// </summary>
+        public ICommand ImportLegacyTasksCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the export tasks command.
+        /// </summary>
+        public ICommand ExportTasksCommand { get; private set; }
 
         /// <summary>
         /// Gets the import tasks command.
@@ -129,7 +142,7 @@ namespace PrestoViewModel.Tabs
             {
                 this._selectedApplication = value;
                 this.NotifyPropertyChanged(() => this.SelectedApplication);
-                this.NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+                this.NotifyPropertyChanged(() => this.AllApplicationTasks);
                 this.NotifyPropertyChanged(() => this.ApplicationIsSelected);
             }
         }
@@ -137,7 +150,7 @@ namespace PrestoViewModel.Tabs
         /// <summary>
         /// Gets the selected application tasks.
         /// </summary>
-        public IOrderedEnumerable<TaskBase> SelectedApplicationTasks
+        public IOrderedEnumerable<TaskBase> AllApplicationTasks
         {
             // Note: This property was created because sorting wasn't working on the grid that showed the tasks.
             //       We have this property so we can return the correctly sorted order.
@@ -154,14 +167,14 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The selected task.
         /// </value>
-        public TaskBase SelectedTask
+        public ObservableCollection<TaskBase> SelectedTasks
         {
-            get { return this._selectedTask; }
+            get { return this._selectedTasks; }
 
             set
             {
-                this._selectedTask = value;
-                NotifyPropertyChanged(() => this.SelectedTask);
+                this._selectedTasks = value;
+                NotifyPropertyChanged(() => this.SelectedTasks);
             }
         }
 
@@ -178,20 +191,22 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddApplicationCommand = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected);
+            this.AddApplicationCommand      = new RelayCommand(_ => AddApplication());
+            this.DeleteApplicationCommand   = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected);
             this.RefreshApplicationsCommand = new RelayCommand(_ => RefreshApplications());
-            this.SaveApplicationCommand = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected);
+            this.SaveApplicationCommand     = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected);
 
             this.ForceInstallationCommand = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected);
 
-            this.AddTaskCommand = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected);
-            this.EditTaskCommand = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
-            this.DeleteTaskCommand = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
-            this.ImportTasksCommand = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected);
-            this.MoveTaskUpCommand = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
-            this.MoveTaskDownCommand = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
-        }
+            this.AddTaskCommand            = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected);
+            this.EditTaskCommand           = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
+            this.DeleteTaskCommand         = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
+            this.ImportTasksCommand        = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected);
+            this.ExportTasksCommand        = new RelayCommand(_ => ExportTasks(), _ => TaskIsSelected());
+            this.ImportLegacyTasksCommand  = new RelayCommand(_ => ImportLegacyTasks(), _ => ApplicationIsSelected);            
+            this.MoveTaskUpCommand         = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
+            this.MoveTaskDownCommand       = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
+        }        
 
         private void RefreshApplications()
         {
@@ -230,10 +245,10 @@ namespace PrestoViewModel.Tabs
 
             int sequence = 1;  // default
 
-            if (this.SelectedTask != null)
+            if (this.SelectedTasks != null && this.SelectedTasks.Count > 0)
             {
                 // The user has a row selected, grab that sequence, minus 1, to have the new task before it.
-                sequence = this.SelectedTask.Sequence - 1;
+                sequence = this.SelectedTasks[0].Sequence - 1;
             }
 
             taskViewModel.TaskBase.Sequence = sequence;
@@ -244,7 +259,7 @@ namespace PrestoViewModel.Tabs
 
             SaveApplication();
 
-            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+            NotifyPropertyChanged(() => this.AllApplicationTasks);
         }
 
         private static TaskViewModel GetTaskViewModel()
@@ -262,7 +277,7 @@ namespace PrestoViewModel.Tabs
 
         private void EditTask()
         {
-            TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(this.SelectedTask.PrestoTaskType, this.SelectedTask);
+            TaskViewModel taskViewModel = ViewModelUtility.GetViewModel(this.SelectedTasks[0].PrestoTaskType, this.SelectedTasks[0]);
 
             if (taskViewModel == null) { return; }
 
@@ -275,24 +290,24 @@ namespace PrestoViewModel.Tabs
 
         private bool TaskIsSelected()
         {
-            return this.SelectedTask != null;
+            return this.SelectedTasks != null && this.SelectedTasks.Count >0;
         }
 
         private void DeleteTask()
         {
-            if (!UserConfirmsDelete(this.SelectedTask.Description)) { return; }
+            if (!UserConfirmsDelete(this.SelectedTasks[0].Description)) { return; }
 
             try
             {
                 // Note: We don't actually delete the task; we just save the application in its new state (without the task).
 
-                this.SelectedApplication.Tasks.Remove(this.SelectedTask);
+                this.SelectedApplication.Tasks.Remove(this.SelectedTasks[0]);
 
                 CorrectTaskSequence();
 
                 SaveApplication();
 
-                NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+                NotifyPropertyChanged(() => this.AllApplicationTasks);
             }
             catch (Exception ex)
             {
@@ -320,11 +335,46 @@ namespace PrestoViewModel.Tabs
 
         private void ImportTasks()
         {
-            ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = new ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>();
-
             string filePathAndName = GetFilePathAndNameFromUser();
 
             if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
+
+            NetDataContractSerializer serializer = new NetDataContractSerializer();
+
+            List<TaskBase> taskBases = new List<TaskBase>();
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+            {
+                taskBases = serializer.Deserialize(fileStream) as List<TaskBase>;
+            }
+
+            // Start the sequence after the highest existing sequence.
+            int sequence = 1;  // default if no tasks exist
+            if (this.SelectedApplication.Tasks != null && this.SelectedApplication.Tasks.Count > 0)
+            {
+                TaskBase highestSequenceTask = this.SelectedApplication.Tasks.OrderByDescending(task => task.Sequence).FirstOrDefault();
+                sequence = highestSequenceTask.Sequence + 1;
+            }
+
+            foreach (TaskBase task in taskBases)
+            {
+                task.Id = null;  // new
+                task.Sequence = sequence;
+                this.SelectedApplication.Tasks.Add(task);
+                sequence++;
+            }
+
+            SaveApplication();
+            NotifyPropertyChanged(() => this.AllApplicationTasks);
+        }        
+
+        private void ImportLegacyTasks()
+        {            
+            string filePathAndName = GetFilePathAndNameFromUser();
+
+            if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
+
+            ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = new ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>();
 
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
@@ -350,7 +400,26 @@ namespace PrestoViewModel.Tabs
             }
 
             SaveApplication();
-            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+            NotifyPropertyChanged(() => this.AllApplicationTasks);
+        }
+
+        private void ExportTasks()
+        {
+            string filePathAndName = SaveFilePathAndNameFromUser(this.SelectedApplication.Name + ".Tasks");
+
+            if (filePathAndName == null) { return; }
+
+            NetDataContractSerializer serializer = new NetDataContractSerializer();
+
+            List<TaskBase> tasksToExport = new List<TaskBase>(this.SelectedTasks);
+
+            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Create))
+            {
+                serializer.WriteObject(fileStream, tasksToExport);
+            }
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemExported, this.SelectedApplication.Name + " tasks");
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]
@@ -434,21 +503,21 @@ namespace PrestoViewModel.Tabs
 
         private void MoveRow(int moveAmount)
         {
-            int sequenceOfSelectedTask = this.SelectedTask.Sequence;
+            int sequenceOfSelectedTask = this.SelectedTasks[0].Sequence;
 
-            if (sequenceOfSelectedTask + moveAmount < 1 || sequenceOfSelectedTask + moveAmount > this.SelectedApplication.Tasks.Count - 1)
+            if (sequenceOfSelectedTask + moveAmount < 1 || sequenceOfSelectedTask + moveAmount > this.SelectedApplication.Tasks.Count)
             {
                 return;  // Can't move an item before the beginning (or after the end) of the list.
             }
 
-            TaskBase taskToSwap = this.SelectedApplication.Tasks.Where(task => task.Sequence == this.SelectedTask.Sequence + moveAmount).FirstOrDefault();
+            TaskBase taskToSwap = this.SelectedApplication.Tasks.Where(task => task.Sequence == this.SelectedTasks[0].Sequence + moveAmount).FirstOrDefault();
 
-            this.SelectedTask.Sequence += moveAmount;
+            this.SelectedTasks[0].Sequence += moveAmount;
             taskToSwap.Sequence += moveAmount * -1;
 
             CorrectTaskSequence();
 
-            NotifyPropertyChanged(() => this.SelectedApplicationTasks);
+            NotifyPropertyChanged(() => this.AllApplicationTasks);
         }
 
         private void CorrectTaskSequence()

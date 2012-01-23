@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="700">
+             d:DesignHeight="600" d:DesignWidth="760">
 
     <UserControl.DataContext>
         <Binding Source="{StaticResource ApplicationViewModel}"/>
@@ -75,14 +76,21 @@
 
             </Grid>
                                     
-            <DockPanel DockPanel.Dock="Bottom" Height="40">
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportTasksCommand}" />                    
+            <DockPanel DockPanel.Dock="Bottom" Height="80" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
+                        <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
+                        <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportTasksCommand}" />
+                        <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportTasksCommand}" />
+                        <Button Style="{StaticResource StandardButton}" Content="Import Legacy..." Command="{Binding ImportLegacyTasksCommand}"
+                                Width="120"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">                    
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                     <Button Content="^" Height="25" Width="25" Command="{Binding MoveTaskUpCommand}" />
                     <Button Content="v" Height="25" Width="25" Command="{Binding MoveTaskDownCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
@@ -96,8 +104,9 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Content="Tasks:"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedApplicationTasks}"
-                      SelectedItem="{Binding SelectedTask}">
+                      ItemsSource="{Binding AllApplicationTasks}"
+                      ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedTasks}"
+                      SelectionMode="Extended">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"/>
                         <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>

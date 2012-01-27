@@ -5,7 +5,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
 		CustomDictionary.xml = CustomDictionary.xml
+		Local.testsettings = Local.testsettings
+		Presto1.vsmdi = Presto1.vsmdi
 		Solution Items\SavingCodeplexCredentials.txt = Solution Items\SavingCodeplexCredentials.txt
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{9699A83B-D1BE-4BCD-B670-D778160EF16F}"
@@ -59,9 +62,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDb", "RavenDb", "{B59F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServerCommon", "Source\Server\PrestoServerCommon\PrestoServerCommon.csproj", "{2F01965F-4A1E-455C-9975-A17BF129EBD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoAutomatedTests", "Source\Testing\PrestoAutomatedTests\PrestoAutomatedTests.csproj", "{75344126-B6A2-4277-9EF5-99E08E147D7E}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
 		SccLocalPath0 = .
@@ -105,6 +110,13 @@ Global
 		SccProjectTopLevelParentUniqueName10 = Presto.sln
 		SccProjectName10 = Source/Server/PrestoServerCommon
 		SccLocalPath10 = Source\\Server\\PrestoServerCommon
+		SccProjectUniqueName11 = Source\\Testing\\PrestoAutomatedTests\\PrestoAutomatedTests.csproj
+		SccProjectTopLevelParentUniqueName11 = Presto.sln
+		SccProjectName11 = Source/Testing/PrestoAutomatedTests
+		SccLocalPath11 = Source\\Testing\\PrestoAutomatedTests
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Presto1.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +227,16 @@ Global
 		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|x86.ActiveCfg = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,6 +258,7 @@ Global
 		{B59FBDF3-226E-4F6B-B564-6F795AA85689} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
 		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0} = {D399A7C6-4F03-44BE-B634-F5E54FC48B9C}
 		{3C7DAE5E-BDED-4B41-9392-59E5D8CEC11F} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
+		{75344126-B6A2-4277-9EF5-99E08E147D7E} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}
 		{9E41ADBA-A55C-4F71-BF0A-463C82334B13} = {CCAFF706-DD44-49CB-8896-EADA2FD38664}
 	EndGlobalSection

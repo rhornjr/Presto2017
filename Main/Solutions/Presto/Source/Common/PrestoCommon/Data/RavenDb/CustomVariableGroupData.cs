@@ -22,7 +22,7 @@ namespace PrestoCommon.Data.RavenDb
             {
                 IEnumerable<CustomVariableGroup> customGroups =
                     QueryAndCacheEtags(session => session.Query<CustomVariableGroup>()
-                    .Include(x => x.ApplicationId)).Cast<CustomVariableGroup>();
+                    .Include(x => x.ApplicationId)).AsEnumerable().Cast<CustomVariableGroup>();
 
                 foreach (CustomVariableGroup customGroup in customGroups)
                 {

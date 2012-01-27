@@ -34,7 +34,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                         .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
                         .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
-                        ).Cast<ApplicationServer>();
+                        ).AsEnumerable().Cast<ApplicationServer>();
 
                     foreach (ApplicationServer appServer in appServers)
                     {

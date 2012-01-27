@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using PrestoCommon.Entities;
 using Raven.Client;
 using Raven.Client.Document;
@@ -108,11 +109,11 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         // ToDo: Look into this suppression.
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected static IEnumerable<EntityBase> QueryAndCacheEtags(Func<IDocumentSession, IEnumerable<EntityBase>> func)
+        protected static IQueryable<EntityBase> QueryAndCacheEtags(Func<IDocumentSession, IQueryable<EntityBase>> func)
         {
             if (func == null) { throw new ArgumentNullException("func"); }
 
-            IEnumerable<EntityBase> entities = func.Invoke(_session);
+            IQueryable<EntityBase> entities = func.Invoke(_session);
             CacheEtags(entities, _session);
             return entities;
         }
@@ -173,18 +174,8 @@ namespace PrestoCommon.Data.RavenDb
 
             try
             {
-                documentStore.Conventions.MaxNumberOfRequestsPerSession = int.MaxValue;  // * See notes below.
                 documentStore.ConnectionStringName = "RavenDb";                
                 documentStore.Initialize();                
-
-                // *By default, Raven sets the max requests to 128. That makes queries, like getting the 50 most recent installation
-                // summaries, not work. When the limit is 128, queries are only evaluated against the first 128 documents
-                // in a table. Not cool.
-                // Note: This still didn't work when I was using a Lucene query:
-                //         session.Advanced.LuceneQuery<InstallationSummary>()
-                //       I had to do this:
-                //         using Raven.Client.Linq;
-                //         session.Query<InstallationSummary>()
             }
             catch
             {

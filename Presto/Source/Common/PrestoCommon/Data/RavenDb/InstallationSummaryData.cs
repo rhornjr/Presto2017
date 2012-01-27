@@ -23,18 +23,21 @@ namespace PrestoCommon.Data.RavenDb
         {
             return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
             {
-                IEnumerable<InstallationSummary> installationSummaryList = QueryAndCacheEtags(session => session.Query<InstallationSummary>()
-                    .Where(summary => summary.ApplicationServerId == appServer.Id
-                            && summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id))
-                    .Cast<InstallationSummary>();
+                IQueryable<EntityBase> installationSummaryList =
+                    QueryAndCacheEtags(session => session.Query<InstallationSummary>()
+                    .Where(summary => summary.ApplicationServerId == appServer.Id &&
+                    summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id));
 
                 if (appWithGroup.CustomVariableGroup == null)
                 {
-                    return installationSummaryList.Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null);
+                    return installationSummaryList.AsEnumerable().Cast<InstallationSummary>()
+                        .Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null);
                 }
 
-                return installationSummaryList.Where(summary =>
-                    summary.ApplicationWithOverrideVariableGroup != null && summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
+                return installationSummaryList.AsEnumerable().Cast<InstallationSummary>()
+                    .Where(summary =>
+                    summary.ApplicationWithOverrideVariableGroup != null &&
+                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
                     summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId);
             });
         }
@@ -51,16 +54,19 @@ namespace PrestoCommon.Data.RavenDb
 
             try
             {
+                // We want to return IEnumerable...
                 return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
                 {
-                    IEnumerable<InstallationSummary> installationSummaries =
+                    // ... however we must use IQueryable here so OrderBy() and Take() happen on the RavenDB end,
+                    // and not in memory here.
+                    IQueryable<EntityBase> installationSummaries =
                         QueryAndCacheEtags(session => session.Query<InstallationSummary>()
                         .Include(x => x.ApplicationServerId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
-                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)                        
-                        .OrderByDescending(summary => summary.InstallationStart)                        
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
+                        .OrderByDescending(summary => summary.InstallationStart)
                         .Take(numberToRetrieve)
-                        ).Cast<InstallationSummary>().ToList();
+                        );
 
                     // Note: We use session.Load() below so that we get the information from the session, and not another trip to the DB.
                     foreach (InstallationSummary summary in installationSummaries)
@@ -80,7 +86,7 @@ namespace PrestoCommon.Data.RavenDb
                             as CustomVariableGroup;
                     }
 
-                    return installationSummaries;
+                    return installationSummaries.AsEnumerable().Cast<InstallationSummary>();
                 });
             }
             finally

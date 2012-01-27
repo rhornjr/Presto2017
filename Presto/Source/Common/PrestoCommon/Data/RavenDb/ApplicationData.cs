@@ -18,7 +18,7 @@ namespace PrestoCommon.Data.RavenDb
         public IEnumerable<Application> GetAll()
         {
             return ExecuteQuery<IEnumerable<Application>>(() =>
-                QueryAndCacheEtags(session => session.Query<Application>()).Cast<Application>());
+                QueryAndCacheEtags(session => session.Query<Application>()).AsEnumerable().Cast<Application>());
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<Application>>(() =>
                 QueryAndCacheEtags(
                 session => session.Query<Application>()
-                .Where(app => app.Id.In<string>(appIds))).Cast<Application>());
+                .Where(app => app.Id.In<string>(appIds))).AsEnumerable().Cast<Application>());
         }
 
         /// <summary>

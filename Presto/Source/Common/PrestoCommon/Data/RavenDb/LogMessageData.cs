@@ -20,7 +20,8 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<LogMessage>>(() =>
                 QueryAndCacheEtags(session => session.Query<LogMessage>()
                 .OrderByDescending(logMessage => logMessage.MessageCreatedTime)
-                .Take(numberToRetrieve)).Cast<LogMessage>());
+                .Take(numberToRetrieve)).AsEnumerable().Cast<LogMessage>()
+                );
         }
 
         /// <summary>

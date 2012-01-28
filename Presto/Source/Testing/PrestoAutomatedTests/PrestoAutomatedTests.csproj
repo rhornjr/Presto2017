@@ -78,8 +78,10 @@
   <ItemGroup>
     <Compile Include="ApplicationLogicTest.cs" />
     <Compile Include="ApplicationServerLogicTest.cs" />
+    <Compile Include="ApplicationServerTest.cs" />
     <Compile Include="CustomVariableGroupLogicTest.cs" />
     <Compile Include="InstallationSummaryLogicTest.cs" />
+    <Compile Include="LogMessageLogicTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
@@ -91,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Shadow Include="Test References\PrestoCommon.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -78,14 +78,12 @@
     <Compile Include="Data\db4o\GenericData.cs" />
     <Compile Include="Data\db4o\InstallationSummaryData.cs" />
     <Compile Include="Data\db4o\LogMessageData.cs" />
-    <Compile Include="Data\db4o\TaskData.cs" />
     <Compile Include="Data\Interfaces\IApplicationData.cs" />
     <Compile Include="Data\Interfaces\IApplicationServerData.cs" />
     <Compile Include="Data\Interfaces\ICustomVariableGroupData.cs" />
     <Compile Include="Data\Interfaces\IGenericData.cs" />
     <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
     <Compile Include="Data\Interfaces\ILogMessageData.cs" />
-    <Compile Include="Data\Interfaces\ITaskData.cs" />
     <Compile Include="Data\RavenDb\ApplicationData.cs" />
     <Compile Include="Data\RavenDb\ApplicationServerData.cs" />
     <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
@@ -93,7 +91,6 @@
     <Compile Include="Data\RavenDb\GenericData.cs" />
     <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
-    <Compile Include="Data\RavenDb\TaskData.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
@@ -124,7 +121,6 @@
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\LogMessageLogic.cs" />
-    <Compile Include="Logic\TaskLogic.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>

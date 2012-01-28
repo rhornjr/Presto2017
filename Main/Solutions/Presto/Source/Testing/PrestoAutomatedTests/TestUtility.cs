@@ -17,6 +17,7 @@ namespace PrestoAutomatedTests
 
         public static readonly int TotalNumberOfObjects = 10;
         public static readonly int TotalNumberOfInstallationSummaries = 250;
+        public static readonly int TotalNumberOfLogMessages = 1000;
 
         public static List<InstallationSummary> AllInstallationSummaries { get; private set; }
 
@@ -28,6 +29,7 @@ namespace PrestoAutomatedTests
             AddCustomVariableGroups();
             AddAppServers();
             AddInstallationSummaries();
+            AddLogMessages();
 
             _dataPopulated = true;
         }        
@@ -119,5 +121,13 @@ namespace PrestoAutomatedTests
                 }
             }
         }
+
+        private static void AddLogMessages()
+        {
+            for (int i = 1; i <= TotalNumberOfLogMessages; i++)
+            {
+                LogMessageLogic.SaveLogMessage("Message " + i);
+            }
+        }        
     }
 }

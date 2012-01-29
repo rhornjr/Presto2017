@@ -269,7 +269,7 @@ namespace PrestoViewModel.Tabs
         {
             string[] filePathAndNames = GetFilePathAndNamesFromUser();
 
-            if (filePathAndNames.Count() < 1) { return; }
+            if (filePathAndNames == null || filePathAndNames.Count() < 1) { return; }
 
             CustomVariableGroup customVariableGroup;
 
@@ -278,7 +278,17 @@ namespace PrestoViewModel.Tabs
                 using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
-                    customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+                    try
+                    {
+                        customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                            ViewModelResources.CannotImport);
+                        LogUtility.LogException(ex);
+                        return;
+                    }
                 }
 
                 customVariableGroup.Id = null;  // This is new.

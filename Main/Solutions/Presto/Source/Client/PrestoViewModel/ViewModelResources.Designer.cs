@@ -70,6 +70,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The items could not be imported. Please verify that the file is in the correct format..
+        /// </summary>
+        internal static string CannotImport {
+            get {
+                return ResourceManager.GetString("CannotImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The selected custom variable group cannot be associated with a server because it&apos;s already associated with an application..
         /// </summary>
         internal static string CannotUseGroup {

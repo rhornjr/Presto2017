@@ -345,7 +345,17 @@ namespace PrestoViewModel.Tabs
 
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
-                taskBases = serializer.Deserialize(fileStream) as List<TaskBase>;
+                try
+                {
+                    taskBases = serializer.Deserialize(fileStream) as List<TaskBase>;
+                }
+                catch (Exception ex)
+                {
+                    ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                        ViewModelResources.CannotImport);
+                    LogUtility.LogException(ex);
+                    return;
+                }
             }
 
             // Start the sequence after the highest existing sequence.
@@ -379,7 +389,17 @@ namespace PrestoViewModel.Tabs
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>));
-                taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
+                try
+                {
+                    taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
+                }
+                catch (Exception ex)
+                {
+                    ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                        ViewModelResources.CannotImport);
+                    LogUtility.LogException(ex);
+                    return;
+                }
             }
 
             // Start the sequence after the highest existing sequence.

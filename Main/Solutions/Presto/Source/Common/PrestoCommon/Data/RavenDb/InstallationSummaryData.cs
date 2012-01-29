@@ -58,7 +58,11 @@ namespace PrestoCommon.Data.RavenDb
                 return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
                 {
                     // ... however we must use IQueryable here so OrderBy() and Take() happen on the RavenDB end,
-                    // and not in memory here.
+                    // and not in memory here. Actually, this isn't true. The big difference was between using a
+                    // LuceneQuery and just Query. When using a LuceneQuery, the OrderByDescending() and Take()
+                    // methods were Enumerable methods, and therefore didn't work correctly. When using Query,
+                    // the OrderByDescending() and Take() were Queryable methods, and worked correctly. So, it
+                    // looks like we could have used IEnumerable everywhere, as long as we used Query here.
                     IQueryable<EntityBase> installationSummaries =
                         QueryAndCacheEtags(session => session.Query<InstallationSummary>()
                         .Include(x => x.ApplicationServerId)

@@ -159,4 +159,7 @@
   <data name="ItemCannotBeSavedConcurrency" xml:space="preserve">
     <value>{0} was not saved because another user has changed it.</value>
   </data>
+  <data name="CannotImport" xml:space="preserve">
+    <value>The items could not be imported. Please verify that the file is in the correct format.</value>
+  </data>
 </root>

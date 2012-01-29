@@ -232,7 +232,17 @@ namespace PrestoViewModel.Tabs
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ApplicationWithOverrideVariableGroup>));
-                applicationsWithOverrideVariableGroup = xmlSerializer.Deserialize(fileStream) as List<ApplicationWithOverrideVariableGroup>;
+                try
+                {
+                    applicationsWithOverrideVariableGroup = xmlSerializer.Deserialize(fileStream) as List<ApplicationWithOverrideVariableGroup>;
+                }
+                catch (Exception ex)
+                {
+                    ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                        ViewModelResources.CannotImport);
+                    LogUtility.LogException(ex);
+                    return;
+                }
             }
 
             // When importing, get the apps and custom variable groups from the DB. We'll use those to populate the properties.            

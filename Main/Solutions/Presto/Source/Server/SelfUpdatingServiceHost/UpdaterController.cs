@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Remoting;
 using System.Threading;
 using System.Xml.Serialization;
 using PrestoServerCommon.Interfaces;
@@ -224,8 +225,19 @@ namespace SelfUpdatingServiceHost
         private void StopApp()
         {
             if (this._startStopControllerToRun != null)
-            {                
-                this._startStopControllerToRun.Stop();
+            {
+                try
+                {
+                    this._startStopControllerToRun.Stop();
+                }
+                catch (RemotingException)
+                {
+                    // Do nothing. If a controller has a lease that expires, we'll get an exception when we try
+                    // to access it. If that happens, just log it and move on. We still want to unload the app.
+                    LogUtility.LogWarning("An attempt was made to stop an IStartStop controller but a remoting " +
+                        "exception occurred. This may be because the controller had its lease expire. We'll just " +
+                        "log this event and move on. We still want to unload the app domain and try to continue.");
+                }
                 LogUtility.LogInformation("Stopped app.");
             }
 

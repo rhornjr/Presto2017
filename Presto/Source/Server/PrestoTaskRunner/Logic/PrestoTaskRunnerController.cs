@@ -35,6 +35,18 @@ namespace PrestoTaskRunner.Logic
             this._timer.Stop();            
         }
 
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object InitializeLifetimeService()
+        {
+            // Returning null here will prevent the lease manager from deleting the object.
+            // If we don't do this, then we get a remoting exception when calling Stop()
+            // from the self-updating service host.
+            return null;
+        }
+
         private void Initialize()
         {
             int timerInterval = Convert.ToInt32(ConfigurationManager.AppSettings["timerInterval"], CultureInfo.InvariantCulture);

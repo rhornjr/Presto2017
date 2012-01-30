@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LogUtility.cs" />
     <Compile Include="SelfUpdatingService.cs">
       <SubType>Component</SubType>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
@@ -90,7 +91,8 @@ namespace PrestoAutomatedTests
             appServerAccessor.Id = appServer.Id;
             appServerAccessor.ApplicationsWithOverrideGroup.Add(appServer.ApplicationsWithOverrideGroup[0]);
             // Let's make sure we return true for a force install.
-            appServerAccessor.ApplicationWithGroupToForceInstall = appServer.ApplicationsWithOverrideGroup[0];
+            appServerAccessor.ApplicationWithGroupToForceInstallList = new List<ApplicationWithOverrideVariableGroup>();
+            appServerAccessor.ApplicationWithGroupToForceInstallList.Add(appServer.ApplicationsWithOverrideGroup[0]);
             // Let's add an installation summary so we can check the rest of the logic in the method.
             InstallationSummary summary = new InstallationSummary(appServer.ApplicationsWithOverrideGroup[0], appServer, DateTime.Now);
             actual = appServerAccessor.ApplicationShouldBeInstalled(appServer.ApplicationsWithOverrideGroup[0]);

@@ -5,7 +5,7 @@ using PrestoCommon.Enums;
 namespace PrestoCommon.Entities
 {
     /// <summary>
-    /// An application can be installed multiple times on any given app server. Using the canonical exmaple, each
+    /// An application can be installed multiple times on any given app server. Using the canonical example, each
     /// instance needs to be the same as the others except for installation path, and one or more custom variables.
     /// </summary>
     public class ApplicationWithOverrideVariableGroup : EntityBase

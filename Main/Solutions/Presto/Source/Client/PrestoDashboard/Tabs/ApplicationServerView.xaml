@@ -20,6 +20,28 @@
                 <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
             </CollectionViewSource.SortDescriptions>            
         </CollectionViewSource>
+
+        <!-- I got this solution from http://bea.stollnitz.com/blog/?p=18 -->
+
+        <CollectionViewSource x:Key="cvs" Source="{Binding ApplicationServers}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="DeploymentEnvironment"/>
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <!-- Our leaf nodes (server names) -->
+        <DataTemplate x:Key="serverTemplate">
+            <TextBlock Text="{Binding Path=Name}"/>
+        </DataTemplate>
+
+        <!-- Note: The Items path refers to the items in the CollectionViewSource group (our servers).
+                   The Name path refers to the group name. -->
+        <HierarchicalDataTemplate x:Key="categoryTemplate"
+                                  ItemsSource="{Binding Path=Items}"
+                                  ItemTemplate="{StaticResource serverTemplate}">
+            <TextBlock Text="{Binding Path=Name}" FontWeight="Bold"/>
+        </HierarchicalDataTemplate>
+
     </UserControl.Resources>    
     
     <Grid>
@@ -27,7 +49,7 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="Application Servers" HorizontalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
@@ -40,8 +62,9 @@
                 </StackPanel>
             </StackPanel>
 
-            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource SortedServers}}" DisplayMemberPath="Name"
-                     SelectedItem="{Binding SelectedApplicationServer}" Height="auto"/>
+            <!-- Note: The Groups path refers to the groups property of the CollectionViewSource.-->
+            <TreeView DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource cvs}, Path=Groups}"
+                  ItemTemplate="{StaticResource categoryTemplate}" SelectedItemChanged="TreeView_SelectedItemChanged"/>
         </DockPanel>
 
         <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding AppServerIsSelected}">            

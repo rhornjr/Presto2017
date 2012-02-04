@@ -20,6 +20,7 @@ namespace PrestoCommon.Entities
         private string _description;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _applicationsWithOverrideGroup;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
+        private List<ApplicationWithOverrideVariableGroup> _applicationWithGroupToForceInstallList;
 
         /// <summary>
         /// Gets or sets the name.
@@ -87,14 +88,6 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
-        /// Gets or sets the application with group to force install.
-        /// </summary>
-        /// <value>
-        /// The application with group to force install.
-        /// </value>
-        public ApplicationWithOverrideVariableGroup ApplicationWithGroupToForceInstall { get; set; }
-
-        /// <summary>
         /// Gets or sets the application ids.
         /// </summary>
         /// <value>
@@ -109,6 +102,29 @@ namespace PrestoCommon.Entities
         /// The custom variable group ids for all app with groups.
         /// </value>
         public List<string> CustomVariableGroupIdsForAllAppWithGroups { get; set; }  // For RavenDB
+
+        /// <summary>
+        /// Gets or sets the application with group to force install.
+        /// </summary>
+        /// <value>
+        /// The application with group to force install.
+        /// </value>
+        public List<ApplicationWithOverrideVariableGroup> ApplicationWithGroupToForceInstallList
+        {
+            get
+            {
+                if (this._applicationWithGroupToForceInstallList == null)
+                {
+                    this._applicationWithGroupToForceInstallList = new List<ApplicationWithOverrideVariableGroup>();
+                }
+                return this._applicationWithGroupToForceInstallList;
+            }
+
+            set
+            {
+                this._applicationWithGroupToForceInstallList = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the custom variable group ids.
@@ -157,16 +173,22 @@ namespace PrestoCommon.Entities
             foreach (ApplicationWithOverrideVariableGroup appWithGroup in this.ApplicationsWithOverrideGroup)
             {
                 if (!ApplicationShouldBeInstalled(appWithGroup)) { continue; }
+                
+                // If this was a force install, remove it, so we don't keep trying to install it repeatedly.
+                ApplicationWithOverrideVariableGroup forceInstallGroup =
+                    this.ApplicationWithGroupToForceInstallList.Where(group => group.ApplicationId == appWithGroup.ApplicationId &&
+                        (group.CustomVariableGroupId == null && appWithGroup.CustomVariableGroupId == null) ||
+                        (group.CustomVariableGroupId == appWithGroup.CustomVariableGroupId)).FirstOrDefault();
+                
+                if (forceInstallGroup != null)
+                {
+                    this.ApplicationWithGroupToForceInstallList.Remove(forceInstallGroup);  // Remove so we don't install again.
+                    ApplicationServerLogic.Save(this);
+                }
 
                 LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup, this.Name));
                 InstallApplication(appWithGroup);
-            }
-
-            if (this.ApplicationWithGroupToForceInstall != null)
-            {
-                this.ApplicationWithGroupToForceInstall = null;  // Remove so we don't install again.
-                ApplicationServerLogic.Save(this);
-            }
+            }                       
         }
 
         private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup)
@@ -219,19 +241,12 @@ namespace PrestoCommon.Entities
         {
             bool forceInstallIsThisAppWithGroup = false;  // default
 
-            if (this.ApplicationWithGroupToForceInstall != null && this.ApplicationWithGroupToForceInstall.Application.Name == appWithGroup.Application.Name &&
-                this.ApplicationWithGroupToForceInstall.Application.Version == appWithGroup.Application.Version)
-            {
-                // If there is a custom variable group, those need to be equal as well, by being null, or...
-                if ((this.ApplicationWithGroupToForceInstall.CustomVariableGroup == null && appWithGroup.CustomVariableGroup == null))
-                { forceInstallIsThisAppWithGroup = true; }
+            ApplicationWithOverrideVariableGroup forceInstallGroup =
+                    this.ApplicationWithGroupToForceInstallList.Where(group => group.ApplicationId == appWithGroup.ApplicationId &&
+                        (group.CustomVariableGroupId == null && appWithGroup.CustomVariableGroupId == null) ||
+                        (group.CustomVariableGroupId == appWithGroup.CustomVariableGroupId)).FirstOrDefault();
 
-                // ... by having the same group.
-                if (this.ApplicationWithGroupToForceInstall.CustomVariableGroup != null &&
-                    appWithGroup.CustomVariableGroup != null &&
-                    this.ApplicationWithGroupToForceInstall.CustomVariableGroup.Id == appWithGroup.CustomVariableGroup.Id)
-                { forceInstallIsThisAppWithGroup = true; }
-            }
+            if (forceInstallGroup != null) { forceInstallIsThisAppWithGroup = true; }            
 
             LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "Checking if app should be installed. App server's ApplicationWithGroupToForceInstall matches the app group's " +
@@ -239,7 +254,7 @@ namespace PrestoCommon.Entities
                 "was a custom variable group, that matched by name as well. ApplicationServer.ApplicationWithGroupToForceInstall: {1}." +
                 "^^^^ ApplicationWithOverrideVariableGroup: {2}.",
                 forceInstallIsThisAppWithGroup,
-                ApplicationWithGroupAsString(this.ApplicationWithGroupToForceInstall),
+                ApplicationWithGroupAsString(forceInstallGroup),
                 ApplicationWithGroupAsString(appWithGroup)), this.EnableDebugLogging);
 
             return forceInstallIsThisAppWithGroup;

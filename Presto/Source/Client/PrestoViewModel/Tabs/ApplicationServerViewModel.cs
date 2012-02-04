@@ -199,7 +199,7 @@ namespace PrestoViewModel.Tabs
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ExactlyOneApplicationIsSelected());
             this.ImportApplicationCommand = new RelayCommand(_ => ImportApplication(), _ => AppServerIsSelected);
             this.ExportApplicationCommand = new RelayCommand(_ => ExportApplication(), _ => AtLeastOneApplicationIsSelected());
-            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => ExactlyOneApplicationIsSelected());
+            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => AtLeastOneApplicationIsSelected());
 
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
@@ -282,26 +282,24 @@ namespace PrestoViewModel.Tabs
 
         private void ForceApplication()
         {
-            ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
-
-            if (selectedAppWithGroup == null) { return; }
+            string allAppWithGroupNames = string.Join(",", this.SelectedApplicationsWithOverrideGroup);
 
             string message = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ConfirmInstallAppOnAppServerMessage, selectedAppWithGroup, this.SelectedApplicationServer);
+                ViewModelResources.ConfirmInstallAppOnAppServerMessage, allAppWithGroupNames, this.SelectedApplicationServer);
 
             if (!UserChoosesYes(message)) { return; }
 
             LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
                 "{0} selected to be installed on {1}.",
-                selectedAppWithGroup,
+                allAppWithGroupNames,
                 this.SelectedApplicationServer));
 
-            this.SelectedApplicationServer.ApplicationWithGroupToForceInstall = selectedAppWithGroup;
+            this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.AddRange(this.SelectedApplicationsWithOverrideGroup);
 
             if (SaveServer() == false) { return; }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.AppWillBeInstalledOnAppServer, selectedAppWithGroup, this.SelectedApplicationServer);
+                ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer);
         }                   
 
         private void AddServer()
@@ -404,14 +402,21 @@ namespace PrestoViewModel.Tabs
         }
 
         private void RemoveApplication()
-        {           
+        {                       
             ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
 
             if (!UserConfirmsDelete(selectedAppWithGroup.ToString())) { return; }
 
-            if (selectedAppWithGroup == null) { return; }
-
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
+
+            // If this app group was selected to be force installed, remove it from that list as well.
+            ApplicationWithOverrideVariableGroup forceInstallGroup =
+                    this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.Where(
+                        group => group.ApplicationId == selectedAppWithGroup.ApplicationId &&
+                        (group.CustomVariableGroupId == null && selectedAppWithGroup.CustomVariableGroupId == null) ||
+                        (group.CustomVariableGroupId == selectedAppWithGroup.CustomVariableGroupId)).FirstOrDefault();
+
+            if (forceInstallGroup != null) { this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.Remove(forceInstallGroup); }
 
             string message = string.Format(CultureInfo.CurrentCulture,
                 "{0} was just removed from {1}.",

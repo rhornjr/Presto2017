@@ -32,8 +32,6 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.CustomVariableGroupIds)
                         .Include(x => x.ApplicationIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                        .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
-                        .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
                         ).AsEnumerable().Cast<ApplicationServer>();
 
                     foreach (ApplicationServer appServer in appServers)
@@ -67,8 +65,6 @@ namespace PrestoCommon.Data.RavenDb
                     .Include(x => x.CustomVariableGroupIds)
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                    .Include(x => x.ApplicationWithGroupToForceInstall.ApplicationId)
-                    .Include(x => x.ApplicationWithGroupToForceInstall.CustomVariableGroupId)
                     .Where(server => server.Name == serverName).FirstOrDefault())
                     as ApplicationServer;
 
@@ -98,17 +94,17 @@ namespace PrestoCommon.Data.RavenDb
                 appGroup.CustomVariableGroup = QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
             }
 
-            if (appServer.ApplicationWithGroupToForceInstall != null)
+            foreach (ApplicationWithOverrideVariableGroup group in appServer.ApplicationWithGroupToForceInstallList)
             {
-                appServer.ApplicationWithGroupToForceInstall.Application =
-                    QuerySingleResultAndCacheEtag(session => session.Load<Application>(appServer.ApplicationWithGroupToForceInstall.ApplicationId)) as Application;
-            }
+                group.Application =
+                    QuerySingleResultAndCacheEtag(session => session.Load<Application>(group.ApplicationId)) as Application;
 
-            if (appServer.ApplicationWithGroupToForceInstall != null && appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId != null)
-            {
-                appServer.ApplicationWithGroupToForceInstall.CustomVariableGroup =
-                    QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(appServer.ApplicationWithGroupToForceInstall.CustomVariableGroupId))
-                    as CustomVariableGroup;
+                if (group.CustomVariableGroupId != null)
+                {
+                    group.CustomVariableGroup =
+                        QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(group.CustomVariableGroupId))
+                        as CustomVariableGroup;
+                }
             }
         }
 

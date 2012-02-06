@@ -61,6 +61,9 @@ namespace SelfUpdatingServiceHost
             {
                 // Check for new binaries. If new, copy the files and restart the app domain.            
                 UpdaterManifest updaterManifest = GetUpdaterManifest();
+
+                if (updaterManifest == null) { return; }
+
                 if (VersionHasBeenInstalled(updaterManifest))
                 {
                     IfAppNotRunningThenRunApp();
@@ -76,8 +79,6 @@ namespace SelfUpdatingServiceHost
             }
             catch (Exception ex)
             {
-                // ToDo: Consider leaving the timer intact. Maybe the exception is that the manifest file is locked.
-                //       For things like that, we want to try processing again.
                 LogUtility.LogException(ex);
                 if (this._timer != null) { this._timer.Dispose(); }
             }
@@ -111,10 +112,19 @@ namespace SelfUpdatingServiceHost
 
             UpdaterManifest updaterManifest;
 
-            using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            try
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdaterManifest));
-                updaterManifest = xmlSerializer.Deserialize(fileStream) as UpdaterManifest;
+                using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdaterManifest));
+                    updaterManifest = xmlSerializer.Deserialize(fileStream) as UpdaterManifest;
+                }
+            }
+            catch (IOException ex)
+            {
+                // This usually means the manifest file was locked, so return null and we'll just try again at the next interval.
+                LogUtility.LogException(ex);
+                return null;
             }
 
             return updaterManifest;

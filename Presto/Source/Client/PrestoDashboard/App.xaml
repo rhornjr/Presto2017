@@ -12,6 +12,7 @@
         <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>
         <vmtab:InstallationSummaryViewModel x:Key="InstallationSummaryViewModel"/>
         <vmtab:LogMessageViewModel x:Key="LogMessageViewModel"/>
+        <vmtab:PingViewModel x:Key="PingViewModel"/>
 
         <Style x:Key="StandardButton" TargetType="Button">
             <Setter Property="Width" Value="70" />

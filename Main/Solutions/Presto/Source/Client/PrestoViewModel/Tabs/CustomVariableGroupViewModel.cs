@@ -291,6 +291,12 @@ namespace PrestoViewModel.Tabs
                     }
                 }
 
+                // If the variable group name exists, append " - copy" to it.
+                if (this.CustomVariableGroups.Any(group => group.Name == customVariableGroup.Name))
+                {
+                    customVariableGroup.Name += " - copy";
+                }
+
                 customVariableGroup.Id = null;  // This is new.
                 CustomVariableGroupLogic.Save(customVariableGroup);
                 this.CustomVariableGroups.Add(customVariableGroup);

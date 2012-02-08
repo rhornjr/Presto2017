@@ -84,6 +84,8 @@
     <Compile Include="Data\Interfaces\IGenericData.cs" />
     <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
     <Compile Include="Data\Interfaces\ILogMessageData.cs" />
+    <Compile Include="Data\Interfaces\IPingRequestData.cs" />
+    <Compile Include="Data\Interfaces\IPingResponseData.cs" />
     <Compile Include="Data\RavenDb\ApplicationData.cs" />
     <Compile Include="Data\RavenDb\ApplicationServerData.cs" />
     <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
@@ -91,6 +93,8 @@
     <Compile Include="Data\RavenDb\GenericData.cs" />
     <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
+    <Compile Include="Data\RavenDb\PingRequestData.cs" />
+    <Compile Include="Data\RavenDb\PingResponseData.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
@@ -107,6 +111,8 @@
     <Compile Include="Entities\LegacyPresto\TaskXmlModify.cs" />
     <Compile Include="Entities\LogMessage.cs" />
     <Compile Include="Entities\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Entities\PingRequest.cs" />
+    <Compile Include="Entities\PingResponse.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskCopyFile.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />
@@ -121,6 +127,8 @@
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\LogMessageLogic.cs" />
+    <Compile Include="Logic\PingRequestLogic.cs" />
+    <Compile Include="Logic\PingResponseLogic.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>

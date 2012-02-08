@@ -59,25 +59,53 @@ namespace PrestoTaskRunner.Logic
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            CheckForApplicationsToInstall();
-        }
-
-        private static void CheckForApplicationsToInstall()
-        {
             if (!Monitor.TryEnter(_locker)) { return; }  // Don't let  multiple threads in here at the same time.
 
             try
             {
-                ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
-
-                if (appServer == null) { return; }
-
-                appServer.InstallApplications();
+                AnswerPingRequest();
+                CheckForApplicationsToInstall();
             }
             finally
             {
                 Monitor.Exit(_locker);
             }
+        }
+
+        private static void AnswerPingRequest()
+        {
+            try
+            {
+                PingRequest pingRequest = PingRequestLogic.GetMostRecent();
+
+                ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
+
+                // See if we have already responded to the most recent ping request.
+
+                PingResponse pingResponse = PingResponseLogic.GetByPingRequestAndServer(pingRequest, appServer);
+
+                if (pingResponse != null) { return; }  // Already responded.
+
+                pingResponse = new PingResponse(pingRequest.Id, DateTime.Now, appServer);
+
+                PingResponseLogic.Save(pingResponse);
+
+                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, "{0} responded to ping request", appServer.Name));
+            }
+            catch (Exception ex)
+            {
+                // Just eat it. We don't want ping response failures to stop processing.
+                LogUtility.LogException(ex);
+            }
+        }
+
+        private static void CheckForApplicationsToInstall()
+        {
+            ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
+
+            if (appServer == null) { return; }
+
+            appServer.InstallApplications();
         }
 
         private static ApplicationServer GetApplicationServerForThisMachine(string serverName)

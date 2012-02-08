@@ -9,3 +9,5 @@
 // You do not need to add suppressions to this file manually.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Mvvm", Scope = "namespace", Target = "PrestoViewModel.Mvvm")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Dto", Scope = "type", Target = "PrestoViewModel.Tabs.ServerPingDto")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Dto", Scope = "member", Target = "PrestoViewModel.Tabs.PingViewModel.#ServerPingDtoList")]

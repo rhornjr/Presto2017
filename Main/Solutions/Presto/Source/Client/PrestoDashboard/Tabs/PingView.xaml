@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="PrestoDashboard.Tabs.PingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="700">
+
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource PingViewModel}"/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Width="120" Content="Send Ping Request" Style="{StaticResource StandardButton}" Command="{Binding PingCommand}"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Content="Ping request time: " VerticalAlignment="Center"/>
+            <Label Content="{Binding PingRequest.RequestTime}" Width="240" VerticalAlignment="Center"/>
+        </StackPanel>
+        
+        <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding ServerPingDtoList}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Path=ResponseTime}" Header="Response Time" Width="240"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="3" Content="Refresh" Style="{StaticResource StandardButton}" Command="{Binding RefreshCommand}"/>
+        
+    </Grid>
+    
+</UserControl>

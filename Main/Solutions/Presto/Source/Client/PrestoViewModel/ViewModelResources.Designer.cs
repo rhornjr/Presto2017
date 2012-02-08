@@ -187,6 +187,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ping items refreshed..
+        /// </summary>
+        internal static string PingItemsRefreshed {
+            get {
+                return ResourceManager.GetString("PingItemsRefreshed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to When importing legacy tasks, we encountered a legacy task type that was not expected: {0}..
         /// </summary>
         internal static string UnexpectedLegacyTask {

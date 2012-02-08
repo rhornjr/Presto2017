@@ -60,7 +60,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class PingViewModel : ViewModelBase, IDisposable
     {
-        private const int TotalTimerRunTimeInMinutes = 2;
+        private const int TotalTimerRunTimeInMinutes = 5;
 
         private Timer _timer;
         private DateTime _timerStartTime;        

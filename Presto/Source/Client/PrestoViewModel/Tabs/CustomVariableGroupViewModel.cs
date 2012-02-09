@@ -157,7 +157,7 @@ namespace PrestoViewModel.Tabs
             this.RefreshVariableGroupCommand = new RelayCommand(_ => RefreshVariableGroup());
 
             this.AddVariableCommand    = new RelayCommand(_ => AddVariable());
-            this.EditVariableCommand   = new RelayCommand(_ => EditVariable());
+            this.EditVariableCommand   = new RelayCommand(_ => EditVariable(), _ => CustomVariableIsSelected());
             this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable(), _ => CustomVariableIsSelected());
         }             
 

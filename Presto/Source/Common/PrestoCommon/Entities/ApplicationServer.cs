@@ -163,6 +163,24 @@ namespace PrestoCommon.Entities
         {
             return this.Name;
         }
+        /// <summary>
+        /// Finds the matching <see cref="ApplicationWithOverrideVariableGroup"/> from the force install list.
+        /// </summary>
+        /// <param name="appWithGroup">The <see cref="ApplicationWithOverrideVariableGroup"/></param>
+        /// <returns>If a match is found, returns the <see cref="ApplicationWithOverrideVariableGroup"/> instance.
+        ///          If no match is found, returns null.
+        /// </returns>
+        public ApplicationWithOverrideVariableGroup GetFromForceInstallList(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            // To find the matching appWithGroup, the app IDs need to match AND one of these two things must be true:
+            // 1. Both custom variable groups are null, or
+            // 2. Both custom variable gropus are the same.
+
+            return this.ApplicationWithGroupToForceInstallList.Where(group =>
+                group.ApplicationId == appWithGroup.ApplicationId &&
+                ((group.CustomVariableGroupId == null && appWithGroup.CustomVariableGroupId == null) ||
+                (group.CustomVariableGroupId == appWithGroup.CustomVariableGroupId))).FirstOrDefault();
+        }
 
         /// <summary>
         /// Installs the applications.
@@ -175,10 +193,7 @@ namespace PrestoCommon.Entities
                 if (!ApplicationShouldBeInstalled(appWithGroup)) { continue; }
                 
                 // If this was a force install, remove it, so we don't keep trying to install it repeatedly.
-                ApplicationWithOverrideVariableGroup forceInstallGroup =
-                    this.ApplicationWithGroupToForceInstallList.Where(group => group.ApplicationId == appWithGroup.ApplicationId &&
-                        (group.CustomVariableGroupId == null && appWithGroup.CustomVariableGroupId == null) ||
-                        (group.CustomVariableGroupId == appWithGroup.CustomVariableGroupId)).FirstOrDefault();
+                ApplicationWithOverrideVariableGroup forceInstallGroup = this.GetFromForceInstallList(appWithGroup);
                 
                 if (forceInstallGroup != null)
                 {
@@ -235,16 +250,13 @@ namespace PrestoCommon.Entities
                 installationSummaryExists), this.EnableDebugLogging);
 
             return installationSummaryExists;
-        }
+        }        
 
         private bool ForceInstallIsThisAppWithGroup(ApplicationWithOverrideVariableGroup appWithGroup)
         {
             bool forceInstallIsThisAppWithGroup = false;  // default
 
-            ApplicationWithOverrideVariableGroup forceInstallGroup =
-                    this.ApplicationWithGroupToForceInstallList.Where(group => group.ApplicationId == appWithGroup.ApplicationId &&
-                        (group.CustomVariableGroupId == null && appWithGroup.CustomVariableGroupId == null) ||
-                        (group.CustomVariableGroupId == appWithGroup.CustomVariableGroupId)).FirstOrDefault();
+            ApplicationWithOverrideVariableGroup forceInstallGroup = this.GetFromForceInstallList(appWithGroup);
 
             if (forceInstallGroup != null) { forceInstallIsThisAppWithGroup = true; }            
 

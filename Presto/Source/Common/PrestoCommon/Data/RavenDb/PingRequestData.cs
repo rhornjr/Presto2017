@@ -25,7 +25,7 @@ namespace PrestoCommon.Data.RavenDb
         public PingRequest GetMostRecent()
         {
             return ExecuteQuery<PingRequest>(() =>
-                QuerySingleResultAndCacheEtag(session => session.Query<PingRequest>()
+                QuerySingleResultAndDoNotCacheEtag(session => session.Query<PingRequest>()
                     .OrderByDescending(x => x.RequestTime)
                     .Take(1).FirstOrDefault()) as PingRequest);
         }

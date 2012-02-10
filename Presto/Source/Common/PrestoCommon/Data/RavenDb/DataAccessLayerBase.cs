@@ -103,6 +103,20 @@ namespace PrestoCommon.Data.RavenDb
         }
 
         /// <summary>
+        /// Executes the query without caching etags.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        protected static EntityBase QuerySingleResultAndDoNotCacheEtag(Func<IDocumentSession, EntityBase> func)
+        {
+            if (func == null) { throw new ArgumentNullException("func"); }
+
+            EntityBase entity = func.Invoke(_session);
+            if (entity == null) { return null; }
+            return entity;
+        }
+
+        /// <summary>
         /// Gets all and cache eTags.
         /// </summary>
         /// <param name="func">The func.</param>
@@ -115,6 +129,21 @@ namespace PrestoCommon.Data.RavenDb
 
             IQueryable<EntityBase> entities = func.Invoke(_session);
             CacheEtags(entities, _session);
+            return entities;
+        }
+
+        /// <summary>
+        /// Executes the query without caching etags.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected static IQueryable<EntityBase> QueryAndDoNotCacheEtags(Func<IDocumentSession, IQueryable<EntityBase>> func)
+        {
+            if (func == null) { throw new ArgumentNullException("func"); }
+
+            IQueryable<EntityBase> entities = func.Invoke(_session);
+            
             return entities;
         }
 

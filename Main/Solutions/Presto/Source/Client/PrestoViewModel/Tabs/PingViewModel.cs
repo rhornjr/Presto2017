@@ -185,6 +185,7 @@ namespace PrestoViewModel.Tabs
             foreach (ServerPingDto serverPingDto in this.ServerPingDtoList)
             {
                 serverPingDto.ResponseTime = null;
+                serverPingDto.Comment      = null;
             }
         }
 
@@ -201,7 +202,7 @@ namespace PrestoViewModel.Tabs
             {
                 foreach (PingResponse response in PingResponseLogic.GetAllForPingRequest(this.PingRequest))
                 {
-                    ServerPingDto serverPingDto = this.ServerPingDtoList.Where(x => x.ApplicationServer.Id == response.ApplicationServer.Id).FirstOrDefault();
+                    ServerPingDto serverPingDto = this.ServerPingDtoList.Where(x => x.ApplicationServer.Id == response.ApplicationServerId).FirstOrDefault();
 
                     if (serverPingDto == null || serverPingDto.ResponseTime == response.ResponseTime) { continue; }
 

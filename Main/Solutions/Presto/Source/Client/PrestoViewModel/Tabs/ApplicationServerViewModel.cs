@@ -287,16 +287,16 @@ namespace PrestoViewModel.Tabs
             string message = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ConfirmInstallAppOnAppServerMessage, allAppWithGroupNames, this.SelectedApplicationServer);
 
-            if (!UserChoosesYes(message)) { return; }
+            if (!UserChoosesYes(message)) { return; }            
+
+            this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.AddRange(this.SelectedApplicationsWithOverrideGroup);
+
+            if (SaveServer() == false) { return; }
 
             LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
                 "{0} selected to be installed on {1}.",
                 allAppWithGroupNames,
                 this.SelectedApplicationServer));
-
-            this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.AddRange(this.SelectedApplicationsWithOverrideGroup);
-
-            if (SaveServer() == false) { return; }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer);
@@ -410,11 +410,7 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
 
             // If this app group was selected to be force installed, remove it from that list as well.
-            ApplicationWithOverrideVariableGroup forceInstallGroup =
-                    this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.Where(
-                        group => group.ApplicationId == selectedAppWithGroup.ApplicationId &&
-                        (group.CustomVariableGroupId == null && selectedAppWithGroup.CustomVariableGroupId == null) ||
-                        (group.CustomVariableGroupId == selectedAppWithGroup.CustomVariableGroupId)).FirstOrDefault();
+            ApplicationWithOverrideVariableGroup forceInstallGroup = this.SelectedApplicationServer.GetFromForceInstallList(selectedAppWithGroup);
 
             if (forceInstallGroup != null) { this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.Remove(forceInstallGroup); }
 

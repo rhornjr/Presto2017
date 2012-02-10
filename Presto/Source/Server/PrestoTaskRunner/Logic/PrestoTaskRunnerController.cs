@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Timers;
 using PrestoCommon.Entities;
@@ -86,7 +88,11 @@ namespace PrestoTaskRunner.Logic
 
                 if (pingResponse != null) { return; }  // Already responded.
 
-                pingResponse = new PingResponse(pingRequest.Id, DateTime.Now, appServer);
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                string comment = "PTR file version " + fileVersionInfo.ProductVersion;
+
+                pingResponse = new PingResponse(pingRequest.Id, DateTime.Now, appServer, comment);
 
                 PingResponseLogic.Save(pingResponse);
 

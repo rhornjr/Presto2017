@@ -28,8 +28,9 @@
         <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding ServerPingDtoList}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="*"/>
-                <DataGridTextColumn Binding="{Binding Path=ResponseTime}" Header="Response Time" Width="240"/>
+                <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="220"/>                
+                <DataGridTextColumn Binding="{Binding Path=ResponseTime}" Header="Response Time" Width="180"/>
+                <DataGridTextColumn Binding="{Binding Path=Comment}" Header="Comment" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 

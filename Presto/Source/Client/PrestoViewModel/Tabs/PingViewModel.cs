@@ -18,7 +18,8 @@ namespace PrestoViewModel.Tabs
     public class ServerPingDto : NotifyPropertyChangedBase
     {
         private ApplicationServer _applicationServer;
-        private DateTime? _responseTime;        
+        private DateTime? _responseTime;
+        private string _comment;
 
         /// <summary>
         /// Gets or sets the application server.
@@ -51,6 +52,23 @@ namespace PrestoViewModel.Tabs
             {
                 this._responseTime = value;
                 NotifyPropertyChanged(() => this.ResponseTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the comment.
+        /// </summary>
+        /// <value>
+        /// The comment.
+        /// </value>
+        public string Comment
+        {
+            get { return this._comment; }
+
+            set
+            {
+                this._comment = value;
+                NotifyPropertyChanged(() => this.Comment);
             }
         }
     }
@@ -188,6 +206,7 @@ namespace PrestoViewModel.Tabs
                     if (serverPingDto == null || serverPingDto.ResponseTime == response.ResponseTime) { continue; }
 
                     serverPingDto.ResponseTime = response.ResponseTime;
+                    serverPingDto.Comment      = response.Comment;
                 }
 
                 // If every server has a response, no need to continue polling.

@@ -107,14 +107,20 @@ namespace SelfUpdatingServiceHost
 
             if (!File.Exists(filePathAndName))
             {
-                throw new FileNotFoundException("The updater manifest file was not found. This file is necessary for the program to run.", filePathAndName);
+                LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
+                    "The updater manifest file was not found. This file is necessary for the program to run: {0}",
+                    filePathAndName));
+                return null;
             }
 
             UpdaterManifest updaterManifest;
 
             try
             {
-                using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                // From: http://stackoverflow.com/questions/3709104/read-file-which-is-in-use
+                // The FileAccess specifies what YOU want to do with the file. The FileShare specifies what OTHERS can do with the
+                // file while you have it in use.
+                using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdaterManifest));
                     updaterManifest = xmlSerializer.Deserialize(fileStream) as UpdaterManifest;

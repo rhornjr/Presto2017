@@ -30,6 +30,14 @@ namespace PrestoCommon.Entities
         public ApplicationServer ApplicationServer { get; set; }
 
         /// <summary>
+        /// Gets or sets the comment.
+        /// </summary>
+        /// <value>
+        /// The comment.
+        /// </value>
+        public string Comment { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PingResponse"/> class.
         /// </summary>
         public PingResponse() { }
@@ -40,7 +48,8 @@ namespace PrestoCommon.Entities
         /// <param name="pingRequestId">The ping request id.</param>
         /// <param name="responseTime">The response time.</param>
         /// <param name="applicationServer">The application server.</param>
-        public PingResponse(string pingRequestId, DateTime responseTime, ApplicationServer applicationServer)
+        /// <param name="comment">The comment.</param>
+        public PingResponse(string pingRequestId, DateTime responseTime, ApplicationServer applicationServer, string comment)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
@@ -48,6 +57,7 @@ namespace PrestoCommon.Entities
             this.ApplicationServer   = applicationServer;
             this.ApplicationServerId = applicationServer.Id;
             this.ResponseTime        = responseTime;
+            this.Comment             = comment;
         }
     }
 }

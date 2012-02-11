@@ -18,43 +18,43 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
-            <Label Content="Description:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Description:" Width="130" />
             <TextBox x:Name="txtDescription" Text="{Binding TaskXmlModifyCopy.Description}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
-            <Label Content="XML Document:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="XML Document:" Width="130" />
             <TextBox x:Name="txtXmlPathAndFileName" Text="{Binding TaskXmlModifyCopy.XmlPathAndFileName}" Width="315"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding BrowseFileCommand}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="2">
-            <Label Content="Node To Change:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Node To Change:" Width="130" />
             <TextBox x:Name="txtNodeToChange" Text="{Binding TaskXmlModifyCopy.NodeToChange}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="3">
-            <Label Content="Attribute Key:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Attribute Key:" Width="130" />
             <TextBox x:Name="txtAttributeKey" Text="{Binding TaskXmlModifyCopy.AttributeKey}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="4">
-            <Label Content="Attribute Key Value:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Attribute Key Value:" Width="130" />
             <TextBox x:Name="txtAttributeKeyValue" Text="{Binding TaskXmlModifyCopy.AttributeKeyValue}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="5">
-            <Label Content="Attribute To Change:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Attribute To Change:" Width="130" />
             <TextBox x:Name="txtAttributeToChange" Text="{Binding TaskXmlModifyCopy.AttributeToChange}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="6">
-            <Label Content="New Value:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="New Value:" Width="130" />
             <TextBox x:Name="txtAttributeToChangeValue" Text="{Binding TaskXmlModifyCopy.AttributeToChangeValue}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="7">
-            <Label Content="Failure Causes All-Stop:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Failure Causes All-Stop:" Width="130" />
             <CheckBox x:Name="chkFailureCausesAllStop" IsChecked="{Binding TaskXmlModifyCopy.FailureCausesAllStop}" VerticalAlignment="Center"/>
         </StackPanel>
 

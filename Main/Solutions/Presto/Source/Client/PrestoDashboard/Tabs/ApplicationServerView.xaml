@@ -51,7 +51,7 @@
         </Grid.ColumnDefinitions>
         
         <DockPanel Grid.Column="0" LastChildFill="True">
-            <Label DockPanel.Dock="Top" Content="Application Servers" HorizontalAlignment="Center"/>
+            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Application Servers" HorizontalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddServerCommand}" />
@@ -83,21 +83,21 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Content="Selected Application Server" HorizontalAlignment="Center"/>
-                
-                <Label Grid.Column="0" Grid.Row="1" Content="Name: "/>
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application Server" HorizontalAlignment="Center"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplicationServer.Name}"/>
 
-                <Label Grid.Column="0" Grid.Row="2" Content="Description: "/>
+                <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardLabel}" Content="Description: "/>
                 <TextBox  Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplicationServer.Description}"/>
 
-                <Label Grid.Column="0" Grid.Row="3" Content="Environment: "/>
+                <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource StandardLabel}" Content="Environment: "/>
 
                 <DockPanel Grid.Column="1" Grid.Row="3">
                     <ComboBox ItemsSource="{Binding DeploymentEnvironments}"
                               SelectedItem="{Binding SelectedApplicationServer.DeploymentEnvironment}" Width="110"
                               HorizontalAlignment="Left"/>
-                    <CheckBox Content="Enable debug logging" IsChecked="{Binding SelectedApplicationServer.EnableDebugLogging}"
+                    <CheckBox Style="{StaticResource StandardCheckBox}" Content="Enable debug logging" IsChecked="{Binding SelectedApplicationServer.EnableDebugLogging}"
                               FlowDirection="RightToLeft" VerticalAlignment="Center"/>
                 </DockPanel>
                 
@@ -111,7 +111,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="Custom Variable Groups:"/>
+                    <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups:"/>
                     <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                           ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
                           SelectedItem="{Binding SelectedCustomVariableGroup}"
@@ -133,7 +133,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Applications:"/>
+                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Applications:"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                           ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
                           ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedApplicationsWithOverrideGroup}"

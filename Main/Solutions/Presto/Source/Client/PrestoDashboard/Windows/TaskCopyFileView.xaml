@@ -15,30 +15,30 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
-            <Label Content="Description:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="Description:" Width="130" />
             <TextBox x:Name="txtDescription" Text="{Binding TaskCopyFileCopy.Description}" Width="340"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
-            <Label Content="SourcePath:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="SourcePath:" Width="130" />
             <TextBox x:Name="txtSourcePath" Text="{Binding TaskCopyFileCopy.SourcePath}" Width="315"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding BrowseSourcePathCommand}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="2">
-            <Label Content="SourceFileName:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="SourceFileName:" Width="130" />
             <TextBox x:Name="txtSourceFileName" Text="{Binding TaskCopyFileCopy.SourceFileName}" Width="315"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding BrowseSourceFileCommand}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="3">
-            <Label Content="DestinationPath:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="DestinationPath:" Width="130" />
             <TextBox x:Name="txtDestinationPath" Text="{Binding TaskCopyFileCopy.DestinationPath}" Width="315"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding BrowseDestinationPathCommand}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="4">
-            <Label Content="FailureCausesAllStop:" Width="130" />
+            <Label Style="{StaticResource StandardLabel}" Content="FailureCausesAllStop:" Width="130" />
             <CheckBox x:Name="chkFailureCausesAllStop" IsChecked="{Binding TaskCopyFileCopy.FailureCausesAllStop}" VerticalAlignment="Center"/>
         </StackPanel>
 

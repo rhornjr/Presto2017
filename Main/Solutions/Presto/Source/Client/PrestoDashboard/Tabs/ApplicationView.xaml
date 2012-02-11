@@ -30,7 +30,7 @@
         </Grid.ColumnDefinitions>
         
         <DockPanel Grid.Column="0" LastChildFill="True">
-            <Label DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>            
+            <Label Style="{StaticResource StandardLabel}" DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>            
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
@@ -58,19 +58,19 @@
                     <ColumnDefinition Width="140"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
-                <Label Grid.Row="0" Grid.ColumnSpan="2" Content="Selected Application" HorizontalAlignment="Center"/>
 
-                <Label Grid.Column="0" Grid.Row="1" Content="Name: "/>
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application" HorizontalAlignment="Center"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplication.Name}"/>
 
-                <Label Grid.Column="0" Grid.Row="2" Content="Version: "/>
+                <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardLabel}" Content="Version: "/>
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplication.Version}"/>
 
-                <Label Grid.Column="0" Grid.Row="3" Content="Force installation: "/>                    
+                <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource StandardLabel}" Content="Force installation: "/>                    
 
                 <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
-                    <Label Content="{Binding SelectedApplication.ForceInstallation}" Width="280"/>
+                    <Label Style="{StaticResource StandardLabel}" Content="{Binding SelectedApplication.ForceInstallation}" Width="280"/>
                     <Button Content="..." Height="25" Width="25" Command="{Binding ForceInstallationCommand}" />
                 </StackPanel>
 
@@ -102,7 +102,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Tasks:"/>
+                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Tasks:"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding AllApplicationTasks}"
                       ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedTasks}"

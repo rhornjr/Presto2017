@@ -11,7 +11,7 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0">
-            <Label DockPanel.Dock="Top" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
+            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"
                      SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
         </DockPanel>

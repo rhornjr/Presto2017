@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0" LastChildFill="True">
-            <Label DockPanel.Dock="Top" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
+            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="120" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
@@ -64,12 +64,12 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.ColumnSpan="2" Content="Selected Group" HorizontalAlignment="Center"/>
+                    <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Group" HorizontalAlignment="Center"/>
 
-                    <Label Grid.Column="0" Grid.Row="1" Content="Name: "/>
+                    <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                     <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedCustomVariableGroup.Name}"/>
 
-                    <Label Grid.Column="0" Grid.Row="2" Content="Application: "/>
+                    <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardLabel}" Content="Application: "/>
 
                     <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
                         <TextBox Text="{Binding SelectedCustomVariableGroup.Application.Name}"
@@ -95,7 +95,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Custom Variables" HorizontalAlignment="Center"/>            
+                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variables" HorizontalAlignment="Center"/>            
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"                      
                       SelectedItem="{Binding SelectedCustomVariable}">

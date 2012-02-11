@@ -14,12 +14,12 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
-            <Label Content="Key:" Width="50" />
+            <Label Style="{StaticResource StandardLabel}" Content="Key:" Width="50" />
             <TextBox Name="variableKey" Text="{Binding CustomVariable.Key}" Width="420"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
-            <Label Content="Value:" Width="50" />
+            <Label Style="{StaticResource StandardLabel}" Content="Value:" Width="50" />
             <TextBox Text="{Binding CustomVariable.Value}" Width="420"/>
         </StackPanel>
 

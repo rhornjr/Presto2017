@@ -13,13 +13,13 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
-            <Label Content="Force time:" Width="85" />
+            <Label Style="{StaticResource StandardLabel}" Content="Force time:" Width="85" />
             <TextBox Text="{Binding ForceInstallation.ForceInstallationTime}" Width="160"/>
             <Button Content="!" Command="{Binding ForceInstallationNowCommand}" Height="20" Width="25" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
-            <Label Content="Environment:" Width="85" />
+            <Label Style="{StaticResource StandardLabel}" Content="Environment:" Width="85" />
             <ComboBox ItemsSource="{Binding DeploymentEnvironments}" SelectedItem="{Binding SelectedDeploymentEnvironment}" Width="185"/>
         </StackPanel>
 

@@ -21,8 +21,8 @@
         <Button Grid.Row="0" Width="120" Content="Send Ping Request" Style="{StaticResource StandardButton}" Command="{Binding PingCommand}"/>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label Content="Ping request time: " VerticalAlignment="Center"/>
-            <Label Content="{Binding PingRequest.RequestTime}" Width="240" VerticalAlignment="Center" ContentStringFormat="G"/>
+            <Label Style="{StaticResource StandardLabel}" Content="Ping request time: " VerticalAlignment="Center"/>
+            <Label Style="{StaticResource StandardLabel}" Content="{Binding PingRequest.RequestTime}" Width="240" VerticalAlignment="Center" ContentStringFormat="G"/>
         </StackPanel>
         
         <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"

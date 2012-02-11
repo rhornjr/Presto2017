@@ -6,19 +6,36 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-        <vmmain:MainWindowViewModel x:Key="MainWindowViewModel"/>
-        <vmtab:ApplicationViewModel x:Key="ApplicationViewModel"/>
-        <vmtab:ApplicationServerViewModel x:Key="ApplicationServerViewModel"/>
-        <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>
-        <vmtab:InstallationSummaryViewModel x:Key="InstallationSummaryViewModel"/>
-        <vmtab:LogMessageViewModel x:Key="LogMessageViewModel"/>
-        <vmtab:PingViewModel x:Key="PingViewModel"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\ShinyBlue.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        
+        
+            <vmmain:MainWindowViewModel x:Key="MainWindowViewModel"/>
+            <vmtab:ApplicationViewModel x:Key="ApplicationViewModel"/>
+            <vmtab:ApplicationServerViewModel x:Key="ApplicationServerViewModel"/>
+            <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>
+            <vmtab:InstallationSummaryViewModel x:Key="InstallationSummaryViewModel"/>
+            <vmtab:LogMessageViewModel x:Key="LogMessageViewModel"/>
+            <vmtab:PingViewModel x:Key="PingViewModel"/>
 
-        <Style x:Key="StandardButton" TargetType="Button">
-            <Setter Property="Width" Value="70" />
-            <Setter Property="Height" Value="25" />
-            <Setter Property="Margin" Value="5" />
-        </Style>
+            <Style x:Key="StandardLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                <Setter Property="Foreground" Value="Blue" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StandardCheckBox" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                <Setter Property="Foreground" Value="Black" />
+            </Style>
+
+            <Style x:Key="StandardButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Width" Value="70" />
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Margin" Value="5" />
+            </Style>
+
+        </ResourceDictionary>
         
     </Application.Resources>
 </Application>

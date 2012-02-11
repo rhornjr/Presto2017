@@ -21,7 +21,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<CustomVariableGroup>>(() =>
             {
                 IEnumerable<CustomVariableGroup> customGroups =
-                    QueryAndCacheEtags(session => session.Query<CustomVariableGroup>()
+                    QueryAndSetEtags(session => session.Query<CustomVariableGroup>()
                     .Include(x => x.ApplicationId)).AsEnumerable().Cast<CustomVariableGroup>();
 
                 foreach (CustomVariableGroup customGroup in customGroups)
@@ -43,7 +43,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<CustomVariableGroup>(() =>
             {
                 CustomVariableGroup customVariableGroup =
-                    QuerySingleResultAndCacheEtag(session => session.Query<CustomVariableGroup>()
+                    QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
                         .Include(x => x.ApplicationId)
                         .Where(customGroup => customGroup.Name == name).FirstOrDefault())
                         as CustomVariableGroup;
@@ -64,7 +64,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<CustomVariableGroup>(() =>
             {
                 CustomVariableGroup customVariableGroup = 
-                    QuerySingleResultAndCacheEtag(session => session.Query<CustomVariableGroup>()
+                    QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
                         .Include(x => x.ApplicationId)
                         .Where(customGroup => customGroup.ApplicationId == application.Id).FirstOrDefault())
                         as CustomVariableGroup;
@@ -81,7 +81,7 @@ namespace PrestoCommon.Data.RavenDb
 
             if (!string.IsNullOrWhiteSpace(customVariableGroup.ApplicationId))
             {
-                customVariableGroup.Application = QuerySingleResultAndCacheEtag(session => session.Load<Application>(customVariableGroup.ApplicationId)) as Application;
+                customVariableGroup.Application = QuerySingleResultAndSetEtag(session => session.Load<Application>(customVariableGroup.ApplicationId)) as Application;
             }
         }
 

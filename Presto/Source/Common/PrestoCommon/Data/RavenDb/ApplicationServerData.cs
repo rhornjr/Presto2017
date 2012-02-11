@@ -27,7 +27,7 @@ namespace PrestoCommon.Data.RavenDb
             {
                 return ExecuteQuery<IEnumerable<ApplicationServer>>(() =>
                 {
-                    IEnumerable<ApplicationServer> appServers = QueryAndCacheEtags(session =>
+                    IEnumerable<ApplicationServer> appServers = QueryAndSetEtags(session =>
                         session.Query<ApplicationServer>()
                         .Include(x => x.CustomVariableGroupIds)
                         .Include(x => x.ApplicationIdsForAllAppWithGroups)
@@ -60,7 +60,7 @@ namespace PrestoCommon.Data.RavenDb
 
             return ExecuteQuery<ApplicationServer>(() =>
             {
-                ApplicationServer appServer = QuerySingleResultAndCacheEtag(session =>
+                ApplicationServer appServer = QuerySingleResultAndSetEtag(session =>
                     session.Query<ApplicationServer>()
                     .Include(x => x.CustomVariableGroupIds)
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
@@ -84,25 +84,25 @@ namespace PrestoCommon.Data.RavenDb
             appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>();
             foreach (string groupId in appServer.CustomVariableGroupIds)
             {                
-                appServer.CustomVariableGroups.Add(QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
+                appServer.CustomVariableGroups.Add(QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
             }
 
             foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
             {
-                appGroup.Application = QuerySingleResultAndCacheEtag(session => session.Load<Application>(appGroup.ApplicationId)) as Application;
+                appGroup.Application = QuerySingleResultAndSetEtag(session => session.Load<Application>(appGroup.ApplicationId)) as Application;
                 if (appGroup.CustomVariableGroupId == null) { continue; }
-                appGroup.CustomVariableGroup = QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
+                appGroup.CustomVariableGroup = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
             }
 
             foreach (ApplicationWithOverrideVariableGroup group in appServer.ApplicationWithGroupToForceInstallList)
             {
                 group.Application =
-                    QuerySingleResultAndCacheEtag(session => session.Load<Application>(group.ApplicationId)) as Application;
+                    QuerySingleResultAndSetEtag(session => session.Load<Application>(group.ApplicationId)) as Application;
 
                 if (group.CustomVariableGroupId != null)
                 {
                     group.CustomVariableGroup =
-                        QuerySingleResultAndCacheEtag(session => session.Load<CustomVariableGroup>(group.CustomVariableGroupId))
+                        QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(group.CustomVariableGroupId))
                         as CustomVariableGroup;
                 }
             }

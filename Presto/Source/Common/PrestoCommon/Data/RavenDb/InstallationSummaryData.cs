@@ -24,7 +24,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
             {
                 IQueryable<EntityBase> installationSummaryList =
-                    QueryAndDoNotCacheEtags(session => session.Query<InstallationSummary>()
+                    QueryAndSetEtags(session => session.Query<InstallationSummary>()
                     .Where(summary => summary.ApplicationServerId == appServer.Id &&
                     summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id));
 
@@ -64,7 +64,7 @@ namespace PrestoCommon.Data.RavenDb
                     // the OrderByDescending() and Take() were Queryable methods, and worked correctly. So, it
                     // looks like we could have used IEnumerable everywhere, as long as we used Query here.
                     IQueryable<EntityBase> installationSummaries =
-                        QueryAndDoNotCacheEtags(session => session.Query<InstallationSummary>()
+                        QueryAndSetEtags(session => session.Query<InstallationSummary>()
                         .Include(x => x.ApplicationServerId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
@@ -76,17 +76,17 @@ namespace PrestoCommon.Data.RavenDb
                     foreach (InstallationSummary summary in installationSummaries)
                     {
                         summary.ApplicationServer =
-                            QuerySingleResultAndDoNotCacheEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
+                            QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
                             as ApplicationServer;
 
                         summary.ApplicationWithOverrideVariableGroup.Application =
-                            QuerySingleResultAndDoNotCacheEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
+                            QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
                             as Application;
 
                         if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { continue; }
 
                         summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
-                            QuerySingleResultAndDoNotCacheEtag(session => session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+                            QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
                             as CustomVariableGroup;
                     }
 

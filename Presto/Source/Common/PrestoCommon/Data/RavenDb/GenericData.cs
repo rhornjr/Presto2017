@@ -20,18 +20,11 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (objectToSave == null) { throw new ArgumentNullException("objectToSave"); }
 
-            Guid eTag = Guid.Empty;
-
-            if (objectToSave.Id != null)
-            {
-                eTag = RetrieveEtagFromCache(objectToSave);
-            }
-
             using (IDocumentSession session = GetOptimisticSession())
             {
-                session.Store(objectToSave, eTag);
+                session.Store(objectToSave, objectToSave.Etag);
                 session.SaveChanges();
-                CacheEtag(objectToSave, session);  // We have a new eTag after saving.
+                SetEtag(objectToSave, session);  // We have a new eTag after saving.
             }
         }
 
@@ -57,7 +50,7 @@ namespace PrestoCommon.Data.RavenDb
 
             using (IDocumentSession session = Database.OpenSession())
             {
-                session.Advanced.DatabaseCommands.Delete(objectToDelete.Id, RetrieveEtagFromCache(objectToDelete));
+                session.Advanced.DatabaseCommands.Delete(objectToDelete.Id, objectToDelete.Etag);
                 session.SaveChanges();
             }
         }

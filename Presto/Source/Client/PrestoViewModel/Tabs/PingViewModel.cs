@@ -196,6 +196,15 @@ namespace PrestoViewModel.Tabs
             // Don't run forever
             if (DateTime.Now.Subtract(this._timerStartTime).Minutes >= TotalTimerRunTimeInMinutes) { this._timer = null; }
 
+            PingRequest latestPingRequest = PingRequestLogic.GetMostRecent();
+            if (this.PingRequest.Id != latestPingRequest.Id && latestPingRequest.RequestTime > this.PingRequest.RequestTime)
+            {
+                // Note: The reason we check the request time is that we could actually get an older ping request, from the
+                //       DB, when the user creates a ping.
+                this.PingRequest = latestPingRequest;
+                ClearResponseTimes();
+            }
+
             if (this.PingRequest == null) { return; }
 
             try

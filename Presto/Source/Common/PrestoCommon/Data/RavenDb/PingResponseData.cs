@@ -35,7 +35,7 @@ namespace PrestoCommon.Data.RavenDb
         {
             return ExecuteQuery<PingResponse>(() =>
             {
-                PingResponse pingResponse = QuerySingleResultAndDoNotCacheEtag(session => session.Query<PingResponse>()
+                PingResponse pingResponse = QuerySingleResultAndSetEtag(session => session.Query<PingResponse>()
                     .Include(response => response.ApplicationServerId)
                     .Where(response => response.PingRequestId == pingRequest.Id && response.ApplicationServerId == appServer.Id)
                     .FirstOrDefault()) as PingResponse;
@@ -55,7 +55,7 @@ namespace PrestoCommon.Data.RavenDb
         {
             return ExecuteQuery<IEnumerable<PingResponse>>(() =>
             {
-                IEnumerable<PingResponse> pingResponses = QueryAndDoNotCacheEtags(session => session.Query<PingResponse>()
+                IEnumerable<PingResponse> pingResponses = QueryAndSetEtags(session => session.Query<PingResponse>()
                     .Include(x => x.ApplicationServerId)
                     .Where(x => x.PingRequestId == pingRequest.Id))
                     .AsEnumerable().Cast<PingResponse>();
@@ -71,7 +71,7 @@ namespace PrestoCommon.Data.RavenDb
 
         private static void HydratePingResponse(PingResponse pingResponse)
         {
-            pingResponse.ApplicationServer = QuerySingleResultAndDoNotCacheEtag(
+            pingResponse.ApplicationServer = QuerySingleResultAndSetEtag(
                 session => session.Load<ApplicationServer>(pingResponse.ApplicationServerId)) as ApplicationServer;
         }
     }

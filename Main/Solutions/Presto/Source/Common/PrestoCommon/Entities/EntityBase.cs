@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace PrestoCommon.Entities
 {
     /// <summary>
@@ -16,5 +17,10 @@ namespace PrestoCommon.Entities
         /// The id.
         /// </value>
         public string Id { get; set; }  // Required field for all objects with RavenDB.
+
+        /// <summary>
+        /// Raven's version of VersionNumber. Used for optimistic concurrency.
+        /// </summary>
+        public Guid Etag { get; set; }
     }
 }

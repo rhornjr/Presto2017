@@ -4,6 +4,7 @@
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
+        FocusManager.FocusedElement="{Binding ElementName=variableKey}"
         Title="CustomVariableView" Width="510">
     <Grid Margin="5" HorizontalAlignment="Center">
         <Grid.RowDefinitions>
@@ -14,7 +15,7 @@
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
             <Label Content="Key:" Width="50" />
-            <TextBox Text="{Binding CustomVariable.Key}" Width="420"/>
+            <TextBox Name="variableKey" Text="{Binding CustomVariable.Key}" Width="420"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">

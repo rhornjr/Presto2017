@@ -22,7 +22,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Label Content="Ping request time: " VerticalAlignment="Center"/>
-            <Label Content="{Binding PingRequest.RequestTime}" Width="240" VerticalAlignment="Center"/>
+            <Label Content="{Binding PingRequest.RequestTime}" Width="240" VerticalAlignment="Center" ContentStringFormat="G"/>
         </StackPanel>
         
         <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"

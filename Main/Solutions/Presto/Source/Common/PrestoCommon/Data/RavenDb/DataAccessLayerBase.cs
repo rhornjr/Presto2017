@@ -14,7 +14,6 @@ namespace PrestoCommon.Data.RavenDb
     /// </summary>
     public abstract class DataAccessLayerBase
     {
-        private static Dictionary<string, Guid> _entityIdAndEtagMapping = new Dictionary<string, Guid>();
         private static DocumentStore _database = GetDatabase();
 
         [ThreadStatic]
@@ -55,7 +54,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <summary>
         /// Closes the session.
         /// </summary>
-        protected void CloseSession()
+        protected void PossiblyCloseSession()
         {
             // Only close the session for the instance that opened it originally.
             if (_isInitialDalInstance == true)
@@ -71,9 +70,6 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="func">The action.</param>
         protected T ExecuteQuery<T>(Func<T> func)
         {
-            // ToDo: I believe this method is now unnecessary. If we add the try/finally to QuerySingleResultAndCacheEtag()
-            //       and QueryAndCacheEtags(), then the DAL methods can just call those directly, instead of going through
-            //       this method.
             if (func == null) { throw new ArgumentNullException("func"); }
 
             try
@@ -83,7 +79,7 @@ namespace PrestoCommon.Data.RavenDb
             finally
             {
                 Debug.WriteLine("Number of requests just before closing session: " + _session.Advanced.NumberOfRequests);
-                CloseSession();
+                PossiblyCloseSession();
             }
         }
 
@@ -92,27 +88,13 @@ namespace PrestoCommon.Data.RavenDb
         /// </summary>
         /// <param name="func">The func.</param>
         /// <returns></returns>
-        protected static EntityBase QuerySingleResultAndCacheEtag(Func<IDocumentSession, EntityBase> func)
+        protected static EntityBase QuerySingleResultAndSetEtag(Func<IDocumentSession, EntityBase> func)
         {
             if (func == null) { throw new ArgumentNullException("func"); }
 
             EntityBase entity = func.Invoke(_session);
             if (entity == null) { return null; }
-            CacheEtag(entity, _session);
-            return entity;
-        }
-
-        /// <summary>
-        /// Executes the query without caching etags.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        protected static EntityBase QuerySingleResultAndDoNotCacheEtag(Func<IDocumentSession, EntityBase> func)
-        {
-            if (func == null) { throw new ArgumentNullException("func"); }
-
-            EntityBase entity = func.Invoke(_session);
-            if (entity == null) { return null; }
+            SetEtag(entity, _session);
             return entity;
         }
 
@@ -123,27 +105,12 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         // ToDo: Look into this suppression.
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected static IQueryable<EntityBase> QueryAndCacheEtags(Func<IDocumentSession, IQueryable<EntityBase>> func)
+        protected static IQueryable<EntityBase> QueryAndSetEtags(Func<IDocumentSession, IQueryable<EntityBase>> func)
         {
             if (func == null) { throw new ArgumentNullException("func"); }
 
             IQueryable<EntityBase> entities = func.Invoke(_session);
-            CacheEtags(entities, _session);
-            return entities;
-        }
-
-        /// <summary>
-        /// Executes the query without caching etags.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected static IQueryable<EntityBase> QueryAndDoNotCacheEtags(Func<IDocumentSession, IQueryable<EntityBase>> func)
-        {
-            if (func == null) { throw new ArgumentNullException("func"); }
-
-            IQueryable<EntityBase> entities = func.Invoke(_session);
-            
+            SetEtags(entities, _session);
             return entities;
         }
 
@@ -152,14 +119,14 @@ namespace PrestoCommon.Data.RavenDb
         /// </summary>
         /// <param name="entityBases">The entity bases.</param>
         /// <param name="session">The session.</param>
-        protected static void CacheEtags(IEnumerable<EntityBase> entityBases, IDocumentSession session)
+        protected static void SetEtags(IEnumerable<EntityBase> entityBases, IDocumentSession session)
         {
             if (entityBases == null) { throw new ArgumentNullException("entityBases"); }
             if (session == null) { throw new ArgumentNullException("session"); }
 
             foreach (EntityBase entityBase in entityBases)
             {
-                CacheEtag(entityBase, session);
+                SetEtag(entityBase, session);
             }
         }
 
@@ -168,33 +135,12 @@ namespace PrestoCommon.Data.RavenDb
         /// </summary>
         /// <param name="entityBase">The entity base.</param>
         /// <param name="session">The session.</param>
-        protected static void CacheEtag(EntityBase entityBase, IDocumentSession session)
+        protected static void SetEtag(EntityBase entityBase, IDocumentSession session)
         {
             if (entityBase == null) { throw new ArgumentNullException("entityBase"); }
             if (session == null) { throw new ArgumentNullException("session"); }
 
-            Guid eTag = (Guid)session.Advanced.GetEtagFor(entityBase);
-
-            if (_entityIdAndEtagMapping.ContainsKey(entityBase.Id))
-            {
-                _entityIdAndEtagMapping[entityBase.Id] = eTag;  // Replace/update existing
-                return; 
-            }
-            _entityIdAndEtagMapping.Add(entityBase.Id, eTag);  // Add new
-        }
-
-        /// <summary>
-        /// Retrieves the etag from cache.
-        /// </summary>
-        /// <param name="entityBase">The entity base.</param>
-        /// <returns></returns>
-        protected static Guid RetrieveEtagFromCache(EntityBase entityBase)
-        {
-            if (entityBase == null) { throw new ArgumentNullException("entityBase"); }
-
-            if (entityBase.Id == null || !_entityIdAndEtagMapping.ContainsKey(entityBase.Id)) { return Guid.Empty; }
-
-            return _entityIdAndEtagMapping[entityBase.Id];
+            entityBase.Etag = (Guid)session.Advanced.GetEtagFor(entityBase);
         }
 
         private static DocumentStore GetDatabase()

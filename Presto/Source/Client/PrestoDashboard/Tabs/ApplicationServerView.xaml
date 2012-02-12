@@ -15,11 +15,6 @@
          the sort doesn't get updated. That's because CollectionViewSource doesn't 
          implement INotifyPropertyChanged. -->
     <UserControl.Resources>
-        <CollectionViewSource x:Key="SortedServers" Source="{Binding ApplicationServers}">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
-            </CollectionViewSource.SortDescriptions>            
-        </CollectionViewSource>
 
         <!-- I got this solution from http://bea.stollnitz.com/blog/?p=18 -->
 
@@ -27,6 +22,9 @@
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="DeploymentEnvironment"/>
             </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
         <!-- Our leaf nodes (server names) -->
@@ -98,7 +96,7 @@
                               SelectedItem="{Binding SelectedApplicationServer.DeploymentEnvironment}" Width="110"
                               HorizontalAlignment="Left"/>
                     <CheckBox Style="{StaticResource StandardCheckBox}" Content="Enable debug logging" IsChecked="{Binding SelectedApplicationServer.EnableDebugLogging}"
-                              FlowDirection="RightToLeft" VerticalAlignment="Center"/>
+                              FlowDirection="LeftToRight" VerticalAlignment="Center" Width="140" HorizontalAlignment="Right"/>
                 </DockPanel>
                 
                 <Button Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />

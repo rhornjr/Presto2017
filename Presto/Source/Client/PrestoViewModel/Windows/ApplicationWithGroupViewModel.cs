@@ -132,12 +132,12 @@ namespace PrestoViewModel.Windows
 
         private void SelectGroup()
         {
-            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel();
+            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(false);
             MainWindowViewModel.ViewLoader.ShowDialog(groupViewModel);
 
             if (groupViewModel.UserCanceled) { return; }
             
-            this.ApplicationWithGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroup;
+            this.ApplicationWithGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroups[0];
         }
 
         private void RemoveGroup()

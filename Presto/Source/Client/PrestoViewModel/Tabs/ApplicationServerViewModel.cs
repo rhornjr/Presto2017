@@ -436,20 +436,20 @@ namespace PrestoViewModel.Tabs
 
         private void AddVariableGroup()
         {
-            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel();
+            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel(true);
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
             if (viewModel.UserCanceled) { return; }
 
             // Servers shouldn't reference custom variable groups that are associated with an application.
-            if (viewModel.SelectedCustomVariableGroup.Application != null)
+            if (viewModel.SelectedCustomVariableGroups.Any(group => group.Application != null))
             {
                 ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.CannotUseGroup;
                 return;
             }
 
-            this.SelectedApplicationServer.CustomVariableGroups.Add(viewModel.SelectedCustomVariableGroup);
+            viewModel.SelectedCustomVariableGroups.ForEach(group => this.SelectedApplicationServer.CustomVariableGroups.Add(group));
 
             SaveServer();
         }

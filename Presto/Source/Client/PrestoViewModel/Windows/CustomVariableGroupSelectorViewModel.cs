@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
@@ -16,8 +17,9 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class CustomVariableGroupSelectorViewModel : ViewModelBase
     {
+        private bool _allowMultipleSelections;
         private Collection<CustomVariableGroup> _customVariableGroups;
-        private CustomVariableGroup _selectedCustomVariableGroup;
+        private List<CustomVariableGroup> _selectedCustomVariableGroups = new List<CustomVariableGroup>();
 
         /// <summary>
         /// Gets the add command.
@@ -57,33 +59,47 @@ namespace PrestoViewModel.Windows
         /// <value>
         /// The selected custom variable group.
         /// </value>
-        public CustomVariableGroup SelectedCustomVariableGroup
+        public List<CustomVariableGroup> SelectedCustomVariableGroups
         {
-            get { return this._selectedCustomVariableGroup; }
+            get { return this._selectedCustomVariableGroups; }
 
             set
             {
-                this._selectedCustomVariableGroup = value;
-                this.NotifyPropertyChanged(() => this.SelectedCustomVariableGroup);
+                this._selectedCustomVariableGroups = value;
+                this.NotifyPropertyChanged(() => this.SelectedCustomVariableGroups);
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomVariableGroupSelectorViewModel"/> class.
         /// </summary>
-        public CustomVariableGroupSelectorViewModel()
+        public CustomVariableGroupSelectorViewModel(bool allowMultipleSelections)
         {
             // ToDo: This constructor should take a list of existing custom variable groups that are already associated
             //       with a server so we don't display them.
+            this._allowMultipleSelections = allowMultipleSelections;
             Initialize();
         }
 
         private void Initialize()
         {
-            this.AddCommand    = new RelayCommand(_ => Add());
+            this.AddCommand    = new RelayCommand(_ => Add(), _ => CanAdd());
             this.CancelCommand = new RelayCommand(_ => Cancel());
 
             LoadCustomVariableGroups();
+        }
+
+        private bool CanAdd()
+        {
+            if (this.SelectedCustomVariableGroups == null) { return false; }
+
+            if (this._allowMultipleSelections)
+            {
+                return this.SelectedCustomVariableGroups.Count >= 1;
+            }
+
+            // Only allow one selected item.
+            return this.SelectedCustomVariableGroups.Count == 1;
         }
 
         private void Add()

@@ -23,7 +23,7 @@
                     <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="150" SortMemberPath="ApplicationServer.Name"/>
                     <DataGridTextColumn Binding="{Binding Path=ApplicationWithOverrideVariableGroup}" Header="Application" Width="150" SortMemberPath="ApplicationWithOverrideVariableGroup.Application.Name"/>
                     <DataGridTextColumn Binding="{Binding Path=InstallationStart}" Header="Start" Width="150"
-                                        SortDirection="Ascending" SortMemberPath="{Binding Path=InstallationStart}"/>
+                                        SortDirection="Ascending" SortMemberPath="InstallationStart"/>
                     <DataGridTextColumn Binding="{Binding Path=InstallationEnd}" Header="End" Width="150"/>
                     <DataGridTextColumn Binding="{Binding Path=InstallationResult}" Header="Result" Width="*"/>
                 </DataGrid.Columns>

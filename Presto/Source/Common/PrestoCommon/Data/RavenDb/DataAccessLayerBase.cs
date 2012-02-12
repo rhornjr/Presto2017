@@ -91,7 +91,7 @@ namespace PrestoCommon.Data.RavenDb
         protected static EntityBase QuerySingleResultAndSetEtag(Func<IDocumentSession, EntityBase> func)
         {
             if (func == null) { throw new ArgumentNullException("func"); }
-
+            
             EntityBase entity = func.Invoke(_session);
             if (entity == null) { return null; }
             SetEtag(entity, _session);

@@ -19,7 +19,7 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="appServer"></param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, Entities.ApplicationWithOverrideVariableGroup appWithGroup)
+        public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
             {
@@ -86,7 +86,14 @@ namespace PrestoCommon.Data.RavenDb
                         if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { continue; }
 
                         summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
-                            QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+                            QuerySingleResultAndSetEtag(session => {
+                                if (session.Advanced.IsLoaded(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+                                {
+                                    return session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
+                                }
+                                return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
+                                ;
+                            })
                             as CustomVariableGroup;
                     }
 

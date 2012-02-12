@@ -50,13 +50,11 @@
         
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Application Servers" HorizontalAlignment="Center"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="40" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddServerCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteServerCommand}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshServersCommand}" />
+                    <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteServerCommand}" />-->
                 </StackPanel>
             </StackPanel>
 

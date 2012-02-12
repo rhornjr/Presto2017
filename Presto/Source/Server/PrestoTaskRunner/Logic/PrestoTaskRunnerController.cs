@@ -26,7 +26,6 @@ namespace PrestoTaskRunner.Logic
         public void Start()
         {
             Initialize();
-            CheckForApplicationsToInstall();
         }
 
         /// <summary>

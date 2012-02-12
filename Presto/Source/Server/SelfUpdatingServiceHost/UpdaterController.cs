@@ -126,7 +126,7 @@ namespace SelfUpdatingServiceHost
                     updaterManifest = xmlSerializer.Deserialize(fileStream) as UpdaterManifest;
                 }
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
                 // This usually means the manifest file was locked, so return null and we'll just try again at the next interval.
                 LogUtility.LogException(ex);

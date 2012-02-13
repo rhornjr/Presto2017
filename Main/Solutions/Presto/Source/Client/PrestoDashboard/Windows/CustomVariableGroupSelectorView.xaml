@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
         WindowStartupLocation="CenterScreen"
+        Background="#FF595959"
         ResizeMode="NoResize"
         Title="CustomVariableGroupSelectorView" Height="400" Width="300">
     <Grid>

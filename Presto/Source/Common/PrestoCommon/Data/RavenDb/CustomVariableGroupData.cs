@@ -93,6 +93,8 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (customVariableGroup == null) { throw new ArgumentNullException("customVariableGroup"); }
 
+            customVariableGroup.ApplicationId = null;  // Default. We'll add it back, below, if there is still an app associated with the group.
+
             if (customVariableGroup.Application != null)
             {
                 customVariableGroup.ApplicationId = customVariableGroup.Application.Id;

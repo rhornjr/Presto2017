@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IStartStop.cs" />
+    <Compile Include="ServerCommonLogUtility.cs" />
+    <Compile Include="PrestoServerCommonUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -2,15 +2,9 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace SelfUpdatingServiceHost
+namespace PrestoServerCommon
 {
-    // Note: This class was copied from Presto.Common. We can't use Presto references in this app because Presto Task Runner
-    //       would use Presto.Common in this app's folder, and not the one in the Presto Task Runner folder.
-
-    /// <summary>
-    /// Quick and dirty logger to get us going
-    /// </summary>
-    public static class LogUtility
+    public static class ServerCommonLogUtility
     {
         /// <summary>
         /// Logs the information.

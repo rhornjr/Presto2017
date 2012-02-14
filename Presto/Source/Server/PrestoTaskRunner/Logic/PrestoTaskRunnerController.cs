@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
@@ -8,6 +7,7 @@ using System.Timers;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using PrestoServerCommon;
 using PrestoServerCommon.Interfaces;
 
 namespace PrestoTaskRunner.Logic
@@ -17,8 +17,26 @@ namespace PrestoTaskRunner.Logic
     /// </summary>
     public class PrestoTaskRunnerController : MarshalByRefObject, IStartStop, IDisposable
     {
+        private string _commentFromServiceHost = string.Empty;
         private System.Timers.Timer _timer;
         private static readonly object _locker = new object();
+
+        /// <summary>
+        /// Gets or sets the comment from service host. This comment is displayed in a ping response. It's typically
+        /// used for the service host to pass in its file version, so it can be displayed with the ping response.
+        /// </summary>
+        /// <value>
+        /// The comment from service host.
+        /// </value>
+        public string CommentFromServiceHost
+        {
+            get { return this._commentFromServiceHost; }
+
+            set
+            {
+                this._commentFromServiceHost = value;
+            }
+        }
 
         /// <summary>
         /// Starts this instance.
@@ -33,7 +51,9 @@ namespace PrestoTaskRunner.Logic
         /// </summary>
         public void Stop()
         {
-            this._timer.Stop();            
+            LogUtility.LogInformation("PrestoTaskRunnerController stopping timer.");
+            this._timer.Stop();
+            Thread.Sleep(2000);  // HACK: Give threads a chance to complete before the self-updating service unloads this app domain.
         }
 
         /// <summary>
@@ -73,7 +93,7 @@ namespace PrestoTaskRunner.Logic
             }
         }
 
-        private static void AnswerPingRequest()
+        private void AnswerPingRequest()
         {
             try
             {
@@ -87,9 +107,7 @@ namespace PrestoTaskRunner.Logic
 
                 if (pingResponse != null) { return; }  // Already responded.
 
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                string comment = "PTR file version " + fileVersionInfo.ProductVersion;
+                string comment = "PTR file version " + PrestoServerCommonUtility.GetFileVersion(Assembly.GetExecutingAssembly()) + " -- " + this.CommentFromServiceHost;
 
                 pingResponse = new PingResponse(pingRequest.Id, DateTime.Now, appServer, comment);
 
@@ -143,6 +161,6 @@ namespace PrestoTaskRunner.Logic
             if (disposing == false) { return; }
 
             if (this._timer != null) { this._timer.Dispose(); }
-        }
+        }        
     }
 }

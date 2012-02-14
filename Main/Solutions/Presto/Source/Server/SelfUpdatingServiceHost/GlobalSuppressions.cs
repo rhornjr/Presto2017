@@ -9,3 +9,6 @@
 // You do not need to add suppressions to this file manually.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IStartStop", Scope = "member", Target = "SelfUpdatingServiceHost.UpdaterController.#StopApp()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UpdaterController", Scope = "member", Target = "SelfUpdatingServiceHost.UpdaterController.#Stop()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "updaterController", Scope = "member", Target = "SelfUpdatingServiceHost.SelfUpdatingService.#OnStop()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IStartStop", Scope = "member", Target = "SelfUpdatingServiceHost.UpdaterController.#Stop()")]

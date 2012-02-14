@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.Remoting;
 using System.Threading;
 using System.Xml.Serialization;
+using PrestoServerCommon;
 using PrestoServerCommon.Interfaces;
 
 namespace SelfUpdatingServiceHost
@@ -34,6 +35,13 @@ namespace SelfUpdatingServiceHost
             this._timer = new Timer(this.Process, this._autoResetEvent, 0, checkForNewBinariesInterval);
         }
 
+        public void Stop()
+        {
+            ServerCommonLogUtility.LogInformation("Stopping timer in UpdaterController and stopping IStartStop app.");
+            if (this._timer != null) { this._timer.Dispose(); }
+            StopApp();
+        }
+
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UpdaterController")]
         private void InitializeVariables()
         {
@@ -43,7 +51,7 @@ namespace SelfUpdatingServiceHost
             this._fullyQualifiedClassName = ConfigurationManager.AppSettings["FullyQualifiedClassName"];
             this._sourceBinaryPath        = ConfigurationManager.AppSettings["SourceBinaryPath"];
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+            ServerCommonLogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 "UpdaterController initialized." + Environment.NewLine +
                 "App name: {0}" + Environment.NewLine +
                 "Running path: {1}" + Environment.NewLine +
@@ -79,8 +87,8 @@ namespace SelfUpdatingServiceHost
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
-                if (this._timer != null) { this._timer.Dispose(); }
+                // Just log and keep trying to process (ie: don't stop timer).
+                ServerCommonLogUtility.LogException(ex);                
             }
             finally
             {
@@ -92,7 +100,7 @@ namespace SelfUpdatingServiceHost
         {
             if (this._initialRunningOfAppOccurred) { return; }
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+            ServerCommonLogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 "Loading and running {0} for the first time...",
                 this._appName));
 
@@ -107,7 +115,7 @@ namespace SelfUpdatingServiceHost
 
             if (!File.Exists(filePathAndName))
             {
-                LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
+                ServerCommonLogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
                     "The updater manifest file was not found. This file is necessary for the program to run: {0}",
                     filePathAndName));
                 return null;
@@ -129,7 +137,7 @@ namespace SelfUpdatingServiceHost
             catch (Exception ex)
             {
                 // This usually means the manifest file was locked, so return null and we'll just try again at the next interval.
-                LogUtility.LogException(ex);
+                ServerCommonLogUtility.LogException(ex);
                 return null;
             }
 
@@ -142,7 +150,7 @@ namespace SelfUpdatingServiceHost
 
             if (updaterManifest.Version != mostRecentlyInstalledVersion)
             {
-                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                ServerCommonLogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                     "New version ({0}) of {1} detected. Old version was {2}. App will be updated and restarted.",
                     updaterManifest.Version,
                     this._appName,
@@ -177,13 +185,13 @@ namespace SelfUpdatingServiceHost
         {
             if (!Directory.Exists(this._runningAppPath))
             {
-                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                ServerCommonLogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                     "Running app path did not exist. Creating it: {0}",
                     this._runningAppPath));
                 Directory.CreateDirectory(this._runningAppPath);
             }
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+            ServerCommonLogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 "Copying files." + Environment.NewLine +
                 "From: {0}" + Environment.NewLine +
                 "To: {1}",
@@ -202,7 +210,7 @@ namespace SelfUpdatingServiceHost
         {
             if (!Directory.Exists(this._runningAppPath)) { return; }
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+            ServerCommonLogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 "Deleting all files in {0}",
                 this._runningAppPath));
 
@@ -232,10 +240,12 @@ namespace SelfUpdatingServiceHost
             
             this._appDomain = AppDomain.CreateDomain(this._appName, AppDomain.CurrentDomain.Evidence, appDomainSetup);
             this._startStopControllerToRun = (IStartStop)this._appDomain.CreateInstanceFromAndUnwrap(assemblyName, this._fullyQualifiedClassName);
-            LogUtility.LogInformation("Created app domain.");
+            this._startStopControllerToRun.CommentFromServiceHost =
+                "Service host file version " + PrestoServerCommonUtility.GetFileVersion(Assembly.GetExecutingAssembly());
+            ServerCommonLogUtility.LogInformation("Created app domain.");
 
             this._startStopControllerToRun.Start();
-            LogUtility.LogInformation("Started app.");
+            ServerCommonLogUtility.LogInformation("Started app.");
         }
 
         private void StopApp()
@@ -250,18 +260,18 @@ namespace SelfUpdatingServiceHost
                 {
                     // Do nothing. If a controller has a lease that expires, we'll get an exception when we try
                     // to access it. If that happens, just log it and move on. We still want to unload the app.
-                    LogUtility.LogWarning("An attempt was made to stop an IStartStop controller but a remoting " +
+                    ServerCommonLogUtility.LogWarning("An attempt was made to stop an IStartStop controller but a remoting " +
                         "exception occurred. This may be because the controller had its lease expire. We'll just " +
                         "log this event and move on. We still want to unload the app domain and try to continue.");
                 }
-                LogUtility.LogInformation("Stopped app.");
+                ServerCommonLogUtility.LogInformation("Stopped app.");
             }
 
             if (this._appDomain != null)
             {                
                 // If we don't do this, the old app domain keeps running.
                 AppDomain.Unload(this._appDomain);
-                LogUtility.LogInformation("Unloaded app domain.");
+                ServerCommonLogUtility.LogInformation("Unloaded app domain.");
             }
         }
 

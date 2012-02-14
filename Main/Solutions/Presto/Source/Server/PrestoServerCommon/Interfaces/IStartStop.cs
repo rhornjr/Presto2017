@@ -7,6 +7,14 @@ namespace PrestoServerCommon.Interfaces
     public interface IStartStop
     {
         /// <summary>
+        /// Gets or sets the comment from service host.
+        /// </summary>
+        /// <value>
+        /// The comment from service host.
+        /// </value>
+        string CommentFromServiceHost { get; set; }
+
+        /// <summary>
         /// Starts this instance.
         /// </summary>
         void Start();

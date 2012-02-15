@@ -157,12 +157,15 @@
     <value>Log message list refreshed.</value>
   </data>
   <data name="ItemCannotBeSavedConcurrency" xml:space="preserve">
-    <value>{0} was not saved because another user has changed it.</value>
+    <value>{0} was not saved because another user has changed it. Please refresh and try again.</value>
   </data>
   <data name="CannotImport" xml:space="preserve">
     <value>The items could not be imported. Please verify that the file is in the correct format.</value>
   </data>
   <data name="PingItemsRefreshed" xml:space="preserve">
     <value>Ping items refreshed.</value>
+  </data>
+  <data name="ItemNotSavedCaption" xml:space="preserve">
+    <value>Item Not Saved</value>
   </data>
 </root>

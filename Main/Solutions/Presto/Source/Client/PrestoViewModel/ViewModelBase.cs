@@ -30,6 +30,16 @@ namespace PrestoViewModel
         }
 
         /// <summary>
+        /// Shows the user message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="caption">The caption.</param>
+        protected static void ShowUserMessage(string message, string caption)
+        {
+            System.Windows.MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        /// <summary>
         /// Users the chooses yes.
         /// </summary>
         /// <param name="message">The message.</param>

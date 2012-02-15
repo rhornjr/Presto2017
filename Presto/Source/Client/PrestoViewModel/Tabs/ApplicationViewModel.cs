@@ -487,8 +487,12 @@ namespace PrestoViewModel.Tabs
             }
             catch (ConcurrencyException)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                    ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplication);
+                string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplication);
+
+                ViewModelUtility.MainWindowViewModel.UserMessage = message;
+
+                ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
+
                 return false;
             }
 

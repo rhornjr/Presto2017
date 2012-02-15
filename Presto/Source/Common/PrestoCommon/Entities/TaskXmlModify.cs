@@ -157,10 +157,6 @@ namespace PrestoCommon.Entities
                 this.TaskSucceeded = false;
                 LogUtility.LogException(ex);
             }
-            finally
-            {
-                LogUtility.LogInformation(taskDetails);
-            }
         }
 
         private static string ConvertTaskDetailsToString(TaskXmlModify taskXmlModify)

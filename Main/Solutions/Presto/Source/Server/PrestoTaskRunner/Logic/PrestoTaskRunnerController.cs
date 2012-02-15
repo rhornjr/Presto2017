@@ -124,11 +124,19 @@ namespace PrestoTaskRunner.Logic
 
         private static void CheckForApplicationsToInstall()
         {
-            ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
+            try
+            {
+                ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
 
-            if (appServer == null) { return; }
+                if (appServer == null) { return; }
 
-            appServer.InstallApplications();
+                appServer.InstallApplications();
+            }
+            catch (Exception ex)
+            {
+                // Log it and keep processing.
+                LogUtility.LogException(ex);
+            }
         }
 
         private static ApplicationServer GetApplicationServerForThisMachine(string serverName)

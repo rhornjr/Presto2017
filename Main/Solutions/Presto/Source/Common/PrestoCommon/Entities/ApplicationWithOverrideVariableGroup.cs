@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 using PrestoCommon.Enums;
+using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
@@ -91,29 +93,37 @@ namespace PrestoCommon.Entities
             bool atLeastOneTaskFailed = false;
             int numberOfSuccessfulTasks = 0;
 
-            // Note: We do a ToList() here because we get a "collection was modified" exception otherwise. The reason we
-            //       get the exception is because, somewhere else in this processing, we make this call:
-            //       CustomVariableGroupLogic.Get(application.Name)
-            //       That method does a refresh on the CustomVariableGroup, which contains an app, which contains the tasks.
-            //       Good times.
-            foreach (TaskBase taskBase in this.Application.Tasks.ToList().OrderBy(task => task.Sequence))
+            try
             {
-                taskBase.Execute(applicationServer, this);
-
-                if (taskBase.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
-
-                if (taskBase.TaskSucceeded == false)
+                // Note: We do a ToList() here because we get a "collection was modified" exception otherwise. The reason we
+                //       get the exception is because, somewhere else in this processing, we make this call:
+                //       CustomVariableGroupLogic.Get(application.Name)
+                //       That method does a refresh on the CustomVariableGroup, which contains an app, which contains the tasks.
+                //       Good times.
+                foreach (TaskBase taskBase in this.Application.Tasks.ToList().OrderBy(task => task.Sequence))
                 {
-                    atLeastOneTaskFailed = true;
-                    if (taskBase.FailureCausesAllStop == 1) { break; }  // No more processing.
+                    taskBase.Execute(applicationServer, this);
+
+                    if (taskBase.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
+
+                    if (taskBase.TaskSucceeded == false)
+                    {
+                        atLeastOneTaskFailed = true;
+                        if (taskBase.FailureCausesAllStop == 1) { break; }  // No more processing.
+                    }
                 }
+
+                if (numberOfSuccessfulTasks < 1) { return InstallationResult.Failure; }
+
+                if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
+
+                return InstallationResult.Success;
             }
-
-            if (numberOfSuccessfulTasks < 1) { return InstallationResult.Failure; }
-
-            if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
-
-            return InstallationResult.Success;
+            catch (Exception ex)
+            {
+                LogUtility.LogException(ex);
+                return InstallationResult.Failure;
+            }
         }
 
         /// <summary>

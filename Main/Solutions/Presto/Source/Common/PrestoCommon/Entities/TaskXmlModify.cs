@@ -89,12 +89,13 @@ namespace PrestoCommon.Entities
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
-            TaskXmlModify taskResolved = GetTaskXmlModifyWithCustomVariablesResolved(applicationServer, applicationWithOverrideVariableGroup);
-
-            string taskDetails = ConvertTaskDetailsToString(taskResolved);
+            string taskDetails = string.Empty;
 
             try
             {
+                TaskXmlModify taskResolved = GetTaskXmlModifyWithCustomVariablesResolved(applicationServer, applicationWithOverrideVariableGroup);
+                taskDetails = ConvertTaskDetailsToString(taskResolved);
+
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(taskResolved.XmlPathAndFileName);
                 XmlElement rootElement = xmlDocument.DocumentElement;
@@ -155,6 +156,10 @@ namespace PrestoCommon.Entities
             {
                 this.TaskSucceeded = false;
                 LogUtility.LogException(ex);
+            }
+            finally
+            {
+                LogUtility.LogInformation(taskDetails);
             }
         }
 

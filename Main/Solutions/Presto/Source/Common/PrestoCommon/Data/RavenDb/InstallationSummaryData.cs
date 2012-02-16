@@ -25,6 +25,7 @@ namespace PrestoCommon.Data.RavenDb
             {
                 IQueryable<EntityBase> installationSummaryList =
                     QueryAndSetEtags(session => session.Query<InstallationSummary>()
+                    .Customize(x => x.WaitForNonStaleResults())
                     .Where(summary => summary.ApplicationServerId == appServer.Id &&
                     summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id));
 
@@ -68,6 +69,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.ApplicationServerId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
+                        .Customize(x => x.WaitForNonStaleResults())
                         .OrderByDescending(summary => summary.InstallationStart)
                         .Take(numberToRetrieve)
                         );

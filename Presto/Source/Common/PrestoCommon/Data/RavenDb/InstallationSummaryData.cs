@@ -24,8 +24,7 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
             {
                 IQueryable<EntityBase> installationSummaryList =
-                    QueryAndSetEtags(session => session.Query<InstallationSummary>()
-                    .Customize(x => x.WaitForNonStaleResults())
+                    QueryAndSetEtags(session => session.Query<InstallationSummary>()                    
                     .Where(summary => summary.ApplicationServerId == appServer.Id &&
                     summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id));
 

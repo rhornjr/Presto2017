@@ -55,6 +55,7 @@ namespace PrestoCommon.Entities
             set
             {
                 this._application = value;
+                if (this._application != null) { this.ApplicationId = this._application.Id; }
                 NotifyPropertyChanged(() => this.Application);
             }
         }
@@ -81,6 +82,7 @@ namespace PrestoCommon.Entities
             set
             {
                 this._customVariableGroup = value;
+                if (this._customVariableGroup != null) { this.CustomVariableGroupId = this._customVariableGroup.Id; }
                 NotifyPropertyChanged(() => this.CustomVariableGroup);
             }
         }

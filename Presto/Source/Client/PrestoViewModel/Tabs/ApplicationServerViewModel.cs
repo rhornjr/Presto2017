@@ -358,6 +358,16 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
+            if (CommonUtility.GetAppWithGroup(this.SelectedApplicationServer.ApplicationsWithOverrideGroup, viewModel.ApplicationWithGroup) != null)
+            {
+                // Uh oh. This app with group already exists in the server list. DENIED.                
+                string ohNoYouDont = string.Format(CultureInfo.CurrentCulture,
+                    "{0} cannot be added to {1} because {1} already contains {0}.",
+                    viewModel.ApplicationWithGroup.ToString(), this.SelectedApplicationServer.Name);
+                ShowUserMessage(ohNoYouDont, ViewModelResources.ItemNotSavedCaption);
+                return;
+            }
+
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(viewModel.ApplicationWithGroup);
 
             string message = string.Format(CultureInfo.CurrentCulture,

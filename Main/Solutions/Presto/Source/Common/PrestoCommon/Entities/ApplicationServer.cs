@@ -172,14 +172,7 @@ namespace PrestoCommon.Entities
         /// </returns>
         public ApplicationWithOverrideVariableGroup GetFromForceInstallList(ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            // To find the matching appWithGroup, the app IDs need to match AND one of these two things must be true:
-            // 1. Both custom variable groups are null, or
-            // 2. Both custom variable groups are the same.
-
-            return this.ApplicationWithGroupToForceInstallList.Where(group =>
-                group.ApplicationId == appWithGroup.ApplicationId &&
-                ((group.CustomVariableGroupId == null && appWithGroup.CustomVariableGroupId == null) ||
-                (group.CustomVariableGroupId == appWithGroup.CustomVariableGroupId))).FirstOrDefault();
+            return CommonUtility.GetAppWithGroup(this.ApplicationWithGroupToForceInstallList, appWithGroup);
         }
 
         /// <summary>

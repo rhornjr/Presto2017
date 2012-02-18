@@ -49,7 +49,7 @@
         </Grid.ColumnDefinitions>
         
         <DockPanel Grid.Column="0" LastChildFill="True">
-            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Application Servers" HorizontalAlignment="Center"/>
+            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Application Servers" HorizontalAlignment="Center" FontWeight="Bold"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="40" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddServerCommand}" />
@@ -79,7 +79,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application Server" HorizontalAlignment="Center"/>
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application Server" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                 <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplicationServer.Name}"/>
@@ -107,7 +107,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups:"/>
+                    <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" FontWeight="Bold"/>
                     <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                           ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
                           SelectedItem="{Binding SelectedCustomVariableGroup}"
@@ -129,7 +129,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Applications:"/>
+                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Applications" FontWeight="Bold"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                           ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
                           ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedApplicationsWithOverrideGroup}"

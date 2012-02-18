@@ -30,7 +30,7 @@
         </Grid.ColumnDefinitions>
         
         <DockPanel Grid.Column="0" LastChildFill="True">
-            <Label Style="{StaticResource StandardLabel}" DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center"/>            
+            <Label Style="{StaticResource StandardLabel}" DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center" FontWeight="Bold"/>            
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="40" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
@@ -57,7 +57,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application" HorizontalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                 <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplication.Name}"/>
@@ -100,7 +100,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Tasks:"/>
+                <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Tasks" HorizontalAlignment="Center" FontWeight="Bold"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding AllApplicationTasks}"
                       ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedTasks}"

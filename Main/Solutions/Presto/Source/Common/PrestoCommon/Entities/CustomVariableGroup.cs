@@ -119,6 +119,9 @@ namespace PrestoCommon.Entities
 
             List<CustomVariable> allCustomVariables = new List<CustomVariable>();
 
+            // Add system variables
+            AddSystemVariables(allCustomVariables, applicationServer, applicationWithOverrideVariableGroup);
+
             // First, get all custom variables associated with the app server.
             foreach (CustomVariableGroup customVariableGroup in applicationServer.CustomVariableGroups)
             {
@@ -137,6 +140,14 @@ namespace PrestoCommon.Entities
             { LogMissingVariableAndThrow(rawString); }
 
             return ResolveCustomVariable(rawString, allCustomVariables);
+        }
+
+        private static void AddSystemVariables(List<CustomVariable> allCustomVariables, ApplicationServer applicationServer,
+            ApplicationWithOverrideVariableGroup appWithOverrideGroup)
+        {
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:applicationName",    Value = appWithOverrideGroup.Application.Name });
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:applicationVersion", Value = appWithOverrideGroup.Application.Version });
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:serverName",         Value = applicationServer.Name });
         }
 
         private static void AddRangeOverride(List<CustomVariable> allCustomVariables, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)

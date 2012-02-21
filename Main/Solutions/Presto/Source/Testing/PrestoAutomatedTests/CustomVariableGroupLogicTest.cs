@@ -69,7 +69,7 @@ namespace PrestoAutomatedTests
         {
             List<CustomVariableGroup> allGroups = new List<CustomVariableGroup>(CustomVariableGroupLogic.GetAll());
 
-            Assert.AreEqual(TestUtility.TotalNumberOfObjects, allGroups.Count);
+            Assert.AreEqual(TestUtility.TotalNumberOfEachEntityToCreate, allGroups.Count);
         }
 
         /// <summary>

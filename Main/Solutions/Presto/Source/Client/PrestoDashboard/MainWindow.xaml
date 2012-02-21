@@ -21,6 +21,7 @@
             <TabItem Header="Installs"><tabs:InstallationSummaryView/></TabItem>
             <TabItem Header="Log"><tabs:LogMessageView/></TabItem>
             <TabItem Header="Ping"><tabs:PingView/></TabItem>
+            <TabItem Header="Global"><tabs:GlobalSettingView/></TabItem>
         </TabControl>
         <TextBlock Grid.Row="1" Text="{Binding UserMessage}" Foreground="Black" FontWeight="Bold" Background="DarkKhaki" TextWrapping="Wrap" Margin="2" Padding="2"/>
     </Grid>

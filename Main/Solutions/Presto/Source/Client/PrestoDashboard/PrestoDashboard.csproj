@@ -34,10 +34,10 @@
     <InstallUrl>http://pbgappmest02/PrestoDashboard/</InstallUrl>
     <ProductName>Presto Dashboard</ProductName>
     <PublisherName>Bob Horn</PublisherName>
-    <MinimumRequiredVersion>1.0.0.28</MinimumRequiredVersion>
+    <MinimumRequiredVersion>1.0.0.29</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.htm</WebPage>
-    <ApplicationRevision>29</ApplicationRevision>
+    <ApplicationRevision>30</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -116,6 +116,9 @@
     <Compile Include="Tabs\CustomVariableGroupView.xaml.cs">
       <DependentUpon>CustomVariableGroupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tabs\GlobalSettingView.xaml.cs">
+      <DependentUpon>GlobalSettingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tabs\InstallationSummaryView.xaml.cs">
       <DependentUpon>InstallationSummaryView.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tabs\CustomVariableGroupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tabs\GlobalSettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

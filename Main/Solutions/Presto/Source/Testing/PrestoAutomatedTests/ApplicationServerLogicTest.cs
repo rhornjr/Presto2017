@@ -70,7 +70,7 @@ namespace PrestoAutomatedTests
         {
             List<ApplicationServer> servers = new List<ApplicationServer>(ApplicationServerLogic.GetAll());
 
-            Assert.AreEqual(TestUtility.TotalNumberOfObjects, servers.Count);
+            Assert.AreEqual(TestUtility.TotalNumberOfEachEntityToCreate, servers.Count);
         }
 
         /// <summary>

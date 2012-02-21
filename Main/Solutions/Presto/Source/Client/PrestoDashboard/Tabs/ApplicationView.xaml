@@ -70,6 +70,7 @@
                 <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
                     <Label Style="{StaticResource StandardLabel}" Content="{Binding SelectedApplication.ForceInstallation}" Width="280"/>
                     <Button Content="..." Height="25" Width="25" Command="{Binding ForceInstallationCommand}" />
+                    <Button Content="X" Height="25" Width="25" Command="{Binding DeleteForceInstallationCommand}" />
                 </StackPanel>
 
             </Grid>

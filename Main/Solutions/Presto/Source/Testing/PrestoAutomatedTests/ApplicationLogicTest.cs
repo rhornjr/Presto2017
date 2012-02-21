@@ -82,7 +82,7 @@ namespace PrestoAutomatedTests
         {
             List<Application> allApps = new List<Application>(ApplicationLogic.GetAll());
 
-            Assert.AreEqual(TestUtility.TotalNumberOfObjects, allApps.Count);
+            Assert.AreEqual(TestUtility.TotalNumberOfEachEntityToCreate, allApps.Count);
         }
     }
 }

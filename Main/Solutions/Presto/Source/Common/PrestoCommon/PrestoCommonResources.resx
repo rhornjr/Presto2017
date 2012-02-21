@@ -131,4 +131,10 @@
 Command         : {1} {2}
 Process Output  : {3}</value>
   </data>
+  <data name="FreezeAllInstallationsTrueSoNoInstallation" xml:space="preserve">
+    <value>In the global setting entity, FreezeAllInstallations is true, so the installation will not happen: {0} on {1}.</value>
+  </data>
+  <data name="GlobalSettingNullSoNoInstallation" xml:space="preserve">
+    <value>The global setting entity is null, so the installation will not happen: {0} on {1}.</value>
+  </data>
 </root>

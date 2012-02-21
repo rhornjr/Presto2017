@@ -101,6 +101,9 @@ namespace PrestoTaskRunner.Logic
 
                 ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
 
+                // Can't do anything if we don't have an app server
+                if (appServer == null) { return; }
+
                 // See if we have already responded to the most recent ping request.
 
                 PingResponse pingResponse = PingResponseLogic.GetByPingRequestAndServer(pingRequest, appServer);

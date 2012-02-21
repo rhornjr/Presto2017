@@ -82,6 +82,7 @@
     <Compile Include="Data\Interfaces\IApplicationServerData.cs" />
     <Compile Include="Data\Interfaces\ICustomVariableGroupData.cs" />
     <Compile Include="Data\Interfaces\IGenericData.cs" />
+    <Compile Include="Data\Interfaces\IGlobalSettingData.cs" />
     <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
     <Compile Include="Data\Interfaces\ILogMessageData.cs" />
     <Compile Include="Data\Interfaces\IPingRequestData.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
     <Compile Include="Data\RavenDb\DataAccessLayerBase.cs" />
     <Compile Include="Data\RavenDb\GenericData.cs" />
+    <Compile Include="Data\RavenDb\GlobalSettingData.cs" />
     <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
     <Compile Include="Data\RavenDb\PingRequestData.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Entities\CustomVariableGroup.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\ForceInstallation.cs" />
+    <Compile Include="Entities\GlobalSetting.cs" />
     <Compile Include="Entities\InstallationSummary.cs" />
     <Compile Include="Entities\LegacyPresto\PrestoTasks.cs" />
     <Compile Include="Entities\LegacyPresto\TaskBase.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
+    <Compile Include="Logic\GlobalSettingLogic.cs" />
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\LogMessageLogic.cs" />

@@ -199,7 +199,7 @@ namespace PrestoViewModel.Tabs
             this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ExactlyOneApplicationIsSelected());
             this.ImportApplicationCommand = new RelayCommand(_ => ImportApplication(), _ => AppServerIsSelected);
             this.ExportApplicationCommand = new RelayCommand(_ => ExportApplication(), _ => AtLeastOneApplicationIsSelected());
-            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => AtLeastOneApplicationIsSelected());
+            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => AtLeastOneApplicationIsSelectedAndAllAreEnabled());
 
             this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
             this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
@@ -413,6 +413,14 @@ namespace PrestoViewModel.Tabs
         private bool AtLeastOneApplicationIsSelected()
         {
             return this.SelectedApplicationsWithOverrideGroup != null && this.SelectedApplicationsWithOverrideGroup.Count >= 1;
+        }
+
+        private bool AtLeastOneApplicationIsSelectedAndAllAreEnabled()
+        {
+            if (AtLeastOneApplicationIsSelected() == false) { return false; }
+
+            // If any are false, return false.
+            return !this.SelectedApplicationsWithOverrideGroup.Any(x => x.Enabled == false);
         }
 
         private void RemoveApplication()

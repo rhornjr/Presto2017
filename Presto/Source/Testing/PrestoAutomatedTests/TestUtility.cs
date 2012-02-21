@@ -15,7 +15,7 @@ namespace PrestoAutomatedTests
     {
         private static bool _dataPopulated;
 
-        public static readonly int TotalNumberOfObjects = 10;
+        public static readonly int TotalNumberOfEachEntityToCreate = 10;
         public static readonly int TotalNumberOfInstallationSummaries = 250;
         public static readonly int TotalNumberOfLogMessages = 1000;
 
@@ -36,7 +36,7 @@ namespace PrestoAutomatedTests
 
         private static void AddApplications()
         {
-            for (int i = 1; i <= TotalNumberOfObjects; i++)
+            for (int i = 1; i <= TotalNumberOfEachEntityToCreate; i++)
             {
                 Application app = new Application();
 
@@ -51,7 +51,7 @@ namespace PrestoAutomatedTests
 
         private static void AddCustomVariableGroups()
         {
-            for (int i = 1; i <= TotalNumberOfObjects; i++)
+            for (int i = 1; i <= TotalNumberOfEachEntityToCreate; i++)
             {
                 CustomVariableGroup group = new CustomVariableGroup();
 
@@ -70,7 +70,7 @@ namespace PrestoAutomatedTests
 
         private static void AddAppServers()
         {
-            for (int i = 1; i <= TotalNumberOfObjects; i++)
+            for (int i = 1; i <= TotalNumberOfEachEntityToCreate; i++)
             {
                 ApplicationServer server = new ApplicationServer();
 
@@ -99,12 +99,12 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithGroup;
             DateTime originalStartTime = DateTime.Now.AddDays(-1);
 
-            int totalOuterLoops = TotalNumberOfInstallationSummaries / TotalNumberOfObjects;
+            int totalOuterLoops = TotalNumberOfInstallationSummaries / TotalNumberOfEachEntityToCreate;
 
             int runningTotal = 1;  // Count of total summaries overall
             for (int i = 1; i <= totalOuterLoops; i++)
             {
-                for (int x = 0; x < TotalNumberOfObjects; x++)
+                for (int x = 0; x < TotalNumberOfEachEntityToCreate - 1; x++)  // We use "- 1" here so we have some entities without an installation summary (for testing)
                 {
                     appWithGroup = new ApplicationWithOverrideVariableGroup() { Application = allApps[x], ApplicationId = allApps[x].Id };
                     DateTime startTime = originalStartTime.AddMinutes(runningTotal);

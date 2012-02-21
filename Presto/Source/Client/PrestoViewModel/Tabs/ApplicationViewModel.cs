@@ -61,6 +61,11 @@ namespace PrestoViewModel.Tabs
         public ICommand ForceInstallationCommand { get; private set; }
 
         /// <summary>
+        /// Gets the delete force installation command.
+        /// </summary>
+        public ICommand DeleteForceInstallationCommand { get; private set; }
+
+        /// <summary>
         /// Gets the add command.
         /// </summary>
         public ICommand AddTaskCommand { get; private set; }
@@ -189,6 +194,7 @@ namespace PrestoViewModel.Tabs
             LoadApplications();
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simply setting the commands")]
         private void Initialize()
         {
             this.AddApplicationCommand      = new RelayCommand(_ => AddApplication());
@@ -196,7 +202,8 @@ namespace PrestoViewModel.Tabs
             this.RefreshApplicationsCommand = new RelayCommand(_ => RefreshApplications());
             this.SaveApplicationCommand     = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected);
 
-            this.ForceInstallationCommand = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected);
+            this.ForceInstallationCommand       = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected);
+            this.DeleteForceInstallationCommand = new RelayCommand(_ => DeleteForceInstallation(), _ => ApplicationIsSelectedAndForceExists());
 
             this.AddTaskCommand            = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected);
             this.EditTaskCommand           = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
@@ -206,7 +213,14 @@ namespace PrestoViewModel.Tabs
             this.ImportLegacyTasksCommand  = new RelayCommand(_ => ImportLegacyTasks(), _ => ApplicationIsSelected);            
             this.MoveTaskUpCommand         = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
             this.MoveTaskDownCommand       = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
-        }        
+        }
+
+        private bool ApplicationIsSelectedAndForceExists()
+        {
+            if (this.ApplicationIsSelected == false) { return false; }
+
+            return this.SelectedApplication.ForceInstallation != null;
+        }
 
         private void RefreshApplications()
         {
@@ -331,6 +345,19 @@ namespace PrestoViewModel.Tabs
                 this.SelectedApplication,
                 this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
                 this.SelectedApplication.ForceInstallation.ForceInstallationTime.ToString()));
+        }
+
+        private void DeleteForceInstallation()
+        {
+            if (this.SelectedApplication.ForceInstallation == null) { return; }  // Nothing to do.            
+
+            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+                "Force installation removed: {0} in {1} at {2}.",
+                this.SelectedApplication,
+                this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
+                this.SelectedApplication.ForceInstallation.ForceInstallationTime.ToString()));
+
+            this.SelectedApplication.ForceInstallation = null;
         }
 
         private void ImportTasks()

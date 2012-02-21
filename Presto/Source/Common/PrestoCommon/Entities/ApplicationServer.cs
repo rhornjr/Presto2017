@@ -195,32 +195,48 @@ namespace PrestoCommon.Entities
                 }
 
                 LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup, this.Name));
-                InstallApplication(appWithGroup);
+
+                // Final check before installing...
+                if (FinalInstallationChecksPass(appWithGroup)) { InstallApplication(appWithGroup); }
             }                       
+        }
+
+        private bool FinalInstallationChecksPass(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            GlobalSetting globalSetting = GlobalSettingLogic.GetItem();
+
+            string warning = string.Empty;
+
+            if (globalSetting == null)
+            {
+                warning = string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.GlobalSettingNullSoNoInstallation, appWithGroup.ToString(), this.Name);
+                LogUtility.LogWarning(warning);
+                LogMessageLogic.SaveLogMessage(warning);
+                return false;
+            }
+
+            if (globalSetting.FreezeAllInstallations)
+            {
+                warning = string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.FreezeAllInstallationsTrueSoNoInstallation, appWithGroup.ToString(), this.Name);
+                LogUtility.LogWarning(warning);
+                LogMessageLogic.SaveLogMessage(warning);
+                return false;
+            }
+
+            return true;
         }
 
         private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup)
         {
             if (AppGroupEnabled(appWithGroup) == false) { return false; }
 
-            // Get the list of InstallationStatus entities to see if we've ever installed this app.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(this, appWithGroup);
-
-            // First, if this app has never been installed, then it needs to be.
-            if (!InstallationSummaryExists(installationSummaryList)) { return true; }
-
-            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
-
-            //     ****  This is forcing an APPLICATION SERVER / APP GROUP instance ****
-
+            // This is forcing an APPLICATION SERVER / APP GROUP instance
             if (ForceInstallIsThisAppWithGroup(appWithGroup)) { return true; }
 
-            //     ****  This is forcing an APPLICATION  ****
-
+            // This is forcing an APPLICATION
             // If there is no force installation time, then no need to install.
             if (!ForceInstallationExists(appWithGroup)) { return false; }            
-
-            if (ForceInstallationShouldHappenBasedOnTimeAndEnvironment(mostRecentInstallationSummary, appWithGroup)) { return true; }
+            if (ForceInstallationShouldHappenBasedOnTimeAndEnvironment(appWithGroup)) { return true; }
 
             return false;
         }              
@@ -233,17 +249,6 @@ namespace PrestoCommon.Entities
 
             return appWithGroup.Enabled;
         }
-
-        private bool InstallationSummaryExists(IEnumerable<InstallationSummary> installationSummaryList)
-        {
-            bool installationSummaryExists = (installationSummaryList != null && installationSummaryList.Count() > 0);
-
-            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
-                "Checking if app should be installed. InstallationSummary exists: {0}. If this value is false, then the app will be installed.",
-                installationSummaryExists), this.EnableDebugLogging);
-
-            return installationSummaryExists;
-        }        
 
         private bool ForceInstallIsThisAppWithGroup(ApplicationWithOverrideVariableGroup appWithGroup)
         {
@@ -306,15 +311,56 @@ namespace PrestoCommon.Entities
             return appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString();
         }
 
-        private bool ForceInstallationShouldHappenBasedOnTimeAndEnvironment(InstallationSummary mostRecentInstallationSummary, ApplicationWithOverrideVariableGroup appWithGroup)
+        private bool ForceInstallationShouldHappenBasedOnTimeAndEnvironment(ApplicationWithOverrideVariableGroup appWithGroup)
         {
+            // Note: To even get to this method, a force installation exists.
+
             DateTime now = DateTime.Now;
 
+            // Get the list of InstallationStatus entities for this server.
+            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(this, appWithGroup);
+
+            bool shouldForce;
+
+            if (installationSummaryList == null || installationSummaryList.Count() < 1)                
+            {
+                shouldForce = now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
+                    appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment;
+                LogForceInstallExistsWithNoInstallationSummaries(appWithGroup, now, shouldForce);
+                return shouldForce;
+            }
+
+            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install            
-            bool shouldForce = (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
+            shouldForce = (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment);
 
+            LogForceInstallBasedOnInstallationSummary(appWithGroup, now, mostRecentInstallationSummary, shouldForce);
+
+            return shouldForce;
+        }
+
+        private void LogForceInstallExistsWithNoInstallationSummaries(ApplicationWithOverrideVariableGroup appWithGroup, DateTime now, bool shouldForce)
+        {
+            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
+                "{0} should be installed on {1}: {2}. A force installation exists, there are no installation summaries, " +
+                "**AND** now ({3}) > appWithGroup.Application.ForceInstallation.ForceInstallationTime ({4}) " +
+                "**AND** appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment ({5}) == this.DeploymentEnvironment ({6}).",
+                appWithGroup.ToString(),
+                this.Name,
+                shouldForce,
+                now.ToString(),
+                appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString(),
+                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment,
+                this.DeploymentEnvironment),
+                    this.EnableDebugLogging);
+        }
+
+        private void LogForceInstallBasedOnInstallationSummary(ApplicationWithOverrideVariableGroup appWithGroup, DateTime now,
+            InstallationSummary mostRecentInstallationSummary, bool shouldForce)
+        {
             LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "Checking if app should be installed. Force installation should happen: {0}. If true, the following is true: " +
                 "mostRecentInstallationSummary.InstallationStart ({1}) < appWithGroup.Application.ForceInstallation.ForceInstallationTime ({2}) " +
@@ -328,9 +374,7 @@ namespace PrestoCommon.Entities
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment,
                 this.DeploymentEnvironment),
                     this.EnableDebugLogging);
-
-            return shouldForce;
-        }  
+        }
 
         private void InstallApplication(ApplicationWithOverrideVariableGroup appWithGroup)
         {

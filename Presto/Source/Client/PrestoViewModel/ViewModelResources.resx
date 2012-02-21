@@ -168,4 +168,10 @@
   <data name="ItemNotSavedCaption" xml:space="preserve">
     <value>Item Not Saved</value>
   </data>
+  <data name="GlobalSettingsRefreshed" xml:space="preserve">
+    <value>Global settings refreshed.</value>
+  </data>
+  <data name="GlobalSettingsSaved" xml:space="preserve">
+    <value>Global settings saved.</value>
+  </data>
 </root>

@@ -4,11 +4,12 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FF595959"
-        Height="190" Width="510"
+        Height="220" Width="510"
         Title="TaskDosCommandView">
     <Grid Margin="5" HorizontalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
+            <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
@@ -31,11 +32,16 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="3">
+            <Label Style="{StaticResource StandardLabel}" Content="Pause (0-120 seconds):" Width="130" />
+            <TextBox x:Name="txtPause" Text="{Binding TaskDosCommandCopy.AfterTaskPauseInSeconds}" Width="340"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Height="25" Grid.Row="4">
             <Label Style="{StaticResource StandardLabel}" Content="FailureCausesAllStop:" Width="130" />
             <CheckBox x:Name="chkFailureCausesAllStop" IsChecked="{Binding TaskDosCommandCopy.FailureCausesAllStop}" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Height="35">
+        <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Center" Height="35">
             <Button Command="{Binding OkCommand}" Style="{StaticResource StandardButton}" Content="OK" Margin="5" />
             <Button Command="{Binding CancelCommand}" Style="{StaticResource StandardButton}" Content="Cancel" Margin="5" />
         </StackPanel>

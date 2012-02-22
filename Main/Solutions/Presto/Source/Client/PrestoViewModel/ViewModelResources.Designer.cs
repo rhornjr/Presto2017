@@ -223,6 +223,24 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Entry.
+        /// </summary>
+        internal static string TaskInvalidEntryCaption {
+            get {
+                return ResourceManager.GetString("TaskInvalidEntryCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This task has an invalid entry. Please correct and try saving again..
+        /// </summary>
+        internal static string TaskInvalidEntryMessage {
+            get {
+                return ResourceManager.GetString("TaskInvalidEntryMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to When importing legacy tasks, we encountered a legacy task type that was not expected: {0}..
         /// </summary>
         internal static string UnexpectedLegacyTask {

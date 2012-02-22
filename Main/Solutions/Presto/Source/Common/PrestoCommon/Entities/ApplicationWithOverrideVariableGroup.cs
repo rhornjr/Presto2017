@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Newtonsoft.Json;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 
@@ -90,11 +91,11 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Installs this instance.
         /// </summary>
-        public InstallationResult Install(ApplicationServer applicationServer)
+        public InstallationResultContainer Install(ApplicationServer applicationServer)
         {
             bool atLeastOneTaskFailed = false;
             int numberOfSuccessfulTasks = 0;
-
+            InstallationResultContainer installationResultContainer = new InstallationResultContainer();
             try
             {
                 // Note: We do a ToList() here because we get a "collection was modified" exception otherwise. The reason we
@@ -104,7 +105,11 @@ namespace PrestoCommon.Entities
                 //       Good times.
                 foreach (TaskBase taskBase in this.Application.Tasks.ToList().OrderBy(task => task.Sequence))
                 {
+                    DateTime taskStartTime = DateTime.Now;
+
                     taskBase.Execute(applicationServer, this);
+
+                    installationResultContainer.TaskDetails.Add(new TaskDetail(taskStartTime, DateTime.Now, taskBase.TaskDetails));
 
                     if (taskBase.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
 
@@ -115,17 +120,23 @@ namespace PrestoCommon.Entities
                     }
                 }
 
-                if (numberOfSuccessfulTasks < 1) { return InstallationResult.Failure; }
+                if (numberOfSuccessfulTasks < 1) { return FinalInstallationResultContainer(installationResultContainer, InstallationResult.Failure); }
 
-                if (atLeastOneTaskFailed) { return InstallationResult.PartialSuccess; }
+                if (atLeastOneTaskFailed) { return FinalInstallationResultContainer(installationResultContainer, InstallationResult.PartialSuccess); }
 
-                return InstallationResult.Success;
+                return FinalInstallationResultContainer(installationResultContainer, InstallationResult.Success);
             }
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                return InstallationResult.Failure;
+                return FinalInstallationResultContainer(installationResultContainer, InstallationResult.Failure);
             }
+        }
+
+        private static InstallationResultContainer FinalInstallationResultContainer(InstallationResultContainer container, InstallationResult result)
+        {
+            container.InstallationResult = result;
+            return container;
         }
 
         /// <summary>

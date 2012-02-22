@@ -38,11 +38,11 @@
                 <Setter Property="Margin" Value="5" />
             </Style>
             
-            <!-- Note: Do not set the x:Key here. If we do, then datagrids will have to explicitly
-                 set their sytle to this. -->
+            <!-- Note: Do not set the x:Key here. If we do, then data grids will have to explicitly
+                 set their style to this. -->
             <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
                 <Setter Property="Background" Value="#FF333333" />
-                <Setter Property="RowBackground" Value="Silver" />
+                <Setter Property="RowBackground" Value="Gainsboro" />
             </Style>
 
             <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">

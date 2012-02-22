@@ -150,11 +150,13 @@ namespace PrestoCommon.Entities
 
                 this.TaskSucceeded = true;
 
+                this.TaskDetails = taskDetails;
                 LogUtility.LogInformation(taskDetails);
             }
             catch (Exception ex)
             {
                 this.TaskSucceeded = false;
+                this.TaskDetails = ex.Message + Environment.NewLine + taskDetails;
                 LogUtility.LogException(ex);
             }
         }

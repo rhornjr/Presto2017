@@ -153,6 +153,7 @@ namespace PrestoCommon.Entities
                 catch (Exception ex)
                 {
                     this.TaskSucceeded = false;
+                    this.TaskDetails = ex.Message + Environment.NewLine;
                     LogUtility.LogException(ex);
                 }
                 finally
@@ -161,7 +162,7 @@ namespace PrestoCommon.Entities
                         PrestoCommonResources.TaskDosCommandLogMessage,
                         this.Description, process.StartInfo.FileName,
                         process.StartInfo.Arguments, processOutput);
-
+                    this.TaskDetails += logMessage;
                     LogUtility.LogInformation(logMessage);
                 }
             }

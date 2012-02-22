@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using PrestoCommon.Enums;
 
@@ -57,6 +58,14 @@ namespace PrestoCommon.Entities
         /// The installation result.
         /// </value>
         public InstallationResult InstallationResult { get; set; }
+
+        /// <summary>
+        /// Gets or sets the task details.
+        /// </summary>
+        /// <value>
+        /// The task details.
+        /// </value>
+        public List<TaskDetail> TaskDetails { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstallationSummary"/> class.

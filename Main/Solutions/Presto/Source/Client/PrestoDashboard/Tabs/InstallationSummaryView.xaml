@@ -13,12 +13,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Column="0">
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding InstallationSummaryList}">
+                      ItemsSource="{Binding InstallationSummaryList}" SelectedItem="{Binding SelectedInstallationSummary}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="150" SortMemberPath="ApplicationServer.Name"/>
                     <DataGridTextColumn Binding="{Binding Path=ApplicationWithOverrideVariableGroup}" Header="Application" Width="150" SortMemberPath="ApplicationWithOverrideVariableGroup.Application.Name"/>
@@ -29,8 +31,19 @@
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
+
+        <GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch" Background="Black"/>
         
-        <StackPanel Grid.Row="1">
+        <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding SelectedInstallationSummary.TaskDetails}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=StartTime}" Header="Start" Width="150" SortMemberPath="StartTime"/>
+                <DataGridTextColumn Binding="{Binding Path=EndTime}" Header="End" Width="150"/>
+                <DataGridTextColumn Binding="{Binding Path=Details}" Header="Details" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3">
             <Button Content="Refresh" Style="{StaticResource StandardButton}" Command="{Binding RefreshCommand}" />
         </StackPanel>
         

@@ -16,6 +16,7 @@ namespace PrestoViewModel.Tabs
     public class InstallationSummaryViewModel : ViewModelBase
     {
         private Collection<InstallationSummary> _installationSummaryList;
+        private InstallationSummary _selectedInstallationSummary;
 
         /// <summary>
         /// Gets the refresh command.
@@ -33,6 +34,23 @@ namespace PrestoViewModel.Tabs
             {
                 this._installationSummaryList = value;
                 NotifyPropertyChanged(() => this.InstallationSummaryList);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected installation summary.
+        /// </summary>
+        /// <value>
+        /// The selected installation summary.
+        /// </value>
+        public InstallationSummary SelectedInstallationSummary
+        {
+            get { return this._selectedInstallationSummary; }
+
+            set
+            {
+                this._selectedInstallationSummary = value;
+                NotifyPropertyChanged(() => this.SelectedInstallationSummary);
             }
         }
 

@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
@@ -380,7 +381,11 @@ namespace PrestoCommon.Entities
         {
             InstallationSummary installationSummary = new InstallationSummary(appWithGroup, this, DateTime.Now);
 
-            installationSummary.InstallationResult = appWithGroup.Install(this);
+            InstallationResultContainer resultContainer = appWithGroup.Install(this);
+
+            installationSummary.InstallationResult = resultContainer.InstallationResult;
+
+            installationSummary.TaskDetails = resultContainer.TaskDetails;
 
             installationSummary.InstallationEnd = DateTime.Now;
 

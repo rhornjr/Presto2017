@@ -87,6 +87,7 @@ namespace PrestoCommon.Entities
                                  "Destination: " + destinationPath + "\r\n" +
                                  "Result     : " + status;
 
+                this.TaskDetails = message;
                 LogUtility.LogInformation(message);
             }
         }

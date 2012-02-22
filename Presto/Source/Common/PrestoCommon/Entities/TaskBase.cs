@@ -12,6 +12,7 @@ namespace PrestoCommon.Entities
         private TaskType _taskType;
         private int      _sequence;
         private bool     _taskSucceeded;        
+        private string   _taskDetails;
 
         /// <summary>
         /// Gets or sets the failure causes all stop.
@@ -99,6 +100,23 @@ namespace PrestoCommon.Entities
         }
 
         /// <summary>
+        /// Gets or sets the task details.
+        /// </summary>
+        /// <value>
+        /// The task details.
+        /// </value>
+        public string TaskDetails
+        {
+            get { return this._taskDetails; }
+
+            set
+            {
+                this._taskDetails = value;
+                NotifyPropertyChanged(() => this.TaskDetails);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TaskBase"/> class.
         /// </summary>
         protected TaskBase() { }
@@ -114,7 +132,7 @@ namespace PrestoCommon.Entities
         protected TaskBase(string description, TaskType taskType, byte failureCausesAllStop, int sequence, bool taskSucceeded)
         {
             this.Description          = description;
-            this.PrestoTaskType             = taskType;
+            this.PrestoTaskType       = taskType;
             this.FailureCausesAllStop = failureCausesAllStop;
             this.Sequence             = sequence;
             this.TaskSucceeded        = taskSucceeded;

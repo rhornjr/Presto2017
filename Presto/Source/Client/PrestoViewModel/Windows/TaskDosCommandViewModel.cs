@@ -74,6 +74,12 @@ namespace PrestoViewModel.Windows
 
         private void Save()
         {
+            if (!this.TaskDosCommandCopy.IsValid())
+            {
+                ShowUserMessage(ViewModelResources.TaskInvalidEntryMessage, ViewModelResources.TaskInvalidEntryCaption);
+                return;
+            }
+
             AppyChangesFromCopyToOriginal();
             this.Close();
         }

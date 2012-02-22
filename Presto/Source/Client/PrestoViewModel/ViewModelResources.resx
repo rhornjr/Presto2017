@@ -174,4 +174,10 @@
   <data name="GlobalSettingsSaved" xml:space="preserve">
     <value>Global settings saved.</value>
   </data>
+  <data name="TaskInvalidEntryCaption" xml:space="preserve">
+    <value>Invalid Entry</value>
+  </data>
+  <data name="TaskInvalidEntryMessage" xml:space="preserve">
+    <value>This task has an invalid entry. Please correct and try saving again.</value>
+  </data>
 </root>

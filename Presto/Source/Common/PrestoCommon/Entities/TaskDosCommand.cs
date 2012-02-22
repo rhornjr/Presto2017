@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Threading;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 
@@ -14,6 +15,9 @@ namespace PrestoCommon.Entities
     {
         private string _dosExecutable;
         private string _parameters;
+        private int _afterTaskPauseInSeconds;
+
+        private readonly int MaxAfterTaskPauseInSeconds = 120;
 
         /// <summary>
         /// Gets or sets the dos executable.
@@ -46,6 +50,28 @@ namespace PrestoCommon.Entities
             {
                 this._parameters = value;
                 NotifyPropertyChanged(() => this.Parameters);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of seconds to pause after a command is executed.
+        /// </summary>
+        /// <value>
+        /// The after task pause in seconds.
+        /// </value>
+        /// <remarks>
+        /// Some DOS commands return immediately, not allowing enough time to complete before moving
+        /// to the next task. With this pause, the user can pause processing for a certain amount of
+        /// time, giving the task a chance to fully complete.
+        /// </remarks>
+        public int AfterTaskPauseInSeconds
+        {
+            get { return this._afterTaskPauseInSeconds; }
+
+            set
+            {
+                this._afterTaskPauseInSeconds = value;
+                NotifyPropertyChanged(() => this.AfterTaskPauseInSeconds);
             }
         }
 
@@ -106,6 +132,8 @@ namespace PrestoCommon.Entities
 
                     process.WaitForExit();
 
+                    Pause();
+
                     // Now I see why I had this commented before. When we run a DOS command, it can return a non-zero exit
                     // code, even though everything is ok. For example, if we need to delete files in a directory, but that
                     // directory doesn't exist, then who cares. All is good. So we either need to make sure all DOS commands
@@ -137,6 +165,13 @@ namespace PrestoCommon.Entities
                     LogUtility.LogInformation(logMessage);
                 }
             }
+        }
+
+        private void Pause()
+        {
+            if (this.AfterTaskPauseInSeconds <= 0) { return; }  // No pause.
+
+            Thread.Sleep(this.AfterTaskPauseInSeconds * 1000);
         }
 
         /// <summary>
@@ -171,8 +206,9 @@ namespace PrestoCommon.Entities
             destination.PrestoTaskType       = source.PrestoTaskType;
 
             // Subclass
-            destination.DosExecutable = source.DosExecutable;
-            destination.Parameters    = source.Parameters;
+            destination.DosExecutable           = source.DosExecutable;
+            destination.Parameters              = source.Parameters;
+            destination.AfterTaskPauseInSeconds = source.AfterTaskPauseInSeconds;
 
             return destination;
         }
@@ -202,6 +238,19 @@ namespace PrestoCommon.Entities
             newTask.Parameters    = legacyTask.Parameters;
 
             return newTask;
+        }
+
+        /// <summary>
+        /// Determines whether this instance is valid.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsValid()
+        {
+            if (this.AfterTaskPauseInSeconds < 0 || this.AfterTaskPauseInSeconds > this.MaxAfterTaskPauseInSeconds) { return false; }
+
+            return true;
         }
     }
 }

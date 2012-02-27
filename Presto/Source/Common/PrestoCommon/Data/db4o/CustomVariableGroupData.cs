@@ -44,24 +44,6 @@ namespace PrestoCommon.Data.db4o
         }
 
         /// <summary>
-        /// Gets the specified application name.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <returns></returns>
-        public CustomVariableGroup GetByApplication(Application application)
-        {
-            CustomVariableGroup group = (from CustomVariableGroup customGroup in Database
-                                         where customGroup.Application != null && customGroup.Application.Name == application.Name
-                                         select customGroup).FirstOrDefault();
-
-            if (group == null) { return null; }
-
-            Database.Ext().Refresh(group, 10);
-
-            return group;
-        }
-
-        /// <summary>
         /// Saves the specified custom variable group.
         /// </summary>
         /// <param name="customVariableGroup">The custom variable group.</param>

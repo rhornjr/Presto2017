@@ -32,6 +32,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.CustomVariableGroupIds)
                         .Include(x => x.ApplicationIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                        .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
                         ).AsEnumerable().Cast<ApplicationServer>();
 
                     foreach (ApplicationServer appServer in appServers)
@@ -65,6 +66,7 @@ namespace PrestoCommon.Data.RavenDb
                     .Include(x => x.CustomVariableGroupIds)
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                    .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
                     .Where(server => server.Name == serverName).FirstOrDefault())
                     as ApplicationServer;
 
@@ -90,6 +92,7 @@ namespace PrestoCommon.Data.RavenDb
             foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
             {
                 appGroup.Application = QuerySingleResultAndSetEtag(session => session.Load<Application>(appGroup.ApplicationId)) as Application;
+                ApplicationData.HydrateApplication(appGroup.Application);
                 if (appGroup.CustomVariableGroupId == null) { continue; }
                 appGroup.CustomVariableGroup = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
             }
@@ -98,6 +101,8 @@ namespace PrestoCommon.Data.RavenDb
             {
                 group.Application =
                     QuerySingleResultAndSetEtag(session => session.Load<Application>(group.ApplicationId)) as Application;
+
+                ApplicationData.HydrateApplication(group.Application);
 
                 if (group.CustomVariableGroupId != null)
                 {
@@ -116,11 +121,14 @@ namespace PrestoCommon.Data.RavenDb
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
-            applicationServer.ApplicationIdsForAllAppWithGroups         = new List<string>();
+            applicationServer.ApplicationIdsForAllAppWithGroups       = new List<string>();
             applicationServer.CustomVariableGroupIdsForAllAppWithGroups = new List<string>();
-            applicationServer.CustomVariableGroupIds                    = new List<string>();
+            applicationServer.CustomVariableGroupIds                  = new List<string>();
 
             // For each group, set its ApplicationId and CustomVariableGroupId.
+            
+            applicationServer.CustomVariableGroupIdsForGroupsWithinApps = new List<string>();
+
             foreach (ApplicationWithOverrideVariableGroup appGroup in applicationServer.ApplicationsWithOverrideGroup)
             {
                 applicationServer.ApplicationIdsForAllAppWithGroups.Add(appGroup.Application.Id);
@@ -131,6 +139,11 @@ namespace PrestoCommon.Data.RavenDb
                 {
                     applicationServer.CustomVariableGroupIdsForAllAppWithGroups.Add(appGroup.CustomVariableGroup.Id);
                     appGroup.CustomVariableGroupId = appGroup.CustomVariableGroup.Id;
+                }
+
+                foreach (CustomVariableGroup customGroup in appGroup.Application.CustomVariableGroups)
+                {
+                    applicationServer.CustomVariableGroupIdsForGroupsWithinApps.Add(customGroup.Id);
                 }
             }
 

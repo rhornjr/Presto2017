@@ -30,16 +30,6 @@ namespace PrestoCommon.Logic
         }
 
         /// <summary>
-        /// Gets the CustomVariableGroup by the specified application name.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <returns></returns>
-        public static CustomVariableGroup GetByApplication(Application application)
-        {
-            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetByApplication(application);
-        }
-
-        /// <summary>
         /// Saves the specified custom variable group.
         /// </summary>
         /// <param name="customVariableGroup">The custom variable group.</param>

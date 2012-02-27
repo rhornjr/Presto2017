@@ -6,9 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
-using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
@@ -19,7 +16,6 @@ namespace PrestoCommon.Entities
     public class CustomVariableGroup : EntityBase
     {
         private string _name;
-        private Application _application;
         private ObservableCollection<CustomVariable> _customVariables;        
 
         /// <summary>
@@ -36,34 +32,6 @@ namespace PrestoCommon.Entities
             {
                 this._name = value;
                 NotifyPropertyChanged(() => this.Name);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the application id.
-        /// </summary>
-        /// <value>
-        /// The application id.
-        /// </value>
-        public string ApplicationId { get; set; }  // For RavenDB, grrrr...
-
-        /// <summary>
-        /// Gets or sets the application that's associated with this custom variable group. If an application
-        /// is associated with a custom variable group, then only that application will be able to use it.
-        /// </summary>
-        /// <value>
-        /// The application.
-        /// </value>
-        [XmlIgnore]  // This is here for exporting custom variable groups. Application.Tasks is read only, so it couldn't serialize.
-        [JsonIgnore]  //  We do not want RavenDB to serialize this.
-        public Application Application
-        {
-            get { return this._application; }
-
-            set
-            {
-                this._application = value;
-                NotifyPropertyChanged(() => this.Application);
             }
         }
 
@@ -107,39 +75,63 @@ namespace PrestoCommon.Entities
         /// </summary>
         /// <param name="rawString">The raw string.</param>
         /// <param name="applicationServer">The application server.</param>
-        /// <param name="applicationWithOverrideVariableGroup">The application with override variable group.</param>
+        /// <param name="appWithGroup">The application with override variable group.</param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
+        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
-            if (applicationWithOverrideVariableGroup == null) { throw new ArgumentNullException("applicationWithOverrideVariableGroup"); }
+            if (appWithGroup == null) { throw new ArgumentNullException("appWithGroup"); }
 
             if (!StringHasCustomVariable(rawString)) { return rawString; }
 
             List<CustomVariable> allCustomVariables = new List<CustomVariable>();
 
             // Add system variables
-            AddSystemVariables(allCustomVariables, applicationServer, applicationWithOverrideVariableGroup);
+            AddSystemVariables(allCustomVariables, applicationServer, appWithGroup);
 
-            // First, get all custom variables associated with the app server.
+            // Add all custom variables associated with the app server.
             foreach (CustomVariableGroup customVariableGroup in applicationServer.CustomVariableGroups)
             {
+                ThrowIfDuplicateCustomVariableKeyExists(allCustomVariables, customVariableGroup);
                 allCustomVariables.AddRange(customVariableGroup.CustomVariables);
             }
 
-            // Get the custom variable group associated with this *application*.
-            CustomVariableGroup appGroup = CustomVariableGroupLogic.GetByApplication(applicationWithOverrideVariableGroup.Application);
-
-            if (appGroup != null && appGroup.CustomVariables != null) { allCustomVariables.AddRange(appGroup.CustomVariables); }
+            // Add all custom variables associated with the application.
+            foreach (CustomVariableGroup customVariableGroup in appWithGroup.Application.CustomVariableGroups)
+            {
+                ThrowIfDuplicateCustomVariableKeyExists(allCustomVariables, customVariableGroup);
+                allCustomVariables.AddRange(customVariableGroup.CustomVariables);
+            }
 
             // Add the override custom variables. If they already exist in our list, replace them.
-            AddRangeOverride(allCustomVariables, applicationWithOverrideVariableGroup);
+            // Since these are overrides, duplicates are okay here.
+            AddRangeOverride(allCustomVariables, appWithGroup);
 
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
             { LogMissingVariableAndThrow(rawString); }
 
             return ResolveCustomVariable(rawString, allCustomVariables);
+        }
+
+        private static void ThrowIfDuplicateCustomVariableKeyExists(List<CustomVariable> allCustomVariables, CustomVariableGroup customVariableGroup)
+        {
+            string duplicateKey = DuplicateCustomVariableKey(allCustomVariables, customVariableGroup);
+            
+            if (!string.IsNullOrEmpty(duplicateKey))
+            {
+                LogDuplicateVariableAndThrow(duplicateKey);
+            }
+        }
+
+        private static string DuplicateCustomVariableKey(IEnumerable<CustomVariable> masterVariableList, CustomVariableGroup newGroup)
+        {
+            foreach (CustomVariable customVariable in newGroup.CustomVariables)
+            {
+                if (masterVariableList.Any(x => x.Key == customVariable.Key)) { return customVariable.Key; }
+            }
+
+            return string.Empty;
         }
 
         private static void AddSystemVariables(List<CustomVariable> allCustomVariables, ApplicationServer applicationServer,
@@ -231,7 +223,15 @@ namespace PrestoCommon.Entities
                     "{0} contains a custom variable that does not exist in the list of custom variables.", rawString);
             LogUtility.LogWarning(message);
             throw new ArgumentException(message);
-        }        
+        }
+
+        private static void LogDuplicateVariableAndThrow(string customVariableKey)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture,
+                    "A custom variable key ({0}) exists more than once. Only one is allowed.", customVariableKey);
+            LogUtility.LogWarning(message);
+            throw new ArgumentException(message);
+        }
 
         private static string CustomVariableWithoutPrefixAndSuffix(string customVariableString)
         {

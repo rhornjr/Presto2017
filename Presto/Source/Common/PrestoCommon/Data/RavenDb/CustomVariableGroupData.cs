@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
@@ -21,13 +20,10 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<IEnumerable<CustomVariableGroup>>(() =>
             {
                 IEnumerable<CustomVariableGroup> customGroups =
-                    QueryAndSetEtags(session => session.Query<CustomVariableGroup>()
-                    .Include(x => x.ApplicationId)).AsEnumerable().Cast<CustomVariableGroup>();
-
-                foreach (CustomVariableGroup customGroup in customGroups)
-                {
-                    HydrateApplication(customGroup);
-                }
+                    QueryAndSetEtags(session =>
+                        session.Query<CustomVariableGroup>()
+                        .Customize(x => x.WaitForNonStaleResults()))
+                        .AsEnumerable().Cast<CustomVariableGroup>();
 
                 return customGroups;
             });
@@ -44,46 +40,12 @@ namespace PrestoCommon.Data.RavenDb
             {
                 CustomVariableGroup customVariableGroup =
                     QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
-                        .Include(x => x.ApplicationId)
                         .Where(customGroup => customGroup.Name == name).FirstOrDefault())
                         as CustomVariableGroup;
-
-                HydrateApplication(customVariableGroup);
 
                 return customVariableGroup;
             });
         }        
-
-        /// <summary>
-        /// Gets the specified application name.
-        /// </summary>
-        /// <param name="application"></param>
-        /// <returns></returns>
-        public CustomVariableGroup GetByApplication(Application application)
-        {
-            return ExecuteQuery<CustomVariableGroup>(() =>
-            {
-                CustomVariableGroup customVariableGroup = 
-                    QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
-                        .Include(x => x.ApplicationId)
-                        .Where(customGroup => customGroup.ApplicationId == application.Id).FirstOrDefault())
-                        as CustomVariableGroup;
-
-                HydrateApplication(customVariableGroup);
-
-                return customVariableGroup;
-            });
-        }
-
-        private static void HydrateApplication(CustomVariableGroup customVariableGroup)
-        {
-            if (customVariableGroup == null) { return; }
-
-            if (!string.IsNullOrWhiteSpace(customVariableGroup.ApplicationId))
-            {
-                customVariableGroup.Application = QuerySingleResultAndSetEtag(session => session.Load<Application>(customVariableGroup.ApplicationId)) as Application;
-            }
-        }
 
         /// <summary>
         /// Saves the specified custom variable group.
@@ -91,15 +53,6 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="customVariableGroup">The custom variable group.</param>
         public void Save(CustomVariableGroup customVariableGroup)
         {
-            if (customVariableGroup == null) { throw new ArgumentNullException("customVariableGroup"); }
-
-            customVariableGroup.ApplicationId = null;  // Default. We'll add it back, below, if there is still an app associated with the group.
-
-            if (customVariableGroup.Application != null)
-            {
-                customVariableGroup.ApplicationId = customVariableGroup.Application.Id;
-            }
-
             new GenericData().Save(customVariableGroup);
         }
     }

@@ -105,6 +105,14 @@ namespace PrestoCommon.Entities
         public List<string> CustomVariableGroupIdsForAllAppWithGroups { get; set; }  // For RavenDB
 
         /// <summary>
+        /// Gets or sets the custom variable group ids for groups within apps.
+        /// </summary>
+        /// <value>
+        /// The custom variable group ids for groups within apps.
+        /// </value>
+        public List<string> CustomVariableGroupIdsForGroupsWithinApps { get; set; }  // For RavenDB
+
+        /// <summary>
         /// Gets or sets the application with group to force install.
         /// </summary>
         /// <value>

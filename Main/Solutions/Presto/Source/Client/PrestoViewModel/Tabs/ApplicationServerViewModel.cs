@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
@@ -24,7 +25,7 @@ namespace PrestoViewModel.Tabs
     public class ApplicationServerViewModel : ViewModelBase
     {
         private List<DeploymentEnvironment> _deploymentEnvironments;
-        private ObservableCollection<ApplicationServer> _applicationServers;
+        private PrestoObservableCollection<ApplicationServer> _applicationServers = new PrestoObservableCollection<ApplicationServer>();
         private ApplicationServer _selectedApplicationServer;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
 
@@ -121,7 +122,7 @@ namespace PrestoViewModel.Tabs
         /// <value>
         /// The application servers.
         /// </value>
-        public ObservableCollection<ApplicationServer> ApplicationServers
+        public PrestoObservableCollection<ApplicationServer> ApplicationServers
         {
             get { return this._applicationServers; }
 
@@ -464,12 +465,15 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
+            // ToDo: Need to validate against the new way that groups are associated with an app.
+            // Note: The Presto Task Runner will throw an exception if there are duplicates, but it's
+            //       still nice to let the user know right now.
             // Servers shouldn't reference custom variable groups that are associated with an application.
-            if (viewModel.SelectedCustomVariableGroups.Any(group => group.Application != null))
-            {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.CannotUseGroup;
-                return;
-            }
+            //if (viewModel.SelectedCustomVariableGroups.Any(group => group.Application != null))
+            //{
+            //    ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.CannotUseGroup;
+            //    return;
+            //}
 
             viewModel.SelectedCustomVariableGroups.ForEach(group => this.SelectedApplicationServer.CustomVariableGroups.Add(group));
 
@@ -492,7 +496,13 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.ApplicationServers = new ObservableCollection<ApplicationServer>(ApplicationServerLogic.GetAll().ToList());
+                // Note: Instead of just setting the entire list to a new list, use Clear() and Add(). When I set
+                //       the entire list here, I had to deal with esoteric problems that ruined my day:
+                //       http://stackoverflow.com/questions/9438632/nullreferenceexception-using-treeview-and-propertychanged#comment11937214_9438632
+
+                this.ApplicationServers.ClearItemsAndNotifyChangeOnlyWhenDone();
+
+                this.ApplicationServers.AddRange(ApplicationServerLogic.GetAll());
             }
             catch (Exception ex)
             {

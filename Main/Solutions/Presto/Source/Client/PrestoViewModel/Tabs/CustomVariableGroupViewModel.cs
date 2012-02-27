@@ -35,16 +35,6 @@ namespace PrestoViewModel.Tabs
         }
 
         /// <summary>
-        /// Gets the add application command.
-        /// </summary>
-        public ICommand AddApplicationCommand { get; private set; }
-
-        /// <summary>
-        /// Gets the remove application command.
-        /// </summary>
-        public ICommand RemoveApplicationCommand { get; private set; }
-
-        /// <summary>
         /// Gets the add variable group command.
         /// </summary>
         public ICommand AddVariableGroupCommand { get; private set; }
@@ -146,9 +136,6 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddApplicationCommand    = new RelayCommand(_ => AddApplication(), _ => CustomVariableGroupIsSelected);
-            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => CustomVariableGroupIsSelected);
-
             this.AddVariableGroupCommand     = new RelayCommand(_ => AddVariableGroup());
             this.DeleteVariableGroupCommand  = new RelayCommand(_ => DeleteVariableGroup(), _ => CustomVariableGroupIsSelected);
             this.SaveVariableGroupCommand    = new RelayCommand(_ => SaveVariableGroup(), _ => CustomVariableGroupIsSelected);
@@ -160,25 +147,6 @@ namespace PrestoViewModel.Tabs
             this.EditVariableCommand   = new RelayCommand(_ => EditVariable(), _ => CustomVariableIsSelected());
             this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable(), _ => CustomVariableIsSelected());
         }             
-
-        private void AddApplication()
-        {
-            // ToDo: Need to check first to see if the selected custom variable group is associated with an app server.
-            //       If so, don't do this. A group can only be associated with an app or server, not both.
-
-            ApplicationSelectorViewModel viewModel = new ApplicationSelectorViewModel();
-
-            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
-
-            if (viewModel.UserCanceled) { return; }
-
-            this.SelectedCustomVariableGroup.Application = viewModel.SelectedApplication;
-        }
-
-        private void RemoveApplication()
-        {
-            this.SelectedCustomVariableGroup.Application = null;
-        }
 
         private void AddVariable()
         {

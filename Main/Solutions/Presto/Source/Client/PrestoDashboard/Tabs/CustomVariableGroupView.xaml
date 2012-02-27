@@ -14,11 +14,13 @@
          the sort doesn't get updated. That's because CollectionViewSource doesn't 
          implement INotifyPropertyChanged. -->
     <UserControl.Resources>
+        
         <CollectionViewSource x:Key="SortedGroups" Source="{Binding CustomVariableGroups}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+
     </UserControl.Resources>
 
     <Grid>
@@ -53,7 +55,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
@@ -67,16 +68,7 @@
                     <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                     <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedCustomVariableGroup.Name}"/>
 
-                    <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardLabel}" Content="Application: "/>
-
-                    <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-                        <TextBox Text="{Binding SelectedCustomVariableGroup.Application.Name}"
-                                 Width="300" HorizontalAlignment="Left"/>
-                        <Button Content="..." Width="25" Height="25" Command="{Binding AddApplicationCommand}"/>
-                        <Button Content="X" Width="25" Height="25" Command="{Binding RemoveApplicationCommand}"/>
-                    </StackPanel>
-
-                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
+                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
 
                 </Grid>
                 
@@ -95,7 +87,7 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variables" FontWeight="Bold"/>            
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"                      
+                      ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"
                       SelectedItem="{Binding SelectedCustomVariable}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="170"/>

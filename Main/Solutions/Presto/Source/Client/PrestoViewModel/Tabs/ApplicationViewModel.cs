@@ -114,6 +114,16 @@ namespace PrestoViewModel.Tabs
         public ICommand SaveApplicationCommand { get; private set; }
 
         /// <summary>
+        /// Gets the add variable group command.
+        /// </summary>
+        public ICommand AddVariableGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the remove variable group command.
+        /// </summary>
+        public ICommand RemoveVariableGroupCommand { get; private set; }
+
+        /// <summary>
         /// Gets or sets the applications.
         /// </summary>
         /// <value>
@@ -184,6 +194,14 @@ namespace PrestoViewModel.Tabs
         }
 
         /// <summary>
+        /// Gets or sets the selected custom variable group.
+        /// </summary>
+        /// <value>
+        /// The selected custom variable group.
+        /// </value>
+        public CustomVariableGroup SelectedCustomVariableGroup { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationViewModel"/> class.
         /// </summary>
         public ApplicationViewModel()
@@ -213,6 +231,9 @@ namespace PrestoViewModel.Tabs
             this.ImportLegacyTasksCommand  = new RelayCommand(_ => ImportLegacyTasks(), _ => ApplicationIsSelected);            
             this.MoveTaskUpCommand         = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
             this.MoveTaskDownCommand       = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
+
+            this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
+            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
         }
 
         private bool ApplicationIsSelectedAndForceExists()
@@ -495,6 +516,40 @@ namespace PrestoViewModel.Tabs
             }
 
             return task;
+        }
+
+        private void AddVariableGroup()
+        {
+            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel(true);
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            // ToDo: Apps shouldn't reference custom variable groups that are associated with a server.
+            // Note: The Presto Task Runner will throw an exception if there are duplicates, but it's
+            //       still nice to let the user know right now.
+            //if (viewModel.SelectedCustomVariableGroups.Any(group => group.Application != null))
+            //{
+            //    ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.CannotUseGroup;
+            //    return;
+            //}
+
+            viewModel.SelectedCustomVariableGroups.ForEach(group => this.SelectedApplication.CustomVariableGroups.Add(group));
+
+            SaveApplication();
+        }
+
+        private bool VariableGroupIsSelected()
+        {
+            return this.SelectedCustomVariableGroup != null;
+        }
+
+        private void RemoveVariableGroup()
+        {
+            this.SelectedApplication.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
+
+            SaveApplication();
         }
 
         private static void LogUnexpectedLegacyTask(string legacyTaskTypeName)

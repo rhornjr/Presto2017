@@ -9,7 +9,8 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class ApplicationWithGroupViewModel : ViewModelBase
     {
-        private ApplicationWithOverrideVariableGroup _applicationWithOverrideVariableGroup;
+        private ApplicationWithOverrideVariableGroup _originalAppWithGroup;
+        private ApplicationWithOverrideVariableGroup _applicationWithOverrideVariableGroup = new ApplicationWithOverrideVariableGroup();
 
         /// <summary>
         /// Gets or sets the ok command.
@@ -83,22 +84,28 @@ namespace PrestoViewModel.Windows
         {
             if (DesignMode.IsInDesignMode) { return; }
 
-            this.ApplicationWithGroup = new ApplicationWithOverrideVariableGroup();
-
             Initialize();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationWithGroupViewModel"/> class.
         /// </summary>
-        /// <param name="appWithGroup">The app with group.</param>
-        public ApplicationWithGroupViewModel(ApplicationWithOverrideVariableGroup appWithGroup)
+        /// <param name="originalAppWithGroup">The app with group.</param>
+        public ApplicationWithGroupViewModel(ApplicationWithOverrideVariableGroup originalAppWithGroup)
         {
             if (DesignMode.IsInDesignMode) { return; }
 
-            this.ApplicationWithGroup = appWithGroup;
+            InitializeWorkingCopy(originalAppWithGroup);
+            this._originalAppWithGroup = originalAppWithGroup;
 
             Initialize();
+        }
+
+        private void InitializeWorkingCopy(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            this.ApplicationWithGroup.Application         = appWithGroup.Application;
+            this.ApplicationWithGroup.CustomVariableGroup = appWithGroup.CustomVariableGroup;
+            this.ApplicationWithGroup.Enabled             = appWithGroup.Enabled;
         }
 
         private void Initialize()
@@ -108,11 +115,22 @@ namespace PrestoViewModel.Windows
             this.SelectApplicationCommand = new RelayCommand(_ => SelectApplication());
             this.SelectGroupCommand       = new RelayCommand(_ => SelectGroup());
             this.RemoveGroupCommand       = new RelayCommand(_ => RemoveGroup());
+
+            this.UserCanceled = true;  // default
         }            
 
         private void Save()
         {
+            this.UserCanceled = false;
+            UpdateOriginalFromWorkingCopy();
             this.Close();
+        }
+
+        private void UpdateOriginalFromWorkingCopy()
+        {
+            this._originalAppWithGroup.Application         = this.ApplicationWithGroup.Application;
+            this._originalAppWithGroup.CustomVariableGroup = this.ApplicationWithGroup.CustomVariableGroup;
+            this._originalAppWithGroup.Enabled             = this.ApplicationWithGroup.Enabled;
         }
 
         private void Cancel()

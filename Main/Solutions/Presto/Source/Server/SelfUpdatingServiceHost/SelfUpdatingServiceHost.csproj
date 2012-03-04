@@ -46,7 +46,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,19 +58,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="SelfUpdatingService.cs">
+    <Compile Include="PrestoSelfUpdatingServiceHostInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SelfUpdatingService.Designer.cs">
-      <DependentUpon>SelfUpdatingService.cs</DependentUpon>
+    <Compile Include="PrestoSelfUpdatingServiceHostInstaller.Designer.cs">
+      <DependentUpon>PrestoSelfUpdatingServiceHostInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrestoSelfUpdatingServiceHost.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PrestoSelfUpdatingServiceHost.Designer.cs">
+      <DependentUpon>PrestoSelfUpdatingServiceHost.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdaterController.cs" />
     <Compile Include="UpdaterManifest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SelfUpdatingService.resx">
-      <DependentUpon>SelfUpdatingService.cs</DependentUpon>
+    <EmbeddedResource Include="PrestoSelfUpdatingServiceHost.resx">
+      <DependentUpon>PrestoSelfUpdatingServiceHost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrestoSelfUpdatingServiceHostInstaller.resx">
+      <DependentUpon>PrestoSelfUpdatingServiceHostInstaller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

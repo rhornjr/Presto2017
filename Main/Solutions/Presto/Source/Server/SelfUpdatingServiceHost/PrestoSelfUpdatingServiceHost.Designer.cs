@@ -1,6 +1,6 @@
 ﻿namespace SelfUpdatingServiceHost
 {
-    partial class SelfUpdatingService
+    partial class PrestoSelfUpdatingServiceHost
     {
         /// <summary> 
         /// Required designer variable.
@@ -37,7 +37,7 @@
             // 
             // SelfUpdatingService
             // 
-            this.ServiceName = "SelfUpdatingService";
+            this.ServiceName = "PrestoSelfUpdatingServiceHost";
 
         }
 

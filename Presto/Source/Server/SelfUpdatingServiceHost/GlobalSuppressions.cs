@@ -12,3 +12,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UpdaterController", Scope = "member", Target = "SelfUpdatingServiceHost.UpdaterController.#Stop()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "updaterController", Scope = "member", Target = "SelfUpdatingServiceHost.SelfUpdatingService.#OnStop()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IStartStop", Scope = "member", Target = "SelfUpdatingServiceHost.UpdaterController.#Stop()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "updaterController", Scope = "member", Target = "SelfUpdatingServiceHost.PrestoSelfUpdatingServiceHost.#OnStop()")]

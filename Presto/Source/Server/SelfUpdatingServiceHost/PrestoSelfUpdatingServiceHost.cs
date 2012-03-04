@@ -5,11 +5,11 @@ using PrestoServerCommon;
 
 namespace SelfUpdatingServiceHost
 {
-    public partial class SelfUpdatingService : ServiceBase
+    public partial class PrestoSelfUpdatingServiceHost : ServiceBase
     {
         UpdaterController _updaterController;
 
-        public SelfUpdatingService()
+        public PrestoSelfUpdatingServiceHost()
         {
             InitializeComponent();
         }
@@ -21,7 +21,7 @@ namespace SelfUpdatingServiceHost
         {            
             try
             {
-                using (SelfUpdatingService selfUpdatingService = new SelfUpdatingService())
+                using (PrestoSelfUpdatingServiceHost selfUpdatingService = new PrestoSelfUpdatingServiceHost())
                 {
                     if (!Environment.UserInteractive)
                     {

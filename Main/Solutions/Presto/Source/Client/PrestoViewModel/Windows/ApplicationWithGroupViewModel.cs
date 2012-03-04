@@ -84,6 +84,8 @@ namespace PrestoViewModel.Windows
         {
             if (DesignMode.IsInDesignMode) { return; }
 
+            this._originalAppWithGroup = new ApplicationWithOverrideVariableGroup();
+
             Initialize();
         }
 

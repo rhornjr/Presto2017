@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using Db4objects.Db4o;
 
 namespace PrestoCommon.Entities
 {
@@ -14,7 +13,6 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
-        [Transient]
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

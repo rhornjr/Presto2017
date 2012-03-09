@@ -99,6 +99,8 @@ namespace PrestoTaskRunner.Logic
             {
                 PingRequest pingRequest = PingRequestLogic.GetMostRecent();
 
+                if (pingRequest == null) { return; }
+
                 ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
 
                 // Can't do anything if we don't have an app server

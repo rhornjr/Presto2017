@@ -83,7 +83,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -102,6 +104,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="PrestoDashboardInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PrestoDashboardInstaller.Designer.cs">
+      <DependentUpon>PrestoDashboardInstaller.cs</DependentUpon>
+    </Compile>
     <Compile Include="PrestoDashboardResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

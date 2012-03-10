@@ -6,6 +6,7 @@ using System.Linq;
 using PrestoCommon.Entities;
 using Raven.Client;
 using Raven.Client.Document;
+using Raven.Client.Indexes;
 
 namespace PrestoCommon.Data.RavenDb
 {
@@ -150,7 +151,10 @@ namespace PrestoCommon.Data.RavenDb
             try
             {
                 documentStore.ConnectionStringName = "RavenDb";                
-                documentStore.Initialize();                
+                documentStore.Initialize();
+
+                // Tell Raven to create our indexes.
+                IndexCreation.CreateIndexes(typeof(DataAccessFactory).Assembly, documentStore);
             }
             catch
             {

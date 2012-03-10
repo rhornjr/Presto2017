@@ -558,6 +558,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1295A7418BF94A708BE54A03C5843D7F"
+                    {
+                    "Name" = "8:Presto"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_BAB99469B2B84BBDA7C1621208C08023"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -577,7 +588,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Presto Dashboard"
         "ProductCode" = "8:{CE5453AD-8ECA-4744-9540-7BA4CC91B3ED}"
-        "PackageCode" = "8:{D8CBEFF4-2147-42DA-965D-F2E6866E4F8B}"
+        "PackageCode" = "8:{FEEDD4B8-11F6-4428-B2B4-797E50FB55AC}"
         "UpgradeCode" = "8:{3BF45CD5-04AA-4C75-AC94-5DD5C83A0423}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -585,7 +596,7 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:2.0.0"
-        "Manufacturer" = "8:Bob Horn"
+        "Manufacturer" = "8:Presto"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Presto Dashboard"
@@ -720,7 +731,7 @@
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_E3241F8DC5414382B47FB99F92B50207"
-            "Folder" = "8:_CC466BF48FE0437FAA986017769701DB"
+            "Folder" = "8:_1295A7418BF94A708BE54A03C5843D7F"
             "WorkingFolder" = "8:_813F343F7C4848038504EE68E6A046C4"
             "Icon" = "8:_5C8F770E5E414F82B5D30D95135A0F01"
             "Feature" = "8:"

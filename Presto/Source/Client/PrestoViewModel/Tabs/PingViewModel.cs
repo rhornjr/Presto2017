@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -196,7 +197,18 @@ namespace PrestoViewModel.Tabs
             // Don't run forever
             if (DateTime.Now.Subtract(this._timerStartTime).Minutes >= TotalTimerRunTimeInMinutes) { this._timer = null; }
 
-            PingRequest latestPingRequest = PingRequestLogic.GetMostRecent();
+            PingRequest latestPingRequest;
+            try
+            {
+                latestPingRequest = PingRequestLogic.GetMostRecent();
+            }
+            catch (Exception ex)
+            {
+                // We need to catch exceptions here because this method is called by the constructor. If this method throws
+                // an exception, the app will just flash open and then close.
+                LogUtility.LogException(ex);
+                return;
+            }
 
             if (latestPingRequest == null)
             {

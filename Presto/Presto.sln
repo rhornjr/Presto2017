@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Local.testsettings = Local.testsettings
 		Presto1.vsmdi = Presto1.vsmdi
 		Solution Items\SavingCodeplexCredentials.txt = Solution Items\SavingCodeplexCredentials.txt
+		Solution Items\SolutionInfo.cs = Solution Items\SolutionInfo.cs
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject

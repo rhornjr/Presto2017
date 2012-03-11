@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="Interfaces\IStartStop.cs" />
     <Compile Include="ServerCommonLogUtility.cs" />
     <Compile Include="PrestoServerCommonUtility.cs" />

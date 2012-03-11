@@ -1,0 +1,259 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAFF2A9-EEB6-44B7-BC2C-FD92ECBB1A3E}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
+		CustomDictionary.xml = CustomDictionary.xml
+		Local.testsettings = Local.testsettings
+		Presto1.vsmdi = Presto1.vsmdi
+		Solution Items\SavingCodeplexCredentials.txt = Solution Items\SavingCodeplexCredentials.txt
+		Solution Items\SolutionInfo.cs = Solution Items\SolutionInfo.cs
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{9699A83B-D1BE-4BCD-B670-D778160EF16F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{047B7E85-DA60-4E12-9BA4-BD5CE04711FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{D82E3A5C-3204-4B84-9F02-5ED567D09D33}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPartyAssemblies", "ThirdPartyAssemblies", "{CD04BF98-CC51-4B4E-998E-6C14B4C6771D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D399A7C6-4F03-44BE-B634-F5E54FC48B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoCommon", "Source\Common\PrestoCommon\PrestoCommon.csproj", "{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoViewModel", "Source\Client\PrestoViewModel\PrestoViewModel.csproj", "{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{8101847C-2ACD-4993-9FDD-901CC2B07E1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoDashboard", "Source\Client\PrestoDashboard\PrestoDashboard.csproj", "{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoTaskRunner", "Source\Server\PrestoTaskRunner\PrestoTaskRunner.csproj", "{038990D2-3F29-4D89-97A3-A11BC53D937E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architecture", "Architecture", "{56F6C77F-E595-4E92-A00D-E4152F0B0241}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "PrestoArchitecture", "Architecture\PrestoArchitecture\PrestoArchitecture.modelproj", "{46E7415A-4162-4CA9-8AD1-85085DA23D21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfUpdatingServiceHost", "Source\Server\SelfUpdatingServiceHost\SelfUpdatingServiceHost.csproj", "{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MvvmFramework", "MvvmFramework", "{CCAFF706-DD44-49CB-8896-EADA2FD38664}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSelectBehavior", "Source\MvvmFramework\MultiSelectBehavior\MultiSelectBehavior.csproj", "{9E41ADBA-A55C-4F71-BF0A-463C82334B13}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDb", "RavenDb", "{B59FBDF3-226E-4F6B-B564-6F795AA85689}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll = Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServerCommon", "Source\Server\PrestoServerCommon\PrestoServerCommon.csproj", "{2F01965F-4A1E-455C-9975-A17BF129EBD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoAutomatedTests", "Source\Testing\PrestoAutomatedTests\PrestoAutomatedTests.csproj", "{75344126-B6A2-4277-9EF5-99E08E147D7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WpfToolkit", "WpfToolkit", "{CDBF03AE-5D75-4B74-BB79-EB71D2C7E043}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\ThirdPartyAssemblies\WpfToolkit\WPFToolkit.dll = Solution Items\ThirdPartyAssemblies\WpfToolkit\WPFToolkit.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installers", "Installers", "{667D14E8-2679-43D2-9E99-9727B63C306B}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PrestoSelfUpdatingServiceHostInstaller", "Source\Installers\PrestoSelfUpdatingServiceHostInstaller\PrestoSelfUpdatingServiceHostInstaller.vdproj", "{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PrestoDashboardInstaller", "Source\Installers\PrestoDashboardInstaller\PrestoDashboardInstaller.vdproj", "{22C907F7-0AFE-42D6-830F-3E08487A4BD6}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 12
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Source\\Common\\PrestoCommon\\PrestoCommon.csproj
+		SccProjectTopLevelParentUniqueName1 = Presto.sln
+		SccProjectName1 = Source/Common/PrestoCommon
+		SccLocalPath1 = Source\\Common\\PrestoCommon
+		SccProjectUniqueName2 = Source\\Client\\PrestoViewModel\\PrestoViewModel.csproj
+		SccProjectTopLevelParentUniqueName2 = Presto.sln
+		SccProjectName2 = Source/Client/PrestoViewModel
+		SccLocalPath2 = Source\\Client\\PrestoViewModel
+		SccProjectUniqueName3 = Source\\Client\\PrestoDashboard\\PrestoDashboard.csproj
+		SccProjectTopLevelParentUniqueName3 = Presto.sln
+		SccProjectName3 = Source/Client/PrestoDashboard
+		SccLocalPath3 = Source\\Client\\PrestoDashboard
+		SccProjectUniqueName4 = Source\\Server\\PrestoTaskRunner\\PrestoTaskRunner.csproj
+		SccProjectTopLevelParentUniqueName4 = Presto.sln
+		SccProjectName4 = Source/Server/PrestoTaskRunner
+		SccLocalPath4 = Source\\Server\\PrestoTaskRunner
+		SccProjectUniqueName5 = Architecture\\PrestoArchitecture\\PrestoArchitecture.modelproj
+		SccProjectTopLevelParentUniqueName5 = Presto.sln
+		SccProjectName5 = Architecture/PrestoArchitecture
+		SccLocalPath5 = Architecture\\PrestoArchitecture
+		SccProjectUniqueName6 = Source\\Server\\SelfUpdatingServiceHost\\SelfUpdatingServiceHost.csproj
+		SccProjectTopLevelParentUniqueName6 = Presto.sln
+		SccProjectName6 = Source/Server/SelfUpdatingServiceHost
+		SccLocalPath6 = Source\\Server\\SelfUpdatingServiceHost
+		SccProjectUniqueName7 = Source\\MvvmFramework\\MultiSelectBehavior\\MultiSelectBehavior.csproj
+		SccProjectTopLevelParentUniqueName7 = Presto.sln
+		SccProjectName7 = Source/MvvmFramework/MultiSelectBehavior
+		SccLocalPath7 = Source\\MvvmFramework\\MultiSelectBehavior
+		SccProjectUniqueName8 = Source\\Server\\PrestoServerCommon\\PrestoServerCommon.csproj
+		SccProjectTopLevelParentUniqueName8 = Presto.sln
+		SccProjectName8 = Source/Server/PrestoServerCommon
+		SccLocalPath8 = Source\\Server\\PrestoServerCommon
+		SccProjectUniqueName9 = Source\\Testing\\PrestoAutomatedTests\\PrestoAutomatedTests.csproj
+		SccProjectTopLevelParentUniqueName9 = Presto.sln
+		SccProjectName9 = Source/Testing/PrestoAutomatedTests
+		SccLocalPath9 = Source\\Testing\\PrestoAutomatedTests
+		SccProjectUniqueName10 = Source\\Installers\\PrestoSelfUpdatingServiceHostInstaller\\PrestoSelfUpdatingServiceHostInstaller.vdproj
+		SccProjectTopLevelParentUniqueName10 = Presto.sln
+		SccProjectName10 = Source/Installers/PrestoSelfUpdatingServiceHostInstaller
+		SccLocalPath10 = Source\\Installers\\PrestoSelfUpdatingServiceHostInstaller
+		SccProjectUniqueName11 = Source\\Installers\\PrestoDashboardInstaller\\PrestoDashboardInstaller.vdproj
+		SccProjectTopLevelParentUniqueName11 = Presto.sln
+		SccProjectName11 = Source/Installers/PrestoDashboardInstaller
+		SccLocalPath11 = Source\\Installers\\PrestoDashboardInstaller
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Presto1.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}.Release|x86.ActiveCfg = Release|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}.Release|x86.ActiveCfg = Release|Any CPU
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Debug|x86.ActiveCfg = Debug|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Debug|x86.Build.0 = Debug|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Release|Any CPU.ActiveCfg = Release|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Release|Mixed Platforms.Build.0 = Release|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Release|x86.ActiveCfg = Release|x86
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}.Release|x86.Build.0 = Release|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Debug|x86.ActiveCfg = Debug|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Debug|x86.Build.0 = Debug|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Release|Any CPU.ActiveCfg = Release|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Release|x86.ActiveCfg = Release|x86
+		{038990D2-3F29-4D89-97A3-A11BC53D937E}.Release|x86.Build.0 = Release|x86
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21}.Release|x86.ActiveCfg = Release|Any CPU
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|x86.ActiveCfg = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Debug|x86.Build.0 = Debug|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|Any CPU.ActiveCfg = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|Mixed Platforms.Build.0 = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|x86.ActiveCfg = Release|x86
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}.Release|x86.Build.0 = Release|x86
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0}.Release|x86.ActiveCfg = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Debug|Any CPU.ActiveCfg = Debug
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Debug|x86.ActiveCfg = Debug
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Release|Any CPU.ActiveCfg = Release
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Release|Mixed Platforms.ActiveCfg = Release
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Release|x86.ActiveCfg = Release
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Debug|Any CPU.ActiveCfg = Debug
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Debug|x86.ActiveCfg = Debug
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Release|Any CPU.ActiveCfg = Release
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Release|Mixed Platforms.ActiveCfg = Release
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Release|x86.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD04BF98-CC51-4B4E-998E-6C14B4C6771D} = {7FAFF2A9-EEB6-44B7-BC2C-FD92ECBB1A3E}
+		{047B7E85-DA60-4E12-9BA4-BD5CE04711FF} = {9699A83B-D1BE-4BCD-B670-D778160EF16F}
+		{D82E3A5C-3204-4B84-9F02-5ED567D09D33} = {9699A83B-D1BE-4BCD-B670-D778160EF16F}
+		{D399A7C6-4F03-44BE-B634-F5E54FC48B9C} = {9699A83B-D1BE-4BCD-B670-D778160EF16F}
+		{8101847C-2ACD-4993-9FDD-901CC2B07E1D} = {9699A83B-D1BE-4BCD-B670-D778160EF16F}
+		{CCAFF706-DD44-49CB-8896-EADA2FD38664} = {9699A83B-D1BE-4BCD-B670-D778160EF16F}
+		{667D14E8-2679-43D2-9E99-9727B63C306B} = {9699A83B-D1BE-4BCD-B670-D778160EF16F}
+		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
+		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
+		{038990D2-3F29-4D89-97A3-A11BC53D937E} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
+		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
+		{2F01965F-4A1E-455C-9975-A17BF129EBD0} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
+		{B59FBDF3-226E-4F6B-B564-6F795AA85689} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
+		{CDBF03AE-5D75-4B74-BB79-EB71D2C7E043} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
+		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0} = {D399A7C6-4F03-44BE-B634-F5E54FC48B9C}
+		{75344126-B6A2-4277-9EF5-99E08E147D7E} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
+		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}
+		{9E41ADBA-A55C-4F71-BF0A-463C82334B13} = {CCAFF706-DD44-49CB-8896-EADA2FD38664}
+		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA} = {667D14E8-2679-43D2-9E99-9727B63C306B}
+		{22C907F7-0AFE-42D6-830F-3E08487A4BD6} = {667D14E8-2679-43D2-9E99-9727B63C306B}
+	EndGlobalSection
+EndGlobal

@@ -18,6 +18,7 @@
             <TabItem Header="Apps"><tabs:ApplicationView/></TabItem>
             <TabItem Header="Servers"><tabs:ApplicationServerView/></TabItem>
             <TabItem Header="Variables"><tabs:GlobalVariableView/></TabItem>
+            <TabItem Header="Resolve"><tabs:ResolveVariableView/></TabItem>
             <TabItem Header="Installs"><tabs:InstallationSummaryView/></TabItem>
             <TabItem Header="Log"><tabs:LogMessageView/></TabItem>
             <TabItem Header="Ping"><tabs:PingView/></TabItem>

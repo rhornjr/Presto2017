@@ -248,5 +248,14 @@ namespace PrestoViewModel {
                 return ResourceManager.GetString("UnexpectedLegacyTask", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variables resolved. Number of problems found: {0}. {1}.
+        /// </summary>
+        internal static string VariablesResolved {
+            get {
+                return ResourceManager.GetString("VariablesResolved", resourceCulture);
+            }
+        }
     }
 }

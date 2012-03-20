@@ -115,6 +115,8 @@
     <Compile Include="Enums\DeploymentEnvironment.cs" />
     <Compile Include="Enums\InstallationResult.cs" />
     <Compile Include="Enums\TaskType.cs" />
+    <Compile Include="Exceptions\CustomVariableExistsMoreThanOnceException.cs" />
+    <Compile Include="Exceptions\CustomVariableMissingException.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />

@@ -76,6 +76,30 @@ namespace PrestoCommon.Data.RavenDb
             });            
         }
 
+        /// <summary>
+        /// Gets the object by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public ApplicationServer GetById(string id)
+        {
+            return ExecuteQuery<ApplicationServer>(() =>
+            {
+                ApplicationServer appServer = QuerySingleResultAndSetEtag(session =>
+                    session.Query<ApplicationServer>()
+                    .Include(x => x.CustomVariableGroupIds)
+                    .Include(x => x.ApplicationIdsForAllAppWithGroups)
+                    .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                    .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
+                    .Where(server => server.Id == id).FirstOrDefault())
+                    as ApplicationServer;
+
+                if (appServer != null) { HydrateApplicationServer(appServer); }
+
+                return appServer;
+            });
+        }
+
         private static void HydrateApplicationServer(ApplicationServer appServer)
         {
             // Not using this, at least for now, because it increased the NumberOfRequests on the session...

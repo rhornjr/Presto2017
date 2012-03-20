@@ -180,4 +180,7 @@
   <data name="TaskInvalidEntryMessage" xml:space="preserve">
     <value>This task has an invalid entry. Please correct and try saving again.</value>
   </data>
+  <data name="VariablesResolved" xml:space="preserve">
+    <value>Variables resolved. Number of problems found: {0}. {1}</value>
+  </data>
 </root>

@@ -45,7 +45,25 @@ namespace PrestoCommon.Data.RavenDb
 
                 return customVariableGroup;
             });
-        }        
+        }
+
+        /// <summary>
+        /// Gets the object by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public CustomVariableGroup GetById(string id)
+        {
+            return ExecuteQuery<CustomVariableGroup>(() =>
+            {
+                CustomVariableGroup customVariableGroup =
+                    QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
+                        .Where(customGroup => customGroup.Id == id).FirstOrDefault())
+                        as CustomVariableGroup;
+
+                return customVariableGroup;
+            });
+        } 
 
         /// <summary>
         /// Saves the specified custom variable group.

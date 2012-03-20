@@ -22,6 +22,13 @@ namespace PrestoCommon.Data.Interfaces
         ApplicationServer GetByName(string serverName);
 
         /// <summary>
+        /// Gets the object by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        ApplicationServer GetById(string id);
+
+        /// <summary>
         /// Saves the specified application server.
         /// </summary>
         /// <param name="applicationServer">The application server.</param>

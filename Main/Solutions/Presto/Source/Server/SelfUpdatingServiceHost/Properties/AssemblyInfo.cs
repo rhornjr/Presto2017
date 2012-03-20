@@ -8,6 +8,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("SelfUpdatingServiceHost")]
 [assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("SelfUpdatingServiceHost")]
+[assembly: AssemblyCopyright("Copyright ©  2011")]
+[assembly: AssemblyTrademark("")]
+
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,6 +23,9 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("7b840d81-8c67-4ec4-8189-ac888a98d686")]
+
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.1")]
 
 [assembly: CLSCompliant(true)]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]

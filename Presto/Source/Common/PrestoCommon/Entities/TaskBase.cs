@@ -1,4 +1,5 @@
-﻿using PrestoCommon.Enums;
+﻿using System.Collections.Generic;
+using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
@@ -142,6 +143,14 @@ namespace PrestoCommon.Entities
         /// Executes this instance.
         /// </summary>
         public abstract void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup);
+
+        /// <summary>
+        /// Gets the task properties. Each concrete task will add a string to the list that is the value of each property in the task.
+        /// For example, for a copy file task, this would return three strings: SourcePath, SourceFileName, and DestinationPath.
+        /// This is done so that custom variables can be resolved all at once.
+        /// </summary>
+        /// <returns></returns>
+        public abstract List<string> GetTaskProperties();
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

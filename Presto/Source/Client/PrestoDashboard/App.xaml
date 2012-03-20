@@ -16,6 +16,7 @@
             <vmtab:ApplicationViewModel x:Key="ApplicationViewModel"/>
             <vmtab:ApplicationServerViewModel x:Key="ApplicationServerViewModel"/>
             <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>
+            <vmtab:ResolveVariableViewModel x:Key="ResolveVariableViewModel"/>
             <vmtab:InstallationSummaryViewModel x:Key="InstallationSummaryViewModel"/>
             <vmtab:LogMessageViewModel x:Key="LogMessageViewModel"/>
             <vmtab:PingViewModel x:Key="PingViewModel"/>

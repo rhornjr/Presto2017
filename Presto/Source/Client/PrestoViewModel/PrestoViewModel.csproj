@@ -75,6 +75,7 @@
     <Compile Include="Tabs\InstallationSummaryViewModel.cs" />
     <Compile Include="Tabs\LogMessageViewModel.cs" />
     <Compile Include="Tabs\PingViewModel.cs" />
+    <Compile Include="Tabs\ResolveVariableViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -82,6 +83,7 @@
       <DependentUpon>ViewModelResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Windows\ApplicationSelectorViewModel.cs" />
+    <Compile Include="Windows\ApplicationServerSelectorViewModel.cs" />
     <Compile Include="Windows\ApplicationWithGroupViewModel.cs" />
     <Compile Include="Windows\CustomVariableGroupSelectorViewModel.cs" />
     <Compile Include="Windows\CustomVariableViewModel.cs" />

@@ -30,6 +30,16 @@ namespace PrestoCommon.Logic
         }
 
         /// <summary>
+        /// Gets the object by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public static CustomVariableGroup GetById(string id)
+        {
+            return DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().GetById(id);
+        }
+
+        /// <summary>
         /// Saves the specified custom variable group.
         /// </summary>
         /// <param name="customVariableGroup">The custom variable group.</param>

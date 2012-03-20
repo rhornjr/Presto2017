@@ -30,6 +30,16 @@ namespace PrestoCommon.Logic
         }
 
         /// <summary>
+        /// Gets the object by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public static ApplicationServer GetById(string id)
+        {
+            return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetById(id);
+        }
+
+        /// <summary>
         /// Saves the specified application server.
         /// </summary>
         /// <param name="applicationServer">The application server.</param>

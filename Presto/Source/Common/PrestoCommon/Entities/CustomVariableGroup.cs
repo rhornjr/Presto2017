@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using PrestoCommon.Exceptions;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
@@ -222,7 +223,7 @@ namespace PrestoCommon.Entities
             string message = string.Format(CultureInfo.CurrentCulture,
                     "{0} contains a custom variable that does not exist in the list of custom variables.", rawString);
             LogUtility.LogWarning(message);
-            throw new ArgumentException(message);
+            throw new CustomVariableMissingException(message);
         }
 
         private static void LogDuplicateVariableAndThrow(string customVariableKey)
@@ -230,7 +231,7 @@ namespace PrestoCommon.Entities
             string message = string.Format(CultureInfo.CurrentCulture,
                     "A custom variable key ({0}) exists more than once. Only one is allowed.", customVariableKey);
             LogUtility.LogWarning(message);
-            throw new ArgumentException(message);
+            throw new CustomVariableExistsMoreThanOnceException(message);
         }
 
         private static string CustomVariableWithoutPrefixAndSuffix(string customVariableString)
@@ -251,7 +252,7 @@ namespace PrestoCommon.Entities
             return matchCollection != null && matchCollection.Count > 0;
         }
 
-        private static MatchCollection GetCustomVariableStringsWithinBiggerString(string sourceString)
+        public static MatchCollection GetCustomVariableStringsWithinBiggerString(string sourceString)
         {
             // Use a regex to find all custom variables in sourceString. The pattern is $(variableName).
 

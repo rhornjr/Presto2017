@@ -37,5 +37,15 @@ namespace PrestoCommon.Logic
         {
             DataAccessFactory.GetDataInterface<IApplicationData>().Save(application);
         }
+
+        /// <summary>
+        /// Gets the by id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public static Application GetById(string id)
+        {
+            return DataAccessFactory.GetDataInterface<IApplicationData>().GetById(id);
+        }
     }
 }

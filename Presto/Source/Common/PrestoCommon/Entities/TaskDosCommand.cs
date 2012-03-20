@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -252,6 +253,22 @@ namespace PrestoCommon.Entities
             if (this.AfterTaskPauseInSeconds < 0 || this.AfterTaskPauseInSeconds > this.MaxAfterTaskPauseInSeconds) { return false; }
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets the task properties. Each concrete task will add a string to the list that is the value of each property in the task.
+        /// For example, for a copy file task, this would return three strings: SourcePath, SourceFileName, and DestinationPath.
+        /// This is done so that custom variables can be resolved all at once.
+        /// </summary>
+        /// <returns></returns>
+        public override List<string> GetTaskProperties()
+        {
+            List<string> taskProperties = new List<string>();
+
+            taskProperties.Add(this.DosExecutable);
+            taskProperties.Add(this.Parameters);
+
+            return taskProperties;
         }
     }
 }

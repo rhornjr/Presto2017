@@ -361,7 +361,8 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedApplication.ForceInstallation = viewModel.ForceInstallation;
 
-            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+            this.AddLogMessageToCache(this.SelectedApplication.Id, 
+                string.Format(CultureInfo.CurrentCulture,
                 "{0} selected to be installed in {1} at {2}.",
                 this.SelectedApplication,
                 this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
@@ -372,7 +373,8 @@ namespace PrestoViewModel.Tabs
         {
             if (this.SelectedApplication.ForceInstallation == null) { return; }  // Nothing to do.            
 
-            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+            this.AddLogMessageToCache(this.SelectedApplication.Id, 
+                string.Format(CultureInfo.CurrentCulture,
                 "Force installation removed: {0} in {1} at {2}.",
                 this.SelectedApplication,
                 this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
@@ -566,6 +568,7 @@ namespace PrestoViewModel.Tabs
             try
             {
                 ApplicationLogic.Save(this.SelectedApplication);
+                this.SaveCachedLogMessages(this.SelectedApplication.Id);
             }
             catch (ConcurrencyException)
             {

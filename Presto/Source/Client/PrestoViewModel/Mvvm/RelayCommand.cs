@@ -36,12 +36,12 @@ namespace PrestoViewModel.Mvvm
         /// <param name="canExecute">The can execute.</param>
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
-            if (execute == null)
-                throw new ArgumentNullException("execute");
+            if (execute == null) throw new ArgumentNullException("execute");
 
             _execute    = execute;
             _canExecute = canExecute;
         }
+
         #endregion // Constructors
 
         #region ICommand Members

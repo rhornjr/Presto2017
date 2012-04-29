@@ -20,4 +20,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("9e3a009d-0c0e-4873-8947-32b4cfac55d2")]
 
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]  // false because we use List<>

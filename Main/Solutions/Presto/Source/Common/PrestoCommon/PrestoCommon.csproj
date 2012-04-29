@@ -110,6 +110,7 @@
     <Compile Include="Entities\TaskDetail.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />
     <Compile Include="Entities\TaskXmlModify.cs" />
+    <Compile Include="EntityHelperClasses\EntityLogMessage.cs" />
     <Compile Include="EntityHelperClasses\InstallationResultContainer.cs" />
     <Compile Include="EntityHelperClasses\PrestoObservableCollection.cs" />
     <Compile Include="Enums\DeploymentEnvironment.cs" />

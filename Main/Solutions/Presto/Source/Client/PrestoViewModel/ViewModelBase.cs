@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -6,6 +7,8 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
+using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.Logic;
 
 namespace PrestoViewModel
 {
@@ -16,10 +19,43 @@ namespace PrestoViewModel
     {
         private static string lastDialogDirectory;
 
+        // Sometimes we need to record log messages when they happen in real time, but we only want
+        // to actually save them if the user hits save. For example, if the user does a force
+        // installation for an app, we want to log that event, but we only want to actually save it
+        // if the user ends up hitting the Save button for the app.
+        // Note: The key is the ID of the entity. The value is the actual message. Since the user
+        //       can select different entities, we only want to save the log messages when they
+        //       save that particular entity.
+        private List<EntityLogMessage> _logMessagesToSaveIfUserHitsSave = new List<EntityLogMessage>();
+
+        /// <summary>
+        /// Adds log messages to the cache.
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <param name="logMessage"></param>
+        protected void AddLogMessageToCache(string entityId, string logMessage)
+        {
+            this._logMessagesToSaveIfUserHitsSave.Add(new EntityLogMessage(entityId, logMessage));
+        }
+
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Really? This really needs an explanation? We, uh, save the cached log messages.
+        /// </summary>
+        protected void SaveCachedLogMessages(string entityId)
+        {
+            foreach (EntityLogMessage entityLogMessage in this._logMessagesToSaveIfUserHitsSave)
+            {
+                if (entityLogMessage.EntityId == entityId) { LogMessageLogic.SaveLogMessage(entityLogMessage.LogMessage); }
+            }
+
+            // Remove the processed messages.
+            this._logMessagesToSaveIfUserHitsSave.RemoveAll(x => x.EntityId == entityId);
+        }
 
         /// <summary>
         /// Closes this instance.

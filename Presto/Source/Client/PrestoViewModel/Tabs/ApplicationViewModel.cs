@@ -37,7 +37,7 @@ namespace PrestoViewModel.Tabs
         /// </value>
         public bool ApplicationIsSelected
         {
-            get { return this.SelectedApplication != null; }
+            get { return ApplicationIsSelectedMethod(); }
         }
 
         /// <summary>
@@ -212,28 +212,34 @@ namespace PrestoViewModel.Tabs
             LoadApplications();
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simply setting the commands")]
         private void Initialize()
         {
-            this.AddApplicationCommand      = new RelayCommand(_ => AddApplication());
-            this.DeleteApplicationCommand   = new RelayCommand(_ => DeleteApplication(), _ => ApplicationIsSelected);
-            this.RefreshApplicationsCommand = new RelayCommand(_ => RefreshApplications());
-            this.SaveApplicationCommand     = new RelayCommand(_ => SaveApplication(), _ => ApplicationIsSelected);
+            this.AddApplicationCommand      = new RelayCommand(AddApplication);
+            this.DeleteApplicationCommand   = new RelayCommand(DeleteApplication, ApplicationIsSelectedMethod);
+            this.RefreshApplicationsCommand = new RelayCommand(RefreshApplications);
+            this.SaveApplicationCommand     = new RelayCommand(SaveApplication, ApplicationIsSelectedMethod);
 
-            this.ForceInstallationCommand       = new RelayCommand(_ => ForceInstallation(), _ => ApplicationIsSelected);
-            this.DeleteForceInstallationCommand = new RelayCommand(_ => DeleteForceInstallation(), _ => ApplicationIsSelectedAndForceExists());
+            this.ForceInstallationCommand       = new RelayCommand(ForceInstallation, ApplicationIsSelectedMethod);
+            this.DeleteForceInstallationCommand = new RelayCommand(DeleteForceInstallation, ApplicationIsSelectedAndForceExists);
 
-            this.AddTaskCommand            = new RelayCommand(_ => AddTask(), _ => ApplicationIsSelected);
-            this.EditTaskCommand           = new RelayCommand(_ => EditTask(), _ => TaskIsSelected());
-            this.DeleteTaskCommand         = new RelayCommand(_ => DeleteTask(), _ => TaskIsSelected());
-            this.ImportTasksCommand        = new RelayCommand(_ => ImportTasks(), _ => ApplicationIsSelected);
-            this.ExportTasksCommand        = new RelayCommand(_ => ExportTasks(), _ => TaskIsSelected());
-            this.ImportLegacyTasksCommand  = new RelayCommand(_ => ImportLegacyTasks(), _ => ApplicationIsSelected);            
-            this.MoveTaskUpCommand         = new RelayCommand(_ => MoveRowUp(), _ => TaskIsSelected());
-            this.MoveTaskDownCommand       = new RelayCommand(_ => MoveRowDown(), _ => TaskIsSelected());
+            this.AddTaskCommand            = new RelayCommand(AddTask, ApplicationIsSelectedMethod);
+            this.EditTaskCommand           = new RelayCommand(EditTask, TaskIsSelected);
+            this.DeleteTaskCommand         = new RelayCommand(DeleteTask, TaskIsSelected);
+            this.ImportTasksCommand        = new RelayCommand(ImportTasks, ApplicationIsSelectedMethod);
+            this.ExportTasksCommand        = new RelayCommand(ExportTasks, TaskIsSelected);
+            this.ImportLegacyTasksCommand  = new RelayCommand(ImportLegacyTasks, ApplicationIsSelectedMethod);            
+            this.MoveTaskUpCommand         = new RelayCommand(MoveRowUp, TaskIsSelected);
+            this.MoveTaskDownCommand       = new RelayCommand(MoveRowDown, TaskIsSelected);
 
-            this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
-            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
+            this.AddVariableGroupCommand    = new RelayCommand(AddVariableGroup);
+            this.RemoveVariableGroupCommand = new RelayCommand(RemoveVariableGroup, VariableGroupIsSelected);
+        }
+
+        // Named this method this way because we have a property of the same name. The RelayCommands need to specify
+        // a method, not a property.
+        private bool ApplicationIsSelectedMethod()
+        {
+            return this.SelectedApplication != null;
         }
 
         private bool ApplicationIsSelectedAndForceExists()
@@ -563,7 +569,7 @@ namespace PrestoViewModel.Tabs
             LogUtility.LogWarning(message);
         }
 
-        private bool SaveApplication()
+        private void SaveApplication()
         {
             try
             {
@@ -577,14 +583,10 @@ namespace PrestoViewModel.Tabs
                 ViewModelUtility.MainWindowViewModel.UserMessage = message;
 
                 ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
-
-                return false;
             }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedApplication);
-
-            return true;
         }
 
         private void LoadApplications()

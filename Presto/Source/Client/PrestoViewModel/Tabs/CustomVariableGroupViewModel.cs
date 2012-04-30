@@ -31,7 +31,7 @@ namespace PrestoViewModel.Tabs
         /// </value>
         public bool CustomVariableGroupIsSelected
         {
-            get { return this.SelectedCustomVariableGroup != null; }
+            get { return this.CustomVariableGroupIsSelectedMethod(); }
         }
 
         /// <summary>
@@ -136,17 +136,24 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddVariableGroupCommand     = new RelayCommand(_ => AddVariableGroup());
-            this.DeleteVariableGroupCommand  = new RelayCommand(_ => DeleteVariableGroup(), _ => CustomVariableGroupIsSelected);
-            this.SaveVariableGroupCommand    = new RelayCommand(_ => SaveVariableGroup(), _ => CustomVariableGroupIsSelected);
-            this.ExportVariableGroupCommand  = new RelayCommand(_ => ExportVariableGroup(), _ => CustomVariableGroupIsSelected);
-            this.ImportVariableGroupCommand  = new RelayCommand(_ => ImportVariableGroup());
-            this.RefreshVariableGroupCommand = new RelayCommand(_ => RefreshVariableGroup());
+            this.AddVariableGroupCommand     = new RelayCommand(AddVariableGroup);
+            this.DeleteVariableGroupCommand  = new RelayCommand(DeleteVariableGroup, CustomVariableGroupIsSelectedMethod);
+            this.SaveVariableGroupCommand    = new RelayCommand(_ => SaveVariableGroup(null), CustomVariableGroupIsSelectedMethod);
+            this.ExportVariableGroupCommand  = new RelayCommand(ExportVariableGroup, CustomVariableGroupIsSelectedMethod);
+            this.ImportVariableGroupCommand  = new RelayCommand(ImportVariableGroup);
+            this.RefreshVariableGroupCommand = new RelayCommand(RefreshVariableGroup);
 
-            this.AddVariableCommand    = new RelayCommand(_ => AddVariable());
-            this.EditVariableCommand   = new RelayCommand(_ => EditVariable(), _ => CustomVariableIsSelected());
-            this.DeleteVariableCommand = new RelayCommand(_ => DeleteVariable(), _ => CustomVariableIsSelected());
-        }             
+            this.AddVariableCommand    = new RelayCommand(AddVariable);
+            this.EditVariableCommand   = new RelayCommand(EditVariable, CustomVariableIsSelected);
+            this.DeleteVariableCommand = new RelayCommand(DeleteVariable, CustomVariableIsSelected);
+        }
+
+        // Named this method this way because we have a property of the same name. The RelayCommands need to specify
+        // a method, not a property.
+        private bool CustomVariableGroupIsSelectedMethod()
+        {
+            return this.SelectedCustomVariableGroup != null;
+        }
 
         private void AddVariable()
         {
@@ -158,10 +165,7 @@ namespace PrestoViewModel.Tabs
 
             this.SelectedCustomVariableGroup.CustomVariables.Add(viewModel.CustomVariable);
 
-            if (SaveVariableGroup() == false)
-            {
-                this.SelectedCustomVariableGroup.CustomVariables.Remove(viewModel.CustomVariable);
-            }
+            SaveVariableGroup(() => this.SelectedCustomVariableGroup.CustomVariables.Remove(viewModel.CustomVariable));
         }
 
         private void EditVariable()
@@ -172,7 +176,7 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
-            SaveVariableGroup();
+            SaveVariableGroup(null);
         }
 
         private bool CustomVariableIsSelected()
@@ -190,10 +194,7 @@ namespace PrestoViewModel.Tabs
 
             // Need to save the group. If we don't, then we'll get an exception when we access it again.
             // The group still thinks is has this variable until we save the group.
-            if (SaveVariableGroup() == false)
-            {
-                this.SelectedCustomVariableGroup.CustomVariables.Add(selectedCustomVariable);
-            }
+            SaveVariableGroup(() => this.SelectedCustomVariableGroup.CustomVariables.Add(selectedCustomVariable));
         }
 
         private void AddVariableGroup()
@@ -214,7 +215,7 @@ namespace PrestoViewModel.Tabs
             this.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
         }
 
-        private bool SaveVariableGroup()
+        private void SaveVariableGroup(Action actionIfSaveFails)
         {
             try
             {
@@ -228,13 +229,11 @@ namespace PrestoViewModel.Tabs
 
                 ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
 
-                return false;
+                actionIfSaveFails.Invoke();
             }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedCustomVariableGroup.Name);
-
-            return true;
         }
 
         private void ImportVariableGroup()

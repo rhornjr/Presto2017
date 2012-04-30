@@ -53,8 +53,8 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.RefreshCommand = new RelayCommand(_ => Refresh());
-            this.SaveCommand = new RelayCommand(_ => Save());
+            this.RefreshCommand = new RelayCommand(Refresh);
+            this.SaveCommand = new RelayCommand(Save);
         }
 
         private void LoadGlobalSetting()

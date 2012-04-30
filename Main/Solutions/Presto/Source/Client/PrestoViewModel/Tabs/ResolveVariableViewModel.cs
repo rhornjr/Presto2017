@@ -124,11 +124,11 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.SelectApplicationCommand = new RelayCommand(_ => SelectApplication());
-            this.SelectGroupCommand       = new RelayCommand(_ => SelectGroup());
-            this.RemoveGroupCommand       = new RelayCommand(_ => RemoveGroup());
-            this.SelectServerCommand      = new RelayCommand(_ => SelectServer());
-            this.ResolveCommand           = new RelayCommand(_ => Resolve(), _ => CanResolve());
+            this.SelectApplicationCommand = new RelayCommand(SelectApplication);
+            this.SelectGroupCommand       = new RelayCommand(SelectGroup);
+            this.RemoveGroupCommand       = new RelayCommand(RemoveGroup);
+            this.SelectServerCommand      = new RelayCommand(SelectServer);
+            this.ResolveCommand           = new RelayCommand(Resolve, CanResolve);
         }
 
         private bool CanResolve()

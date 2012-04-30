@@ -37,7 +37,7 @@ namespace PrestoViewModel.Tabs
         /// </value>
         public bool AppServerIsSelected
         {
-            get { return this.SelectedApplicationServer != null; }
+            get { return AppServerIsSelectedMethod(); }
         }
 
         /// <summary>
@@ -190,21 +190,28 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddServerCommand      = new RelayCommand(_ => AddServer());
-            this.DeleteServerCommand   = new RelayCommand(_ => DeleteServer(), _ => AppServerIsSelected);
-            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), _ => AppServerIsSelected);
-            this.RefreshServersCommand = new RelayCommand(_ => RefreshServers());
+            this.AddServerCommand      = new RelayCommand(AddServer);
+            this.DeleteServerCommand   = new RelayCommand(DeleteServer, AppServerIsSelectedMethod);
+            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), AppServerIsSelectedMethod);
+            this.RefreshServersCommand = new RelayCommand(RefreshServers);
 
-            this.AddApplicationCommand    = new RelayCommand(_ => AddApplication());
-            this.EditApplicationCommand   = new RelayCommand(_ => EditApplication(), _ => ExactlyOneApplicationIsSelected());
-            this.RemoveApplicationCommand = new RelayCommand(_ => RemoveApplication(), _ => ExactlyOneApplicationIsSelected());
-            this.ImportApplicationCommand = new RelayCommand(_ => ImportApplication(), _ => AppServerIsSelected);
-            this.ExportApplicationCommand = new RelayCommand(_ => ExportApplication(), _ => AtLeastOneApplicationIsSelected());
-            this.ForceApplicationCommand  = new RelayCommand(_ => ForceApplication(), _ => AtLeastOneApplicationIsSelectedAndAllAreEnabled());
+            this.AddApplicationCommand    = new RelayCommand(AddApplication);
+            this.EditApplicationCommand   = new RelayCommand(EditApplication, ExactlyOneApplicationIsSelected);
+            this.RemoveApplicationCommand = new RelayCommand(RemoveApplication, ExactlyOneApplicationIsSelected);
+            this.ImportApplicationCommand = new RelayCommand(ImportApplication, AppServerIsSelectedMethod);
+            this.ExportApplicationCommand = new RelayCommand(ExportApplication, AtLeastOneApplicationIsSelected);
+            this.ForceApplicationCommand  = new RelayCommand(ForceApplication, AtLeastOneApplicationIsSelectedAndAllAreEnabled);
 
-            this.AddVariableGroupCommand    = new RelayCommand(_ => AddVariableGroup());
-            this.RemoveVariableGroupCommand = new RelayCommand(_ => RemoveVariableGroup(), _ => VariableGroupIsSelected());
-        }        
+            this.AddVariableGroupCommand    = new RelayCommand(AddVariableGroup);
+            this.RemoveVariableGroupCommand = new RelayCommand(RemoveVariableGroup, VariableGroupIsSelected);
+        }
+
+        // Named this method this way because we have a property of the same name. The RelayCommands need to specify
+        // a method, not a property.
+        private bool AppServerIsSelectedMethod()
+        {
+            return this.SelectedApplicationServer != null;
+        }
 
         private void ExportApplication()
         {

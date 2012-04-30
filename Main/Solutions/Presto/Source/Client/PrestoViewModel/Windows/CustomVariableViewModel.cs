@@ -68,8 +68,8 @@ namespace PrestoViewModel.Windows
 
         private void Initialize()
         {
-            this.OkCommand     = new RelayCommand(_ => Save());
-            this.CancelCommand = new RelayCommand(_ => Cancel());
+            this.OkCommand     = new RelayCommand(Save);
+            this.CancelCommand = new RelayCommand(Cancel);
         }
 
         private void Save()

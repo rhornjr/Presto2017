@@ -24,9 +24,24 @@ namespace PrestoViewModel.Mvvm
         /// Initializes a new instance of the <see cref="RelayCommand"/> class.
         /// </summary>
         /// <param name="execute">The execute.</param>
-        public RelayCommand(Action<object> execute)
-            : this(execute, null)
+        public RelayCommand(Action execute)
         {
+            if (execute == null) throw new ArgumentNullException("execute");
+
+            _execute = _ => execute();
+            _canExecute = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execute"></param>
+        public RelayCommand(Action<object> execute)
+        {
+            if (execute == null) throw new ArgumentNullException("execute");
+
+            _execute = execute;
+            _canExecute = null;
         }
 
         /// <summary>
@@ -34,12 +49,25 @@ namespace PrestoViewModel.Mvvm
         /// </summary>
         /// <param name="execute">The execute.</param>
         /// <param name="canExecute">The can execute.</param>
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+        public RelayCommand(Action<object> execute, Func<bool> canExecute)
         {
             if (execute == null) throw new ArgumentNullException("execute");
 
-            _execute    = execute;
-            _canExecute = canExecute;
+            _execute = execute;
+            _canExecute = _ => canExecute();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RelayCommand"/> class.
+        /// </summary>
+        /// <param name="execute">The execute.</param>
+        /// <param name="canExecute">The can execute.</param>
+        public RelayCommand(Action execute, Func<bool> canExecute)
+        {
+            if (execute == null) throw new ArgumentNullException("execute");
+
+            _execute    = _ => execute();
+            _canExecute = _ => canExecute();
         }
 
         #endregion // Constructors

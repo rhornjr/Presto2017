@@ -106,9 +106,9 @@ namespace PrestoViewModel.Windows
         {
             this.ForceInstallation = new ForceInstallation();
 
-            this.OkCommand                   = new RelayCommand(_ => Save(), _ => ForceInstallationTimeIsValid());
-            this.CancelCommand               = new RelayCommand(_ => Cancel());
-            this.ForceInstallationNowCommand = new RelayCommand(_ => ForceInstallationNow());
+            this.OkCommand                   = new RelayCommand(Save, ForceInstallationTimeIsValid);
+            this.CancelCommand               = new RelayCommand(Cancel);
+            this.ForceInstallationNowCommand = new RelayCommand(ForceInstallationNow);
         }
 
         private bool ForceInstallationTimeIsValid()

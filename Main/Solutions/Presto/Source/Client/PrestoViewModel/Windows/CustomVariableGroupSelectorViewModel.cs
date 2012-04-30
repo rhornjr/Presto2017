@@ -83,8 +83,8 @@ namespace PrestoViewModel.Windows
 
         private void Initialize()
         {
-            this.AddCommand    = new RelayCommand(_ => Add(), _ => CanAdd());
-            this.CancelCommand = new RelayCommand(_ => Cancel());
+            this.AddCommand    = new RelayCommand(Add, CanAdd);
+            this.CancelCommand = new RelayCommand(Cancel);
 
             LoadCustomVariableGroups();
         }

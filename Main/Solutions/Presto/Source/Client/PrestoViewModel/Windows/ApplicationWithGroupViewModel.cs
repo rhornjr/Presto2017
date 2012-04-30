@@ -112,11 +112,11 @@ namespace PrestoViewModel.Windows
 
         private void Initialize()
         {
-            this.OkCommand                = new RelayCommand(_ => Save());
-            this.CancelCommand            = new RelayCommand(_ => Cancel());
-            this.SelectApplicationCommand = new RelayCommand(_ => SelectApplication());
-            this.SelectGroupCommand       = new RelayCommand(_ => SelectGroup());
-            this.RemoveGroupCommand       = new RelayCommand(_ => RemoveGroup());
+            this.OkCommand                = new RelayCommand(Save);
+            this.CancelCommand            = new RelayCommand(Cancel);
+            this.SelectApplicationCommand = new RelayCommand(SelectApplication);
+            this.SelectGroupCommand       = new RelayCommand(SelectGroup);
+            this.RemoveGroupCommand       = new RelayCommand(RemoveGroup);
 
             this.UserCanceled = true;  // default
         }            

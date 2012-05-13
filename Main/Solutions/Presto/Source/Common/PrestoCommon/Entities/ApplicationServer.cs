@@ -385,6 +385,21 @@ namespace PrestoCommon.Entities
                     this.EnableDebugLogging);
         }
 
+        public void InstallPrestoSelfUpdater()
+        {
+            // Get the self-updater app from the DB
+            ApplicationWithOverrideVariableGroup appWithGroup =
+                this.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == "Presto Self-updater").FirstOrDefault();
+
+            if (appWithGroup == null)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.PrestoSelfUpdaterAppNotFound, this.Name);
+                throw new InvalidOperationException(message);
+            }
+
+            InstallApplication(appWithGroup);
+        }
+
         private void InstallApplication(ApplicationWithOverrideVariableGroup appWithGroup)
         {
             InstallationSummary installationSummary = new InstallationSummary(appWithGroup, this, DateTime.Now);

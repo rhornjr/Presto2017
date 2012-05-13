@@ -223,6 +223,15 @@ namespace PrestoViewModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Presto self-updating service could not be installed. Please make sure that app has been assigned to this server. You can also check the log for details on this error..
+        /// </summary>
+        internal static string PrestoUpdaterCouldNotBeInstalled {
+            get {
+                return ResourceManager.GetString("PrestoUpdaterCouldNotBeInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Entry.
         /// </summary>
         internal static string TaskInvalidEntryCaption {

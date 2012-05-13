@@ -96,8 +96,10 @@
                     <CheckBox Style="{StaticResource StandardCheckBox}" Content="Enable debug logging" IsChecked="{Binding SelectedApplicationServer.EnableDebugLogging}"
                               FlowDirection="LeftToRight" VerticalAlignment="Center" Width="140" HorizontalAlignment="Right"/>
                 </DockPanel>
-                
-                <Button Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
+
+                <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveServerCommand}" />
+                </StackPanel>
             </Grid>                        
             
             <DockPanel DockPanel.Dock="Bottom">

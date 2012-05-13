@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -59,6 +61,11 @@ namespace PrestoViewModel.Tabs
         /// Gets the save server command.
         /// </summary>
         public ICommand SaveServerCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the install presto updater command.
+        /// </summary>
+        public ICommand InstallPrestoUpdaterCommand { get; private set; }        
 
         /// <summary>
         /// Gets the add application command.
@@ -190,10 +197,11 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddServerCommand      = new RelayCommand(AddServer);
-            this.DeleteServerCommand   = new RelayCommand(DeleteServer, AppServerIsSelectedMethod);
-            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), AppServerIsSelectedMethod);
-            this.RefreshServersCommand = new RelayCommand(RefreshServers);
+            this.AddServerCommand            = new RelayCommand(AddServer);
+            this.DeleteServerCommand         = new RelayCommand(DeleteServer, AppServerIsSelectedMethod);
+            this.SaveServerCommand           = new RelayCommand(_ => SaveServer(), AppServerIsSelectedMethod);
+            this.InstallPrestoUpdaterCommand = new RelayCommand(_ => InstallPrestoUpdater(), AppServerIsSelectedMethod);            
+            this.RefreshServersCommand       = new RelayCommand(RefreshServers);
 
             this.AddApplicationCommand    = new RelayCommand(AddApplication);
             this.EditApplicationCommand   = new RelayCommand(EditApplication, ExactlyOneApplicationIsSelected);
@@ -286,10 +294,15 @@ namespace PrestoViewModel.Tabs
                 "{0} could not be imported because the application ({1}) with which it is associated does not exist.",
                 importedGroup.ToString(),
                 importedGroup.Application.Name);
-        }        
+        }
 
         private void ForceApplication()
         {
+            if (PrestoUpdaterAppIncludedInForceRequestOfMultipleApps()) { return; }
+
+            // Special installation for the Presto Self-updater app
+            if (InstallPrestoUpdaterIfItIsSelected()) { return; }
+
             string allAppWithGroupNames = string.Join(",", this.SelectedApplicationsWithOverrideGroup);
 
             string message = string.Format(CultureInfo.CurrentCulture,
@@ -301,6 +314,11 @@ namespace PrestoViewModel.Tabs
 
             if (SaveServer() == false) { return; }
 
+            LogAndShowAppToBeInstalled(allAppWithGroupNames);
+        }
+
+        private void LogAndShowAppToBeInstalled(string allAppWithGroupNames)
+        {
             LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
                 "{0} selected to be installed on {1}.",
                 allAppWithGroupNames,
@@ -308,7 +326,59 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer);
-        }                   
+        }
+
+        private bool PrestoUpdaterAppIncludedInForceRequestOfMultipleApps()
+        {
+            if (this.SelectedApplicationsWithOverrideGroup.Count > 1 &&
+                this.SelectedApplicationsWithOverrideGroup.Any(
+                    x => x.Application.Name.Equals(ConfigurationManager.AppSettings["selfUpdatingAppName"],
+                        StringComparison.OrdinalIgnoreCase)))
+            {                
+                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                    "Cannot include the Presto Self-updater app with a request to install multiple apps. If you want to install the " +
+                    "updater app, select it by itself.");
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool InstallPrestoUpdaterIfItIsSelected()
+        {
+            // If the only app, that is selected, is the Presto self-updater, then return true.
+
+            if (this.SelectedApplicationsWithOverrideGroup.Count == 1 &&
+                this.SelectedApplicationsWithOverrideGroup[0].Application.Name.Equals(ConfigurationManager.AppSettings["selfUpdatingAppName"],
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                LogAndShowAppToBeInstalled("Presto Self-updater");
+
+                Task.Factory.StartNew(() =>
+                {
+                    InstallPrestoUpdater();
+                });
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void InstallPrestoUpdater()
+        {
+            try
+            {
+                this.SelectedApplicationServer.InstallPrestoSelfUpdater();
+            }
+            catch (Exception ex)
+            {
+                LogUtility.LogException(ex);
+
+                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.PrestoUpdaterCouldNotBeInstalled);
+            }
+        }
 
         private void AddServer()
         {

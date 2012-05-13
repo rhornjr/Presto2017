@@ -137,4 +137,7 @@ Process Output  : {3}</value>
   <data name="GlobalSettingNullSoNoInstallation" xml:space="preserve">
     <value>The global setting entity is null, so the installation will not happen: {0} on {1}.</value>
   </data>
+  <data name="PrestoSelfUpdaterAppNotFound" xml:space="preserve">
+    <value>An attempt was made to install the Presto self-updating application, but that application was not found in the list of applications for the server {0}.</value>
+  </data>
 </root>

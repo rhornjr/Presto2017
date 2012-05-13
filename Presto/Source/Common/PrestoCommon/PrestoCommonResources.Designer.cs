@@ -97,6 +97,15 @@ namespace PrestoCommon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An attempt was made to install the Presto self-updating application, but that application was not found in the list of applications for the server {0}..
+        /// </summary>
+        internal static string PrestoSelfUpdaterAppNotFound {
+            get {
+                return ResourceManager.GetString("PrestoSelfUpdaterAppNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TaskDOSCommand failed with exit code {0}..
         /// </summary>
         internal static string TaskDosCommandFailedWithExitCode {

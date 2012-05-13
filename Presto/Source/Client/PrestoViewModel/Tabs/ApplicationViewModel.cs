@@ -84,11 +84,6 @@ namespace PrestoViewModel.Tabs
         public ICommand EditTaskCommand { get; private set; }
 
         /// <summary>
-        /// Gets the import legacy tasks command.
-        /// </summary>
-        public ICommand ImportLegacyTasksCommand { get; private set; }
-
-        /// <summary>
         /// Gets the export tasks command.
         /// </summary>
         public ICommand ExportTasksCommand { get; private set; }
@@ -227,7 +222,6 @@ namespace PrestoViewModel.Tabs
             this.DeleteTaskCommand         = new RelayCommand(DeleteTask, TaskIsSelected);
             this.ImportTasksCommand        = new RelayCommand(ImportTasks, ApplicationIsSelectedMethod);
             this.ExportTasksCommand        = new RelayCommand(ExportTasks, TaskIsSelected);
-            this.ImportLegacyTasksCommand  = new RelayCommand(ImportLegacyTasks, ApplicationIsSelectedMethod);            
             this.MoveTaskUpCommand         = new RelayCommand(MoveRowUp, TaskIsSelected);
             this.MoveTaskDownCommand       = new RelayCommand(MoveRowDown, TaskIsSelected);
 
@@ -391,29 +385,60 @@ namespace PrestoViewModel.Tabs
 
         private void ImportTasks()
         {
-            string filePathAndName = GetFilePathAndNameFromUser();
+            // Try to import new tasks. If that fails, automatically try to import legacy tasks. If that fails too, then fail and log.
 
+            string filePathAndName = GetFilePathAndNameFromUser();
             if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
 
-            NetDataContractSerializer serializer = new NetDataContractSerializer();
+            Exception exceptionFromGettingNewTasks;
 
-            List<TaskBase> taskBases = new List<TaskBase>();
+            try
+            {
+                List<TaskBase> taskBases = TryGetNewTasks(filePathAndName);
+                if (taskBases == null) { return; }
+                ImportNewTasks(taskBases);
+                return;
+            }
+            catch (Exception ex)
+            {
+                exceptionFromGettingNewTasks = ex;
+            }
+
+            Exception exceptionFromGettingLegacyTasks;
+
+            try
+            {
+                ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = TryGetLegacyTasks(filePathAndName);
+                if (taskBases == null) { return; }
+                ImportLegacyTasks(taskBases);
+                return;
+            }
+            catch (Exception ex)
+            {
+                exceptionFromGettingLegacyTasks = ex;
+            }
+
+            // If we get here, then we couldn't import either of the two types of tasks (new and legacy).
+
+            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.CannotImport);
+
+            LogUtility.LogException(exceptionFromGettingNewTasks);
+            LogUtility.LogException(exceptionFromGettingLegacyTasks);
+        }
+
+        private static List<TaskBase> TryGetNewTasks(string filePathAndName)
+        {
+            NetDataContractSerializer serializer = new NetDataContractSerializer();
 
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
-                try
-                {
-                    taskBases = serializer.Deserialize(fileStream) as List<TaskBase>;
-                }
-                catch (Exception ex)
-                {
-                    ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                        ViewModelResources.CannotImport);
-                    LogUtility.LogException(ex);
-                    return;
-                }
+                return serializer.Deserialize(fileStream) as List<TaskBase>;
             }
+        }
 
+        private void ImportNewTasks(List<TaskBase> taskBases)
+        {
             // Start the sequence after the highest existing sequence.
             int sequence = 1;  // default if no tasks exist
             if (this.SelectedApplication.Tasks != null && this.SelectedApplication.Tasks.Count > 0)
@@ -432,32 +457,19 @@ namespace PrestoViewModel.Tabs
 
             SaveApplication();
             NotifyPropertyChanged(() => this.AllApplicationTasks);
-        }        
+        }
 
-        private void ImportLegacyTasks()
-        {            
-            string filePathAndName = GetFilePathAndNameFromUser();
-
-            if (string.IsNullOrWhiteSpace(filePathAndName)) { return; }
-
-            ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = new ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>();
-
+        private static ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> TryGetLegacyTasks(string filePathAndName)
+        {
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>));
-                try
-                {
-                    taskBases = xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
-                }
-                catch (Exception ex)
-                {
-                    ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                        ViewModelResources.CannotImport);
-                    LogUtility.LogException(ex);
-                    return;
-                }
+                return xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
             }
+        }
 
+        private void ImportLegacyTasks(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases)
+        {            
             // Start the sequence after the highest existing sequence.
             int sequence = 1;  // default if no tasks exist
             if (this.SelectedApplication.Tasks != null && this.SelectedApplication.Tasks.Count > 0)

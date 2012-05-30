@@ -35,9 +35,62 @@ namespace PrestoCommon.Data.SqlServer
                 .FirstOrDefault();
         }
 
-        public void Save(CustomVariableGroup customVariableGroup)
+        public void Save(CustomVariableGroup newGroup)
         {
-            this.SaveChanges<CustomVariableGroup>(customVariableGroup);
-        }        
+            if (newGroup == null) { throw new ArgumentNullException("newGroup"); }
+
+            CustomVariableGroup groupFromContext;
+
+            if (newGroup.IdForEf == 0)  // New group
+            {
+                groupFromContext = newGroup;
+                // Clear variables, otherwise new groups will be added to the groups table.
+                groupFromContext.CustomVariables.Clear();
+                this.Database.CustomVariableGroups.Add(groupFromContext);
+            }
+            else
+            {
+                groupFromContext = this.Database.CustomVariableGroups
+                    .Include(x => x.CustomVariables)
+                    .Single(x => x.IdForEf == newGroup.IdForEf);
+            }
+
+            AddVariablesToGroup(newGroup, groupFromContext);
+            this.Database.SaveChanges();
+        }
+
+        private void AddVariablesToGroup(CustomVariableGroup groupNotAssociatedWithContext, CustomVariableGroup groupFromContext)
+        {
+            foreach (CustomVariable variabaleInNewGroup in groupNotAssociatedWithContext.CustomVariables)
+            {
+                if (variabaleInNewGroup.IdForEf == 0)
+                {
+                    groupFromContext.CustomVariables.Add(variabaleInNewGroup);
+                }
+                else
+                {
+                    CustomVariable variable = groupFromContext.CustomVariables.Single(x => x.IdForEf == variabaleInNewGroup.IdForEf);  // Get original task
+                    this.Database.Entry(variable).CurrentValues.SetValues(variabaleInNewGroup);  // Update with new
+                }
+            }
+
+            // Delete tasks that no longer exist within the app.
+            List<CustomVariable> variablesToDelete = new List<CustomVariable>();
+            foreach (CustomVariable originalVariable in groupFromContext.CustomVariables)
+            {
+                CustomVariable variable = groupNotAssociatedWithContext.CustomVariables.Where(x => x.IdForEf == originalVariable.IdForEf).FirstOrDefault();
+
+                if (variable == null)
+                {
+                    variablesToDelete.Add(originalVariable);
+                }
+            }
+
+            foreach (CustomVariable variableToDelete in variablesToDelete)
+            {
+                groupFromContext.CustomVariables.Remove(variableToDelete);
+                this.Database.CustomVariables.Remove(variableToDelete);
+            }
+        }
     }
 }

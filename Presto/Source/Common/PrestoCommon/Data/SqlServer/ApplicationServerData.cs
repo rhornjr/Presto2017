@@ -78,7 +78,7 @@ namespace PrestoCommon.Data.SqlServer
             {
                 if (appWithGroup.IdForEf == 0)
                 {
-                    var emptyAppWithGroup = new ApplicationWithOverrideVariableGroup();
+                    var emptyAppWithGroup = new ApplicationWithOverrideVariableGroup() { Enabled = appWithGroup.Enabled };
                     // Add with no app or group so new app or group doesn't get added to DB
                     serverFromContext.ApplicationsWithOverrideGroup.Add(emptyAppWithGroup);
 

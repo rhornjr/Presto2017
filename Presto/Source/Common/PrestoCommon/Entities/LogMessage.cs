@@ -31,6 +31,9 @@ namespace PrestoCommon.Entities
         /// </value>
         public string UserName { get; set; }
 
+        public LogMessage()
+        { }  // Parameterless constructor for EF.
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogMessage"/> class.
         /// </summary>

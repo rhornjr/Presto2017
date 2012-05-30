@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -12,6 +13,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Task for a DOS command (anything you can do at a command prompt)
     /// </summary>
+    [Table("TaskDosCommands")]  // EF
     public class TaskDosCommand : TaskBase
     {
         private string _dosExecutable;
@@ -220,11 +222,11 @@ namespace PrestoCommon.Entities
         /// </summary>
         /// <param name="legacyTaskBase">The legacy task base.</param>
         /// <returns></returns>
-        public static TaskDosCommand CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase)
+        public static TaskDosCommand CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTaskBase)
         {
             if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }
 
-            PrestoCommon.Entities.LegacyPresto.TaskDosCommand legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.TaskDosCommand;
+            PrestoCommon.Entities.LegacyPresto.LegacyTaskDosCommand legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.LegacyTaskDosCommand;
 
             TaskDosCommand newTask = new TaskDosCommand();
 

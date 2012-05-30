@@ -6,24 +6,19 @@ namespace PrestoCommon.Entities.LegacyPresto
     /// 
     /// </summary>
     [Serializable]
-    public class TaskCopyFile : TaskBase
+    public class LegacyTaskDosCommand : LegacyTaskBase
     {
         #region [Public Properties]
 
         /// <summary>
         /// 
         /// </summary>
-        public string SourcePath { get; set; }
+        public string DosExecutable { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string SourceFileName { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string DestinationPath { get; set; }
+        public string Parameters { get; set; }
 
         #endregion
     }

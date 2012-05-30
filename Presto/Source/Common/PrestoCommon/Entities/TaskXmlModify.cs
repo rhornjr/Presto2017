@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
@@ -11,6 +12,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// 
     /// </summary>
+    [Table("TaskXmlModifys")]  // EF
     public class TaskXmlModify : TaskBase
     {
         /// <summary>
@@ -249,11 +251,11 @@ namespace PrestoCommon.Entities
         /// </summary>
         /// <param name="legacyTaskBase">The legacy task base.</param>
         /// <returns></returns>
-        public static TaskXmlModify CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase)
+        public static TaskXmlModify CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTaskBase)
         {
             if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }
 
-            PrestoCommon.Entities.LegacyPresto.TaskXmlModify legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.TaskXmlModify;
+            PrestoCommon.Entities.LegacyPresto.LegacyTaskXmlModify legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.LegacyTaskXmlModify;
 
             TaskXmlModify newTask = new TaskXmlModify();
 

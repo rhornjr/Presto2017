@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using PrestoCommon.Exceptions;
 using PrestoCommon.Misc;
 
@@ -35,6 +36,9 @@ namespace PrestoCommon.Entities
                 NotifyPropertyChanged(() => this.Name);
             }
         }
+
+        [JsonIgnore]
+        public ICollection<Application> Applications { get; set; }
 
         /// <summary>
         /// Gets or sets the custom variables.

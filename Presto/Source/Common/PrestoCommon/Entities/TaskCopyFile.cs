@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using PrestoCommon.Enums;
@@ -10,6 +11,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// 
     /// </summary>
+    [Table("TaskCopyFiles")]  // EF
     public class TaskCopyFile : TaskBase
     {
         /// <summary>
@@ -135,11 +137,11 @@ namespace PrestoCommon.Entities
         /// </summary>
         /// <param name="legacyTaskBase">The legacy task base.</param>
         /// <returns></returns>
-        public static TaskCopyFile CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTaskBase)
+        public static TaskCopyFile CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTaskBase)
         {
             if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }
 
-            PrestoCommon.Entities.LegacyPresto.TaskCopyFile legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.TaskCopyFile;
+            PrestoCommon.Entities.LegacyPresto.LegacyTaskCopyFile legacyTask = legacyTaskBase as PrestoCommon.Entities.LegacyPresto.LegacyTaskCopyFile;
 
             TaskCopyFile newTask = new TaskCopyFile();
 

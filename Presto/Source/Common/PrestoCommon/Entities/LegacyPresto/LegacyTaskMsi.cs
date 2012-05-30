@@ -6,7 +6,7 @@ namespace PrestoCommon.Entities.LegacyPresto
     /// 
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Msi"), Serializable]
-    public class TaskMsi : TaskBase
+    public class LegacyTaskMsi : LegacyTaskBase
     {
         /// <summary>
         /// 
@@ -47,7 +47,7 @@ namespace PrestoCommon.Entities.LegacyPresto
         /// <summary>
         /// 
         /// </summary>
-        public TaskMsi()
+        public LegacyTaskMsi()
         {
             // Some properties can be ignored, depending on whether it's an install or uninstall. So set those to empty strings.
             this.Path                 = string.Empty;

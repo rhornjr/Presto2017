@@ -7,11 +7,11 @@ namespace PrestoCommon.Entities.LegacyPresto
     /// 
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes"), Serializable]
-    [XmlInclude( typeof( TaskMsi        ) )]
-    [XmlInclude( typeof( TaskCopyFile   ) )]
-    [XmlInclude( typeof( TaskDosCommand ) )]
-    [XmlInclude( typeof( TaskXmlModify  ) )]
-    public /* abstract */ class TaskBase : IComparable<TaskBase>
+    [XmlInclude( typeof( LegacyTaskMsi        ) )]
+    [XmlInclude( typeof( LegacyTaskCopyFile   ) )]
+    [XmlInclude( typeof( LegacyTaskDosCommand ) )]
+    [XmlInclude( typeof( LegacyTaskXmlModify  ) )]
+    public /* abstract */ class LegacyTaskBase : IComparable<LegacyTaskBase>
     {
         /// <summary>
         /// 
@@ -51,7 +51,7 @@ namespace PrestoCommon.Entities.LegacyPresto
         /// <summary>
         /// 
         /// </summary>
-        public TaskBase()
+        public LegacyTaskBase()
         {
             this.TaskItemId = null;
         }
@@ -64,7 +64,7 @@ namespace PrestoCommon.Entities.LegacyPresto
         /// <param name="other"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
-        public int CompareTo( TaskBase other )
+        public int CompareTo( LegacyTaskBase other )
         {
             return this.Sequence.CompareTo( other.Sequence );
         }

@@ -59,6 +59,12 @@ namespace PrestoCommon.Entities
         /// </value>
         public InstallationResult InstallationResult { get; set; }
 
+        public int InstallationResultId  // Because EF doesn't natively support enums
+        {
+            get { return (int)this.InstallationResult; }
+            set { this.InstallationResult = (InstallationResult)value; }
+        }
+
         /// <summary>
         /// Gets or sets the task details.
         /// </summary>

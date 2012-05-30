@@ -112,15 +112,5 @@ namespace PrestoCommon.Data.SqlServer
                 app.CustomVariableGroups.Add(group);
             }
         }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private Application GetById(int id)
-        {
-            return this.Database.Applications
-                .Include(x => x.Tasks)
-                .Include(x => x.CustomVariableGroups)
-                .Where(x => x.IdForEf == id)
-                .FirstOrDefault();
-        }
     }
 }

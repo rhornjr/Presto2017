@@ -66,6 +66,13 @@ namespace PrestoCommon.Entities
             }
         }
 
+        public int PrestoTaskTypeId  // Because EF doesn't natively support enums
+        {
+            get { return (int)this.PrestoTaskType; }
+
+            set { this.PrestoTaskType = (TaskType)value; }
+        }
+
         /// <summary>
         /// Gets or sets the sequence.
         /// </summary>

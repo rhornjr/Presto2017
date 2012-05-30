@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// 
     /// </summary>
-    public class TaskDetail
+    public class TaskDetail : EntityBase
     {
         /// <summary>
         /// Gets or sets the start time.

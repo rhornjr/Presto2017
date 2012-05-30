@@ -13,6 +13,9 @@ namespace PrestoCommon.Entities
         /// </summary>
         public string PingRequestId { get; private set; }
 
+        [JsonIgnore]
+        public PingRequest PingRequest { get; set; }
+
         /// <summary>
         /// Gets the application server id.
         /// </summary>

@@ -73,6 +73,13 @@ namespace PrestoCommon.Entities
         /// </value>
         public DeploymentEnvironment DeploymentEnvironment { get; set; }
 
+        public int DeploymentEnvironmentId  // Because EF doesn't natively support enums
+        {
+            get { return (int)DeploymentEnvironment; }
+
+            set { DeploymentEnvironment = (Enums.DeploymentEnvironment)value; }
+        }
+
         /// <summary>
         /// Gets the application.
         /// </summary>

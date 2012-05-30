@@ -408,7 +408,7 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases = TryGetLegacyTasks(filePathAndName);
+                ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase> taskBases = TryGetLegacyTasks(filePathAndName);
                 if (taskBases == null) { return; }
                 ImportLegacyTasks(taskBases);
                 return;
@@ -459,16 +459,16 @@ namespace PrestoViewModel.Tabs
             NotifyPropertyChanged(() => this.AllApplicationTasks);
         }
 
-        private static ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> TryGetLegacyTasks(string filePathAndName)
+        private static ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase> TryGetLegacyTasks(string filePathAndName)
         {
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>));
-                return xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase>;
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase>));
+                return xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase>;
             }
         }
 
-        private void ImportLegacyTasks(ObservableCollection<PrestoCommon.Entities.LegacyPresto.TaskBase> taskBases)
+        private void ImportLegacyTasks(ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase> taskBases)
         {            
             // Start the sequence after the highest existing sequence.
             int sequence = 1;  // default if no tasks exist
@@ -478,7 +478,7 @@ namespace PrestoViewModel.Tabs
                 sequence = highestSequenceTask.Sequence + 1;
             }
 
-            foreach (PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask in taskBases)
+            foreach (PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTask in taskBases)
             {
                 TaskBase task = CreateTaskFromLegacyTask(legacyTask);
                 task.Id = null;  // new
@@ -511,7 +511,7 @@ namespace PrestoViewModel.Tabs
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]
-        private static TaskBase CreateTaskFromLegacyTask(PrestoCommon.Entities.LegacyPresto.TaskBase legacyTask)
+        private static TaskBase CreateTaskFromLegacyTask(PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTask)
         {
             Debug.WriteLine(legacyTask.GetType().ToString());
 

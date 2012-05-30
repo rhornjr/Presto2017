@@ -17,6 +17,9 @@ namespace PrestoCommon.Entities
         /// </summary>
         public string UserInitiatingRequest { get; private set; }
 
+        public PingRequest()
+        { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PingRequest"/> class.
         /// </summary>

@@ -6,7 +6,7 @@ namespace PrestoCommon.Entities.LegacyPresto
     /// 
     /// </summary>
     [Serializable]
-    public class TaskXmlModify : TaskBase
+    public class LegacyTaskXmlModify : LegacyTaskBase
     {
         /// <summary>
         ///

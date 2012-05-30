@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
@@ -11,7 +10,22 @@ namespace PrestoCommon.Data.SqlServer
     {
         public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            throw new NotImplementedException();
+            IQueryable<InstallationSummary> summaries = this.Database.InstallationSummaries
+                .Include(x => x.ApplicationServer)
+                .Include(x => x.ApplicationWithOverrideVariableGroup)
+                .Where(x => x.ApplicationServer.IdForEf == appServer.IdForEf)
+                .Where(x => x.ApplicationWithOverrideVariableGroup.IdForEf == appWithGroup.Application.IdForEf);
+
+            if (appWithGroup.CustomVariableGroup == null)
+            {
+                return summaries.Where(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null);
+            }
+
+            return summaries
+                .Where(x =>
+                x.ApplicationWithOverrideVariableGroup != null &&
+                x.ApplicationWithOverrideVariableGroup.CustomVariableGroup != null &&
+                x.ApplicationWithOverrideVariableGroup.CustomVariableGroup.IdForEf == appWithGroup.CustomVariableGroup.IdForEf);
         }
 
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
@@ -25,6 +39,7 @@ namespace PrestoCommon.Data.SqlServer
 
         public void Save(InstallationSummary installationSummary)
         {
+            // ToDo: Save child/list properties
             this.SaveChanges<InstallationSummary>(installationSummary);
         }
     }

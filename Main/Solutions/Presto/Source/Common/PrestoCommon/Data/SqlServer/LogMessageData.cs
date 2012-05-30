@@ -14,7 +14,7 @@ namespace PrestoCommon.Data.SqlServer
                 .Take(numberToRetrieve);
         }
 
-        public void Save(Entities.LogMessage logMessage)
+        public void Save(LogMessage logMessage)
         {
             this.SaveChanges<LogMessage>(logMessage);
         }

@@ -73,6 +73,9 @@ namespace PrestoCommon.Entities
         /// </value>
         public List<TaskDetail> TaskDetails { get; set; }
 
+        public InstallationSummary()
+        { }  // Parameterless constructor for EF.
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InstallationSummary"/> class.
         /// </summary>

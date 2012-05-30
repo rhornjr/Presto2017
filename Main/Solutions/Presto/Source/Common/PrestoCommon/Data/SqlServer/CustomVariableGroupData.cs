@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
@@ -10,7 +11,9 @@ namespace PrestoCommon.Data.SqlServer
     {
         public IEnumerable<CustomVariableGroup> GetAll()
         {
-            return this.Database.CustomVariableGroups.ToList();
+            return this.Database.CustomVariableGroups
+                .Include(x => x.CustomVariables)
+                .ToList();
         }
 
         public CustomVariableGroup GetByName(string name)

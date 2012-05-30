@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
@@ -20,27 +20,29 @@ namespace PrestoCommon.Data.SqlServer
 
         public Application GetByName(string name)
         {
-            throw new NotImplementedException();
+            return this.Database.Applications
+                .Include(x => x.Tasks)
+                .Include(x => x.CustomVariableGroups)
+                .Where(x => x.Name == name)
+                .FirstOrDefault();
         }
 
         public Application GetById(string id)
         {
-            throw new NotImplementedException();
+            int idAsInt = Convert.ToInt32(id, CultureInfo.InvariantCulture);
+
+            return this.Database.Applications
+                .Include(x => x.Tasks)
+                .Include(x => x.CustomVariableGroups)
+                .Where(x => x.IdForEf == idAsInt)
+                .FirstOrDefault();
         }
 
-        public IEnumerable<Application> GetByIds(IEnumerable<string> appIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#")]
         public void Save(Application newApp)
         {
-            // ToDo: Need to deal with CRUDing tasks.
-
             if (newApp == null) { throw new ArgumentNullException("newApp"); }
 
-            int[] groupIds = GetGroupIds(newApp);
+            int[] groupIds = GetGroupIds(newApp.CustomVariableGroups.ToList());
 
             Application appFromContext;
 
@@ -102,27 +104,13 @@ namespace PrestoCommon.Data.SqlServer
         {
             app.CustomVariableGroups.Clear();
 
-            List<CustomVariableGroup> groupsFromDb2 =
+            List<CustomVariableGroup> groupsFromDb =
                 this.Database.CustomVariableGroups.Where(g => groupIds.Contains(g.IdForEf)).ToList();
 
-            foreach (CustomVariableGroup group in groupsFromDb2)
+            foreach (CustomVariableGroup group in groupsFromDb)
             {
                 app.CustomVariableGroups.Add(group);
             }
-        }
-
-        private static int[] GetGroupIds(Application application)
-        {
-            int[] groupIds = new int[application.CustomVariableGroups.Count];
-
-            int i = 0;
-            foreach (CustomVariableGroup group in application.CustomVariableGroups)
-            {
-                groupIds[i] = group.IdForEf;
-                i++;
-            }
-
-            return groupIds;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]

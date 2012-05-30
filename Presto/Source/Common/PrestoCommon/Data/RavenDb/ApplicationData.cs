@@ -75,27 +75,6 @@ namespace PrestoCommon.Data.RavenDb
         }
 
         /// <summary>
-        /// Gets the by ids.
-        /// </summary>
-        /// <param name="appIds">The app ids.</param>
-        /// <returns></returns>
-        public IEnumerable<Application> GetByIds(IEnumerable<string> appIds)
-        {
-            return ExecuteQuery<IEnumerable<Application>>(() =>
-            {
-                IEnumerable<Application> apps = QueryAndSetEtags(session =>
-                    session.Query<Application>()
-                    .Include(x => x.CustomVariableGroupIds)
-                    .Where(app => app.Id.In<string>(appIds)))
-                    .AsEnumerable().Cast<Application>();
-
-                foreach (Application app in apps) { HydrateApplication(app); }
-
-                return apps;
-            });
-        }
-
-        /// <summary>
         /// Hydrates the application.
         /// </summary>
         /// <param name="app">The app.</param>

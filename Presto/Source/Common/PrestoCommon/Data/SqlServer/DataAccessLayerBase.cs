@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -38,6 +39,22 @@ namespace PrestoCommon.Data.SqlServer
             return EntityState.Added;
         }
 
+        protected static int[] GetGroupIds(List<CustomVariableGroup> groups)
+        {
+            if (groups == null) { throw new ArgumentNullException("groups"); }
+
+            int[] groupIds = new int[groups.Count];
+
+            int i = 0;
+            foreach (CustomVariableGroup group in groups)
+            {
+                groupIds[i] = group.IdForEf;
+                i++;
+            }
+
+            return groupIds;
+        }
+
         /*******************************************************************************************
          *                                  ENTITY FRAMEWORK                                       *
          *******************************************************************************************/
@@ -47,8 +64,6 @@ namespace PrestoCommon.Data.SqlServer
             System.Data.Entity.Database.SetInitializer<PrestoContext>(new DropCreateDatabaseAlways<PrestoContext>());
 
             this.Database.CustomVariableGroups.Add(CreateDummyCustomVariableGroup());
-            this.Database.TaskBases.Add(CreateDummyTaskDosCommand());
-            this.Database.TaskBases.Add(CreateDummyTaskCopyFile());
 
             this.Database.SaveChanges();
 
@@ -56,10 +71,6 @@ namespace PrestoCommon.Data.SqlServer
             {
                 Debug.WriteLine(taskBase.ToString());
             }
-
-            // Q: Remove the first custom variable in the group to see if EF removes it without me having to explicitly delete it.
-            // A: The variable doesn't get deleted, however the FK pointer to the variable group gets set to NULL.
-            //customVariableGroups[0].CustomVariables.RemoveAt(0);
         }
 
         private static CustomVariableGroup CreateDummyCustomVariableGroup()
@@ -68,29 +79,6 @@ namespace PrestoCommon.Data.SqlServer
             customVariableGroup.CustomVariables.Add(new CustomVariable() { Id = "1", Key = "Snuh Key 1", Value = "Snuh Value 1" });
 
             return customVariableGroup;
-        }
-
-        private static TaskDosCommand CreateDummyTaskDosCommand()
-        {
-            TaskDosCommand taskDosCommand = new TaskDosCommand("dos1", 1, 4, false, "cmd", "/c snuh");
-            taskDosCommand.Id = "1";
-
-            return taskDosCommand;
-        }
-
-        private static TaskCopyFile CreateDummyTaskCopyFile()
-        {
-            TaskCopyFile taskCopyFile    = new TaskCopyFile();
-            taskCopyFile.Description     = "Copy file 1";
-            taskCopyFile.DestinationPath = "dest path 1";
-            taskCopyFile.Id              = "2";
-            taskCopyFile.PrestoTaskType  = Enums.TaskType.CopyFile;
-            taskCopyFile.Sequence        = 5;
-            taskCopyFile.SourceFileName  = "source file 1";
-            taskCopyFile.SourcePath      = "source path 1";
-            taskCopyFile.TaskSucceeded   = false;
-
-            return taskCopyFile;
         }
     }
 
@@ -109,23 +97,5 @@ namespace PrestoCommon.Data.SqlServer
         public DbSet<TaskBase>            TaskBases             { get; set; }
         
         public DbSet<ApplicationWithOverrideVariableGroup> ApplicationWithOverrideVariableGroups { get; set; }
-
-        // This isn't necessary.
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);  // ToDo: Should this be called?
-
-        //    // Specify the many-many relationship between app and group
-        //    modelBuilder.Entity<CustomVariableGroup>()
-        //        .HasMany(g => g.Applications)
-        //        .WithMany(a => a.CustomVariableGroups)
-        //        .Map(m =>
-        //            {
-        //                m.MapLeftKey("CustomVariableGroup_IdForEf");
-        //                m.MapRightKey("Application_IdForEf");
-        //                m.ToTable("CustomVariableGroupApplications");
-        //            });
-        //}
     }
 }

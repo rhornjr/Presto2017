@@ -38,7 +38,10 @@ namespace PrestoCommon.Entities
         }
 
         [JsonIgnore]
-        public ICollection<Application> Applications { get; set; }
+        public ICollection<Application> Applications { get; set; }  // For EF many-many
+
+        [JsonIgnore]
+        public ICollection<ApplicationServer> ApplicationServers { get; set; }  // For EF many-many
 
         /// <summary>
         /// Gets or sets the custom variables.

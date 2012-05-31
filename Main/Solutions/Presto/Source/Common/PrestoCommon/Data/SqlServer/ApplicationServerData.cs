@@ -49,6 +49,8 @@ namespace PrestoCommon.Data.SqlServer
 
             int[] groupIds = GetGroupIds(newServer.CustomVariableGroups.ToList());
 
+            List<ApplicationWithOverrideVariableGroup> appsWithGroupInUserModifiedServer = newServer.ApplicationsWithOverrideGroup.ToList();
+
             ApplicationServer serverFromContext;
 
             if (newServer.IdForEf == 0)  // New app
@@ -67,14 +69,14 @@ namespace PrestoCommon.Data.SqlServer
                     .Single(x => x.IdForEf == newServer.IdForEf);
             }
 
-            AddAppGroupsToServer(newServer, serverFromContext);
+            AddAppGroupsToServer(appsWithGroupInUserModifiedServer, serverFromContext);
             AddGroupsToApp(groupIds, serverFromContext);
             this.Database.SaveChanges();
         }
 
-        private void AddAppGroupsToServer(ApplicationServer serverNotAssociatedWithContext, ApplicationServer serverFromContext)
+        private void AddAppGroupsToServer(List<ApplicationWithOverrideVariableGroup> appsWithGroupInUserModifiedServer, ApplicationServer serverFromContext)
         {
-            foreach (ApplicationWithOverrideVariableGroup appWithGroup in serverNotAssociatedWithContext.ApplicationsWithOverrideGroup)
+            foreach (ApplicationWithOverrideVariableGroup appWithGroup in appsWithGroupInUserModifiedServer)
             {
                 if (appWithGroup.IdForEf == 0)
                 {
@@ -105,7 +107,7 @@ namespace PrestoCommon.Data.SqlServer
             foreach (ApplicationWithOverrideVariableGroup appWithGroup in serverFromContext.ApplicationsWithOverrideGroup)
             {
                 ApplicationWithOverrideVariableGroup appGroupInNewServer =
-                    serverNotAssociatedWithContext.ApplicationsWithOverrideGroup.Where(x => x.IdForEf == appWithGroup.IdForEf).FirstOrDefault();
+                    appsWithGroupInUserModifiedServer.Where(x => x.IdForEf == appWithGroup.IdForEf).FirstOrDefault();
 
                 if (appGroupInNewServer == null)
                 {

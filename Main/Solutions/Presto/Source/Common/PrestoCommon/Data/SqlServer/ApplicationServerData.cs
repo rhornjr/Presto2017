@@ -22,7 +22,8 @@ namespace PrestoCommon.Data.SqlServer
         public ApplicationServer GetByName(string serverName)
         {
             return this.Database.ApplicationServers
-                .Include(x => x.ApplicationsWithOverrideGroup)
+                .Include(x => x.ApplicationsWithOverrideGroup.Select(y => y.Application))
+                .Include(x => x.ApplicationsWithOverrideGroup.Select(y => y.CustomVariableGroup))
                 .Include(x => x.ApplicationWithGroupToForceInstallList)
                 .Include(x => x.CustomVariableGroups)
                 .Where(x => x.Name == serverName)
@@ -34,7 +35,8 @@ namespace PrestoCommon.Data.SqlServer
             int idAsInt = Convert.ToInt32(id, CultureInfo.InvariantCulture);
 
             return this.Database.ApplicationServers
-                .Include(x => x.ApplicationsWithOverrideGroup)
+                .Include(x => x.ApplicationsWithOverrideGroup.Select(y => y.Application))
+                .Include(x => x.ApplicationsWithOverrideGroup.Select(y => y.CustomVariableGroup))
                 .Include(x => x.ApplicationWithGroupToForceInstallList)
                 .Include(x => x.CustomVariableGroups)
                 .Where(x => x.IdForEf == idAsInt)

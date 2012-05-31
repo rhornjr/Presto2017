@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Diagnostics;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Data.SqlServer
@@ -19,7 +18,7 @@ namespace PrestoCommon.Data.SqlServer
 
             if (!_databaseInitialized)
             {
-                //InitializeDatabase();
+                InitializeDatabase();
                 _databaseInitialized = true;
             }
         }
@@ -59,27 +58,20 @@ namespace PrestoCommon.Data.SqlServer
          *                                  ENTITY FRAMEWORK                                       *
          *******************************************************************************************/
 
-        public void InitializeDatabase()
+        public static void InitializeDatabase()
         {
             System.Data.Entity.Database.SetInitializer<PrestoContext>(new DropCreateDatabaseAlways<PrestoContext>());
 
-            this.Database.CustomVariableGroups.Add(CreateDummyCustomVariableGroup());
-
-            this.Database.SaveChanges();
-
-            foreach (TaskBase taskBase in this.Database.TaskBases)
-            {
-                Debug.WriteLine(taskBase.ToString());
-            }
+            //this.Database.CustomVariableGroups.Add(CreateDummyCustomVariableGroup());
         }
 
-        private static CustomVariableGroup CreateDummyCustomVariableGroup()
-        {
-            CustomVariableGroup customVariableGroup = new CustomVariableGroup() { Id = "1", Name = "Snuh" };
-            customVariableGroup.CustomVariables.Add(new CustomVariable() { Id = "1", Key = "Snuh Key 1", Value = "Snuh Value 1" });
+        //private static CustomVariableGroup CreateDummyCustomVariableGroup()
+        //{
+        //    CustomVariableGroup customVariableGroup = new CustomVariableGroup() { Id = "1", Name = "Snuh" };
+        //    customVariableGroup.CustomVariables.Add(new CustomVariable() { Id = "1", Key = "Snuh Key 1", Value = "Snuh Value 1" });
 
-            return customVariableGroup;
-        }
+        //    return customVariableGroup;
+        //}
     }
 
     public class PrestoContext : DbContext

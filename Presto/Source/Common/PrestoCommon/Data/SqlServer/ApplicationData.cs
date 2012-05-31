@@ -44,6 +44,8 @@ namespace PrestoCommon.Data.SqlServer
 
             int[] groupIds = GetGroupIds(newApp.CustomVariableGroups.ToList());
 
+            List<TaskBase> tasksInUserModifiedApp = newApp.Tasks.ToList();
+
             Application appFromContext;
 
             if (newApp.IdForEf == 0)  // New app
@@ -61,14 +63,14 @@ namespace PrestoCommon.Data.SqlServer
                     .Single(x => x.IdForEf == newApp.IdForEf);
             }
 
-            AddTasksToApp(newApp, appFromContext);
+            AddTasksToApp(tasksInUserModifiedApp, appFromContext);
             AddGroupsToApp(groupIds, appFromContext);
             this.Database.SaveChanges();
         }
 
-        private void AddTasksToApp(Application appNotAssociatedWithContext, Application appFromContext)
+        private void AddTasksToApp(List<TaskBase> tasksInUserModifiedApp, Application appFromContext)
         {
-            foreach (TaskBase taskModified in appNotAssociatedWithContext.Tasks)
+            foreach (TaskBase taskModified in tasksInUserModifiedApp)
             {
                 if (taskModified.IdForEf == 0)
                 {
@@ -85,7 +87,7 @@ namespace PrestoCommon.Data.SqlServer
             List<TaskBase> tasksToDelete = new List<TaskBase>();
             foreach (TaskBase originalTask in appFromContext.Tasks)
             {
-                TaskBase task = appNotAssociatedWithContext.Tasks.Where(x => x.IdForEf == originalTask.IdForEf).FirstOrDefault();
+                TaskBase task = tasksInUserModifiedApp.Where(x => x.IdForEf == originalTask.IdForEf).FirstOrDefault();
 
                 if (task == null)
                 {                    

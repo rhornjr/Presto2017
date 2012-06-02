@@ -57,11 +57,9 @@ namespace PrestoCommon.Data.SqlServer
 
             if (newServer.IdForEf == 0)  // New app
             {
-                serverFromContext = newServer;
-                // Clear groups, otherwise new groups will be added to the groups table.
-                serverFromContext.ApplicationsWithOverrideGroup.Clear();
-                serverFromContext.CustomVariableGroups.Clear();
+                serverFromContext = new ApplicationServer();
                 this.Database.ApplicationServers.Add(serverFromContext);
+                this.Database.Entry(serverFromContext).CurrentValues.SetValues(newServer);  // Set all scalar properties.
             }
             else
             {

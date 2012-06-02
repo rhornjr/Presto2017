@@ -43,10 +43,9 @@ namespace PrestoCommon.Data.SqlServer
 
             if (newGroup.IdForEf == 0)  // New group
             {
-                groupFromContext = newGroup;
-                // Clear variables, otherwise new groups will be added to the groups table.
-                groupFromContext.CustomVariables.Clear();
+                groupFromContext = new CustomVariableGroup();
                 this.Database.CustomVariableGroups.Add(groupFromContext);
+                this.Database.Entry(groupFromContext).CurrentValues.SetValues(newGroup);  // Set all scalar properties.                
             }
             else
             {

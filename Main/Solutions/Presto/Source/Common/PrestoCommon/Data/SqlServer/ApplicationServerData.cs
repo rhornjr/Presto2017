@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
@@ -72,6 +73,27 @@ namespace PrestoCommon.Data.SqlServer
             AddAppGroupsToServer(appsWithGroupInUserModifiedServer, serverFromContext);
             AddGroupsToApp(groupIds, serverFromContext);
             this.Database.SaveChanges();
+        }
+
+        public ApplicationServer SaveTest(ApplicationServer appServer)
+        {
+            if (appServer == null) { throw new ArgumentNullException("appServer"); }
+
+            // Since we can only ever add *existing* groups, always set their state to modified so they don't get added again to the DB.
+            this.Database.Entry(appServer.CustomVariableGroups[0]).State = EntityState.Modified;
+
+            if (appServer.IdForEf == 0)
+            {
+                this.Database.ApplicationServers.Add(appServer);
+            }
+            else
+            {
+                this.Database.Entry(appServer).State = EntityState.Modified;
+            }
+
+            this.Database.SaveChanges();
+
+            return appServer;
         }
 
         private void AddAppGroupsToServer(List<ApplicationWithOverrideVariableGroup> appsWithGroupInUserModifiedServer, ApplicationServer serverFromContext)

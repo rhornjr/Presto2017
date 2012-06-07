@@ -63,11 +63,6 @@ namespace PrestoViewModel.Tabs
         public ICommand SaveServerCommand { get; private set; }
 
         /// <summary>
-        /// Gets the install presto updater command.
-        /// </summary>
-        public ICommand InstallPrestoUpdaterCommand { get; private set; }        
-
-        /// <summary>
         /// Gets the add application command.
         /// </summary>
         public ICommand AddApplicationCommand { get; private set; }
@@ -197,11 +192,10 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.AddServerCommand            = new RelayCommand(AddServer);
-            this.DeleteServerCommand         = new RelayCommand(DeleteServer, AppServerIsSelectedMethod);
-            this.SaveServerCommand           = new RelayCommand(_ => SaveServer(), AppServerIsSelectedMethod);
-            this.InstallPrestoUpdaterCommand = new RelayCommand(_ => InstallPrestoUpdater(), AppServerIsSelectedMethod);            
-            this.RefreshServersCommand       = new RelayCommand(RefreshServers);
+            this.AddServerCommand      = new RelayCommand(AddServer);
+            this.DeleteServerCommand   = new RelayCommand(DeleteServer, AppServerIsSelectedMethod);
+            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), AppServerIsSelectedMethod);
+            this.RefreshServersCommand = new RelayCommand(RefreshServers);
 
             this.AddApplicationCommand    = new RelayCommand(AddApplication);
             this.EditApplicationCommand   = new RelayCommand(EditApplication, ExactlyOneApplicationIsSelected);

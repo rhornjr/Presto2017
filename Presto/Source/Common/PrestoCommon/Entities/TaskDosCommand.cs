@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -13,7 +12,6 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Task for a DOS command (anything you can do at a command prompt)
     /// </summary>
-    [Table("TaskDosCommands")]  // EF
     public class TaskDosCommand : TaskBase
     {
         private string _dosExecutable;

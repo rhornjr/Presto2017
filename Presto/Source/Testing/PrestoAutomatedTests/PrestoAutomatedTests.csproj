@@ -75,7 +75,6 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationLogicTest.cs" />
-    <Compile Include="ApplicationServerDataTest.cs" />
     <Compile Include="ApplicationServerLogicTest.cs" />
     <Compile Include="ApplicationServerTest.cs" />
     <Compile Include="CustomVariableGroupLogicTest.cs" />

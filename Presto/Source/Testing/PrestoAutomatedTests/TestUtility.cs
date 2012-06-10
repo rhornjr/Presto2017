@@ -11,11 +11,6 @@ namespace PrestoAutomatedTests
     // 2. Start the DB server: C:\Software\RavenDb\RavenDB-Build-573\Server\Raven.Server.exe
     // 3. Run the tests (CTRL-R-A)
 
-    // For SQL Server
-    // 1. Close local SQL Server so it's not in use
-    // 2. In DataAccessLayerBase, make sure this line, in the constructor, is active: InitializeDatabase();
-    // 3. Run the tests (CTRL-R-A)
-
     public static class TestUtility
     {
         private static bool _dataPopulated;

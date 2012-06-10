@@ -40,9 +40,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -93,20 +90,6 @@
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
     <Compile Include="Data\RavenDb\PingRequestData.cs" />
     <Compile Include="Data\RavenDb\PingResponseData.cs" />
-    <Compile Include="Data\SqlServer\ApplicationServerData.cs" />
-    <Compile Include="Data\SqlServer\CustomVariableGroupData.cs" />
-    <Compile Include="Data\SqlServer\DataAccessLayerBase.cs" />
-    <Compile Include="Data\SqlServer\ApplicationData.cs" />
-    <Compile Include="Data\SqlServer\GlobalSettingData.cs" />
-    <Compile Include="Data\SqlServer\InstallationSummaryData.cs" />
-    <Compile Include="Data\SqlServer\LogMessageData.cs" />
-    <Compile Include="Data\SqlServer\PingRequestData.cs" />
-    <Compile Include="Data\SqlServer\PingResponseData.cs" />
-    <Compile Include="Data\SqlServer\Presto.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Presto.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
@@ -170,24 +153,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Data\SqlServer\Presto.dbml.layout">
-      <DependentUpon>Presto.dbml</DependentUpon>
-    </None>
     <EmbeddedResource Include="PrestoCommonResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PrestoCommonResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\SqlServer\Presto.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>Presto.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
+using PrestoCommon.Entities.LegacyPresto;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
@@ -408,7 +409,7 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase> taskBases = TryGetLegacyTasks(filePathAndName);
+                ObservableCollection<LegacyTaskBase> taskBases = TryGetLegacyTasks(filePathAndName);
                 if (taskBases == null) { return; }
                 ImportLegacyTasks(taskBases);
                 return;
@@ -447,7 +448,7 @@ namespace PrestoViewModel.Tabs
                 sequence = highestSequenceTask.Sequence + 1;
             }
 
-            foreach (TaskBase task in taskBases)
+            foreach (TaskBase task in taskBases.OrderBy(x => x.Sequence))
             {
                 task.Id = null;  // new
                 task.Sequence = sequence;
@@ -459,17 +460,17 @@ namespace PrestoViewModel.Tabs
             NotifyPropertyChanged(() => this.AllApplicationTasks);
         }
 
-        private static ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase> TryGetLegacyTasks(string filePathAndName)
+        private static ObservableCollection<LegacyTaskBase> TryGetLegacyTasks(string filePathAndName)
         {
             using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase>));
-                return xmlSerializer.Deserialize(fileStream) as ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase>;
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<LegacyTaskBase>));
+                return xmlSerializer.Deserialize(fileStream) as ObservableCollection<LegacyTaskBase>;
             }
         }
 
-        private void ImportLegacyTasks(ObservableCollection<PrestoCommon.Entities.LegacyPresto.LegacyTaskBase> taskBases)
-        {            
+        private void ImportLegacyTasks(ObservableCollection<LegacyTaskBase> taskBases)
+        {
             // Start the sequence after the highest existing sequence.
             int sequence = 1;  // default if no tasks exist
             if (this.SelectedApplication.Tasks != null && this.SelectedApplication.Tasks.Count > 0)
@@ -478,7 +479,7 @@ namespace PrestoViewModel.Tabs
                 sequence = highestSequenceTask.Sequence + 1;
             }
 
-            foreach (PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTask in taskBases)
+            foreach (LegacyTaskBase legacyTask in taskBases.OrderBy(x => x.Sequence))
             {
                 TaskBase task = CreateTaskFromLegacyTask(legacyTask);
                 task.Id = null;  // new
@@ -511,7 +512,7 @@ namespace PrestoViewModel.Tabs
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]
-        private static TaskBase CreateTaskFromLegacyTask(PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTask)
+        private static TaskBase CreateTaskFromLegacyTask(LegacyTaskBase legacyTask)
         {
             Debug.WriteLine(legacyTask.GetType().ToString());
 
@@ -521,13 +522,13 @@ namespace PrestoViewModel.Tabs
 
             switch (legacyTaskTypeName)
             {
-                case "TaskCopyFile":
+                case "LegacyTaskCopyFile":
                     task = TaskCopyFile.CreateNewFromLegacyTask(legacyTask);
                     break;
-                case "TaskDosCommand":
+                case "LegacyTaskDosCommand":
                     task = TaskDosCommand.CreateNewFromLegacyTask(legacyTask);
                     break;
-                case "TaskXmlModify":
+                case "LegacyTaskXmlModify":
                     task = TaskXmlModify.CreateNewFromLegacyTask(legacyTask);
                     break;
                 default:

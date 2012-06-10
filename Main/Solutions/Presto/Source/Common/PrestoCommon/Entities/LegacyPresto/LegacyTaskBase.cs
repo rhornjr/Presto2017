@@ -11,6 +11,7 @@ namespace PrestoCommon.Entities.LegacyPresto
     [XmlInclude( typeof( LegacyTaskCopyFile   ) )]
     [XmlInclude( typeof( LegacyTaskDosCommand ) )]
     [XmlInclude( typeof( LegacyTaskXmlModify  ) )]
+    [XmlType("TaskBase")]  // So TaskBase, in the XML file, will deserialize as this class.
     public /* abstract */ class LegacyTaskBase : IComparable<LegacyTaskBase>
     {
         /// <summary>

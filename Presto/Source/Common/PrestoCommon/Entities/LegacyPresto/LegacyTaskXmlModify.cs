@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace PrestoCommon.Entities.LegacyPresto
 {
@@ -6,6 +7,7 @@ namespace PrestoCommon.Entities.LegacyPresto
     /// 
     /// </summary>
     [Serializable]
+    [XmlType("TaskXmlModify")]
     public class LegacyTaskXmlModify : LegacyTaskBase
     {
         /// <summary>

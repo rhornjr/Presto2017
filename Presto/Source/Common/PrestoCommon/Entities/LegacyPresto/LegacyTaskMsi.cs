@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace PrestoCommon.Entities.LegacyPresto
 {
@@ -6,6 +7,7 @@ namespace PrestoCommon.Entities.LegacyPresto
     /// 
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Msi"), Serializable]
+    [XmlType("TaskMsi")]
     public class LegacyTaskMsi : LegacyTaskBase
     {
         /// <summary>

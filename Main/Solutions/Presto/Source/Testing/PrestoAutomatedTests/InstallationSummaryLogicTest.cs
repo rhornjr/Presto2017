@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
@@ -100,13 +99,7 @@ namespace PrestoAutomatedTests
 
             for (int i = 0; i <= 49; i++)
             {
-                //Assert.AreEqual(summariesCreatedByTestUtility[i].InstallationStart, summariesFromDb[i].InstallationStart);
-                // Had to do it this way because the Ticks property was slightly different. If we're down to the same millisecond,
-                // that's close enough. Got this solution from: http://stackoverflow.com/questions/3577856/nunit-assert-areequal-datetime-tolerances
-                DateTime date1 = summariesCreatedByTestUtility[i].InstallationStart;
-                DateTime date2 = summariesFromDb[i].InstallationStart;
-                Assert.IsTrue((date1 - date2) < TimeSpan.FromMilliseconds(2));
-                // ToDo: How can we be off even 1 tick, let alone a millisecond? They should be identical.
+                Assert.AreEqual(summariesCreatedByTestUtility[i].InstallationStart, summariesFromDb[i].InstallationStart);
             }
         }
     }

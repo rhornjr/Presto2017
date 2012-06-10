@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
@@ -12,7 +11,6 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// 
     /// </summary>
-    [Table("TaskXmlModifys")]  // EF
     public class TaskXmlModify : TaskBase
     {
         /// <summary>

@@ -19,6 +19,10 @@
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -30,8 +34,33 @@
             </Border>
             <Border Grid.Column="1" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                 <CheckBox IsChecked="{Binding GlobalSetting.FreezeAllInstallations}" Style="{StaticResource StandardCheckBox}" Margin="8"/>
-            </Border>            
-            
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                <Label Content="System Variables" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                <Label Content="$(sys:applicationName)" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                <Label Content="The name of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
+                <Label Content="$(sys:applicationVersion)" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
+                <Label Content="The version string of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
+                <Label Content="$(sys:serverName)" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
+                <Label Content="The name of the server where the application is being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+
         </Grid>
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">

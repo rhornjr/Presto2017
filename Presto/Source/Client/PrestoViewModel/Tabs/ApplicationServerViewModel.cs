@@ -30,6 +30,7 @@ namespace PrestoViewModel.Tabs
         private PrestoObservableCollection<ApplicationServer> _applicationServers = new PrestoObservableCollection<ApplicationServer>();
         private ApplicationServer _selectedApplicationServer;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
+        private static string _selfUpdatingAppName = GetSelfUpdatingAppName();
 
         /// <summary>
         /// Gets a value indicating whether [app server is selected].
@@ -326,12 +327,12 @@ namespace PrestoViewModel.Tabs
         {
             if (this.SelectedApplicationsWithOverrideGroup.Count > 1 &&
                 this.SelectedApplicationsWithOverrideGroup.Any(
-                    x => x.Application.Name.Equals(ConfigurationManager.AppSettings["selfUpdatingAppName"],
-                        StringComparison.OrdinalIgnoreCase)))
+                    x => x.Application.Name.Equals(_selfUpdatingAppName, StringComparison.OrdinalIgnoreCase)))
             {                
                 ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                    "Cannot include the Presto Self-updater app with a request to install multiple apps. If you want to install the " +
-                    "updater app, select it by itself.");
+                    "Cannot include the {0} app with a request to install multiple apps. If you want to install the " +
+                    "updater app, select it by itself.",
+                    _selfUpdatingAppName);
                 return true;
             }
 
@@ -343,10 +344,9 @@ namespace PrestoViewModel.Tabs
             // If the only app, that is selected, is the Presto self-updater, then return true.
 
             if (this.SelectedApplicationsWithOverrideGroup.Count == 1 &&
-                this.SelectedApplicationsWithOverrideGroup[0].Application.Name.Equals(ConfigurationManager.AppSettings["selfUpdatingAppName"],
-                    StringComparison.OrdinalIgnoreCase))
+                this.SelectedApplicationsWithOverrideGroup[0].Application.Name.Equals(_selfUpdatingAppName, StringComparison.OrdinalIgnoreCase))
             {
-                LogAndShowAppToBeInstalled("Presto Self-updater");
+                LogAndShowAppToBeInstalled(_selfUpdatingAppName);
 
                 Task.Factory.StartNew(() =>
                 {
@@ -357,6 +357,11 @@ namespace PrestoViewModel.Tabs
             }
 
             return false;
+        }
+
+        private static string GetSelfUpdatingAppName()
+        {
+            return ConfigurationManager.AppSettings["selfUpdatingAppName"];
         }
 
         private void InstallPrestoUpdater()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -387,9 +388,11 @@ namespace PrestoCommon.Entities
 
         public void InstallPrestoSelfUpdater()
         {
+            string selfUpdatingAppName = ConfigurationManager.AppSettings["selfUpdatingAppName"];
+
             // Get the self-updater app from the DB
             ApplicationWithOverrideVariableGroup appWithGroup =
-                this.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == "Presto Self-updater").FirstOrDefault();
+                this.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == selfUpdatingAppName).FirstOrDefault();
 
             if (appWithGroup == null)
             {

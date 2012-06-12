@@ -18,6 +18,7 @@ namespace PrestoAutomatedTests
         public static readonly int TotalNumberOfEachEntityToCreate = 10;
         public static readonly int TotalNumberOfInstallationSummaries = 250;
         public static readonly int TotalNumberOfLogMessages = 1000;
+        public static readonly int NumberOfExtraInstallationSummariesForServer4AndApp8 = 2000;
 
         public static List<InstallationSummary> AllInstallationSummaries { get; private set; }
 
@@ -29,6 +30,7 @@ namespace PrestoAutomatedTests
             AddCustomVariableGroups();
             AddAppServers();
             AddInstallationSummaries();
+            AddManyInstallationSummariesForOneServerAndApp();
             AddLogMessages();
 
             _dataPopulated = true;
@@ -119,6 +121,32 @@ namespace PrestoAutomatedTests
 
                     runningTotal++;
                 }
+            }
+        }
+
+        private static void AddManyInstallationSummariesForOneServerAndApp()
+        {
+            string serverName = "server4";
+            ApplicationServer server = ApplicationServerLogic.GetByName(serverName);
+
+            string appName = "app8";
+            Application app = ApplicationLogic.GetByName(appName);
+
+            ApplicationWithOverrideVariableGroup appWithGroup = new ApplicationWithOverrideVariableGroup();
+            appWithGroup.Application = app;
+
+            // Save many installation summaries, for one server, to test Raven's 128 or 1024 limit.
+            DateTime originalStartTime = DateTime.Now.AddDays(-1);
+            for (int i = 1; i <= NumberOfExtraInstallationSummariesForServer4AndApp8; i++)
+            {
+                DateTime startTime = originalStartTime.AddMinutes(i);
+                InstallationSummary summary = new InstallationSummary(appWithGroup, server, startTime);
+
+                summary.InstallationEnd = startTime.AddSeconds(4);
+                summary.InstallationResult = InstallationResult.Success;
+
+                AllInstallationSummaries.Add(summary);
+                InstallationSummaryLogic.Save(summary);
             }
         }
 

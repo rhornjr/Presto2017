@@ -22,7 +22,8 @@ namespace PrestoCommon.Data.RavenDb
                 IEnumerable<CustomVariableGroup> customGroups =
                     QueryAndSetEtags(session =>
                         session.Query<CustomVariableGroup>()
-                        .Customize(x => x.WaitForNonStaleResults()))
+                        .Customize(x => x.WaitForNonStaleResults())
+                        .Take(int.MaxValue))
                         .AsEnumerable().Cast<CustomVariableGroup>();
 
                 return customGroups;

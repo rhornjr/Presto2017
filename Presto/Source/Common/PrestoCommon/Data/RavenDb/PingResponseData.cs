@@ -57,7 +57,8 @@ namespace PrestoCommon.Data.RavenDb
             {
                 IEnumerable<PingResponse> pingResponses = QueryAndSetEtags(session => session.Query<PingResponse>()
                     .Include(x => x.ApplicationServerId)
-                    .Where(x => x.PingRequestId == pingRequest.Id))
+                    .Where(x => x.PingRequestId == pingRequest.Id)
+                    .Take(int.MaxValue))
                     .AsEnumerable().Cast<PingResponse>();
 
                 foreach (PingResponse pingResponse in pingResponses)

@@ -23,7 +23,8 @@ namespace PrestoCommon.Data.RavenDb
             {
                 IEnumerable<Application> apps = QueryAndSetEtags(session =>
                     session.Query<Application>()
-                    .Include(x => x.CustomVariableGroupIds))
+                    .Include(x => x.CustomVariableGroupIds)
+                    .Take(int.MaxValue))
                     .AsEnumerable().Cast<Application>();
 
                 foreach (Application app in apps) { HydrateApplication(app);                }

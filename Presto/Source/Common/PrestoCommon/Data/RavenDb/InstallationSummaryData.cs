@@ -21,12 +21,22 @@ namespace PrestoCommon.Data.RavenDb
         /// <returns></returns>
         public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
+            // ToDo: This method should change to return only the latest InstallationSummary. The consuming code only cares about the
+            //       most recent InstallationSummary anyway. Then we don't have to deal with Raven hitting its 128 document limit.
+
             return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
             {
                 IQueryable<EntityBase> installationSummaryList =
-                    QueryAndSetEtags(session => session.Query<InstallationSummary>()                    
+                    QueryAndSetEtags(session => session.Query<InstallationSummary>()
+                    .Include(x => x.ApplicationServerId)
+                    .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
+                    .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
+                    .Customize(x => x.WaitForNonStaleResults())
                     .Where(summary => summary.ApplicationServerId == appServer.Id &&
-                    summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id));
+                        summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id)
+                    .Take(int.MaxValue));
+
+                HydrateInstallationSummaries(installationSummaryList);
 
                 if (appWithGroup.CustomVariableGroup == null)
                 {
@@ -73,30 +83,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Take(numberToRetrieve)
                         );
 
-                    // Note: We use session.Load() below so that we get the information from the session, and not another trip to the DB.
-                    foreach (InstallationSummary summary in installationSummaries)
-                    {
-                        summary.ApplicationServer =
-                            QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
-                            as ApplicationServer;
-
-                        summary.ApplicationWithOverrideVariableGroup.Application =
-                            QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
-                            as Application;
-
-                        if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { continue; }
-
-                        summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
-                            QuerySingleResultAndSetEtag(session => {
-                                if (session.Advanced.IsLoaded(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
-                                {
-                                    return session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
-                                }
-                                return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
-                                ;
-                            })
-                            as CustomVariableGroup;
-                    }
+                    HydrateInstallationSummaries(installationSummaries);
 
                     return installationSummaries.AsEnumerable().Cast<InstallationSummary>();
                 });
@@ -105,6 +92,35 @@ namespace PrestoCommon.Data.RavenDb
             {
                 stopwatch.Stop();
                 Debug.WriteLine("InstallationSummaryData.GetMostRecentByStartTime(): " + stopwatch.ElapsedMilliseconds);
+            }
+        }
+
+        private static void HydrateInstallationSummaries(IQueryable<EntityBase> installationSummaries)
+        {
+            // Note: We use session.Load() below so that we get the information from the session, and not another trip to the DB.
+            foreach (InstallationSummary summary in installationSummaries)
+            {
+                summary.ApplicationServer =
+                    QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
+                    as ApplicationServer;
+
+                summary.ApplicationWithOverrideVariableGroup.Application =
+                    QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
+                    as Application;
+
+                if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { continue; }
+
+                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
+                    QuerySingleResultAndSetEtag(session =>
+                    {
+                        if (session.Advanced.IsLoaded(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+                        {
+                            return session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
+                        }
+                        return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
+                        ;
+                    })
+                    as CustomVariableGroup;
             }
         }
 

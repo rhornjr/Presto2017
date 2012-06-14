@@ -30,6 +30,7 @@
                 <CodeCoverageItem binaryFile="Source\Server\PrestoTaskRunner\bin\Debug\PrestoTaskRunner.exe" pdbFile="Source\Server\PrestoTaskRunner\bin\Debug\PrestoTaskRunner.pdb" instrumentInPlace="true" />
                 <CodeCoverageItem binaryFile="Source\Client\PrestoViewModel\bin\Debug\PrestoViewModel.dll" pdbFile="Source\Client\PrestoViewModel\bin\Debug\PrestoViewModel.pdb" instrumentInPlace="true" />
                 <CodeCoverageItem binaryFile="Source\Server\SelfUpdatingServiceHost\bin\Debug\SelfUpdatingServiceHost.exe" pdbFile="Source\Server\SelfUpdatingServiceHost\bin\Debug\SelfUpdatingServiceHost.pdb" instrumentInPlace="true" />
+                <CodeCoverageItem binaryFile="Source\Testing\PrestoAutomatedTests\bin\Debug\PrestoAutomatedTests.dll" pdbFile="Source\Testing\PrestoAutomatedTests\bin\Debug\PrestoAutomatedTests.pdb" instrumentInPlace="true" />
               </Regular>
             </CodeCoverage>
           </Configuration>

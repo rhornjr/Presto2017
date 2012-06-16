@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
@@ -336,8 +335,7 @@ namespace PrestoAutomatedTests
             appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
 
             // Get the list of InstallationStatus entities for this server.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(appServer, appWithValidGroup);
-            InstallationSummary mostRecentInstallationSummary        = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithValidGroup);
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddDays(-1);
@@ -369,8 +367,7 @@ namespace PrestoAutomatedTests
             appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
 
             // Get the list of InstallationStatus entities for this server.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(appServer, appWithValidGroup);
-            InstallationSummary mostRecentInstallationSummary        = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithValidGroup);
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);
@@ -403,8 +400,7 @@ namespace PrestoAutomatedTests
             appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
 
             // Get the list of InstallationStatus entities for this server.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(appServer, appWithValidGroup);
-            InstallationSummary mostRecentInstallationSummary        = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithValidGroup);
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);

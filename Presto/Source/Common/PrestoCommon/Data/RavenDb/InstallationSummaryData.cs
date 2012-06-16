@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
 using Raven.Client.Linq;
@@ -19,37 +20,42 @@ namespace PrestoCommon.Data.RavenDb
         /// <param name="appServer"></param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
-        public IEnumerable<InstallationSummary> GetByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
+        public InstallationSummary GetMostRecentByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            // ToDo: This method should change to return only the latest InstallationSummary. The consuming code only cares about the
-            //       most recent InstallationSummary anyway. Then we don't have to deal with Raven hitting its 128 document limit.
-
-            return ExecuteQuery<IEnumerable<InstallationSummary>>(() =>
+            return ExecuteQuery<InstallationSummary>(() =>
             {
-                IQueryable<EntityBase> installationSummaryList =
-                    QueryAndSetEtags(session => session.Query<InstallationSummary>()
+                Expression<Func<InstallationSummary, bool>> whereClause = GetWhereClause(appServer, appWithGroup);
+
+                InstallationSummary installationSummary =
+                    QuerySingleResultAndSetEtag(session => session.Query<InstallationSummary>()
                     .Include(x => x.ApplicationServerId)
                     .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
                     .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
                     .Customize(x => x.WaitForNonStaleResults())
-                    .Where(summary => summary.ApplicationServerId == appServer.Id &&
-                        summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id)
-                    .Take(int.MaxValue));
+                    .Where(whereClause)
+                    .OrderByDescending(x => x.InstallationStart)
+                    .FirstOrDefault()) as InstallationSummary;
 
-                HydrateInstallationSummaries(installationSummaryList);
+                HydrateInstallationSummary(installationSummary);
 
-                if (appWithGroup.CustomVariableGroup == null)
-                {
-                    return installationSummaryList.AsEnumerable().Cast<InstallationSummary>()
-                        .Where(summary => summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null);
-                }
-
-                return installationSummaryList.AsEnumerable().Cast<InstallationSummary>()
-                    .Where(summary =>
-                    summary.ApplicationWithOverrideVariableGroup != null &&
-                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
-                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId);
+                return installationSummary;
             });
+        }
+
+        private static Expression<Func<InstallationSummary, bool>> GetWhereClause(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            if (appWithGroup.CustomVariableGroup == null)
+            {
+                return summary => summary.ApplicationServerId == appServer.Id &&
+                            summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null;
+            }
+
+            return summary => summary.ApplicationServerId == appServer.Id &&
+                            summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
+                            summary.ApplicationWithOverrideVariableGroup != null &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId;
         }
 
         /// <summary>
@@ -100,28 +106,35 @@ namespace PrestoCommon.Data.RavenDb
             // Note: We use session.Load() below so that we get the information from the session, and not another trip to the DB.
             foreach (InstallationSummary summary in installationSummaries)
             {
-                summary.ApplicationServer =
-                    QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
-                    as ApplicationServer;
-
-                summary.ApplicationWithOverrideVariableGroup.Application =
-                    QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
-                    as Application;
-
-                if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { continue; }
-
-                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
-                    QuerySingleResultAndSetEtag(session =>
-                    {
-                        if (session.Advanced.IsLoaded(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
-                        {
-                            return session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
-                        }
-                        return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
-                        ;
-                    })
-                    as CustomVariableGroup;
+                HydrateInstallationSummary(summary);
             }
+        }
+
+        private static void HydrateInstallationSummary(InstallationSummary summary)
+        {
+            if (summary == null) { return; }
+
+            summary.ApplicationServer =
+                QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
+                as ApplicationServer;
+
+            summary.ApplicationWithOverrideVariableGroup.Application =
+                QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
+                as Application;
+
+            if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { return; }
+
+            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
+                QuerySingleResultAndSetEtag(session =>
+                {
+                    if (session.Advanced.IsLoaded(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+                    {
+                        return session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
+                    }
+                    return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
+                    ;
+                })
+                as CustomVariableGroup;
         }
 
         /// <summary>

@@ -328,19 +328,17 @@ namespace PrestoCommon.Entities
             DateTime now = DateTime.Now;
 
             // Get the list of InstallationStatus entities for this server.
-            IEnumerable<InstallationSummary> installationSummaryList = InstallationSummaryLogic.GetByServerAppAndGroup(this, appWithGroup);
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(this, appWithGroup);
 
             bool shouldForce;
 
-            if (installationSummaryList == null || installationSummaryList.Count() < 1)                
+            if (mostRecentInstallationSummary == null)
             {
                 shouldForce = now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                     appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment;
                 LogForceInstallExistsWithNoInstallationSummaries(appWithGroup, now, shouldForce);
                 return shouldForce;
             }
-
-            InstallationSummary mostRecentInstallationSummary = installationSummaryList.OrderByDescending(summary => summary.InstallationStart).FirstOrDefault();
 
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install            
             shouldForce = (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&

@@ -79,6 +79,15 @@ namespace PrestoAutomatedTests
 
             InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(server, appWithGroup);
 
+            InstallationSummary mostRecentSummaryInMemory =
+                TestUtility.AllInstallationSummaries
+                    .Where(summary => summary.ApplicationServer.Id == server.Id &&
+                            summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null)
+                    .OrderByDescending(x => x.InstallationStart)
+                    .First();
+
+            Assert.AreEqual(mostRecentSummaryInMemory.InstallationStart, mostRecentInstallationSummary.InstallationStart);
             Assert.AreEqual(serverName, mostRecentInstallationSummary.ApplicationServer.Name);
             Assert.AreEqual(appName, mostRecentInstallationSummary.ApplicationWithOverrideVariableGroup.Application.Name);
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
@@ -78,13 +77,10 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithGroup = new ApplicationWithOverrideVariableGroup();
             appWithGroup.Application = app;
 
-            List<InstallationSummary> summaries = new List<InstallationSummary>(InstallationSummaryLogic.GetByServerAppAndGroup(server, appWithGroup));
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(server, appWithGroup);
 
-            foreach (InstallationSummary summary in summaries)
-            {
-                Assert.AreEqual(serverName, summary.ApplicationServer.Name);
-                Assert.AreEqual(appName, summary.ApplicationWithOverrideVariableGroup.Application.Name);
-            }
+            Assert.AreEqual(serverName, mostRecentInstallationSummary.ApplicationServer.Name);
+            Assert.AreEqual(appName, mostRecentInstallationSummary.ApplicationWithOverrideVariableGroup.Application.Name);
         }
 
         /// <summary>
@@ -116,18 +112,10 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithGroup = new ApplicationWithOverrideVariableGroup();
             appWithGroup.Application = app;
 
-            List<InstallationSummary> summaries = new List<InstallationSummary>(InstallationSummaryLogic.GetByServerAppAndGroup(server, appWithGroup));
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(server, appWithGroup);
 
-            Assert.AreEqual(TestUtility.NumberOfExtraInstallationSummariesForServer4AndApp8, summaries.Count);
-
-            int i = 0;
-            foreach (InstallationSummary summary in summaries)
-            {
-                Debug.WriteLine(i);
-                Assert.AreEqual(serverName, summary.ApplicationServer.Name);
-                Assert.AreEqual(appName, summary.ApplicationWithOverrideVariableGroup.Application.Name);
-                i++;
-            }
+            Assert.AreEqual(serverName, mostRecentInstallationSummary.ApplicationServer.Name);
+            Assert.AreEqual(appName, mostRecentInstallationSummary.ApplicationWithOverrideVariableGroup.Application.Name);
         }
     }
 }

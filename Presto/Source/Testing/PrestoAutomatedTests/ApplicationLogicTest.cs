@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
@@ -83,6 +84,25 @@ namespace PrestoAutomatedTests
             List<Application> allApps = new List<Application>(ApplicationLogic.GetAll());
 
             Assert.AreEqual(TestUtility.TotalNumberOfEachEntityToCreate, allApps.Count);
+        }
+
+        [TestMethod()]
+        public void GetByIdTest()
+        {
+            string name = "app4";
+
+            Application appByName = ApplicationLogic.GetByName(name);
+
+            Application appById = ApplicationLogic.GetById(appByName.Id);
+
+            Assert.AreEqual(appByName.Id, appById.Id);
+        }
+
+        [TestMethod()]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SaveNullApplicationTest()
+        {
+            ApplicationLogic.Save(null);
         }
     }
 }

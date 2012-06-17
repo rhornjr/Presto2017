@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<OrderedTest name="OrderedTest1" storage="c:\codeplex\presto\main\solutions\presto\source\testing\prestoautomatedtests\orderedtest1.orderedtest" id="16e51f92-97ec-44c0-b96d-f789dbbdef6f" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<OrderedTest name="orderedtest1" storage="c:\codeplex\presto\main\solutions\presto\source\testing\prestoautomatedtests\orderedtest1.orderedtest" id="16e51f92-97ec-44c0-b96d-f789dbbdef6f" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Execution id="0b05b851-5a99-4d6e-9a43-f0d54c302a61" />
   <TestLinks>
     <TestLink id="10b4f6f0-526d-f5c1-926d-008de6889f9c" name="GetMostRecentByStartTimeTest" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <TestLink id="7d9eccf7-d861-7c1d-35ad-765f9d462ffc" name="GetMostRecentByCreatedTimeTest" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -25,5 +26,7 @@
     <TestLink id="c80a6f35-1d8f-dfd4-5e18-275158b84eb1" name="ApplicationShouldBeInstalledTest_UseCase11" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <TestLink id="968ccddc-cd69-63fe-7926-4061e63bcd61" name="ApplicationShouldBeInstalledTest_UseCase10" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <TestLink id="86f96734-40e4-010f-1a28-bca513eb3f5c" name="ApplicationShouldBeInstalledTest_UseCase1" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="005aff0d-5337-05e5-c588-d632f7806a07" name="SaveNullApplicationTest" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="6c528443-3606-c921-6233-53c4840cfd90" name="GetByIdTest" storage="bin\debug\prestoautomatedtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </TestLinks>
 </OrderedTest>

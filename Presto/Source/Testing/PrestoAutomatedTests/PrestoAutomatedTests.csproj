@@ -46,6 +46,8 @@
     <Reference Include="NLog">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Raven.Abstractions-3.5">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll</HintPath>
     </Reference>
@@ -62,8 +64,12 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -77,6 +83,7 @@
     <Compile Include="ApplicationLogicTest.cs" />
     <Compile Include="ApplicationServerLogicTest.cs" />
     <Compile Include="ApplicationServerTest.cs" />
+    <Compile Include="ApplicationViewModelTest.cs" />
     <Compile Include="CustomVariableGroupLogicTest.cs" />
     <Compile Include="InstallationSummaryLogicTest.cs" />
     <Compile Include="LogMessageLogicTest.cs" />
@@ -84,6 +91,10 @@
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Client\PrestoViewModel\PrestoViewModel.csproj">
+      <Project>{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}</Project>
+      <Name>PrestoViewModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\PrestoCommon\PrestoCommon.csproj">
       <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
       <Name>PrestoCommon</Name>
@@ -94,6 +105,7 @@
     <None Include="OrderedTest1.orderedtest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Shadow Include="Test References\PrestoViewModel.accessor" />
     <Shadow Include="Test References\PrestoCommon.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

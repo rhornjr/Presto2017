@@ -58,6 +58,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -122,6 +123,10 @@
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="Exceptions\CustomVariableExistsMoreThanOnceException.cs" />
     <Compile Include="Exceptions\CustomVariableMissingException.cs" />
+    <Compile Include="Factories\OpenFileDialog\MockOpenFileDialogService.cs" />
+    <Compile Include="Factories\TypeContainer.cs" />
+    <Compile Include="Factories\OpenFileDialog\IOpenFileDialogService.cs" />
+    <Compile Include="Factories\OpenFileDialog\OpenFileDialogService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />

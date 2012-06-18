@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
 using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.Factories;
+using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Logic;
 
 namespace PrestoViewModel
@@ -115,15 +117,15 @@ namespace PrestoViewModel
         /// <returns></returns>
         protected static string GetFilePathAndNameFromUser()
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using (IOpenFileDialogService dialogService = TypeContainer.RetrieveType<IOpenFileDialogService>())
             {
-                openFileDialog.InitialDirectory = lastDialogDirectory;
+                dialogService.InitialDirectory = lastDialogDirectory;
 
-                if (openFileDialog.ShowDialog() == DialogResult.Cancel) { return null; }
+                if (dialogService.ShowDialog() == DialogResult.Cancel) { return null; }
 
-                lastDialogDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+                lastDialogDirectory = Path.GetDirectoryName(dialogService.FileName);
 
-                return openFileDialog.FileName;
+                return dialogService.FileName;
             }
         }
 
@@ -133,16 +135,16 @@ namespace PrestoViewModel
         /// <returns></returns>
         protected static string[] GetFilePathAndNamesFromUser()
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using (IOpenFileDialogService dialogService = TypeContainer.RetrieveType<IOpenFileDialogService>())
             {
-                openFileDialog.InitialDirectory = lastDialogDirectory;
-                openFileDialog.Multiselect = true;
+                dialogService.InitialDirectory = lastDialogDirectory;
+                dialogService.Multiselect = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.Cancel) { return null; }
+                if (dialogService.ShowDialog() == DialogResult.Cancel) { return null; }
 
-                lastDialogDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+                lastDialogDirectory = Path.GetDirectoryName(dialogService.FileName);
 
-                return openFileDialog.FileNames;
+                return dialogService.FileNames;
             }
         }
 

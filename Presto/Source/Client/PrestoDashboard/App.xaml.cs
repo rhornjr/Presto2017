@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
+using PrestoCommon.Factories;
+using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
@@ -25,6 +27,9 @@ namespace PrestoDashboard
             //DispatcherHelper.Initialize();
 
             base.OnStartup(e);
+            
+            // Use a real (as opposed to mock) open file dialog.
+            TypeContainer.RegisterType(typeof(IOpenFileDialogService), typeof(OpenFileDialogService));
 
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
         }

@@ -41,21 +41,21 @@
             </Border>
 
             <Border Grid.Column="0" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-                <Label Content="$(sys:applicationName)" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+                <TextBox IsReadOnly="True" Text="$(sys:applicationName)" HorizontalAlignment="Right" Margin="8" />
             </Border>
             <Border Grid.Column="1" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
                 <Label Content="The name of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
 
             <Border Grid.Column="0" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
-                <Label Content="$(sys:applicationVersion)" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+                <TextBox IsReadOnly="True" Text="$(sys:applicationVersion)" HorizontalAlignment="Right" Margin="8"/>
             </Border>
             <Border Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
                 <Label Content="The version string of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
 
             <Border Grid.Column="0" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
-                <Label Content="$(sys:serverName)" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+                <TextBox IsReadOnly="True" Text="$(sys:serverName)" HorizontalAlignment="Right" Margin="8"/>
             </Border>
             <Border Grid.Column="1" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
                 <Label Content="The name of the server where the application is being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>

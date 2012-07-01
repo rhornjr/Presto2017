@@ -327,11 +327,15 @@ namespace PrestoViewModel.Tabs
             string message = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ConfirmInstallAppOnAppServerMessage, allAppWithGroupNames, this.SelectedApplicationServer);
 
-            if (!UserChoosesYes(message)) { return; }            
+            if (!UserChoosesYes(message)) { return; }
 
-            this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.AddRange(this.SelectedApplicationsWithOverrideGroup);
-
-            if (SaveServer() == false) { return; }
+            List<ServerForceInstallation> serverForceInstallations = new List<ServerForceInstallation>();
+            foreach (ApplicationWithOverrideVariableGroup appWithGroup in this.SelectedApplicationsWithOverrideGroup)
+            {
+                ServerForceInstallation serverForceInstallation = new ServerForceInstallation(this.SelectedApplicationServer, appWithGroup);
+                serverForceInstallations.Add(serverForceInstallation);
+            }
+            ApplicationServerLogic.SaveForceInstallations(serverForceInstallations);
 
             LogAndShowAppToBeInstalled(allAppWithGroupNames);
         }
@@ -535,9 +539,9 @@ namespace PrestoViewModel.Tabs
             this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
 
             // If this app group was selected to be force installed, remove it from that list as well.
-            ApplicationWithOverrideVariableGroup forceInstallGroup = this.SelectedApplicationServer.GetFromForceInstallList(selectedAppWithGroup);
+            ServerForceInstallation forceInstallGroup = this.SelectedApplicationServer.GetFromForceInstallList(selectedAppWithGroup);
 
-            if (forceInstallGroup != null) { this.SelectedApplicationServer.ApplicationWithGroupToForceInstallList.Remove(forceInstallGroup); }
+            if (forceInstallGroup != null) { ApplicationServerLogic.RemoveForceInstallation(forceInstallGroup); }
 
             string message = string.Format(CultureInfo.CurrentCulture,
                 "{0} was just removed from {1}.",

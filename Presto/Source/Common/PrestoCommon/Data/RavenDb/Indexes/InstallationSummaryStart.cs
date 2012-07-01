@@ -9,7 +9,12 @@ namespace PrestoCommon.Data.RavenDb.Indexes
         public InstallationSummaryStart()
         {
             Map = summaries => from summary in summaries
-                               select new { InstallationStart = summary.InstallationStart };
+                               select new {
+                                   ApplicationWithOverrideVariableGroup_CustomVariableGroupId = summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId,
+                                   ApplicationWithOverrideVariableGroup_ApplicationId = summary.ApplicationWithOverrideVariableGroup.ApplicationId,
+                                   ApplicationServerId = summary.ApplicationServerId,
+                                   InstallationStart = summary.InstallationStart
+                               };
         }
     }
 }

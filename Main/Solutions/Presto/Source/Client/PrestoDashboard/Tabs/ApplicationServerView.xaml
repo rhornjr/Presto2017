@@ -111,11 +111,11 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" FontWeight="Bold"/>
                     <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                          ItemsSource="{Binding SelectedApplicationServer.CustomVariableGroups}"
+                          ItemsSource="{Binding SelectedApplicationServerCustomVariableGroups}"
                           SelectedItem="{Binding SelectedCustomVariableGroup}"
                           Height="125">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
+                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -133,7 +133,7 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Applications" FontWeight="Bold"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                          ItemsSource="{Binding SelectedApplicationServer.ApplicationsWithOverrideGroup}"
+                          ItemsSource="{Binding SelectedApplicationServerApplicationsWithOverrideGroup}"
                           ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedApplicationsWithOverrideGroup}"
                           SelectionMode="Extended">
                     <DataGrid.Columns>

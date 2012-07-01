@@ -151,6 +151,30 @@ namespace PrestoViewModel.Tabs
                 this._selectedApplicationServer = value;
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServer);
                 this.NotifyPropertyChanged(() => this.AppServerIsSelected);
+                this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
+                this.NotifyPropertyChanged(() => this.SelectedApplicationServerCustomVariableGroups);
+            }
+        }
+
+        public IEnumerable<ApplicationWithOverrideVariableGroup> SelectedApplicationServerApplicationsWithOverrideGroup
+        {
+            get
+            {
+                if (this.SelectedApplicationServer == null ||
+                    this.SelectedApplicationServer.ApplicationsWithOverrideGroup == null) { return null; }
+
+                return this.SelectedApplicationServer.ApplicationsWithOverrideGroup
+                    .OrderBy(x => x.Application.Name)
+                    .ThenBy(x => x.CustomVariableGroup == null ? string.Empty : x.CustomVariableGroup.Name);
+            }
+        }
+
+        public IEnumerable<CustomVariableGroup> SelectedApplicationServerCustomVariableGroups
+        {
+            get
+            {
+                if (this.SelectedApplicationServer == null || this.SelectedApplicationServer.CustomVariableGroups == null) { return null; }
+                return this.SelectedApplicationServer.CustomVariableGroups.OrderBy(x => x.Name);
             }
         }
 
@@ -409,6 +433,8 @@ namespace PrestoViewModel.Tabs
             try
             {
                 ApplicationServerLogic.Save(this.SelectedApplicationServer);
+                this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
+                this.NotifyPropertyChanged(() => this.SelectedApplicationServerCustomVariableGroups);
             }
             catch (ConcurrencyException)
             {

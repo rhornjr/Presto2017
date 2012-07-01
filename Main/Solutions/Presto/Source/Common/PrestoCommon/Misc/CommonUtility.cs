@@ -5,17 +5,8 @@ using PrestoCommon.Entities;
 
 namespace PrestoCommon.Misc
 {
-    /// <summary>
-    /// Common helper methods
-    /// </summary>
     public static class CommonUtility
     {
-        /// <summary>
-        /// Gets the app with group.
-        /// </summary>
-        /// <param name="appWithGroupList">The app with group list.</param>
-        /// <param name="appWithGroupToFind">The app with group to find.</param>
-        /// <returns></returns>
         public static ApplicationWithOverrideVariableGroup GetAppWithGroup(
             IEnumerable<ApplicationWithOverrideVariableGroup> appWithGroupList, ApplicationWithOverrideVariableGroup appWithGroupToFind)
         {
@@ -27,9 +18,34 @@ namespace PrestoCommon.Misc
             // 2. Both custom variable groups are the same.
 
             return appWithGroupList.Where(groupFromList =>
-                groupFromList.ApplicationId == appWithGroupToFind.ApplicationId &&
-                ((groupFromList.CustomVariableGroupId == null && appWithGroupToFind.CustomVariableGroupId == null) ||
-                (groupFromList.CustomVariableGroupId == appWithGroupToFind.CustomVariableGroupId))).FirstOrDefault();
+                groupFromList.Application.Id == appWithGroupToFind.Application.Id &&
+                ((groupFromList.CustomVariableGroup == null && appWithGroupToFind.CustomVariableGroup == null) ||
+                (groupFromList.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroup.Id))).FirstOrDefault();
+        }
+
+        public static ServerForceInstallation GetAppWithGroup(
+            IEnumerable<ServerForceInstallation> forceInstallationsToDo, ApplicationWithOverrideVariableGroup appWithGroupToFind)
+        {
+            if (forceInstallationsToDo == null) { throw new ArgumentNullException("forceInstallationsToDo"); }
+            if (appWithGroupToFind == null) { throw new ArgumentNullException("appWithGroupToFind"); }
+
+            // To find the matching appWithGroup, the app IDs need to match AND one of these two things must be true:
+            // 1. Both custom variable groups are null, or
+            // 2. Both custom variable groups are the same.
+
+            if (appWithGroupToFind.CustomVariableGroup == null)
+            {
+                return forceInstallationsToDo.Where(forceInstallationToDo =>
+                    forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup == null)
+                    .FirstOrDefault();
+            }
+
+            return forceInstallationsToDo.Where(forceInstallationToDo =>
+                forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
+                forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup != null && 
+                forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroupId)
+                .FirstOrDefault();
         }
     }
 }

@@ -41,6 +41,7 @@ namespace PrestoCommon.Data.RavenDb
             {
                 CustomVariableGroup customVariableGroup =
                     QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
+                        .Customize(x => x.WaitForNonStaleResults())
                         .Where(customGroup => customGroup.Name == name).FirstOrDefault())
                         as CustomVariableGroup;
 
@@ -59,6 +60,7 @@ namespace PrestoCommon.Data.RavenDb
             {
                 CustomVariableGroup customVariableGroup =
                     QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
+                        .Customize(x => x.WaitForNonStaleResults())
                         .Where(customGroup => customGroup.Id == id).FirstOrDefault())
                         as CustomVariableGroup;
 

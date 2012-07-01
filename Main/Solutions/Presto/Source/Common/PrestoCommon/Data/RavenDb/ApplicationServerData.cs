@@ -9,15 +9,8 @@ using Raven.Client.Linq;
 
 namespace PrestoCommon.Data.RavenDb
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class ApplicationServerData : DataAccessLayerBase, IApplicationServerData
     {
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
         public IEnumerable<ApplicationServer> GetAll()
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -51,11 +44,6 @@ namespace PrestoCommon.Data.RavenDb
             }
         }        
 
-        /// <summary>
-        /// Gets the name of the by.
-        /// </summary>
-        /// <param name="serverName">Name of the server.</param>
-        /// <returns></returns>
         public ApplicationServer GetByName(string serverName)
         {
             // Note: RavenDB queries are case-insensitive, so no ToUpper() conversion is necessary here.
@@ -77,11 +65,6 @@ namespace PrestoCommon.Data.RavenDb
             });            
         }
 
-        /// <summary>
-        /// Gets the object by id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
         public ApplicationServer GetById(string id)
         {
             return ExecuteQuery<ApplicationServer>(() =>
@@ -121,34 +104,15 @@ namespace PrestoCommon.Data.RavenDb
                 if (appGroup.CustomVariableGroupId == null) { continue; }
                 appGroup.CustomVariableGroup = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
             }
-
-            foreach (ApplicationWithOverrideVariableGroup group in appServer.ApplicationWithGroupToForceInstallList)
-            {
-                group.Application =
-                    QuerySingleResultAndSetEtag(session => session.Load<Application>(group.ApplicationId)) as Application;
-
-                ApplicationData.HydrateApplication(group.Application);
-
-                if (group.CustomVariableGroupId != null)
-                {
-                    group.CustomVariableGroup =
-                        QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(group.CustomVariableGroupId))
-                        as CustomVariableGroup;
-                }
-            }
         }
 
-        /// <summary>
-        /// Saves the specified application server.
-        /// </summary>
-        /// <param name="applicationServer">The application server.</param>
         public void Save(ApplicationServer applicationServer)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
-            applicationServer.ApplicationIdsForAllAppWithGroups       = new List<string>();
+            applicationServer.ApplicationIdsForAllAppWithGroups         = new List<string>();
             applicationServer.CustomVariableGroupIdsForAllAppWithGroups = new List<string>();
-            applicationServer.CustomVariableGroupIds                  = new List<string>();
+            applicationServer.CustomVariableGroupIds                    = new List<string>();
 
             // For each group, set its ApplicationId and CustomVariableGroupId.
             
@@ -180,5 +144,68 @@ namespace PrestoCommon.Data.RavenDb
 
             new GenericData().Save(applicationServer);
         }
+
+        #region [ServerForceInstallation]
+
+        public IEnumerable<ServerForceInstallation> GetForceInstallationsByServerId(string serverId)
+        {
+            return ExecuteQuery<IEnumerable<ServerForceInstallation>>(() =>
+            {
+                IEnumerable<ServerForceInstallation> forceInstallations = QueryAndSetEtags(session =>
+                    session.Query<ServerForceInstallation>()
+                    .Include(x => x.ApplicationId)
+                    .Include(x => x.ApplicationServerId)
+                    .Include(x => x.OverrideGroupId)
+                    .Customize(x => x.WaitForNonStaleResults())
+                    .Where(x => x.ApplicationServerId == serverId)
+                    .Take(int.MaxValue)                    
+                    ).AsEnumerable().Cast<ServerForceInstallation>();
+
+                foreach (ServerForceInstallation serverForceInstallation in forceInstallations)
+                {
+                    serverForceInstallation.ApplicationServer =
+                        QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(serverForceInstallation.ApplicationServerId)) as ApplicationServer;
+
+                    serverForceInstallation.ApplicationWithOverrideGroup = new ApplicationWithOverrideVariableGroup();
+
+                    serverForceInstallation.ApplicationWithOverrideGroup.Application =
+                        QuerySingleResultAndSetEtag(session => session.Load<Application>(serverForceInstallation.ApplicationId)) as Application;
+
+                    if (serverForceInstallation.OverrideGroupId == null) { continue; }
+
+                    serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroup =
+                        QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(serverForceInstallation.OverrideGroupId)) as CustomVariableGroup;
+                }
+
+                return forceInstallations;
+            });
+        }
+
+        public void SaveForceInstallations(IEnumerable<ServerForceInstallation> serverForceInstallations)
+        {
+            if (serverForceInstallations == null) { throw new ArgumentNullException("serverForceInstallations"); }
+
+            GenericData data = new GenericData();
+
+            foreach (ServerForceInstallation serverForceInstallation in serverForceInstallations)
+            {
+                serverForceInstallation.ApplicationServerId = serverForceInstallation.ApplicationServer.Id;
+                serverForceInstallation.ApplicationId       = serverForceInstallation.ApplicationWithOverrideGroup.Application.Id;
+
+                if (serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroup != null)
+                {
+                    serverForceInstallation.OverrideGroupId = serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroup.Id;
+                }
+
+                data.Save(serverForceInstallation);
+            }
+        }
+
+        public void RemoveForceInstallation(ServerForceInstallation forceInstallation)
+        {
+            new GenericData().Delete(forceInstallation);
+        }
+
+        #endregion
     }
 }

@@ -146,7 +146,7 @@ namespace PrestoCommon.Data.RavenDb
 
         private static DocumentStore GetDatabase()
         {            
-            DocumentStore documentStore = new DocumentStore();            
+            DocumentStore documentStore = new DocumentStore();
 
             try
             {

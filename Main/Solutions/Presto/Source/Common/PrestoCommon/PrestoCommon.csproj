@@ -110,6 +110,7 @@
     <Compile Include="Entities\NotifyPropertyChangedBase.cs" />
     <Compile Include="Entities\PingRequest.cs" />
     <Compile Include="Entities\PingResponse.cs" />
+    <Compile Include="Entities\ServerForceInstallation.cs" />
     <Compile Include="Entities\TaskBase.cs" />
     <Compile Include="Entities\TaskCopyFile.cs" />
     <Compile Include="Entities\TaskDetail.cs" />

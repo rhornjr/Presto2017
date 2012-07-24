@@ -15,7 +15,7 @@
          implement INotifyPropertyChanged. -->
     <UserControl.Resources>
         
-        <CollectionViewSource x:Key="SortedGroups" Source="{Binding CustomVariableGroups}">
+        <CollectionViewSource x:Key="SortedGroups" Source="{Binding CustomVariableGroups}" Filter="CollectionViewSource_Filter">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
             </CollectionViewSource.SortDescriptions>
@@ -30,21 +30,32 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0" LastChildFill="True">
-            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" HorizontalAlignment="Center" FontWeight="Bold"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
+            <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" HorizontalAlignment="Center" FontWeight="Bold"/>                
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="120" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical">
+                    <Separator></Separator>
+                    <CheckBox Name="chkShowDisabled" Style="{StaticResource StandardCheckBox}" Content="Show disabled" IsChecked="{Binding ShowDisabled}"
+                              FlowDirection="LeftToRight" VerticalAlignment="Center" Width="140" HorizontalAlignment="Right"
+                              Command="{Binding RefreshVariableGroupCommand}"/>
+                    <Separator></Separator>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshVariableGroupCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" Height="20" />
+                    <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshVariableGroupCommand}" Height="20" />
                     <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />-->
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportVariableGroupCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportVariableGroupCommand}" Height="20"/>
+                    <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" Height="20" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" Height="20" />
                 </StackPanel>
             </StackPanel>
-                <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource SortedGroups}}"
-                         DisplayMemberPath="Name"
-                         SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto"/>
+            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource SortedGroups}}"
+                     DisplayMemberPath="Name"
+                     SelectedItem="{Binding SelectedCustomVariableGroup}" Height="auto">
+            </ListBox>
         </DockPanel>
 
         <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding CustomVariableGroupIsSelected}">
@@ -61,15 +72,17 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
                         <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
+                    </Grid.ColumnDefinitions>                    
+                    
                     <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Group" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                     <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                     <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedCustomVariableGroup.Name}"/>
 
-                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
+                    <CheckBox Grid.Column="1" Grid.Row="2" Style="{StaticResource StandardCheckBox}" Content="Disabled" IsChecked="{Binding SelectedCustomVariableGroup.Disabled}"
+                              FlowDirection="LeftToRight" VerticalAlignment="Center" Width="140" HorizontalAlignment="Right"/>
 
+                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
                 </Grid>
                 
             </StackPanel>

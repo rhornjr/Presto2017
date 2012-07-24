@@ -68,6 +68,14 @@ namespace PrestoAutomatedTests
 
                 CustomVariableGroupLogic.Save(group);
             }
+
+            // Add a group with the Deleted property set to true. It shouldn't affect the other tests because
+            // getting all the groups should exclude the deleted group.
+            Guid uniqueGroupName = Guid.NewGuid();
+            CustomVariableGroup deletedGroup = new CustomVariableGroup();
+            deletedGroup.Name = uniqueGroupName.ToString();
+            deletedGroup.Deleted = true;
+            CustomVariableGroupLogic.Save(deletedGroup);
         }
 
         private static void AddAppServers()

@@ -15,79 +15,52 @@ using Raven.Abstractions.Exceptions;
 
 namespace PrestoViewModel.Tabs
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class CustomVariableGroupViewModel : ViewModelBase
     {
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
         private CustomVariableGroup _selectedCustomVariableGroup;
+        private bool _showDisabled;
 
-        /// <summary>
-        /// Gets a value indicating whether [custom variable group is selected].
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [custom variable group is selected]; otherwise, <c>false</c>.
-        /// </value>
         public bool CustomVariableGroupIsSelected
         {
             get { return this.CustomVariableGroupIsSelectedMethod(); }
         }
 
-        /// <summary>
-        /// Gets the add variable group command.
-        /// </summary>
         public ICommand AddVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the delete variable group command.
-        /// </summary>
         public ICommand DeleteVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the import variable group command.
-        /// </summary>
         public ICommand ImportVariableGroupCommand { get; private set; }        
 
-        /// <summary>
-        /// Gets the export variable group command.
-        /// </summary>
         public ICommand ExportVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the refresh variable group command.
-        /// </summary>
         public ICommand RefreshVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the save group command.
-        /// </summary>
         public ICommand SaveVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the add variable command.
-        /// </summary>
         public ICommand AddVariableCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the edit variable command.
-        /// </summary>
         public ICommand EditVariableCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the delete variable command.
-        /// </summary>
         public ICommand DeleteVariableCommand { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the custom variable groups.
-        /// </summary>
-        /// <value>
-        /// The custom variable groups.
-        /// </value>
+        public bool ShowDisabled
+        {
+            get { return this._showDisabled; }
+
+            set
+            {
+                this._showDisabled = value;
+                NotifyPropertyChanged(() => this.CustomVariableGroups);
+            }
+        }
+
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
-            get { return this._customVariableGroups; }
+            get
+            {
+                return this._customVariableGroups;
+            }
 
             private set
             {
@@ -96,12 +69,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected custom variable group.
-        /// </summary>
-        /// <value>
-        /// The selected custom variable group.
-        /// </value>
         public CustomVariableGroup SelectedCustomVariableGroup
         {
             get { return this._selectedCustomVariableGroup; }
@@ -201,7 +168,9 @@ namespace PrestoViewModel.Tabs
         {
             string newGroupName = "New group - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
 
-            this.CustomVariableGroups.Add(new CustomVariableGroup() { Name = newGroupName });
+            CustomVariableGroup newGroup = new CustomVariableGroup() { Name = newGroupName }; 
+
+            this.CustomVariableGroups.Add(newGroup);
 
             this.SelectedCustomVariableGroup = this.CustomVariableGroups.Where(group => group.Name == newGroupName).FirstOrDefault();
         }        
@@ -210,7 +179,18 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedCustomVariableGroup.Name)) { return; }
 
-            LogicBase.Delete(this.SelectedCustomVariableGroup);
+            try
+            {
+                CustomVariableGroupLogic.Delete(this.SelectedCustomVariableGroup);
+            }
+            catch (Exception ex)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = ex.Message;
+
+                ShowUserMessage(ex.Message, ViewModelResources.ItemCannotBeDeletedCaption);
+
+                return;
+            }
 
             this.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
         }

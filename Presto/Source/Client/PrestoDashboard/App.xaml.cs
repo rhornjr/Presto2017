@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -24,7 +25,6 @@ namespace PrestoDashboard
         protected override void OnStartup(StartupEventArgs e)
         {
             this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(this.AppDispatcherUnhandledException);
-            //DispatcherHelper.Initialize();
 
             base.OnStartup(e);
             
@@ -37,17 +37,17 @@ namespace PrestoDashboard
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             LogUtility.LogException(e.Exception);
-            
-            MessageBox.Show(string.Format(PrestoDashboardResource.ErrorMessage, e.Exception.Message), PrestoDashboardResource.ErrorCaption,
-                MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+            string message = string.Format(CultureInfo.CurrentCulture, PrestoDashboardResource.ErrorMessage, e.Exception.Message);
+
+            MessageBox.Show(message, PrestoDashboardResource.ErrorCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             
             e.Handled = true;
             
-            //Dispatcher.CurrentDispatcher.InvokeShutdown();
             Application.Current.Shutdown();
         }
 
-        private ViewLoader RegisterViewModelsAndTypes()
+        private static ViewLoader RegisterViewModelsAndTypes()
         {
             ViewLoader viewLoader = new ViewLoader();
 

@@ -186,4 +186,7 @@
   <data name="PrestoUpdaterCouldNotBeInstalled" xml:space="preserve">
     <value>The Presto self-updating service could not be installed. Please make sure that app has been assigned to this server. You can also check the log for details on this error.</value>
   </data>
+  <data name="ItemCannotBeDeletedCaption" xml:space="preserve">
+    <value>Cannot Delete</value>
+  </data>
 </root>

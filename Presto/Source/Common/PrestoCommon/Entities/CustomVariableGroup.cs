@@ -11,20 +11,14 @@ using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
-    /// <summary>
-    /// Container for <see cref="CustomVariable"/>s
-    /// </summary>
     public class CustomVariableGroup : EntityBase
     {
         private string _name;
-        private ObservableCollection<CustomVariable> _customVariables;        
+        private ObservableCollection<CustomVariable> _customVariables;
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
+        public bool Disabled { get; set; }
+        public bool Deleted { get; set; }  // Since there is no referential integrity in RavenDB, use this property.
+
         public string Name
         {
             get { return this._name; }
@@ -36,12 +30,6 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the custom variables.
-        /// </summary>
-        /// <value>
-        /// The custom variables.
-        /// </value>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Deserialization")]
         public ObservableCollection<CustomVariable> CustomVariables
         {
@@ -60,24 +48,11 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
         public override string ToString()
         {
             return this.Name;
         }
 
-        /// <summary>
-        /// Resolves the custom variable.
-        /// </summary>
-        /// <param name="rawString">The raw string.</param>
-        /// <param name="applicationServer">The application server.</param>
-        /// <param name="appWithGroup">The application with override variable group.</param>
-        /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {

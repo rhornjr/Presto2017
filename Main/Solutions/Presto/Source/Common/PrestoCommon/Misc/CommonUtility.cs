@@ -17,10 +17,19 @@ namespace PrestoCommon.Misc
             // 1. Both custom variable groups are null, or
             // 2. Both custom variable groups are the same.
 
+            if (appWithGroupToFind.CustomVariableGroup == null)
+            {
+                return appWithGroupList.Where(groupFromList =>
+                    groupFromList.Application.Id == appWithGroupToFind.Application.Id &&
+                    groupFromList.CustomVariableGroup == null)
+                    .FirstOrDefault();
+            }
+
             return appWithGroupList.Where(groupFromList =>
-                groupFromList.Application.Id == appWithGroupToFind.Application.Id &&
-                ((groupFromList.CustomVariableGroup == null && appWithGroupToFind.CustomVariableGroup == null) ||
-                (groupFromList.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroup.Id))).FirstOrDefault();
+                groupFromList.Application.Id == appWithGroupToFind.Application.Id &&                
+                groupFromList.CustomVariableGroup != null &&
+                groupFromList.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroup.Id)
+                .FirstOrDefault();
         }
 
         public static ServerForceInstallation GetAppWithGroup(

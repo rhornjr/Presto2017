@@ -34,10 +34,10 @@
     <InstallUrl>http://pbgappmest02/PrestoDashboard/</InstallUrl>
     <ProductName>Presto Dashboard</ProductName>
     <PublisherName>Bob Horn</PublisherName>
-    <MinimumRequiredVersion>1.0.0.39</MinimumRequiredVersion>
+    <MinimumRequiredVersion>1.0.0.40</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.htm</WebPage>
-    <ApplicationRevision>40</ApplicationRevision>
+    <ApplicationRevision>41</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

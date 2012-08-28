@@ -117,7 +117,9 @@ namespace PrestoViewModel.Windows
         {
             try
             {
-                this.CustomVariableGroups = new Collection<CustomVariableGroup>(CustomVariableGroupLogic.GetAll().OrderBy(x => x.Name).ToList());
+                this.CustomVariableGroups =
+                    new Collection<CustomVariableGroup>(
+                        CustomVariableGroupLogic.GetAll().Where(x => x.Disabled == false).OrderBy(x => x.Name).ToList());
             }
             catch (SocketException ex)
             {

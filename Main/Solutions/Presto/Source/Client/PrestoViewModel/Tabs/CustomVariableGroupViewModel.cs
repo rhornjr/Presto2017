@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -51,9 +53,13 @@ namespace PrestoViewModel.Tabs
             set
             {
                 this._showDisabled = value;
-                NotifyPropertyChanged(() => this.CustomVariableGroups);
+                NotifyPropertyChanged(() => this.ShowDisabled);
             }
         }
+
+        // This is a wrapper around the real CustomVariableGroups so that we can do filtering and sorting.
+        // The view binds to this property.
+        public ICollectionView CustomVariableGroupsCollectionView { get; private set; }
 
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
@@ -81,26 +87,15 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected custom variable.
-        /// </summary>
-        /// <value>
-        /// The selected custom variable.
-        /// </value>
         public CustomVariable SelectedCustomVariable { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomVariableGroupViewModel"/> class.
-        /// </summary>
         public CustomVariableGroupViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
-
-            LoadCustomVariableGroups();
         }
-
+        
         private void Initialize()
         {
             this.AddVariableGroupCommand     = new RelayCommand(AddVariableGroup);
@@ -108,11 +103,42 @@ namespace PrestoViewModel.Tabs
             this.SaveVariableGroupCommand    = new RelayCommand(_ => SaveVariableGroup(null), CustomVariableGroupIsSelectedMethod);
             this.ExportVariableGroupCommand  = new RelayCommand(ExportVariableGroup, CustomVariableGroupIsSelectedMethod);
             this.ImportVariableGroupCommand  = new RelayCommand(ImportVariableGroup);
-            this.RefreshVariableGroupCommand = new RelayCommand(RefreshVariableGroup);
+            this.RefreshVariableGroupCommand = new RelayCommand(RefreshVariableGroups);
 
             this.AddVariableCommand    = new RelayCommand(AddVariable);
             this.EditVariableCommand   = new RelayCommand(EditVariable, CustomVariableIsSelected);
             this.DeleteVariableCommand = new RelayCommand(DeleteVariable, CustomVariableIsSelected);
+
+            LoadCustomVariableGroups();
+
+            InitializeCustomVariableGroupsCollectionView();
+        }
+
+        private void InitializeCustomVariableGroupsCollectionView()
+        {
+            this.CustomVariableGroupsCollectionView = CollectionViewSource.GetDefaultView(this.CustomVariableGroups);
+            this.CustomVariableGroupsCollectionView.SortDescriptions.Clear();
+            this.CustomVariableGroupsCollectionView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+
+            ApplyFilterToCustomVariableGroups();
+
+            NotifyPropertyChanged(() => this.CustomVariableGroupsCollectionView);
+        }
+
+        private void ApplyFilterToCustomVariableGroups()
+        {
+            if (_showDisabled)
+            {
+                this.CustomVariableGroupsCollectionView.Filter = _ => { return true; };
+            }
+            else
+            {
+                this.CustomVariableGroupsCollectionView.Filter = (item) =>
+                {
+                    var myitem = (CustomVariableGroup)item;
+                    return !myitem.Disabled;
+                };
+            }
         }
 
         // Named this method this way because we have a property of the same name. The RelayCommands need to specify
@@ -173,7 +199,7 @@ namespace PrestoViewModel.Tabs
             this.CustomVariableGroups.Add(newGroup);
 
             this.SelectedCustomVariableGroup = this.CustomVariableGroups.Where(group => group.Name == newGroupName).FirstOrDefault();
-        }        
+        }
 
         private void DeleteVariableGroup()
         {
@@ -181,7 +207,9 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                CustomVariableGroupLogic.Delete(this.SelectedCustomVariableGroup);
+                CustomVariableGroup deletedGroup = this.CustomVariableGroups.Where(x => x.Id == this.SelectedCustomVariableGroup.Id).FirstOrDefault();
+                CustomVariableGroupLogic.Delete(deletedGroup);                
+                this.CustomVariableGroups.Remove(deletedGroup);
             }
             catch (Exception ex)
             {
@@ -191,15 +219,16 @@ namespace PrestoViewModel.Tabs
 
                 return;
             }
-
-            this.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
         }
 
         private void SaveVariableGroup(Action actionIfSaveFails)
         {
+            string selectedGroupName = this.SelectedCustomVariableGroup.Name;
+
             try
             {
                 CustomVariableGroupLogic.Save(this.SelectedCustomVariableGroup);
+                InitializeCustomVariableGroupsCollectionView();
             }
             catch (ConcurrencyException)
             {
@@ -213,7 +242,7 @@ namespace PrestoViewModel.Tabs
             }
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemSaved, this.SelectedCustomVariableGroup.Name);
+                ViewModelResources.ItemSaved, selectedGroupName);
         }
 
         private void ImportVariableGroup()
@@ -270,9 +299,10 @@ namespace PrestoViewModel.Tabs
                 ViewModelResources.ItemExported, this.SelectedCustomVariableGroup.Name);
         }
 
-        private void RefreshVariableGroup()
+        private void RefreshVariableGroups()
         {
             this.LoadCustomVariableGroups();
+            InitializeCustomVariableGroupsCollectionView();
 
             ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
         }   

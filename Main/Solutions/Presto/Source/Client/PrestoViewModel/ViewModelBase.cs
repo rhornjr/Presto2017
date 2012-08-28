@@ -14,9 +14,6 @@ using PrestoCommon.Logic;
 
 namespace PrestoViewModel
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
         private static string lastDialogDirectory;
@@ -30,24 +27,13 @@ namespace PrestoViewModel
         //       save that particular entity.
         private List<EntityLogMessage> _logMessagesToSaveIfUserHitsSave = new List<EntityLogMessage>();
 
-        /// <summary>
-        /// Adds log messages to the cache.
-        /// </summary>
-        /// <param name="entityId"></param>
-        /// <param name="logMessage"></param>
         protected void AddLogMessageToCache(string entityId, string logMessage)
         {
             this._logMessagesToSaveIfUserHitsSave.Add(new EntityLogMessage(entityId, logMessage));
         }
 
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <summary>
-        /// Really? This really needs an explanation? We, uh, save the cached log messages.
-        /// </summary>
         protected void SaveCachedLogMessages(string entityId)
         {
             foreach (EntityLogMessage entityLogMessage in this._logMessagesToSaveIfUserHitsSave)
@@ -59,29 +45,16 @@ namespace PrestoViewModel
             this._logMessagesToSaveIfUserHitsSave.RemoveAll(x => x.EntityId == entityId);
         }
 
-        /// <summary>
-        /// Closes this instance.
-        /// </summary>
         protected void Close()
         {
             MainWindowViewModel.ViewLoader.CloseView(this);
         }
 
-        /// <summary>
-        /// Shows the user message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="caption">The caption.</param>
         protected static void ShowUserMessage(string message, string caption)
         {
             System.Windows.MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        /// <summary>
-        /// Users the chooses yes.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <returns></returns>
         protected static bool UserChoosesYes(string message)
         {            
             if (System.Windows.MessageBox.Show(message, ViewModelResources.ConfirmCaption,
@@ -93,11 +66,6 @@ namespace PrestoViewModel
             return true;
         }
 
-        /// <summary>
-        /// Users the confirms delete.
-        /// </summary>
-        /// <param name="nameOfItemToDelete">The item name to delete.</param>
-        /// <returns></returns>
         protected static bool UserConfirmsDelete(string nameOfItemToDelete)
         {
             string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ConfirmDeleteMessage, nameOfItemToDelete);
@@ -111,10 +79,6 @@ namespace PrestoViewModel
             return true;
         }
 
-        /// <summary>
-        /// Gets the file path and name from user.
-        /// </summary>
-        /// <returns></returns>
         protected static string GetFilePathAndNameFromUser()
         {
             using (IOpenFileDialogService dialogService = TypeContainer.RetrieveType<IOpenFileDialogService>())
@@ -129,10 +93,6 @@ namespace PrestoViewModel
             }
         }
 
-        /// <summary>
-        /// Gets the file path and names from user.
-        /// </summary>
-        /// <returns></returns>
         protected static string[] GetFilePathAndNamesFromUser()
         {
             using (IOpenFileDialogService dialogService = TypeContainer.RetrieveType<IOpenFileDialogService>())
@@ -148,11 +108,6 @@ namespace PrestoViewModel
             }
         }
 
-        /// <summary>
-        /// Saves the file path and name from user.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
         protected static string SaveFilePathAndNameFromUser(string fileName)
         {
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
@@ -169,11 +124,6 @@ namespace PrestoViewModel
             }
         }
 
-        /// <summary>
-        /// Notifies the property changed.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression">The expression.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected void NotifyPropertyChanged<T>(Expression<Func<T>> expression)
         {

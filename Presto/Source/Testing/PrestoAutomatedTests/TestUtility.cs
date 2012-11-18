@@ -9,7 +9,10 @@ namespace PrestoAutomatedTests
     // The way this all works, at least for RavenDB at the moment:
     // 1. Start with a fresh DB - Delete C:\Software\RavenDb\RavenDB-Build-573\Server\Data
     // 2. Start the DB server: C:\Software\RavenDb\RavenDB-Build-573\Server\Raven.Server.exe
-    // 3. Run the tests (CTRL-R-A)
+    // 3. Run the ordered tests:
+    //      - In SolutionItems, open Presto1.vsmdi (just double-click it)
+    //      - In the grid, check orderedtest1.
+    //      - Click the play/run button.
 
     public static class TestUtility
     {

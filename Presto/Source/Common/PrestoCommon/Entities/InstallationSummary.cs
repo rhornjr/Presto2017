@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
@@ -18,6 +19,10 @@ namespace PrestoCommon.Entities
 
         public DateTime InstallationEnd { get; set; }
 
+        public DateTime InstallationStartUtc { get; set; }
+
+        public DateTime InstallationEndUtc { get; set; }
+
         public InstallationResult InstallationResult { get; set; }
 
         public List<TaskDetail> TaskDetails { get; set; }
@@ -27,6 +32,17 @@ namespace PrestoCommon.Entities
             this.ApplicationWithOverrideVariableGroup = applicationWithOverrideVariableGroup;
             this.ApplicationServer                    = applicationServer;
             this.InstallationStart                    = startTime;
+            this.InstallationStartUtc                 = TimeZoneInfo.ConvertTimeToUtc(startTime);
+        }
+
+        public void SetResults(InstallationResultContainer resultContainer, DateTime endTime)
+        {
+            if (resultContainer == null) { throw new ArgumentNullException("resultContainer"); }
+
+            this.InstallationResult = resultContainer.InstallationResult;
+            this.TaskDetails        = resultContainer.TaskDetails;
+            this.InstallationEnd    = endTime;
+            this.InstallationEndUtc = TimeZoneInfo.ConvertTimeToUtc(endTime);
         }
     }
 }

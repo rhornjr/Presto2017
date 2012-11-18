@@ -85,7 +85,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
                         .Customize(x => x.WaitForNonStaleResults())
-                        .OrderByDescending(summary => summary.InstallationStart)
+                        .OrderByDescending(summary => summary.InstallationStartUtc)
                         .Take(numberToRetrieve)
                         );
 

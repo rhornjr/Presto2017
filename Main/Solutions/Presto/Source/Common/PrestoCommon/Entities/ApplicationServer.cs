@@ -415,11 +415,7 @@ namespace PrestoCommon.Entities
 
             InstallationResultContainer resultContainer = appWithGroup.Install(this);
 
-            installationSummary.InstallationResult = resultContainer.InstallationResult;
-
-            installationSummary.TaskDetails = resultContainer.TaskDetails;
-
-            installationSummary.InstallationEnd = DateTime.Now;
+            installationSummary.SetResults(resultContainer, DateTime.Now);
 
             LogAndSaveInstallationSummary(installationSummary);
         }

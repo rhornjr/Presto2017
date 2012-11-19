@@ -119,6 +119,7 @@ namespace PrestoViewModel.Tabs
             {
                 this.InstallationSummaryList = new Collection<InstallationSummary>(InstallationSummaryLogic.GetMostRecentByStartTime(50).ToList());
                 SetInstallationSummaryDtos();
+                this.SelectedInstallationSummary = null;
             }
             catch (Exception ex)
             {

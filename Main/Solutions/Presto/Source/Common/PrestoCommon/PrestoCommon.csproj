@@ -86,6 +86,7 @@
     <Compile Include="Data\RavenDb\GenericData.cs" />
     <Compile Include="Data\RavenDb\GlobalSettingData.cs" />
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStart.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStartUtc.cs" />
     <Compile Include="Data\RavenDb\Indexes\LogMessageCreatedTime.cs" />
     <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
     <Compile Include="Data\RavenDb\LogMessageData.cs" />

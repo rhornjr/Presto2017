@@ -137,7 +137,7 @@ namespace PrestoViewModel.Tabs
             foreach (InstallationSummary installationSummary in this.InstallationSummaryList)
             {
                 InstallationSummaryDto dto = new InstallationSummaryDto();
-                dto.ApplicationName        = installationSummary.ApplicationWithOverrideVariableGroup.Application.Name;
+                dto.ApplicationName        = installationSummary.ApplicationWithOverrideVariableGroup.ToString();
                 dto.Id                     = installationSummary.Id;                
                 dto.Result                 = installationSummary.InstallationResult.ToString();
                 dto.ServerName             = installationSummary.ApplicationServer.Name;

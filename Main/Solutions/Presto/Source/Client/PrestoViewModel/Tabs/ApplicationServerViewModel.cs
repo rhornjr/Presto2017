@@ -242,7 +242,9 @@ namespace PrestoViewModel.Tabs
 
         private void ExportApplication()
         {
-            string filePathAndName = SaveFilePathAndNameFromUser(".AppsWithGroup");
+            string fileName = SetFileNameBasedOnSelection();
+
+            string filePathAndName = SaveFilePathAndNameFromUser(fileName);
 
             if (filePathAndName == null) { return; }
 
@@ -254,6 +256,37 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemExported, filePathAndName);
+        }
+
+        private string SetFileNameBasedOnSelection()
+        {
+            // Since the user can choose multiple rows, the default file name changes based on what is selected.
+            string fileName = string.Empty; // default
+            string fileNameSuffix = ".AppsWithGroup";
+
+            // One row selected:
+            if (this.SelectedApplicationsWithOverrideGroup.Count == 1)
+            {
+                fileName = this.SelectedApplicationsWithOverrideGroup[0].Application.Name;
+                if (this.SelectedApplicationsWithOverrideGroup[0].CustomVariableGroup != null)
+                {
+                    fileName += " and " + this.SelectedApplicationsWithOverrideGroup[0].CustomVariableGroup.Name;
+                }
+                return fileName += fileNameSuffix;
+            }
+
+            // If the number of distinct rows is 1 (all have the same app), then capture that.
+            bool allRowsAreForSameApp = false;
+            if (this.SelectedApplicationsWithOverrideGroup.Select(x => x.Application.Name).Distinct().Count() == 1) { allRowsAreForSameApp = true; }
+
+            // If the application is the same for all rows, use something like "App 1.2 with multiple override groups".
+            if (allRowsAreForSameApp)
+            {
+                return this.SelectedApplicationsWithOverrideGroup[0].Application.Name + " with multiple override groups" + fileNameSuffix;
+            }
+
+            // If we get here, then we have multiple rows selected with different apps in each row. Return a generic file name.
+            return "Multiple apps" + fileNameSuffix;
         }
 
         private void ImportApplication()

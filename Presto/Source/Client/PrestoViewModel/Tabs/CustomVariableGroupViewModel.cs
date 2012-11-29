@@ -278,6 +278,7 @@ namespace PrestoViewModel.Tabs
                 }
 
                 customVariableGroup.Id = null;  // This is new.
+                customVariableGroup.Etag = Guid.Empty;
                 CustomVariableGroupLogic.Save(customVariableGroup);
                 this.CustomVariableGroups.Add(customVariableGroup);
             }

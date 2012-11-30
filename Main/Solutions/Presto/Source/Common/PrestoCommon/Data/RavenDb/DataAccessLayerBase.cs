@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using PrestoCommon.Entities;
 using Raven.Client;
 using Raven.Client.Document;
@@ -152,6 +153,10 @@ namespace PrestoCommon.Data.RavenDb
             {
                 documentStore.ConnectionStringName = "RavenDb";                
                 documentStore.Initialize();
+
+                // Pre-authenticate so each save doesn't need to do authentication.
+                // http://stackoverflow.com/a/13645513/279516
+                documentStore.JsonRequestFactory.ConfigureRequest += (sender, e) => ((HttpWebRequest)e.Request).PreAuthenticate = true;
 
                 // Tell Raven to create our indexes.
                 IndexCreation.CreateIndexes(typeof(DataAccessFactory).Assembly, documentStore);

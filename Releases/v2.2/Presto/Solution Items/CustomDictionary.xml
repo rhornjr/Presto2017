@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Dictionary>
+  <Words>
+    <Recognized>      
+      <Word>Etag</Word>
+      <Word>Etags</Word>
+    </Recognized>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>Ip</Acronym>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>

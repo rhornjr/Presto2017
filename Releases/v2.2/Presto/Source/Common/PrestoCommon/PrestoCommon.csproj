@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PrestoCommon</RootNamespace>
+    <AssemblyName>PrestoCommon</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\..\Solution Items\AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Abstractions-3.5">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight-3.5">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Data\DataAccessFactory.cs" />
+    <Compile Include="Data\Interfaces\IApplicationData.cs" />
+    <Compile Include="Data\Interfaces\IApplicationServerData.cs" />
+    <Compile Include="Data\Interfaces\ICustomVariableGroupData.cs" />
+    <Compile Include="Data\Interfaces\IGenericData.cs" />
+    <Compile Include="Data\Interfaces\IGlobalSettingData.cs" />
+    <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
+    <Compile Include="Data\Interfaces\ILogMessageData.cs" />
+    <Compile Include="Data\Interfaces\IPingRequestData.cs" />
+    <Compile Include="Data\Interfaces\IPingResponseData.cs" />
+    <Compile Include="Data\RavenDb\ApplicationData.cs" />
+    <Compile Include="Data\RavenDb\ApplicationServerData.cs" />
+    <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
+    <Compile Include="Data\RavenDb\DataAccessLayerBase.cs" />
+    <Compile Include="Data\RavenDb\GenericData.cs" />
+    <Compile Include="Data\RavenDb\GlobalSettingData.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStart.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStartUtc.cs" />
+    <Compile Include="Data\RavenDb\Indexes\LogMessageCreatedTime.cs" />
+    <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
+    <Compile Include="Data\RavenDb\LogMessageData.cs" />
+    <Compile Include="Data\RavenDb\PingRequestData.cs" />
+    <Compile Include="Data\RavenDb\PingResponseData.cs" />
+    <Compile Include="Entities\Application.cs" />
+    <Compile Include="Entities\ApplicationServer.cs" />
+    <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
+    <Compile Include="Entities\CustomVariable.cs" />
+    <Compile Include="Entities\CustomVariableGroup.cs" />
+    <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Entities\ForceInstallation.cs" />
+    <Compile Include="Entities\GlobalSetting.cs" />
+    <Compile Include="Entities\InstallationSummary.cs" />
+    <Compile Include="Entities\LegacyPresto\PrestoTasks.cs" />
+    <Compile Include="Entities\LegacyPresto\LegacyTaskBase.cs" />
+    <Compile Include="Entities\LegacyPresto\LegacyTaskCopyFile.cs" />
+    <Compile Include="Entities\LegacyPresto\LegacyTaskDosCommand.cs" />
+    <Compile Include="Entities\LegacyPresto\LegacyTaskMsi.cs" />
+    <Compile Include="Entities\LegacyPresto\LegacyTaskXmlModify.cs" />
+    <Compile Include="Entities\LogMessage.cs" />
+    <Compile Include="Entities\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Entities\PingRequest.cs" />
+    <Compile Include="Entities\PingResponse.cs" />
+    <Compile Include="Entities\ServerForceInstallation.cs" />
+    <Compile Include="Entities\TaskBase.cs" />
+    <Compile Include="Entities\TaskCopyFile.cs" />
+    <Compile Include="Entities\TaskDetail.cs" />
+    <Compile Include="Entities\TaskDosCommand.cs" />
+    <Compile Include="Entities\TaskXmlModify.cs" />
+    <Compile Include="EntityHelperClasses\EntityLogMessage.cs" />
+    <Compile Include="EntityHelperClasses\InstallationResultContainer.cs" />
+    <Compile Include="EntityHelperClasses\InstallationSummaryDto.cs" />
+    <Compile Include="EntityHelperClasses\PrestoObservableCollection.cs" />
+    <Compile Include="EntityHelperClasses\TimeZoneHelpers\ITimeZoneHelper.cs" />
+    <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperInstallingServer.cs" />
+    <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperThisComputer.cs" />
+    <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperUtc.cs" />
+    <Compile Include="Enums\DeploymentEnvironment.cs" />
+    <Compile Include="Enums\InstallationResult.cs" />
+    <Compile Include="Enums\TaskType.cs" />
+    <Compile Include="Exceptions\CustomVariableExistsMoreThanOnceException.cs" />
+    <Compile Include="Exceptions\CustomVariableMissingException.cs" />
+    <Compile Include="Factories\OpenFileDialog\MockOpenFileDialogService.cs" />
+    <Compile Include="Factories\TypeContainer.cs" />
+    <Compile Include="Factories\OpenFileDialog\IOpenFileDialogService.cs" />
+    <Compile Include="Factories\OpenFileDialog\OpenFileDialogService.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Logic\ApplicationLogic.cs" />
+    <Compile Include="Logic\ApplicationServerLogic.cs" />
+    <Compile Include="Logic\CustomVariableGroupLogic.cs" />
+    <Compile Include="Logic\GlobalSettingLogic.cs" />
+    <Compile Include="Logic\InstallationSummaryLogic.cs" />
+    <Compile Include="Logic\LogicBase.cs" />
+    <Compile Include="Logic\LogMessageLogic.cs" />
+    <Compile Include="Logic\PingRequestLogic.cs" />
+    <Compile Include="Logic\PingResponseLogic.cs" />
+    <Compile Include="Misc\CommonUtility.cs" />
+    <Compile Include="Misc\LogUtility.cs" />
+    <Compile Include="PrestoCommonResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrestoCommonResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\..\..\Solution Items\CustomDictionary.xml">
+      <Link>Properties\CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="PrestoCommonResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PrestoCommonResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

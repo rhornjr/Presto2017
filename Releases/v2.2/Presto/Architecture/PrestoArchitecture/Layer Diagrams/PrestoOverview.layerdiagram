@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="83611eaa-daac-4066-882d-0700c1285f41" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" name="Presto Database Server">
+      <childLayers>
+        <layer Id="5647707b-390d-4f7f-a631-007fa13c5bcb" name="Task" />
+        <layer Id="e1d778df-d7b8-4fb5-87d5-dc9d6a8a2959" name="Application Server" />
+        <layer Id="1f48ee32-5e19-44dc-8ece-b8f21cc34d15" name="Application" />
+        <layer Id="3a5b8880-d86c-40be-868e-1d744f31cb39" name="Custom Variables" />
+        <layer Id="3c6e7203-8eff-4501-8691-615520417798" name="Installation Summary" />
+      </childLayers>
+    </layer>
+    <layer Id="de310182-d733-4ee2-a8dc-d5c9b16744fb" name="Presto Dashboard UI - 1">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="b2181bb9-71ec-4e9f-ae21-8b00335a7112" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="026a0c89-28d4-4242-b08b-8fdd53163200" name="AppServer1">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="dbf4a1fe-b267-4500-8805-dbd6aef8b32f" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="c102ecb4-3b5c-4a37-9f70-05700f758a6f" name="Presto Task Runner" />
+      </childLayers>
+    </layer>
+    <layer Id="4d71c4b7-2b62-47c3-a0a5-99d3bdb827ab" name="AppServer2">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="0b328172-e4fa-4d39-bfbf-25349051c1fd" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="bfe29175-593f-4e29-8bf4-00aebbc56379" name="Presto Task Runner" />
+      </childLayers>
+    </layer>
+    <layer Id="f4f977b7-e976-40b7-b766-eaa4cac8032e" name="AppServer3">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="9fd58f24-6c2e-4799-8c51-c090c9911808" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="9b00b0c0-87ef-4bc8-9d49-d1e1d4a85c46" name="Presto Task Runner" />
+      </childLayers>
+    </layer>
+    <layer Id="a7795d9c-625e-48a5-8511-6da108a11bce" name="AppServer4">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="9b36d49a-1bfb-4eba-a8c7-29833a688dda" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="3c3eae47-8080-4847-aafc-9b916a135661" name="Presto Task Runner" />
+      </childLayers>
+    </layer>
+    <layer Id="3259eacf-fe5f-441c-aafa-97853cc0a054" name="Presto Dashboard UI - 2">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="bfa531e7-e867-4623-9a20-de36170758af" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="91316d4b-15ca-40fb-82f4-5a99a96c8b96" name="Presto Dashboard UI - 3">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="702e3feb-38a3-439f-a6c3-7854d290f514" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="399da508-4f93-4610-8711-7fc7a453fc96" name="Presto Dashboard UI - 4">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="9db8a8fd-2bba-49d0-b3f5-149d359f24bb" direction="Forward">
+          <layerMoniker Id="bc32ac23-8de4-4ccf-8739-55b21591fc4b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="dbe643e6-f8fa-4fa5-bfcf-54591e179ed7" name="App servers detect when an app needs to be installed, install the app, and create an installation summary." />
+    <layer Id="342191d1-20de-4a94-8873-29d17a80f745" name="Users use the Presto Dashboard to configure servers, apps, tasks, and variables. Users can also view installation summaries and force servers to install apps." />
+  </layers>
+</layerModel>

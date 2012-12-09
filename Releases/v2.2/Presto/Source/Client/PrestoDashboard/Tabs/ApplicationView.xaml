@@ -1,0 +1,142 @@
+﻿<UserControl x:Class="PrestoDashboard.Tabs.ApplicationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="760">
+
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource ApplicationViewModel}"/>
+    </UserControl.DataContext>
+
+    <!-- This works for the initial sort, but when members get added to the collection
+         the sort doesn't get updated. That's because CollectionViewSource doesn't 
+         implement INotifyPropertyChanged. -->
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="SortedApplications" Source="{Binding Applications}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <DockPanel Grid.Column="0" LastChildFill="True">
+            <Label Style="{StaticResource StandardLabel}" DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center" FontWeight="Bold"/>            
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="40" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshApplicationsCommand}" />
+                    <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />-->
+                </StackPanel>
+            </StackPanel>
+            <ListBox ItemsSource="{Binding Source={StaticResource SortedApplications}}" DisplayMemberPath="Name"
+                     SelectedItem="{Binding SelectedApplication}"/>
+        </DockPanel>
+
+        <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding ApplicationIsSelected}">
+            
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplication.Name}"/>
+
+                <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardLabel}" Content="Version: "/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding SelectedApplication.Version}"/>
+
+                <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource StandardLabel}" Content="Force installation: "/>                    
+
+                <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                    <Label Style="{StaticResource StandardLabel}" Content="{Binding SelectedApplication.ForceInstallation}" Width="280"/>
+                    <Button Content="..." Height="25" Width="25" Command="{Binding ForceInstallationCommand}" />
+                    <Button Content="X" Height="25" Width="25" Command="{Binding DeleteForceInstallationCommand}" />
+                </StackPanel>
+
+            </Grid>                                 
+            
+            <DockPanel DockPanel.Dock="Bottom">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" FontWeight="Bold"/>
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                          ItemsSource="{Binding SelectedApplication.CustomVariableGroups}"
+                          SelectedItem="{Binding SelectedCustomVariableGroup}"
+                          Height="125">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
+                        <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveVariableGroupCommand}" />
+                    </StackPanel>
+                </Grid>
+            </DockPanel>
+
+            <DockPanel>
+
+                <DockPanel DockPanel.Dock="Bottom" Height="40" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddTaskCommand}" />
+                            <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditTaskCommand}" />
+                            <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteTaskCommand}" />
+                            <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportTasksCommand}" />
+                            <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportTasksCommand}" />
+                            <Button Content="^" Height="25" Width="25" Command="{Binding MoveTaskUpCommand}" />
+                            <Button Content="v" Height="25" Width="25" Command="{Binding MoveTaskDownCommand}" />
+                            <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveApplicationCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Tasks" HorizontalAlignment="Center" FontWeight="Bold"/>
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                          ItemsSource="{Binding AllApplicationTasks}"
+                          ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedTasks}"
+                          SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"/>
+                            <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Path=PrestoTaskType}" Header="Type" Width="120"/>
+                            <DataGridTextColumn Binding="{Binding Path=FailureCausesAllStop}" Header="Stop" Width="50"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+            </DockPanel>
+            
+        </DockPanel>
+
+    </Grid>
+</UserControl>

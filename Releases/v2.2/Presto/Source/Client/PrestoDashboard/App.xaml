@@ -1,0 +1,57 @@
+﻿<Application x:Class="PrestoDashboard.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vmmain="clr-namespace:PrestoViewModel;assembly=PrestoViewModel"
+             xmlns:vmtab="clr-namespace:PrestoViewModel.Tabs;assembly=PrestoViewModel"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\ExpressionDark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        
+        
+            <vmmain:MainWindowViewModel x:Key="MainWindowViewModel"/>
+            <vmtab:ApplicationViewModel x:Key="ApplicationViewModel"/>
+            <vmtab:ApplicationServerViewModel x:Key="ApplicationServerViewModel"/>
+            <vmtab:CustomVariableGroupViewModel x:Key="CustomVariableGroupViewModel"/>
+            <vmtab:ResolveVariableViewModel x:Key="ResolveVariableViewModel"/>
+            <vmtab:InstallationSummaryViewModel x:Key="InstallationSummaryViewModel"/>
+            <vmtab:LogMessageViewModel x:Key="LogMessageViewModel"/>
+            <vmtab:PingViewModel x:Key="PingViewModel"/>
+            <vmtab:GlobalSettingViewModel x:Key="GlobalSettingViewModel"/>
+
+            <Style x:Key="StandardLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="2" />
+            </Style>
+
+            <Style x:Key="StandardCheckBox" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StandardButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Width" Value="70" />
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            
+            <!-- Note: Do not set the x:Key here. If we do, then data grids will have to explicitly
+                 set their style to this. -->
+            <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
+                <Setter Property="Background" Value="#FF333333" />
+                <Setter Property="RowBackground" Value="Gainsboro" />
+            </Style>
+
+            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                <Setter Property="Background" Value="DarkSlateGray" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+        
+    </Application.Resources>
+</Application>

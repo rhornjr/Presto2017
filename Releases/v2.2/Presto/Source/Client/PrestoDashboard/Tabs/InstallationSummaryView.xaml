@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="PrestoDashboard.Tabs.InstallationSummaryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="700">
+
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource InstallationSummaryViewModel}"/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Content="Show times as: " VerticalAlignment="Center" Width="100"/>
+            <ComboBox ItemsSource="{Binding TimeZoneHelpers}"
+                      SelectedItem="{Binding SelectedTimeZoneHelper}" Width="200"
+                      HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        </StackPanel>
+        
+        <DockPanel Grid.Column="0" Grid.Row="1">
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding InstallationSummaryDtos}" SelectedItem="{Binding SelectedInstallationSummaryDto}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=ServerName}" Header="Server" Width="150" SortMemberPath="ApplicationServer.Name"/>
+                    <DataGridTextColumn Binding="{Binding Path=ApplicationName}" Header="Application" Width="150" SortMemberPath="ApplicationWithOverrideVariableGroup.Application.Name"/>
+                    <DataGridTextColumn Binding="{Binding Path=InstallationStart}" Header="Start" Width="150"
+                                        SortDirection="Ascending" SortMemberPath="InstallationStart"/>
+                    <DataGridTextColumn Binding="{Binding Path=InstallationEnd}" Header="End" Width="150"/>
+                    <DataGridTextColumn Binding="{Binding Path=Result}" Header="Result" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="Black"/>
+        
+        <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      ItemsSource="{Binding SelectedInstallationSummary.TaskDetails}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=StartTime}" Header="Start" Width="150" SortMemberPath="StartTime"/>
+                <DataGridTextColumn Binding="{Binding Path=EndTime}" Header="End" Width="150"/>
+                <DataGridTextColumn Binding="{Binding Path=Details}" Header="Details" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="4">
+            <Button Content="Refresh" Style="{StaticResource StandardButton}" Command="{Binding RefreshCommand}" />
+        </StackPanel>
+        
+    </Grid>
+    
+</UserControl>

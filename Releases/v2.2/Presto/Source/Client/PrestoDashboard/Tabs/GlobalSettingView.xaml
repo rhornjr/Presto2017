@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="PrestoDashboard.Tabs.GlobalSettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="700">
+
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource GlobalSettingViewModel}"/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                <Label Content="Freeze all installations:" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                <CheckBox IsChecked="{Binding GlobalSetting.FreezeAllInstallations}" Style="{StaticResource StandardCheckBox}" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                <Label Content="System Variables" Style="{StaticResource StandardLabel}" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                <TextBox IsReadOnly="True" Text="$(sys:applicationName)" HorizontalAlignment="Right" Margin="8" />
+            </Border>
+            <Border Grid.Column="1" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                <Label Content="The name of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
+                <TextBox IsReadOnly="True" Text="$(sys:applicationVersion)" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
+                <Label Content="The version string of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
+                <TextBox IsReadOnly="True" Text="$(sys:serverName)" HorizontalAlignment="Right" Margin="8"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
+                <Label Content="The name of the server where the application is being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+
+        </Grid>
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Save" Style="{StaticResource StandardButton}" Command="{Binding SaveCommand}" />
+            <Button Content="Refresh" Style="{StaticResource StandardButton}" Command="{Binding RefreshCommand}" />
+        </StackPanel>
+
+    </Grid>
+</UserControl>

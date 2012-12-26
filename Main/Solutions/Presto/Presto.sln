@@ -61,9 +61,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServerCommon", "Sourc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoAutomatedTests", "Source\Testing\PrestoAutomatedTests\PrestoAutomatedTests.csproj", "{75344126-B6A2-4277-9EF5-99E08E147D7E}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DashboardInstaller", "Source\Installers\DashboardInstaller\DashboardInstaller.wixproj", "{75296CD9-84E4-44C5-AECF-D54C6D1ED183}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SelfUpdatingServiceHostInstaller", "Source\Installers\SelfUpdatingServiceHostInstaller\SelfUpdatingServiceHostInstaller.wixproj", "{D45A435E-0E60-48F9-87C5-8691635681BB}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
 		SccLocalPath0 = .
@@ -103,6 +107,14 @@ Global
 		SccProjectTopLevelParentUniqueName9 = Presto.sln
 		SccProjectName9 = Source/Testing/PrestoAutomatedTests
 		SccLocalPath9 = Source\\Testing\\PrestoAutomatedTests
+		SccProjectUniqueName10 = Source\\Installers\\DashboardInstaller\\DashboardInstaller.wixproj
+		SccProjectTopLevelParentUniqueName10 = Presto.sln
+		SccProjectName10 = Source/Installers/DashboardInstaller
+		SccLocalPath10 = Source\\Installers\\DashboardInstaller
+		SccProjectUniqueName11 = Source\\Installers\\SelfUpdatingServiceHostInstaller\\SelfUpdatingServiceHostInstaller.wixproj
+		SccProjectTopLevelParentUniqueName11 = Presto.sln
+		SccProjectName11 = Source/Installers/SelfUpdatingServiceHostInstaller
+		SccLocalPath11 = Source\\Installers\\SelfUpdatingServiceHostInstaller
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Presto1.vsmdi
@@ -206,6 +218,26 @@ Global
 		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Debug|x86.ActiveCfg = Debug|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Debug|x86.Build.0 = Debug|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Release|Any CPU.ActiveCfg = Release|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Release|Mixed Platforms.Build.0 = Release|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Release|x86.ActiveCfg = Release|x86
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183}.Release|x86.Build.0 = Release|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Debug|x86.ActiveCfg = Debug|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Debug|x86.Build.0 = Debug|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Release|Any CPU.ActiveCfg = Release|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Release|x86.ActiveCfg = Release|x86
+		{D45A435E-0E60-48F9-87C5-8691635681BB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -229,5 +261,7 @@ Global
 		{75344126-B6A2-4277-9EF5-99E08E147D7E} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}
 		{9E41ADBA-A55C-4F71-BF0A-463C82334B13} = {CCAFF706-DD44-49CB-8896-EADA2FD38664}
+		{75296CD9-84E4-44C5-AECF-D54C6D1ED183} = {667D14E8-2679-43D2-9E99-9727B63C306B}
+		{D45A435E-0E60-48F9-87C5-8691635681BB} = {667D14E8-2679-43D2-9E99-9727B63C306B}
 	EndGlobalSection
 EndGlobal

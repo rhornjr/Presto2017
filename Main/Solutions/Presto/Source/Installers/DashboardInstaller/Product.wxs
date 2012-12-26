@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Presto Dashboard" Language="1033" Version="2.3.0.0" Manufacturer="Bob Horn" UpgradeCode="5b33a31b-39f9-4b2f-b359-b05796c8e10d">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" /> <!-- So we don't have to have a separate cab file with the MSI -->
+
+		<Feature Id="ProductFeature" Title="Presto Dashboard" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Presto Dashboard" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="PrestoDashboard.exe">
+         <File Id="PrestoDashboard.exe" Source="$(var.PrestoDashboard.TargetPath)" />
+			 </Component>
+      <Component Id="PrestoDashboard.exe.config">
+        <File Id="PrestoDashboard.exe.config" Source="$(var.PrestoDashboard.TargetDir)PrestoDashboard.exe.config" />
+      </Component>
+      <Component Id="MultiSelectBehavior.dll">
+        <File Id="MultiSelectBehavior.dll" Source="$(var.PrestoDashboard.TargetDir)MultiSelectBehavior.dll" />
+      </Component>
+      <Component Id="Newtonsoft.Json.dll">
+        <File Id="Newtonsoft.Json.dll" Source="$(var.PrestoDashboard.TargetDir)Newtonsoft.Json.dll" />
+      </Component>
+      <Component Id="NLog.dll">
+        <File Id="NLog.dll" Source="$(var.PrestoDashboard.TargetDir)NLog.dll" />
+      </Component>
+      <Component Id="PrestoCommon.dll">
+        <File Id="PrestoCommon.dll" Source="$(var.PrestoDashboard.TargetDir)PrestoCommon.dll" />
+      </Component>
+      <Component Id="PrestoViewModel.dll">
+        <File Id="PrestoViewModel.dll" Source="$(var.PrestoDashboard.TargetDir)PrestoViewModel.dll" />
+      </Component>
+      <Component Id="Raven.Abstractions_3.5.dll">
+        <File Id="Raven.Abstractions_3.5.dll" Source="$(var.PrestoDashboard.TargetDir)Raven.Abstractions-3.5.dll" />
+      </Component>
+      <Component Id="Raven.Client.Lightweight_3.5.dll">
+        <File Id="Raven.Client.Lightweight_3.5.dll" Source="$(var.PrestoDashboard.TargetDir)Raven.Client.Lightweight-3.5.dll" />
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

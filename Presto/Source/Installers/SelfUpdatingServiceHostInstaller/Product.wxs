@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Presto Self Updating Service Host" Language="1033" Version="1.0.0.0" Manufacturer="Bob Horn" UpgradeCode="ce85eb23-2a9d-416b-8c9c-a5fc2b3726ca">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" /> <!-- So we don't have to have a separate cab file with the MSI -->
+
+		<Feature Id="ProductFeature" Title="Presto Self Updating Service Host" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Presto Self Updating Service Host" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="SelfUpdatingServiceHost.exe">
+        <File Id="SelfUpdatingServiceHost.exe" Source="$(var.SelfUpdatingServiceHost.TargetPath)" KeyPath="yes" Vital="yes" />
+        <!-- To install as a service -->
+        <ServiceInstall Id="SelfUpdatingServiceHostService" DisplayName="Presto Self Updating Service Host"
+                        Name="Presto Self Updating Service Host" ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes">
+        </ServiceInstall>
+        <ServiceControl Id="ServiceStart" Name="Presto Self Updating Service Host" Start="install" Wait="no" />
+        <ServiceControl Id="ServiceStop" Name="Presto Self Updating Service Host" Stop="both" Wait="yes" />
+        <ServiceControl Id="ServiceRemove" Name="Presto Self Updating Service Host" Remove="uninstall" Wait="yes" />
+      </Component>
+      <Component Id="SelfUpdatingServiceHost.exe.config">
+        <File Id="SelfUpdatingServiceHost.exe.config" Source="$(var.SelfUpdatingServiceHost.TargetDir)SelfUpdatingServiceHost.exe.config" />
+      </Component>
+      <Component Id="PrestoServerCommon.dll">
+        <File Id="PrestoServerCommon.dll" Source="$(var.SelfUpdatingServiceHost.TargetDir)PrestoServerCommon.dll" />
+      </Component>
+      <Component Id="SelfUpdatingServiceHost.pdb">
+        <File Id="SelfUpdatingServiceHost.pdb" Source="$(var.SelfUpdatingServiceHost.TargetDir)SelfUpdatingServiceHost.pdb" />
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

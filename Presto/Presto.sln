@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAFF2A9-EEB6-44B7-BC2C-FD92ECBB1A3E}"
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
@@ -22,25 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPartyAssemblies", "Thi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D399A7C6-4F03-44BE-B634-F5E54FC48B9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoCommon", "Source\Common\PrestoCommon\PrestoCommon.csproj", "{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoViewModel", "Source\Client\PrestoViewModel\PrestoViewModel.csproj", "{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{8101847C-2ACD-4993-9FDD-901CC2B07E1D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoDashboard", "Source\Client\PrestoDashboard\PrestoDashboard.csproj", "{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoTaskRunner", "Source\Server\PrestoTaskRunner\PrestoTaskRunner.csproj", "{038990D2-3F29-4D89-97A3-A11BC53D937E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architecture", "Architecture", "{56F6C77F-E595-4E92-A00D-E4152F0B0241}"
 EndProject
-Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "PrestoArchitecture", "Architecture\PrestoArchitecture\PrestoArchitecture.modelproj", "{46E7415A-4162-4CA9-8AD1-85085DA23D21}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfUpdatingServiceHost", "Source\Server\SelfUpdatingServiceHost\SelfUpdatingServiceHost.csproj", "{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MvvmFramework", "MvvmFramework", "{CCAFF706-DD44-49CB-8896-EADA2FD38664}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSelectBehavior", "Source\MvvmFramework\MultiSelectBehavior\MultiSelectBehavior.csproj", "{9E41ADBA-A55C-4F71-BF0A-463C82334B13}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDb", "RavenDb", "{B59FBDF3-226E-4F6B-B564-6F795AA85689}"
 	ProjectSection(SolutionItems) = preProject
@@ -50,16 +36,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDb", "RavenDb", "{B59F
 		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServerCommon", "Source\Server\PrestoServerCommon\PrestoServerCommon.csproj", "{2F01965F-4A1E-455C-9975-A17BF129EBD0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoAutomatedTests", "Source\Testing\PrestoAutomatedTests\PrestoAutomatedTests.csproj", "{75344126-B6A2-4277-9EF5-99E08E147D7E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WpfToolkit", "WpfToolkit", "{CDBF03AE-5D75-4B74-BB79-EB71D2C7E043}"
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\ThirdPartyAssemblies\WpfToolkit\WPFToolkit.dll = Solution Items\ThirdPartyAssemblies\WpfToolkit\WPFToolkit.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installers", "Installers", "{667D14E8-2679-43D2-9E99-9727B63C306B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoCommon", "Source\Common\PrestoCommon\PrestoCommon.csproj", "{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoViewModel", "Source\Client\PrestoViewModel\PrestoViewModel.csproj", "{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoDashboard", "Source\Client\PrestoDashboard\PrestoDashboard.csproj", "{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoTaskRunner", "Source\Server\PrestoTaskRunner\PrestoTaskRunner.csproj", "{038990D2-3F29-4D89-97A3-A11BC53D937E}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "PrestoArchitecture", "Architecture\PrestoArchitecture\PrestoArchitecture.modelproj", "{46E7415A-4162-4CA9-8AD1-85085DA23D21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfUpdatingServiceHost", "Source\Server\SelfUpdatingServiceHost\SelfUpdatingServiceHost.csproj", "{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSelectBehavior", "Source\MvvmFramework\MultiSelectBehavior\MultiSelectBehavior.csproj", "{9E41ADBA-A55C-4F71-BF0A-463C82334B13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServerCommon", "Source\Server\PrestoServerCommon\PrestoServerCommon.csproj", "{2F01965F-4A1E-455C-9975-A17BF129EBD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoAutomatedTests", "Source\Testing\PrestoAutomatedTests\PrestoAutomatedTests.csproj", "{75344126-B6A2-4277-9EF5-99E08E147D7E}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution

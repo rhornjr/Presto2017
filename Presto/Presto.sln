@@ -61,13 +61,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WpfToolkit", "WpfToolkit", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installers", "Installers", "{667D14E8-2679-43D2-9E99-9727B63C306B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PrestoSelfUpdatingServiceHostInstaller", "Source\Installers\PrestoSelfUpdatingServiceHostInstaller\PrestoSelfUpdatingServiceHostInstaller.vdproj", "{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PrestoDashboardInstaller", "Source\Installers\PrestoDashboardInstaller\PrestoDashboardInstaller.vdproj", "{22C907F7-0AFE-42D6-830F-3E08487A4BD6}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 10
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
 		SccLocalPath0 = .
@@ -107,14 +103,6 @@ Global
 		SccProjectTopLevelParentUniqueName9 = Presto.sln
 		SccProjectName9 = Source/Testing/PrestoAutomatedTests
 		SccLocalPath9 = Source\\Testing\\PrestoAutomatedTests
-		SccProjectUniqueName10 = Source\\Installers\\PrestoSelfUpdatingServiceHostInstaller\\PrestoSelfUpdatingServiceHostInstaller.vdproj
-		SccProjectTopLevelParentUniqueName10 = Presto.sln
-		SccProjectName10 = Source/Installers/PrestoSelfUpdatingServiceHostInstaller
-		SccLocalPath10 = Source\\Installers\\PrestoSelfUpdatingServiceHostInstaller
-		SccProjectUniqueName11 = Source\\Installers\\PrestoDashboardInstaller\\PrestoDashboardInstaller.vdproj
-		SccProjectTopLevelParentUniqueName11 = Presto.sln
-		SccProjectName11 = Source/Installers/PrestoDashboardInstaller
-		SccLocalPath11 = Source\\Installers\\PrestoDashboardInstaller
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Presto1.vsmdi
@@ -218,18 +206,6 @@ Global
 		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{75344126-B6A2-4277-9EF5-99E08E147D7E}.Release|x86.ActiveCfg = Release|Any CPU
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Debug|Any CPU.ActiveCfg = Debug
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Debug|x86.ActiveCfg = Debug
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Release|Any CPU.ActiveCfg = Release
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Release|Mixed Platforms.ActiveCfg = Release
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA}.Release|x86.ActiveCfg = Release
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Debug|Any CPU.ActiveCfg = Debug
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Debug|x86.ActiveCfg = Debug
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Release|Any CPU.ActiveCfg = Release
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Release|Mixed Platforms.ActiveCfg = Release
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -253,7 +229,5 @@ Global
 		{75344126-B6A2-4277-9EF5-99E08E147D7E} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}
 		{9E41ADBA-A55C-4F71-BF0A-463C82334B13} = {CCAFF706-DD44-49CB-8896-EADA2FD38664}
-		{AA3BC549-BAC7-4858-AB73-FAA0F49E97DA} = {667D14E8-2679-43D2-9E99-9727B63C306B}
-		{22C907F7-0AFE-42D6-830F-3E08487A4BD6} = {667D14E8-2679-43D2-9E99-9727B63C306B}
 	EndGlobalSection
 EndGlobal

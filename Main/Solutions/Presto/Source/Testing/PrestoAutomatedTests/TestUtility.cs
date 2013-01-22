@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 
 namespace PrestoAutomatedTests
 {
     // The way this all works, at least for RavenDB at the moment:
-    // 1. Start with a fresh DB - Delete C:\Software\RavenDb\RavenDB-Build-573\Server\Data
-    // 2. Start the DB server: C:\Software\RavenDb\RavenDB-Build-573\Server\Raven.Server.exe
+    // 1. Start with a fresh DB - Delete C:\Software\RavenDb\RavenDB-Build-960\Server\Data
+    // 2. Start the DB server: C:\Software\RavenDb\RavenDB-Build-960\Server\Raven.Server.exe
     // 3. Run the ordered tests:
     //      - In SolutionItems, open Presto1.vsmdi (just double-click it)
     //      - In the grid, check orderedtest1.
@@ -28,6 +29,8 @@ namespace PrestoAutomatedTests
         public static void PopulateData()
         {
             if (_dataPopulated) { return; }
+
+            CommonUtility.RegisterRavenDataClasses();
 
             AddApplications();
             AddCustomVariableGroups();

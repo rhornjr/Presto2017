@@ -68,7 +68,7 @@ namespace PrestoAutomatedTests
         /// <summary>
         ///A test for ImportTasks
         ///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         [DeploymentItem("PrestoViewModel.dll")]
         public void ImportTasksTest()
         {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 	<Product Id="*" Name="Presto Dashboard" Language="1033" Version="2.3.0.0" Manufacturer="Bob Horn" UpgradeCode="5b33a31b-39f9-4b2f-b359-b05796c8e10d">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
@@ -26,6 +27,10 @@
 			 </Component>
       <Component Id="PrestoDashboard.exe.config">
         <File Id="PrestoDashboard.exe.config" Source="$(var.PrestoDashboard.TargetDir)PrestoDashboard.exe.config" />
+        <util:XmlFile Id="AppConfigSetConnection" Action="setValue" Permanent="yes"
+                      File="$(var.PrestoDashboard.TargetDir)PrestoDashboard.exe.config"
+                      ElementPath="/configuration/connectionStrings/add[\[]@name='RavenDb'[\]]" Name="connectionString"
+                      Value="Your Connection string values here" />
       </Component>
       <Component Id="MultiSelectBehavior.dll">
         <File Id="MultiSelectBehavior.dll" Source="$(var.PrestoDashboard.TargetDir)MultiSelectBehavior.dll" />

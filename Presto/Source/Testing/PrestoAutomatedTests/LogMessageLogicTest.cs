@@ -5,8 +5,6 @@ using PrestoCommon.Logic;
 
 namespace PrestoAutomatedTests
 {
-    
-    
     /// <summary>
     ///This is a test class for LogMessageLogicTest and is intended
     ///to contain all LogMessageLogicTest Unit Tests
@@ -67,7 +65,7 @@ namespace PrestoAutomatedTests
         /// <summary>
         ///A test for GetMostRecentByCreatedTime
         ///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void GetMostRecentByCreatedTimeTest()
         {
             int numberToRetrieve = 50; // TODO: Initialize to an appropriate value

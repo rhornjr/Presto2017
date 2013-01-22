@@ -10,6 +10,9 @@ using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
+using Microsoft.Practices.Unity;
+using PrestoCommon.Data.Interfaces;
+using PrestoCommon.Data.RavenDb;
 
 namespace PrestoDashboard
 {
@@ -27,13 +30,15 @@ namespace PrestoDashboard
             this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(this.AppDispatcherUnhandledException);
 
             base.OnStartup(e);
-            
+
+            CommonUtility.RegisterRavenDataClasses();
+
             // Use a real (as opposed to mock) open file dialog.
             TypeContainer.RegisterType(typeof(IOpenFileDialogService), typeof(OpenFileDialogService));
 
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
         }
-        
+
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             LogUtility.LogException(e.Exception);

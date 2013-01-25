@@ -11,6 +11,8 @@ using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Factories;
 using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
+using Microsoft.Practices.Unity;
 
 namespace PrestoViewModel
 {
@@ -81,7 +83,7 @@ namespace PrestoViewModel
 
         protected static string GetFilePathAndNameFromUser()
         {
-            using (IOpenFileDialogService dialogService = TypeContainer.RetrieveType<IOpenFileDialogService>())
+            using (IOpenFileDialogService dialogService = CommonUtility.Container.Resolve<IOpenFileDialogService>())
             {
                 dialogService.InitialDirectory = lastDialogDirectory;
 
@@ -95,7 +97,7 @@ namespace PrestoViewModel
 
         protected static string[] GetFilePathAndNamesFromUser()
         {
-            using (IOpenFileDialogService dialogService = TypeContainer.RetrieveType<IOpenFileDialogService>())
+            using (IOpenFileDialogService dialogService = CommonUtility.Container.Resolve<IOpenFileDialogService>())
             {
                 dialogService.InitialDirectory = lastDialogDirectory;
                 dialogService.Multiselect = true;

@@ -143,7 +143,6 @@
     <Compile Include="Exceptions\CustomVariableExistsMoreThanOnceException.cs" />
     <Compile Include="Exceptions\CustomVariableMissingException.cs" />
     <Compile Include="Factories\OpenFileDialog\MockOpenFileDialogService.cs" />
-    <Compile Include="Factories\TypeContainer.cs" />
     <Compile Include="Factories\OpenFileDialog\IOpenFileDialogService.cs" />
     <Compile Include="Factories\OpenFileDialog\OpenFileDialogService.cs" />
     <Compile Include="GlobalSuppressions.cs" />

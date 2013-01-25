@@ -34,7 +34,7 @@ namespace PrestoDashboard
             CommonUtility.RegisterRavenDataClasses();
 
             // Use a real (as opposed to mock) open file dialog.
-            TypeContainer.RegisterType(typeof(IOpenFileDialogService), typeof(OpenFileDialogService));
+            CommonUtility.Container.RegisterType<IOpenFileDialogService, OpenFileDialogService>();
 
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
         }

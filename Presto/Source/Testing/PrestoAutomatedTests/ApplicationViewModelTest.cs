@@ -4,8 +4,10 @@ using PrestoCommon.Entities;
 using PrestoCommon.Factories;
 using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Tabs;
+using Microsoft.Practices.Unity;
 
 namespace PrestoAutomatedTests
 {
@@ -76,7 +78,7 @@ namespace PrestoAutomatedTests
             MainWindowViewModel mainViewModel = new MainWindowViewModel();
 
             // Use a mock open file dialog so we don't need user input.
-            TypeContainer.RegisterType(typeof(IOpenFileDialogService), typeof(MockOpenFileDialogService));
+            CommonUtility.Container.RegisterType<IOpenFileDialogService, MockOpenFileDialogService>();
             MockOpenFileDialogService.SetFileName(@"C:\Data\Presto2Files\Presto2ToRunAtHome\Derating.Tasks");
 
             ApplicationViewModel_Accessor appViewModel = new ApplicationViewModel_Accessor();            

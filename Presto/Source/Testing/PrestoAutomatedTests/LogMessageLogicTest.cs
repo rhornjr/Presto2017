@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
@@ -65,12 +66,15 @@ namespace PrestoAutomatedTests
         /// <summary>
         ///A test for GetMostRecentByCreatedTime
         ///</summary>
-        //[TestMethod()]
+        [TestMethod()]
         public void GetMostRecentByCreatedTimeTest()
         {
             int numberToRetrieve = 50; // TODO: Initialize to an appropriate value
 
-            List<LogMessage> logMessages = new List<LogMessage>(LogMessageLogic.GetMostRecentByCreatedTime(numberToRetrieve));
+            // Note: Other tests can create log messages, so we're only going to get the messages that
+            //       start with a certain prefix that are part of the standard messages originally loaded.
+            IEnumerable<LogMessage> logMessages = new List<LogMessage>(LogMessageLogic.GetMostRecentByCreatedTime(numberToRetrieve))
+                .Where(x => x.Message.StartsWith(TestUtility.LogMessagePrefix));
 
             // Note: The TestUtility will create, say 1000 messages. Each message is "Message n". So the last message
             //       will be "Message 1000".

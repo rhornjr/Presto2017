@@ -24,6 +24,8 @@ namespace PrestoAutomatedTests
         public static readonly int TotalNumberOfLogMessages = 1000;
         public static readonly int NumberOfExtraInstallationSummariesForServer4AndApp8 = 2000;
 
+        public static readonly string LogMessagePrefix = "Message";
+
         public static List<InstallationSummary> AllInstallationSummaries { get; private set; }
 
         public static void PopulateData()
@@ -168,7 +170,7 @@ namespace PrestoAutomatedTests
         {
             for (int i = 1; i <= TotalNumberOfLogMessages; i++)
             {
-                LogMessageLogic.SaveLogMessage("Message " + i);
+                LogMessageLogic.SaveLogMessage(LogMessagePrefix + " " + i);
             }
         }        
     }

@@ -6,7 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
 		CustomDictionary.xml = CustomDictionary.xml
 		Local.testsettings = Local.testsettings
-		Presto1.vsmdi = Presto1.vsmdi
 		Solution Items\SavingCodeplexCredentials.txt = Solution Items\SavingCodeplexCredentials.txt
 		Solution Items\SolutionInfo.cs = Solution Items\SolutionInfo.cs
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
@@ -127,9 +126,6 @@ Global
 		SccProjectTopLevelParentUniqueName11 = Presto.sln
 		SccProjectName11 = Source/Installers/SelfUpdatingServiceHostInstaller
 		SccLocalPath11 = Source\\Installers\\SelfUpdatingServiceHostInstaller
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Presto1.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

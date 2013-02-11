@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Logic;
@@ -82,6 +83,11 @@ namespace PrestoViewModel.Tabs
         private void Save()
         {
             GlobalSettingLogic.Save(this.GlobalSetting);
+
+            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+                "Global settings updated. Freeze all installations is now {0}.",
+                this.GlobalSetting.FreezeAllInstallations));
+
             ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.GlobalSettingsSaved;
         }
     }

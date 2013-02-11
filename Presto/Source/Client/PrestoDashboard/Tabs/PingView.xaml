@@ -3,13 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
 
     <UserControl.DataContext>
         <Binding Source="{StaticResource PingViewModel}"/>
     </UserControl.DataContext>
-    
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="PingViewSource" Source="{Binding ServerPingDtoList}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="ApplicationServer.Name"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -26,7 +35,7 @@
         </StackPanel>
         
         <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding ServerPingDtoList}" CanUserSortColumns="True">
+                      ItemsSource="{Binding Source={StaticResource PingViewSource}}" CanUserSortColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=ApplicationServer}" Header="Server" Width="220" SortMemberPath="ApplicationServer.Name"/>
                 <DataGridTextColumn Binding="{Binding Path=ResponseTime}" Header="Response Time" Width="180"/>

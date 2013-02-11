@@ -129,23 +129,17 @@ namespace PrestoViewModel.Tabs
             {
                 if (this._serverPingDtoList == null)
                 {
-                    this.ServerPingDtoList = new ObservableCollection<ServerPingDto>();
+                    this._serverPingDtoList = new ObservableCollection<ServerPingDto>();
 
                     IEnumerable allServers = ApplicationServerLogic.GetAll();
 
                     foreach (ApplicationServer server in allServers)
                     {
-                        this.ServerPingDtoList.Add(new ServerPingDto() { ApplicationServer = server });
+                        this._serverPingDtoList.Add(new ServerPingDto() { ApplicationServer = server });
                     }
                 }
 
                 return this._serverPingDtoList;
-            }
-
-            private set
-            {
-                this._serverPingDtoList = value;
-                this.NotifyPropertyChanged(() => this.ServerPingDtoList);
             }
         }
 

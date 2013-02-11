@@ -3,12 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
 
     <UserControl.DataContext>
         <Binding Source="{StaticResource ResolveVariableViewModel}"/>
     </UserControl.DataContext>
+    
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="VariablesViewSource" Source="{Binding ResolvedCustomVariables}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Key"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
@@ -47,7 +56,7 @@
         </StackPanel>
         
         <DataGrid Grid.Row="3" Grid.ColumnSpan="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding ResolvedCustomVariables}" CanUserSortColumns="True">
+                      ItemsSource="{Binding Source={StaticResource VariablesViewSource}}" CanUserSortColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=Key}" Header="Variable" Width="220" SortMemberPath="Key"/>
                 <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>

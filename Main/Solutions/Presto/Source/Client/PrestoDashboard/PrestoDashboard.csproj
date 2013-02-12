@@ -37,7 +37,7 @@
     <MinimumRequiredVersion>1.0.0.47</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.htm</WebPage>
-    <ApplicationRevision>47</ApplicationRevision>
+    <ApplicationRevision>48</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -68,10 +68,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>3237321E6E6586B6499D210278C38F6F2EA21163</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BF6E66CDA898D0E976C33810D10DAEE0DA3A13A2</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>PrestoDashboard_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>PrestoDashboard_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -324,6 +324,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="PrestoDashboard_1_TemporaryKey.pfx" />
     <None Include="PrestoDashboard_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

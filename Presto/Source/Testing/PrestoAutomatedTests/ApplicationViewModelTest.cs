@@ -1,13 +1,12 @@
 ﻿using System;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
-using PrestoCommon.Factories;
 using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Tabs;
-using Microsoft.Practices.Unity;
 
 namespace PrestoAutomatedTests
 {
@@ -81,7 +80,8 @@ namespace PrestoAutomatedTests
             CommonUtility.Container.RegisterType<IOpenFileDialogService, MockOpenFileDialogService>();
             MockOpenFileDialogService.SetFileName(@"C:\Data\Presto2Files\Presto2ToRunAtHome\Derating.Tasks");
 
-            ApplicationViewModel_Accessor appViewModel = new ApplicationViewModel_Accessor();            
+            ApplicationViewModel appViewModel = new ApplicationViewModel();
+            PrivateObject privateObject = new PrivateObject(appViewModel);
 
             DateTime now = DateTime.Now;
 
@@ -93,8 +93,7 @@ namespace PrestoAutomatedTests
 
             appViewModel.SelectedApplication = app;
 
-            appViewModel.ImportTasks();
-
+            privateObject.Invoke("ImportTasks");
             // Need to verify that the app has x number of tasks.
         }
     }

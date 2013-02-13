@@ -1,12 +1,11 @@
 ﻿using System;
-using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
     public class ForceInstallation : EntityBase
     {
         private DateTime? _forceInstallationTime;
-        private DeploymentEnvironment _forceInstallationEnvironment;
+        private InstallationEnvironment _forceInstallationEnvironment;
 
         public DateTime? ForceInstallationTime
         {
@@ -19,7 +18,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        public DeploymentEnvironment ForceInstallationEnvironment
+        public InstallationEnvironment ForceInstallationEnvironment
         {
             get { return this._forceInstallationEnvironment; }
 

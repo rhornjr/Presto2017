@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
-using PrestoCommon.Enums;
+using PrestoCommon.Logic;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
@@ -14,8 +14,8 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class ForceInstallationViewModel : ViewModelBase
     {
-        private List<DeploymentEnvironment> _deploymentEnvironments;
-        private DeploymentEnvironment _selectedDeploymentEnvironment;
+        private List<InstallationEnvironment> _deploymentEnvironments;
+        private InstallationEnvironment _selectedDeploymentEnvironment;
 
         /// <summary>
         /// Gets a value indicating whether [user canceled].
@@ -58,27 +58,19 @@ namespace PrestoViewModel.Windows
         /// Gets the deployment environments.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-        public List<DeploymentEnvironment> DeploymentEnvironments
+        public List<InstallationEnvironment> DeploymentEnvironments
         {
             get
             {
                 if (this._deploymentEnvironments == null)
                 {
-                    this._deploymentEnvironments = Enum.GetValues(typeof(DeploymentEnvironment)).Cast<DeploymentEnvironment>().ToList();
-                    this._deploymentEnvironments.Remove(DeploymentEnvironment.Unknown);  // Don't let Unknown be an option.
-                    if (this.SelectedDeploymentEnvironment == DeploymentEnvironment.Unknown) { this.SelectedDeploymentEnvironment = this._deploymentEnvironments[0]; } // Set selected to first as default
+                    this._deploymentEnvironments = InstallationEnvironmentLogic.GetAll().ToList();
                 }
                 return this._deploymentEnvironments;
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected deployment environment.
-        /// </summary>
-        /// <value>
-        /// The selected deployment environment.
-        /// </value>
-        public DeploymentEnvironment SelectedDeploymentEnvironment
+        public InstallationEnvironment SelectedDeploymentEnvironment
         {
             get { return this._selectedDeploymentEnvironment; }
 

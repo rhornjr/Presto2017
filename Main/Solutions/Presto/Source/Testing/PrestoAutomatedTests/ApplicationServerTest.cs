@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
-using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 
 namespace PrestoAutomatedTests
@@ -72,11 +72,12 @@ namespace PrestoAutomatedTests
         {
             // Use Case #1 -- app group is not enabled
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
             
             // If disabled, don't install.
             ApplicationWithOverrideVariableGroup appWithGroup = new ApplicationWithOverrideVariableGroup() { Enabled = false };
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -86,7 +87,8 @@ namespace PrestoAutomatedTests
         {
             // Use Case #2 -- app group exists in the server's ApplicationWithGroupToForceInstallList -- with *null* custom variable group
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
             
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -101,7 +103,7 @@ namespace PrestoAutomatedTests
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithNullGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithNullGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
             Assert.AreEqual(true, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -113,7 +115,8 @@ namespace PrestoAutomatedTests
         {
             // Use Case #3 -- app group exists in the server's ApplicationWithGroupToForceInstallList -- with *valid* custom variable group
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -129,7 +132,7 @@ namespace PrestoAutomatedTests
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithValidGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(true, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -141,7 +144,8 @@ namespace PrestoAutomatedTests
         {
             // Use Case #4 -- app group does not exist in the server's ApplicationWithGroupToForceInstallList
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -153,7 +157,7 @@ namespace PrestoAutomatedTests
             // Add our app to the server
             appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
             // Note: We are *not* adding our app to the *force install* list of the server
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -163,7 +167,8 @@ namespace PrestoAutomatedTests
         {
             // Use Case #5 -- app group does exist in the server's ApplicationWithGroupToForceInstallList, but the custom variable ID is different
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -182,8 +187,8 @@ namespace PrestoAutomatedTests
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithDifferentGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
-            
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(false, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -195,7 +200,8 @@ namespace PrestoAutomatedTests
         {
             // Use Case #6 -- app group does not exist in the server's ApplicationWithGroupToForceInstallList, but the custom variable ID exists
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -215,8 +221,8 @@ namespace PrestoAutomatedTests
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithDifferentAppId);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
-            
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(false, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -228,7 +234,8 @@ namespace PrestoAutomatedTests
         {
             // Use Case #7 -- no force installation exists AT THE APP LEVEL
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -238,9 +245,9 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
             appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
             // Add our app to the server
-            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);            
+            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -251,7 +258,8 @@ namespace PrestoAutomatedTests
             // Use Case #8 -- force installation exists AT THE APP LEVEL, but the force installation time is in the future,
             //                and no installation summaries exist.
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
@@ -263,13 +271,13 @@ namespace PrestoAutomatedTests
             // Add our app to the server
             appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
 
-            ForceInstallation forceInstallation = new ForceInstallation();
-            forceInstallation.ForceInstallationTime = DateTime.Now.AddDays(10);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.DeploymentEnvironment;  // Make sure the environment matches
+            ForceInstallation forceInstallation            = new ForceInstallation();
+            forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(10);
+            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
 
             appWithValidGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -280,7 +288,8 @@ namespace PrestoAutomatedTests
             // Use Case #9 -- force installation exists AT THE APP LEVEL, and the force installation time is in the past,
             //                no installation summaries exist, and the deployment environments match.
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");  // Use server 10 because it doesn't have any installation summaries
@@ -294,11 +303,11 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.DeploymentEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
 
             appWithValidGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(true, actual);
         }
 
@@ -309,7 +318,8 @@ namespace PrestoAutomatedTests
             // Use Case #10 -- force installation exists AT THE APP LEVEL, and the force installation time is in the past,
             //                 no installation summaries exist, and the deployment environments *DO NOT* match.
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");  // Use server 10 because it doesn't have any installation summaries
@@ -323,11 +333,11 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = DeploymentEnvironment.QA;  // Make sure the environments don't match
+            forceInstallation.ForceInstallationEnvironment = InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder == 2).First(); // Make sure the environments don't match
 
             appWithValidGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -338,7 +348,8 @@ namespace PrestoAutomatedTests
             // Use Case #11 -- force installation exists AT THE APP LEVEL, and the force installation time is *before* the most recent
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");  // Use server 4 because it has installation summaries
@@ -356,11 +367,11 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.DeploymentEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
 
             appWithNullGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithNullGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
             Assert.AreEqual(false, actual);  // False because an installation has occurred after the force deployment time.
         }
 
@@ -371,7 +382,8 @@ namespace PrestoAutomatedTests
             // Use Case #12 -- force installation exists AT THE APP LEVEL, and the force installation time is *after* the most recent
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");  // Use server 4 because it has installation summaries
@@ -388,11 +400,11 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.DeploymentEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
 
             appWithNullGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithNullGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
             Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
         }
 
@@ -404,7 +416,8 @@ namespace PrestoAutomatedTests
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
             //                 However, the global setting, FreezeAllInstallations, is true.
 
-            ApplicationServer_Accessor appServerAccessor = new ApplicationServer_Accessor();
+            ApplicationServer appServerAccessor = new ApplicationServer();
+            PrivateObject privateObject = new PrivateObject(appServerAccessor);
 
             // Use this app server
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");  // Use server 4 because it has installation summaries
@@ -421,7 +434,7 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.DeploymentEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
 
             appWithNullGroup.Application.ForceInstallation = forceInstallation;
 
@@ -431,10 +444,10 @@ namespace PrestoAutomatedTests
             globalSetting.FreezeAllInstallations = true;
             GlobalSettingLogic.Save(globalSetting);
 
-            bool actual = appServerAccessor.ApplicationShouldBeInstalled(appWithNullGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
             Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
 
-            bool actualUsingFreeze = appServerAccessor.FinalInstallationChecksPass(appWithNullGroup);
+            bool actualUsingFreeze = (bool)privateObject.Invoke("FinalInstallationChecksPass", appWithNullGroup);
             Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
         }
     }

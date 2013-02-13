@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
-using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
@@ -26,7 +25,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
-        private List<DeploymentEnvironment> _deploymentEnvironments;
+        private List<InstallationEnvironment> _deploymentEnvironments;
         private PrestoObservableCollection<ApplicationServer> _applicationServers = new PrestoObservableCollection<ApplicationServer>();
         private ApplicationServer _selectedApplicationServer;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
@@ -107,13 +106,13 @@ namespace PrestoViewModel.Tabs
         /// Gets the deployment environments.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-        public List<DeploymentEnvironment> DeploymentEnvironments
+        public List<InstallationEnvironment> DeploymentEnvironments
         {
             get
             {
                 if (this._deploymentEnvironments == null)
                 {
-                    this._deploymentEnvironments = Enum.GetValues(typeof(DeploymentEnvironment)).Cast<DeploymentEnvironment>().ToList();
+                    this._deploymentEnvironments = InstallationEnvironmentLogic.GetAll().ToList();
                 }
                 return this._deploymentEnvironments;
             }

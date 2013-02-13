@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using PrestoCommon.EntityHelperClasses;
-using PrestoCommon.Enums;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 
@@ -40,12 +39,6 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
         public string Name
         {
             get { return this._name; }
@@ -57,12 +50,6 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
         public string Description
         {
             get { return this._description; }
@@ -74,25 +61,13 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [enable debug logging].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [enable debug logging]; otherwise, <c>false</c>.
-        /// </value>
         public bool EnableDebugLogging { get; set; }
 
-        /// <summary>
-        /// Gets or sets the deployment environment.
-        /// </summary>
-        /// <value>
-        /// The deployment environment.
-        /// </value>
-        public DeploymentEnvironment DeploymentEnvironment { get; set; }
+        public string InstallationEnvironmentId { get; set; }
 
-        /// <summary>
-        /// Gets the application.
-        /// </summary>
+        [JsonIgnore]
+        public InstallationEnvironment InstallationEnvironment { get; set; }
+
         public ObservableCollection<ApplicationWithOverrideVariableGroup> ApplicationsWithOverrideGroup
         {
             get
@@ -105,43 +80,16 @@ namespace PrestoCommon.Entities
             set { this._applicationsWithOverrideGroup = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the application ids.
-        /// </summary>
-        /// <value>
-        /// The application ids.
-        /// </value>
         public List<string> ApplicationIdsForAllAppWithGroups { get; set; }  // For RavenDB
 
-        /// <summary>
-        /// Gets or sets the custom variable group ids for all app with groups.
-        /// </summary>
-        /// <value>
-        /// The custom variable group ids for all app with groups.
-        /// </value>
         public List<string> CustomVariableGroupIdsForAllAppWithGroups { get; set; }  // For RavenDB
 
-        /// <summary>
-        /// Gets or sets the custom variable group ids for groups within apps.
-        /// </summary>
-        /// <value>
-        /// The custom variable group ids for groups within apps.
-        /// </value>
         public List<string> CustomVariableGroupIdsForGroupsWithinApps { get; set; }  // For RavenDB        
 
-        /// <summary>
-        /// Gets or sets the custom variable group ids.
-        /// </summary>
-        /// <value>
-        /// The custom variable group ids.
-        /// </value>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
-        /// <summary>
-        /// Gets the custom variable groups.
-        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
@@ -156,12 +104,6 @@ namespace PrestoCommon.Entities
             set { this._customVariableGroups = value; }
         }
 
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
         public override string ToString()
         {
             return this.Name;
@@ -178,9 +120,6 @@ namespace PrestoCommon.Entities
             return CommonUtility.GetAppWithGroup(this.ForceInstallationsToDo, appWithGroup);
         }
 
-        /// <summary>
-        /// Installs the applications.
-        /// </summary>
         public void InstallApplications()
         {
             // If we find an app that needs to be installed, install it.
@@ -343,7 +282,7 @@ namespace PrestoCommon.Entities
             if (mostRecentInstallationSummary == null)
             {
                 shouldForce = now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
-                    appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment;
+                    appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment.Id == this.InstallationEnvironment.Id;
                 LogForceInstallExistsWithNoInstallationSummaries(appWithGroup, now, shouldForce);
                 return shouldForce;
             }
@@ -351,7 +290,7 @@ namespace PrestoCommon.Entities
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install            
             shouldForce = (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
-                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment == this.DeploymentEnvironment);
+                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment.Id == this.InstallationEnvironment.Id);
 
             LogForceInstallBasedOnInstallationSummary(appWithGroup, now, mostRecentInstallationSummary, shouldForce);
 
@@ -370,7 +309,7 @@ namespace PrestoCommon.Entities
                 now.ToString(),
                 appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString(),
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment,
-                this.DeploymentEnvironment),
+                this.InstallationEnvironment),
                     this.EnableDebugLogging);
         }
 
@@ -388,7 +327,7 @@ namespace PrestoCommon.Entities
                 now.ToString(),
                 appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString(),
                 appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment,
-                this.DeploymentEnvironment),
+                this.InstallationEnvironment),
                     this.EnableDebugLogging);
         }
 

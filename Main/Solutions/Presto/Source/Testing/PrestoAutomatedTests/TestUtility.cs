@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
 using PrestoCommon.Logic;
@@ -31,6 +32,7 @@ namespace PrestoAutomatedTests
 
             CommonUtility.RegisterRavenDataClasses();
 
+            AddInstallationEnvironments();
             AddApplications();
             AddCustomVariableGroups();
             AddAppServers();
@@ -39,7 +41,23 @@ namespace PrestoAutomatedTests
             AddLogMessages();
 
             _dataPopulated = true;
-        }        
+        }
+
+        private static void AddInstallationEnvironments()
+        {
+            AddInstallationEnvironment("Development", 1);
+            AddInstallationEnvironment("QA", 2);
+            AddInstallationEnvironment("Staging", 3);
+            AddInstallationEnvironment("Production", 4);
+        }
+
+        private static void AddInstallationEnvironment(string name, int logicalOrder)
+        {
+            InstallationEnvironment env = new InstallationEnvironment();
+            env.Name = name;
+            env.LogicalOrder = logicalOrder;
+            InstallationEnvironmentLogic.Save(env);
+        }
 
         private static void AddApplications()
         {
@@ -85,12 +103,14 @@ namespace PrestoAutomatedTests
 
         private static void AddAppServers()
         {
+            IEnumerable<InstallationEnvironment> environments = InstallationEnvironmentLogic.GetAll();
+
             for (int i = 1; i <= TotalNumberOfEachEntityToCreate; i++)
             {
                 ApplicationServer server = new ApplicationServer();
 
                 server.Name                          = "server" + i;
-                server.DeploymentEnvironment         = DeploymentEnvironment.Development;
+                server.InstallationEnvironment       = environments.Where(x => x.LogicalOrder == 1).First();  // 1st env is dev
                 server.Description                   = "Description " + i;
                 server.EnableDebugLogging            = false;
 

@@ -19,15 +19,16 @@ namespace PrestoCommon.Misc
 
         public static void RegisterRavenDataClasses()
         {
-            CommonUtility.Container.RegisterType<IApplicationData,         ApplicationData>();
-            CommonUtility.Container.RegisterType<IApplicationServerData,   ApplicationServerData>();
-            CommonUtility.Container.RegisterType<ICustomVariableGroupData, CustomVariableGroupData>();
-            CommonUtility.Container.RegisterType<IGenericData,             GenericData>();
-            CommonUtility.Container.RegisterType<IGlobalSettingData,       GlobalSettingData>();
-            CommonUtility.Container.RegisterType<IInstallationSummaryData, InstallationSummaryData>();
-            CommonUtility.Container.RegisterType<ILogMessageData,          LogMessageData>();
-            CommonUtility.Container.RegisterType<IPingRequestData,         PingRequestData>();
-            CommonUtility.Container.RegisterType<IPingResponseData,        PingResponseData>();
+            CommonUtility.Container.RegisterType<IApplicationData,             ApplicationData>();
+            CommonUtility.Container.RegisterType<IApplicationServerData,       ApplicationServerData>();
+            CommonUtility.Container.RegisterType<ICustomVariableGroupData,     CustomVariableGroupData>();
+            CommonUtility.Container.RegisterType<IGenericData,                 GenericData>();
+            CommonUtility.Container.RegisterType<IGlobalSettingData,           GlobalSettingData>();
+            CommonUtility.Container.RegisterType<IInstallationSummaryData,     InstallationSummaryData>();
+            CommonUtility.Container.RegisterType<ILogMessageData,              LogMessageData>();
+            CommonUtility.Container.RegisterType<IPingRequestData,             PingRequestData>();
+            CommonUtility.Container.RegisterType<IPingResponseData,            PingResponseData>();
+            CommonUtility.Container.RegisterType<IInstallationEnvironmentData, InstallationEnvironmentData>();
         }
 
         public static ApplicationWithOverrideVariableGroup GetAppWithGroup(

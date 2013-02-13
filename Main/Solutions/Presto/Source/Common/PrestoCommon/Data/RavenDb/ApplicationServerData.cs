@@ -26,6 +26,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.ApplicationIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
+                        .Include(x => x.InstallationEnvironment)
                         .Take(int.MaxValue)
                         ).AsEnumerable().Cast<ApplicationServer>();
 
@@ -56,6 +57,7 @@ namespace PrestoCommon.Data.RavenDb
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
+                    .Include(x => x.InstallationEnvironment)
                     .Where(server => server.Name == serverName).FirstOrDefault())
                     as ApplicationServer;
 
@@ -75,6 +77,7 @@ namespace PrestoCommon.Data.RavenDb
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
+                    .Include(x => x.InstallationEnvironment)
                     .Where(server => server.Id == id).FirstOrDefault())
                     as ApplicationServer;
 
@@ -104,6 +107,9 @@ namespace PrestoCommon.Data.RavenDb
                 if (appGroup.CustomVariableGroupId == null) { continue; }
                 appGroup.CustomVariableGroup = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
             }
+
+            appServer.InstallationEnvironment = QuerySingleResultAndSetEtag(session =>
+                session.Load<InstallationEnvironment>(appServer.InstallationEnvironmentId)) as InstallationEnvironment;
         }
 
         public void Save(ApplicationServer applicationServer)
@@ -113,6 +119,8 @@ namespace PrestoCommon.Data.RavenDb
             applicationServer.ApplicationIdsForAllAppWithGroups         = new List<string>();
             applicationServer.CustomVariableGroupIdsForAllAppWithGroups = new List<string>();
             applicationServer.CustomVariableGroupIds                    = new List<string>();
+
+            applicationServer.InstallationEnvironmentId = applicationServer.InstallationEnvironment.Id;
 
             // For each group, set its ApplicationId and CustomVariableGroupId.
             

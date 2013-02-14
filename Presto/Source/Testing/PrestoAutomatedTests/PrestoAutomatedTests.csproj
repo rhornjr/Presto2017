@@ -100,7 +100,6 @@
     <Compile Include="CustomVariableGroupLogicTest.cs" />
     <Compile Include="InstallationSummaryLogicTest.cs" />
     <Compile Include="LogMessageLogicTest.cs" />
-    <Compile Include="Mocks\MockAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>

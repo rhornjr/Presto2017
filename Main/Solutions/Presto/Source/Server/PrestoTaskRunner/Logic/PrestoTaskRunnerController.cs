@@ -71,6 +71,7 @@ namespace PrestoTaskRunner.Logic
         private void Initialize()
         {
             CommonUtility.RegisterRavenDataClasses();
+            CommonUtility.RegisterRealClasses();
 
             int timerInterval = Convert.ToInt32(ConfigurationManager.AppSettings["timerInterval"], CultureInfo.InvariantCulture);
 

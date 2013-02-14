@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PrestoAutomatedTests.Mocks;
 using PrestoCommon.Entities;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;
+using PrestoCommon.Misc;
 
 namespace PrestoAutomatedTests
 {
-    
-    
     /// <summary>
     ///This is a test class for ApplicationServerTest and is intended
     ///to contain all ApplicationServerTest Unit Tests
@@ -16,6 +18,7 @@ namespace PrestoAutomatedTests
     public class ApplicationServerTest
     {
         private TestContext testContextInstance;
+        bool _enableAppServerDebugLogging = true;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -288,26 +291,23 @@ namespace PrestoAutomatedTests
             // Use Case #9 -- force installation exists AT THE APP LEVEL, and the force installation time is in the past,
             //                no installation summaries exist, and the deployment environments match.
 
-            ApplicationServer appServerAccessor = new ApplicationServer();
-            PrivateObject privateObject = new PrivateObject(appServerAccessor);
+            // Prerequisites:
+            // An app has a ForceInstallation, and that ForceInstallation environment must match the app server env.
+            // The app server must have an appWithGroup for that of our application.
 
-            // Use this app server
-            ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");  // Use server 10 because it doesn't have any installation summaries
-            // And we want to give our proxy the same ID and app group
-            appServerAccessor.Id = appServer.Id;
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
-            // Add our app to the server
-            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
+            // Use server 10 because it doesn't have any installation summaries
+            ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match
 
-            appWithValidGroup.Application.ForceInstallation = forceInstallation;
+            // Use this app and group
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
+            appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
+            PrivateObject privateObject = new PrivateObject(appServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
             Assert.AreEqual(true, actual);
         }
 
@@ -318,26 +318,24 @@ namespace PrestoAutomatedTests
             // Use Case #10 -- force installation exists AT THE APP LEVEL, and the force installation time is in the past,
             //                 no installation summaries exist, and the deployment environments *DO NOT* match.
 
-            ApplicationServer appServerAccessor = new ApplicationServer();
-            PrivateObject privateObject = new PrivateObject(appServerAccessor);
+            // Prerequisites:
+            // An app has a ForceInstallation, and that ForceInstallation environment must match the app server env.
+            // The app server must have an appWithGroup for that of our application.
 
-            // Use this app server
-            ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");  // Use server 10 because it doesn't have any installation summaries
-            // And we want to give our proxy the same ID and app group
-            appServerAccessor.Id = appServer.Id;
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
-            // Add our app to the server
-            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithValidGroup);
+            // Use server 10 because it doesn't have any installation summaries
+            ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");
 
-            ForceInstallation forceInstallation            = new ForceInstallation();
-            forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder == 2).First(); // Make sure the environments don't match
+            ForceInstallation forceInstallation               = new ForceInstallation();
+            forceInstallation.ForceInstallationTime           = DateTime.Now.AddDays(-1);
+            forceInstallation.ForceInstallationEnvironment    = // use an environment that's different than our app server's.
+                InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder != appServer.InstallationEnvironment.LogicalOrder).First();
 
-            appWithValidGroup.Application.ForceInstallation = forceInstallation;
+            // Use this app and group
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
+            appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
+            PrivateObject privateObject = new PrivateObject(appServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -348,30 +346,24 @@ namespace PrestoAutomatedTests
             // Use Case #11 -- force installation exists AT THE APP LEVEL, and the force installation time is *before* the most recent
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
 
-            ApplicationServer appServerAccessor = new ApplicationServer();
-            PrivateObject privateObject = new PrivateObject(appServerAccessor);
+            // Use server 4 because it has installation summaries
+            ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;  // So we can check the event log and see that this test passed/failed for the right reason.
 
-            // Use this app server
-            ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");  // Use server 4 because it has installation summaries
-            // And we want to give our proxy the same ID and app group
-            appServerAccessor.Id = appServer.Id;
+            // Use this app and group
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];            
 
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithNullGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithNullGroup.CustomVariableGroup = null;
-            // Add our app to the server
-            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithNullGroup);
-
-            // Get the list of InstallationStatus entities for this server.
-            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithNullGroup);
+            // Get the most recent InstallationSummary for this server.
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithGroup);
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match            
 
-            appWithNullGroup.Application.ForceInstallation = forceInstallation;
+            appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
+            PrivateObject privateObject = new PrivateObject(appServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
             Assert.AreEqual(false, actual);  // False because an installation has occurred after the force deployment time.
         }
 
@@ -381,74 +373,85 @@ namespace PrestoAutomatedTests
         {
             // Use Case #12 -- force installation exists AT THE APP LEVEL, and the force installation time is *after* the most recent
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
+            //                 The second test/assert is for when the global setting, FreezeAllInstallations, is true.
 
-            ApplicationServer appServerAccessor = new ApplicationServer();
-            PrivateObject privateObject = new PrivateObject(appServerAccessor);
+            // Use server 4 because it has installation summaries
+            ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;  // So we can check the event log and see that this test passed/failed for the right reason.
 
-            // Use this app server
-            ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");  // Use server 4 because it has installation summaries
-            // And we want to give our proxy the same ID and app group
-            appServerAccessor.Id = appServer.Id;
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithNullGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithNullGroup.CustomVariableGroup = null;
-            // Add our app to the server
-            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithNullGroup);
+            // Use this app and group
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
 
-            // Get the list of InstallationStatus entities for this server.
-            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithNullGroup);
+            // Get the most recent InstallationSummary for this server.
+            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithGroup);
 
             ForceInstallation forceInstallation            = new ForceInstallation();
             forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
+            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match            
 
-            appWithNullGroup.Application.ForceInstallation = forceInstallation;
+            appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
+            PrivateObject privateObject = new PrivateObject(appServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
             Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
+
+            // Now try it with FreezeAllInstallations true to override any installation logic.
+            GlobalSetting globalSetting = GlobalSettingLogic.GetItem();
+            if (globalSetting == null) { globalSetting = new GlobalSetting(); }
+            globalSetting.FreezeAllInstallations = true;
+            GlobalSettingLogic.Save(globalSetting);
+
+            bool actualUsingFreeze = (bool)privateObject.Invoke("FinalInstallationChecksPass", appWithGroup);
+            Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
         }
 
         [TestMethod()]
         [DeploymentItem("PrestoCommon.dll")]
         public void ApplicationShouldBeInstalledTest_UseCase13()
         {
-            // Use Case #13 -- force installation exists AT THE APP LEVEL, and the force installation time is *after* the most recent
-            //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
-            //                 However, the global setting, FreezeAllInstallations, is true.
+            // An install is not supposed to happen. Make sure the installer was not invoked.
 
-            ApplicationServer appServerAccessor = new ApplicationServer();
-            PrivateObject privateObject = new PrivateObject(appServerAccessor);
+            MockAppInstaller mockAppInstaller = new MockAppInstaller();
+            CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller);
 
-            // Use this app server
-            ApplicationServer appServer = ApplicationServerLogic.GetByName("server4");  // Use server 4 because it has installation summaries
-            // And we want to give our proxy the same ID and app group
-            appServerAccessor.Id = appServer.Id;
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithNullGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithNullGroup.CustomVariableGroup = null;
-            // Add our app to the server
-            appServerAccessor.ApplicationsWithOverrideGroup.Add(appWithNullGroup);
+            // Use server 10 because it doesn't have any installation summaries
+            ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");
 
-            // Get the list of InstallationStatus entities for this server.
-            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithNullGroup);
+            ForceInstallation forceInstallation = new ForceInstallation();
+            forceInstallation.ForceInstallationTime = DateTime.Now.AddDays(-1);
+            forceInstallation.ForceInstallationEnvironment = // use an environment that's different than our app server's.
+                InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder != appServer.InstallationEnvironment.LogicalOrder).First();
 
-            ForceInstallation forceInstallation            = new ForceInstallation();
-            forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);
-            forceInstallation.ForceInstallationEnvironment = appServerAccessor.InstallationEnvironment;  // Make sure the environment matches
+            // Use this app and group
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
+            appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            appWithNullGroup.Application.ForceInstallation = forceInstallation;
+            appServer.InstallApplications();
+            Assert.AreEqual(false, mockAppInstaller.Invoked);
+        }
 
-            // Set FreezeAllInstallations to true to override any installation logic.
-            GlobalSetting globalSetting = GlobalSettingLogic.GetItem();
-            if (globalSetting == null) { globalSetting = new GlobalSetting(); }
-            globalSetting.FreezeAllInstallations = true;
-            GlobalSettingLogic.Save(globalSetting);
+        [TestMethod()]
+        [DeploymentItem("PrestoCommon.dll")]
+        public void ApplicationShouldBeInstalledTest_UseCase14()
+        {
+            // An install is supposed to happen. Make sure the installer was invoked.
 
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
-            Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
+            MockAppInstaller mockAppInstaller = new MockAppInstaller();
+            CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller);
 
-            bool actualUsingFreeze = (bool)privateObject.Invoke("FinalInstallationChecksPass", appWithNullGroup);
-            Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
+            // Use server 10 because it doesn't have any installation summaries
+            ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");
+
+            ForceInstallation forceInstallation = new ForceInstallation();
+            forceInstallation.ForceInstallationTime = DateTime.Now.AddDays(-1);
+            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match
+
+            // Use this app and group
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
+            appWithGroup.Application.ForceInstallation = forceInstallation;
+
+            appServer.InstallApplications();
+            Assert.AreEqual(true, mockAppInstaller.Invoked);
         }
     }
 }

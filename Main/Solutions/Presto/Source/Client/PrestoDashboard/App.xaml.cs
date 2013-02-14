@@ -5,14 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using PrestoCommon.Factories;
+using Microsoft.Practices.Unity;
 using PrestoCommon.Factories.OpenFileDialog;
 using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
-using Microsoft.Practices.Unity;
-using PrestoCommon.Data.Interfaces;
-using PrestoCommon.Data.RavenDb;
 
 namespace PrestoDashboard
 {
@@ -32,6 +29,7 @@ namespace PrestoDashboard
             base.OnStartup(e);
 
             CommonUtility.RegisterRavenDataClasses();
+            CommonUtility.RegisterRealClasses();
 
             // Use a real (as opposed to mock) open file dialog.
             CommonUtility.Container.RegisterType<IOpenFileDialogService, OpenFileDialogService>();

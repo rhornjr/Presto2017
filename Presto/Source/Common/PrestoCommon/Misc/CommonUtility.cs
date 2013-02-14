@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Data.RavenDb;
 using PrestoCommon.Entities;
+using PrestoCommon.Interfaces;
 
 namespace PrestoCommon.Misc
 {
@@ -29,6 +30,13 @@ namespace PrestoCommon.Misc
             CommonUtility.Container.RegisterType<IPingRequestData,             PingRequestData>();
             CommonUtility.Container.RegisterType<IPingResponseData,            PingResponseData>();
             CommonUtility.Container.RegisterType<IInstallationEnvironmentData, InstallationEnvironmentData>();
+        }
+
+        public static void RegisterRealClasses()
+        {
+            // This is so we can make the actual app installations. When running test code, we don't
+            // want an app to actually be installed.
+            CommonUtility.Container.RegisterType<IAppInstaller, AppInstaller>();
         }
 
         public static ApplicationWithOverrideVariableGroup GetAppWithGroup(

@@ -70,7 +70,7 @@ namespace PrestoAutomatedTests
         ///A test for ImportTasks
         ///</summary>
         //[TestMethod()]
-        [DeploymentItem("PrestoViewModel.dll")]
+        //[DeploymentItem("PrestoViewModel.dll")]
         public void ImportTasksTest()
         {
             // Need this because it assigns itself as the main window in ViewModelUtility.

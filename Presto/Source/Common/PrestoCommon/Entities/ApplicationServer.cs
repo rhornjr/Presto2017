@@ -5,8 +5,9 @@ using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
-using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 
@@ -138,8 +139,7 @@ namespace PrestoCommon.Entities
 
                 LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup, this.Name));
 
-                // Final check before installing...
-                if (FinalInstallationChecksPass(appWithGroup)) { InstallApplication(appWithGroup); }
+                CommonUtility.Container.Resolve<IAppInstaller>().InstallApplication(this, appWithGroup);
             }                       
         }
 
@@ -179,6 +179,8 @@ namespace PrestoCommon.Entities
             // If there is no force installation time, then no need to install.
             if (!ForceInstallationExists(appWithGroup)) { return false; }            
             if (ForceInstallationShouldHappenBasedOnTimeAndEnvironment(appWithGroup)) { return true; }
+
+            if (FinalInstallationChecksPass(appWithGroup)) { return true; }
 
             return false;
         }              
@@ -345,31 +347,7 @@ namespace PrestoCommon.Entities
                 throw new InvalidOperationException(message);
             }
 
-            InstallApplication(appWithGroup);
-        }
-
-        private void InstallApplication(ApplicationWithOverrideVariableGroup appWithGroup)
-        {
-            InstallationSummary installationSummary = new InstallationSummary(appWithGroup, this, DateTime.Now);
-
-            InstallationResultContainer resultContainer = appWithGroup.Install(this);
-
-            installationSummary.SetResults(resultContainer, DateTime.Now);
-
-            LogAndSaveInstallationSummary(installationSummary);
-        }
-
-        private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)
-        {
-            InstallationSummaryLogic.Save(installationSummary);
-
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
-                PrestoCommonResources.ApplicationInstalled,
-                installationSummary.ApplicationWithOverrideVariableGroup.ToString(),
-                installationSummary.ApplicationServer.Name,
-                installationSummary.InstallationStart.ToString(CultureInfo.CurrentCulture),
-                installationSummary.InstallationEnd.ToString(CultureInfo.CurrentCulture),
-                installationSummary.InstallationResult.ToString()));
+            CommonUtility.Container.Resolve<IAppInstaller>().InstallApplication(this, appWithGroup);
         }
     }
 }

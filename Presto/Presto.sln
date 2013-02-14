@@ -1,11 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAFF2A9-EEB6-44B7-BC2C-FD92ECBB1A3E}"
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
 		CustomDictionary.xml = CustomDictionary.xml
 		Local.testsettings = Local.testsettings
+		Presto.vsmdi = Presto.vsmdi
 		Solution Items\SavingCodeplexCredentials.txt = Solution Items\SavingCodeplexCredentials.txt
 		Solution Items\SolutionInfo.cs = Solution Items\SolutionInfo.cs
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
@@ -119,13 +120,14 @@ Global
 		SccProjectName9 = Source/Testing/PrestoAutomatedTests
 		SccLocalPath9 = Source\\Testing\\PrestoAutomatedTests
 		SccProjectUniqueName10 = Source\\Installers\\DashboardInstaller\\DashboardInstaller.wixproj
-		SccProjectTopLevelParentUniqueName10 = Presto.sln
 		SccProjectName10 = Source/Installers/DashboardInstaller
 		SccLocalPath10 = Source\\Installers\\DashboardInstaller
 		SccProjectUniqueName11 = Source\\Installers\\SelfUpdatingServiceHostInstaller\\SelfUpdatingServiceHostInstaller.wixproj
-		SccProjectTopLevelParentUniqueName11 = Presto.sln
 		SccProjectName11 = Source/Installers/SelfUpdatingServiceHostInstaller
 		SccLocalPath11 = Source\\Installers\\SelfUpdatingServiceHostInstaller
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Presto.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -271,7 +273,5 @@ Global
 		{75344126-B6A2-4277-9EF5-99E08E147D7E} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}
 		{9E41ADBA-A55C-4F71-BF0A-463C82334B13} = {CCAFF706-DD44-49CB-8896-EADA2FD38664}
-		{75296CD9-84E4-44C5-AECF-D54C6D1ED183} = {667D14E8-2679-43D2-9E99-9727B63C306B}
-		{D45A435E-0E60-48F9-87C5-8691635681BB} = {667D14E8-2679-43D2-9E99-9727B63C306B}
 	EndGlobalSection
 EndGlobal

@@ -31,6 +31,7 @@ namespace PrestoAutomatedTests
             if (_dataPopulated) { return; }
 
             CommonUtility.RegisterRavenDataClasses();
+            //RegisterMockAppInstaller();
 
             AddInstallationEnvironments();
             AddApplications();
@@ -42,6 +43,17 @@ namespace PrestoAutomatedTests
 
             _dataPopulated = true;
         }
+
+        //private static void RegisterMockAppInstaller()
+        //{
+        //    var mockAppInstaller = new Mock<IAppInstaller>();
+            
+        //    // So we don't actually install apps when testing. Just don't do anything.
+        //    mockAppInstaller.Setup(m => m.InstallApplication(It.IsAny<ApplicationServer>(),
+        //        It.IsAny<ApplicationWithOverrideVariableGroup>()));
+
+        //    CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller.Object);
+        //}
 
         private static void AddInstallationEnvironments()
         {

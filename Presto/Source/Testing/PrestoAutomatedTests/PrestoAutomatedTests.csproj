@@ -52,6 +52,7 @@
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -99,6 +100,7 @@
     <Compile Include="CustomVariableGroupLogicTest.cs" />
     <Compile Include="InstallationSummaryLogicTest.cs" />
     <Compile Include="LogMessageLogicTest.cs" />
+    <Compile Include="Mocks\MockAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
@@ -119,6 +121,11 @@
     </None>
     <Shadow Include="Test References\PrestoViewModel.accessor" />
     <Shadow Include="Test References\PrestoCommon.accessor" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Moq\Moq.dll" />
+    <Content Include="Moq\Moq.pdb" />
+    <Content Include="Moq\Moq.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

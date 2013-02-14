@@ -148,6 +148,7 @@
     <Compile Include="Factories\OpenFileDialog\IOpenFileDialogService.cs" />
     <Compile Include="Factories\OpenFileDialog\OpenFileDialogService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Interfaces\IAppInstaller.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Logic\LogMessageLogic.cs" />
     <Compile Include="Logic\PingRequestLogic.cs" />
     <Compile Include="Logic\PingResponseLogic.cs" />
+    <Compile Include="Misc\AppInstaller.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">

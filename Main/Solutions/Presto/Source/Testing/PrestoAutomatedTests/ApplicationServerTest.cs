@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PrestoAutomatedTests.Mocks;
+using Moq;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;
@@ -411,8 +411,7 @@ namespace PrestoAutomatedTests
         {
             // An install is not supposed to happen. Make sure the installer was not invoked.
 
-            MockAppInstaller mockAppInstaller = new MockAppInstaller();
-            CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller);
+            var mockAppInstaller = RegisterMockAppInstaller();
 
             // Use server 10 because it doesn't have any installation summaries
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");
@@ -426,8 +425,9 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            appServer.InstallApplications();
-            Assert.AreEqual(false, mockAppInstaller.Invoked);
+            appServer.InstallApplications();            
+            mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -436,8 +436,7 @@ namespace PrestoAutomatedTests
         {
             // An install is supposed to happen. Make sure the installer was invoked.
 
-            MockAppInstaller mockAppInstaller = new MockAppInstaller();
-            CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller);
+            var mockAppInstaller = RegisterMockAppInstaller();
 
             // Use server 10 because it doesn't have any installation summaries
             ApplicationServer appServer = ApplicationServerLogic.GetByName("server10");
@@ -451,7 +450,21 @@ namespace PrestoAutomatedTests
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
             appServer.InstallApplications();
-            Assert.AreEqual(true, mockAppInstaller.Invoked);
+            mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Once());
+        }
+
+        private static Mock<IAppInstaller> RegisterMockAppInstaller()
+        {
+            var mockAppInstaller = new Mock<IAppInstaller>();
+
+            // So we don't actually install apps when testing. Just don't do anything.
+            mockAppInstaller.Setup(m => m.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()));
+
+            CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller.Object);
+
+            return mockAppInstaller;
         }
     }
 }

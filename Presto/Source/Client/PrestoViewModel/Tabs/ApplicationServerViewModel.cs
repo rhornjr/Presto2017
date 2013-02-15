@@ -25,7 +25,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
-        private List<InstallationEnvironment> _deploymentEnvironments;
+        private List<InstallationEnvironment> _installationEnvironments;
         private PrestoObservableCollection<ApplicationServer> _applicationServers = new PrestoObservableCollection<ApplicationServer>();
         private ApplicationServer _selectedApplicationServer;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
@@ -106,15 +106,15 @@ namespace PrestoViewModel.Tabs
         /// Gets the deployment environments.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-        public List<InstallationEnvironment> DeploymentEnvironments
+        public List<InstallationEnvironment> InstallationEnvironments
         {
             get
             {
-                if (this._deploymentEnvironments == null)
+                if (this._installationEnvironments == null)
                 {
-                    this._deploymentEnvironments = InstallationEnvironmentLogic.GetAll().ToList();
+                    this._installationEnvironments = InstallationEnvironmentLogic.GetAll().ToList();
                 }
-                return this._deploymentEnvironments;
+                return this._installationEnvironments;
             }
         }
 
@@ -152,6 +152,7 @@ namespace PrestoViewModel.Tabs
                 this.NotifyPropertyChanged(() => this.AppServerIsSelected);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerCustomVariableGroups);
+                this.NotifyPropertyChanged(() => this.SelectedApplicationServerInstallationEnvironment);
             }
         }
 
@@ -174,6 +175,20 @@ namespace PrestoViewModel.Tabs
             {
                 if (this.SelectedApplicationServer == null || this.SelectedApplicationServer.CustomVariableGroups == null) { return null; }
                 return this.SelectedApplicationServer.CustomVariableGroups.OrderBy(x => x.Name);
+            }
+        }
+
+        public InstallationEnvironment SelectedApplicationServerInstallationEnvironment
+        {
+            get
+            {
+                return this.InstallationEnvironments.Where(
+                    x => x.Id == this.SelectedApplicationServer.InstallationEnvironment.Id).First();
+            }
+
+            set
+            {
+                this.SelectedApplicationServer.InstallationEnvironment = value;
             }
         }
 
@@ -443,9 +458,13 @@ namespace PrestoViewModel.Tabs
         {
             string newServerName = "New server - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
 
-            this.ApplicationServers.Add(new ApplicationServer() { Name = newServerName });
+            ApplicationServer server = new ApplicationServer();
+            server.Name = newServerName;
+            //server.InstallationEnvironment = this.InstallationEnvironments[0]; // Use first one as default.
 
-            this.SelectedApplicationServer = this.ApplicationServers.Where(server => server.Name == newServerName).FirstOrDefault();
+            this.ApplicationServers.Add(server);
+
+            this.SelectedApplicationServer = this.ApplicationServers.Where(x => x.Name == newServerName).FirstOrDefault();
         }        
 
         private void DeleteServer()
@@ -465,7 +484,14 @@ namespace PrestoViewModel.Tabs
         }
 
         private bool SaveServer()
-        {                        
+        {
+            if (this.SelectedApplicationServer.InstallationEnvironment == null)
+            {
+                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.ServerNotSavedEnvironmentMissing;
+                ShowUserMessage(ViewModelResources.ServerNotSavedEnvironmentMissing, "Missing Environment");
+                return false;
+            }
+              
             try
             {
                 ApplicationServerLogic.Save(this.SelectedApplicationServer);

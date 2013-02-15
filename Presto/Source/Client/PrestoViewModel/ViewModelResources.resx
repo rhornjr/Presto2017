@@ -189,4 +189,7 @@
   <data name="ItemCannotBeDeletedCaption" xml:space="preserve">
     <value>Cannot Delete</value>
   </data>
+  <data name="ServerNotSavedEnvironmentMissing" xml:space="preserve">
+    <value>Server not saved because an environment was not selected.</value>
+  </data>
 </root>

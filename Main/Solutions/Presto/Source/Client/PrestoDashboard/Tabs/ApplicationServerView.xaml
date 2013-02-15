@@ -20,7 +20,7 @@
 
         <CollectionViewSource x:Key="cvs" Source="{Binding ApplicationServers}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="DeploymentEnvironment"/>
+                <PropertyGroupDescription PropertyName="InstallationEnvironment"/>
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
@@ -90,8 +90,8 @@
                 <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource StandardLabel}" Content="Environment: "/>
 
                 <DockPanel Grid.Column="1" Grid.Row="3">
-                    <ComboBox ItemsSource="{Binding DeploymentEnvironments}"
-                              SelectedItem="{Binding SelectedApplicationServer.DeploymentEnvironment}" Width="110"
+                    <ComboBox ItemsSource="{Binding InstallationEnvironments}"
+                              SelectedItem="{Binding SelectedApplicationServerInstallationEnvironment}" Width="110"
                               HorizontalAlignment="Left"/>
                     <CheckBox Style="{StaticResource StandardCheckBox}" Content="Enable debug logging" IsChecked="{Binding SelectedApplicationServer.EnableDebugLogging}"
                               FlowDirection="LeftToRight" VerticalAlignment="Center" Width="140" HorizontalAlignment="Right"/>

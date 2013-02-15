@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Practices.Unity;
+using PrestoCommon.Entities;
 using PrestoCommon.Factories.OpenFileDialog;
+using PrestoCommon.Logic;
 using PrestoCommon.Misc;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
@@ -16,7 +18,7 @@ namespace PrestoDashboard
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Application.Startup"/> event.
@@ -35,6 +37,40 @@ namespace PrestoDashboard
             CommonUtility.Container.RegisterType<IOpenFileDialogService, OpenFileDialogService>();
 
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
+
+            EnsureInitialNecessaryDataExists();
+        }
+
+        private static void EnsureInitialNecessaryDataExists()
+        {
+            PossiblyAddInstallationEnvironments();
+        }
+
+        private static void PossiblyAddInstallationEnvironments()
+        {
+            List<InstallationEnvironment> environments = InstallationEnvironmentLogic.GetAll().ToList();
+
+            if (environments.Count > 0) { return; }
+
+            AddInstallationEnvironment("Development", 1);
+            AddInstallationEnvironment("QA", 2);
+            AddInstallationEnvironment("Staging", 3);
+            AddInstallationEnvironment("Production", 4);
+        }
+
+        private static void AddInstallationEnvironment(string name, int logicalOrder)
+        {
+            InstallationEnvironment env = new InstallationEnvironment();
+            env.Name = name;
+            env.LogicalOrder = logicalOrder;
+            InstallationEnvironmentLogic.Save(env);
+
+            string logMessage = string.Format(CultureInfo.CurrentCulture,
+                "Created environment [{0}] with logical order of [{1}]",
+                env.Name,
+                env.LogicalOrder);
+
+            LogMessageLogic.SaveLogMessage(logMessage);
         }
 
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -47,7 +83,7 @@ namespace PrestoDashboard
             
             e.Handled = true;
             
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private static ViewLoader RegisterViewModelsAndTypes()

@@ -168,6 +168,6 @@ namespace PrestoCommon.Data.RavenDb
             }
 
             return documentStore;
-        }
+        }       
     }
 }

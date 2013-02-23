@@ -32,7 +32,7 @@ namespace PrestoAutomatedTests
 
             CommonUtility.RegisterRavenDataClasses();
 
-            AddInstallationEnvironments();
+            PossiblyAddInstallationEnvironments();
             AddApplications();
             AddCustomVariableGroups();
             AddAppServers();
@@ -43,8 +43,12 @@ namespace PrestoAutomatedTests
             _dataPopulated = true;
         }
 
-        private static void AddInstallationEnvironments()
+        internal static void PossiblyAddInstallationEnvironments()
         {
+            List<InstallationEnvironment> environments = InstallationEnvironmentLogic.GetAll().ToList();
+
+            if (environments.Count > 0) { return; }
+
             AddInstallationEnvironment("Development", 1);
             AddInstallationEnvironment("QA", 2);
             AddInstallationEnvironment("Staging", 3);

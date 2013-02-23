@@ -43,7 +43,31 @@ namespace PrestoDashboard
 
         private static void EnsureInitialNecessaryDataExists()
         {
+            PossiblyAddGlobalSetting();
             PossiblyAddInstallationEnvironments();
+        }
+
+        private static void PossiblyAddGlobalSetting()
+        {
+            GlobalSetting globalSetting = GlobalSettingLogic.GetItem();
+
+            if (globalSetting != null) { return; }
+
+            AddGlobalSetting();
+        }
+
+        private static void AddGlobalSetting()
+        {
+            GlobalSetting globalSetting = new GlobalSetting();
+            globalSetting.FreezeAllInstallations = false;
+
+            GlobalSettingLogic.Save(globalSetting);
+
+            string logMessage = string.Format(CultureInfo.CurrentCulture,
+                "Global setting didn't exist, so it was created with Freeze All Installations set to [{0}].",
+                globalSetting.FreezeAllInstallations);
+
+            LogMessageLogic.SaveLogMessage(logMessage);
         }
 
         private static void PossiblyAddInstallationEnvironments()

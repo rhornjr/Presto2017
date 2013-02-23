@@ -20,22 +20,6 @@
       </WebTestRunConfiguration>
     </TestTypeSpecific>
     <AgentRule name="LocalMachineDefaultRole">
-      <DataCollectors>
-        <DataCollector uri="datacollector://microsoft/CodeCoverage/1.0" assemblyQualifiedName="Microsoft.VisualStudio.TestTools.CodeCoverage.CoveragePlugIn, Microsoft.VisualStudio.QualityTools.Plugins.CodeCoverage, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" friendlyName="Code Coverage">
-          <Configuration>
-            <CodeCoverage xmlns="">
-              <Regular>
-                <CodeCoverageItem binaryFile="Source\Common\PrestoCommon\bin\Debug\PrestoCommon.dll" pdbFile="Source\Common\PrestoCommon\bin\Debug\PrestoCommon.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="Source\Server\PrestoServerCommon\bin\Debug\PrestoServerCommon.dll" pdbFile="Source\Server\PrestoServerCommon\bin\Debug\PrestoServerCommon.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="Source\Server\PrestoTaskRunner\bin\Debug\PrestoTaskRunner.exe" pdbFile="Source\Server\PrestoTaskRunner\bin\Debug\PrestoTaskRunner.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="Source\Client\PrestoViewModel\bin\Debug\PrestoViewModel.dll" pdbFile="Source\Client\PrestoViewModel\bin\Debug\PrestoViewModel.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="Source\Server\SelfUpdatingServiceHost\bin\Debug\SelfUpdatingServiceHost.exe" pdbFile="Source\Server\SelfUpdatingServiceHost\bin\Debug\SelfUpdatingServiceHost.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="Source\Testing\PrestoAutomatedTests\bin\Debug\PrestoAutomatedTests.dll" pdbFile="Source\Testing\PrestoAutomatedTests\bin\Debug\PrestoAutomatedTests.pdb" instrumentInPlace="true" />
-              </Regular>
-            </CodeCoverage>
-          </Configuration>
-        </DataCollector>
-      </DataCollectors>
     </AgentRule>
   </Execution>
 </TestSettings>

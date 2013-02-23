@@ -182,6 +182,8 @@ namespace PrestoViewModel.Tabs
         {
             get
             {
+                if (this.SelectedApplicationServer == null) { return null; }
+
                 return this.InstallationEnvironments.Where(
                     x => x.Id == this.SelectedApplicationServer.InstallationEnvironment.Id).First();
             }

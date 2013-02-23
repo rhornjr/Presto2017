@@ -170,6 +170,17 @@ namespace PrestoCommon.Entities
 
         private bool ApplicationShouldBeInstalled(ApplicationWithOverrideVariableGroup appWithGroup)
         {
+            if (IndividualChecksPass(appWithGroup) == false) { return false; }
+
+            // This could be the first check in this method because if the freeze is set, it doesn't matter what the other conditions are.
+            // However, we want this last, so we can view the logs for what would have happened even if the freeze was set.
+            if (FinalInstallationChecksPass(appWithGroup)) { return true; }
+
+            return false;
+        }
+
+        private bool IndividualChecksPass(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
             if (AppGroupEnabled(appWithGroup) == false) { return false; }
 
             // This is forcing an APPLICATION SERVER / APP GROUP instance
@@ -177,13 +188,11 @@ namespace PrestoCommon.Entities
 
             // This is forcing an APPLICATION
             // If there is no force installation time, then no need to install.
-            if (!ForceInstallationExists(appWithGroup)) { return false; }            
+            if (!ForceInstallationExists(appWithGroup)) { return false; }
             if (ForceInstallationShouldHappenBasedOnTimeAndEnvironment(appWithGroup)) { return true; }
 
-            if (FinalInstallationChecksPass(appWithGroup)) { return true; }
-
             return false;
-        }              
+        }
 
         private bool AppGroupEnabled(ApplicationWithOverrideVariableGroup appWithGroup)
         {

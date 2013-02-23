@@ -79,9 +79,12 @@ namespace PrestoAutomatedTests
             // Use Case #1 -- app group is not enabled
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
             
             // If disabled, don't install.
             ApplicationWithOverrideVariableGroup appWithGroup = new ApplicationWithOverrideVariableGroup() { Enabled = false };
+
+            SetGlobalFreeze(false);
 
             PrivateObject privateObject = new PrivateObject(appServer);
             bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
@@ -96,6 +99,7 @@ namespace PrestoAutomatedTests
             //             -- with *null* custom variable group
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithNullGroup = appServer.ApplicationsWithOverrideGroup[0];
@@ -103,6 +107,8 @@ namespace PrestoAutomatedTests
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithNullGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+
+            SetGlobalFreeze(false);
 
             PrivateObject privateObject = new PrivateObject(appServer);
             bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
@@ -119,6 +125,7 @@ namespace PrestoAutomatedTests
             //             -- with *valid* custom variable group
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
@@ -127,6 +134,8 @@ namespace PrestoAutomatedTests
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithValidGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+
+            SetGlobalFreeze(false);
 
             PrivateObject privateObject = new PrivateObject(appServer);
             bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
@@ -142,11 +151,14 @@ namespace PrestoAutomatedTests
             // Use Case #4 -- app group does not exist in the server's ApplicationWithGroupToForceInstallList
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
             appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
-            
+
+            SetGlobalFreeze(false);
+
             // Note: We are *not* adding our app to the *force install* list of the server
             PrivateObject privateObject = new PrivateObject(appServer);
             bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
@@ -160,23 +172,26 @@ namespace PrestoAutomatedTests
             // Use Case #5 -- app exists in the server's ApplicationWithGroupToForceInstallList,
             //                but the custom variable is different
 
-            ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
+            string rootName = "UseCase05";
 
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
+            TestHelper.CreateAndPersistEntitiesForAUseCase(rootName, 0);
 
-            // Add an app, with the same app ID, but different group ID, to the force install list of the server
+            ApplicationServer appServer = ApplicationServerLogic.GetByName(TestHelper.GetServerName(rootName));
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
+
             ApplicationWithOverrideVariableGroup appWithDifferentGroup = new ApplicationWithOverrideVariableGroup();
-            appWithDifferentGroup.Application = appWithValidGroup.Application;
-            appWithDifferentGroup.CustomVariableGroup = null;
+            appWithDifferentGroup.Application = appServer.ApplicationsWithOverrideGroup[0].Application;
+            // Set the group to something that doesn't already exist within the server...
+            appWithDifferentGroup.CustomVariableGroup = TestHelper.CreateCustomVariableGroup(rootName + " " + Guid.NewGuid().ToString());
 
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithDifferentGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
 
+            SetGlobalFreeze(false);
+
             PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithDifferentGroup);
             Assert.AreEqual(false, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -189,20 +204,29 @@ namespace PrestoAutomatedTests
             // Use Case #6 -- app does not exist in the server's ApplicationWithGroupToForceInstallList,
             //                but the custom variable does.
 
-            ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
+            string rootName = "UseCase06";
 
-            // Use this app
-            ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
-            
-            // Add an app, with a different app ID, but the same group ID, to the force install list of the server
-            ApplicationWithOverrideVariableGroup appWithDifferentAppId = new ApplicationWithOverrideVariableGroup();
-            appWithDifferentAppId.Application = ApplicationLogic.GetById("Applications/3");
-            appWithDifferentAppId.CustomVariableGroup = appWithValidGroup.CustomVariableGroup;
+            TestHelper.CreateAndPersistEntitiesForAUseCase(rootName, 0);
+
+            ApplicationServer appServer = ApplicationServerLogic.GetByName(TestHelper.GetServerName(rootName));
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
+
+            appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroup = TestHelper.CreateCustomVariableGroup(rootName);
+            ApplicationServerLogic.Save(appServer);  // To save with a valid group.
+
+            // Create a new app group with a new app, but an existing group
+            ApplicationWithOverrideVariableGroup appWithValidGroup = new ApplicationWithOverrideVariableGroup();
+            appWithValidGroup.Application = TestHelper.CreateApp(rootName + " " + Guid.NewGuid().ToString());
+            appWithValidGroup.CustomVariableGroup = appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroup;
+
+            // Set the app to something that doesn't already exist within the server...
+            // Leave the group alone because it already exists.
 
             // Add our app to the force install list of the server
-            ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithDifferentAppId);
+            ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithValidGroup);
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+
+            SetGlobalFreeze(false);
 
             PrivateObject privateObject = new PrivateObject(appServer);
             bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
@@ -217,13 +241,12 @@ namespace PrestoAutomatedTests
         {
             // Use Case #7 -- no force installation exists AT THE APP LEVEL
 
-            ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            
-            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithGroup.Application.ForceInstallation = null;
+            // It doesn't really matter what we set here. We're getting rid of the ForceInstallation, so the app shouldn't get installed.
+            TestEntityContainer container = CreateTestEntityContainer("UseCase07", x => DateTime.Now, true, false, 0);
+            container.AppWithGroup.Application.ForceInstallation = null;
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
+            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -234,18 +257,10 @@ namespace PrestoAutomatedTests
             // Use Case #8 -- force installation exists AT THE APP LEVEL, but the force installation time is in the future,
             //                and no installation summaries exist, and the deployment environments match.
 
-            ApplicationServer appServer = GetAppServerWithNoInstallationSummariesFromDb();
+            TestEntityContainer container = CreateTestEntityContainer("UseCase08", x => DateTime.Now.AddDays(10), true, false, 0);
 
-            ForceInstallation forceInstallation            = new ForceInstallation();
-            forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(10);
-            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match
-
-            // Use this app and group
-            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithGroup.Application.ForceInstallation = forceInstallation;
-
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
+            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -256,22 +271,10 @@ namespace PrestoAutomatedTests
             // Use Case #9 -- force installation exists AT THE APP LEVEL, and the force installation time is in the past,
             //                no installation summaries exist, and the deployment environments match.
 
-            // Prerequisites:
-            // An app has a ForceInstallation, and that ForceInstallation environment must match the app server env.
-            // The app server must have an appWithGroup for that of our application.
+            TestEntityContainer container = CreateTestEntityContainer("UseCase09", x => DateTime.Now.AddDays(-1), true, false, 0);
 
-            ApplicationServer appServer = GetAppServerWithNoInstallationSummariesFromDb();
-
-            ForceInstallation forceInstallation            = new ForceInstallation();
-            forceInstallation.ForceInstallationTime        = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match
-
-            // Use this app and group
-            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithGroup.Application.ForceInstallation = forceInstallation;
-
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
+            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
             Assert.AreEqual(true, actual);
         }
 
@@ -282,23 +285,10 @@ namespace PrestoAutomatedTests
             // Use Case #10 -- force installation exists AT THE APP LEVEL, and the force installation time is in the past,
             //                 no installation summaries exist, and the deployment environments *DO NOT* match.
 
-            // Prerequisites:
-            // An app has a ForceInstallation, and that ForceInstallation environment must match the app server env.
-            // The app server must have an appWithGroup for that of our application.
+            TestEntityContainer container = CreateTestEntityContainer("UseCase10", x => DateTime.Now.AddDays(-1), false, false, 0);
 
-            ApplicationServer appServer = GetAppServerWithNoInstallationSummariesFromDb();
-
-            ForceInstallation forceInstallation               = new ForceInstallation();
-            forceInstallation.ForceInstallationTime           = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment    = // use an environment that's different than our app server's.
-                InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder != appServer.InstallationEnvironment.LogicalOrder).First();
-
-            // Use this app and group
-            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithGroup.Application.ForceInstallation = forceInstallation;
-
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
+            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -309,23 +299,11 @@ namespace PrestoAutomatedTests
             // Use Case #11 -- force installation exists AT THE APP LEVEL, and the force installation time is *before* the most recent
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
 
-            ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;  // So we can check the event log and see that this test passed/failed for the right reason.
+            TestEntityContainer container = CreateTestEntityContainer("UseCase11", x => x.InstallationStart.AddSeconds(-86400),
+                true, false, 5);  // 86400 seconds in a day
 
-            // Use this app and group
-            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];            
-
-            // Get the most recent InstallationSummary for this server.
-            InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithGroup);
-
-            ForceInstallation forceInstallation            = new ForceInstallation();
-            forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match            
-
-            appWithGroup.Application.ForceInstallation = forceInstallation;
-
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
+            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
             Assert.AreEqual(false, actual);  // False because an installation has occurred after the force deployment time.
         }
 
@@ -337,33 +315,79 @@ namespace PrestoAutomatedTests
             //                 installation summary time, *installation summaries exist*, and the deployment environments *match*.
             //                 The second test/assert is for when the global setting, FreezeAllInstallations, is true.
 
-            ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;  // So we can check the event log and see that this test passed/failed for the right reason.
+            TestEntityContainer container = CreateTestEntityContainer("UseCase12", x => x.InstallationStart.AddSeconds(1), true, false, 5);
+
+            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
+            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
+
+            /*************************************************************************************
+             * Now try it with FreezeAllInstallations true to override any installation logic.
+             *************************************************************************************/
+
+            SetGlobalFreeze(true);
+
+            bool actualUsingFreeze = (bool)privateObject.Invoke("FinalInstallationChecksPass", container.AppWithGroup);
+            Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
+        }
+
+        private TestEntityContainer CreateTestEntityContainer(string rootName,
+            Func<InstallationSummary, DateTime> forceInstallationTimeFunc,
+            bool forceInstallEnvironmentShouldMatch, bool freezeAllInstallations, int numberOfInstallationSummariesToCreate)
+        {
+            // Creates all of the entities for a particular use case and stores them in a container. This is done
+            // because many of the methods in this class do this same thing.
+
+            SetGlobalFreeze(freezeAllInstallations);
+
+            TestHelper.CreateAndPersistEntitiesForAUseCase(rootName, numberOfInstallationSummariesToCreate);
+
+            ApplicationServer appServer = ApplicationServerLogic.GetByName(TestHelper.GetServerName(rootName));
+
+            // So we can check the event log and see that this test passed/failed for the right reason.
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app and group
-            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
+            string appName = TestHelper.GetAppName(rootName);
+            ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == appName).First();
 
             // Get the most recent InstallationSummary for this server.
             InstallationSummary mostRecentInstallationSummary = InstallationSummaryLogic.GetMostRecentByServerAppAndGroup(appServer, appWithGroup);
 
-            ForceInstallation forceInstallation            = new ForceInstallation();
-            forceInstallation.ForceInstallationTime        = mostRecentInstallationSummary.InstallationStart.AddSeconds(1);
-            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match            
+            ForceInstallation forceInstallation     = new ForceInstallation();
+            forceInstallation.ForceInstallationTime = forceInstallationTimeFunc.Invoke(mostRecentInstallationSummary);
+
+            if (forceInstallEnvironmentShouldMatch)
+            {
+                forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;
+            }
+            else
+            {
+                forceInstallation.ForceInstallationEnvironment =
+                    InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder != appServer.InstallationEnvironment.LogicalOrder).First();
+            }
 
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
-            Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
+            TestEntityContainer container = new TestEntityContainer();
 
-            // Now try it with FreezeAllInstallations true to override any installation logic.
+            container.ApplicationServer             = appServer;
+            container.AppWithGroup                  = appWithGroup;
+            container.ForceInstallation             = forceInstallation;
+            container.MostRecentInstallationSummary = mostRecentInstallationSummary;
+
+            return container;
+        }
+
+        private static void SetGlobalFreeze(bool shouldFreeze)
+        {
             GlobalSetting globalSetting = GlobalSettingLogic.GetItem();
-            if (globalSetting == null) { globalSetting = new GlobalSetting(); }
-            globalSetting.FreezeAllInstallations = true;
-            GlobalSettingLogic.Save(globalSetting);
 
-            bool actualUsingFreeze = (bool)privateObject.Invoke("FinalInstallationChecksPass", appWithGroup);
-            Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
+            if (globalSetting == null) { globalSetting = new GlobalSetting(); }
+
+            globalSetting.FreezeAllInstallations = shouldFreeze;
+
+            GlobalSettingLogic.Save(globalSetting);
         }
 
         [TestMethod()]
@@ -371,6 +395,8 @@ namespace PrestoAutomatedTests
         public void ApplicationShouldBeInstalledTest_UseCase13()
         {
             // An install is not supposed to happen. Make sure the installer was not invoked.
+
+            SetGlobalFreeze(false);
 
             var mockAppInstaller = RegisterMockAppInstaller();
 
@@ -395,6 +421,8 @@ namespace PrestoAutomatedTests
         public void ApplicationShouldBeInstalledTest_UseCase14()
         {
             // An install is supposed to happen. Make sure the installer was invoked.
+
+            SetGlobalFreeze(false);
 
             var mockAppInstaller = RegisterMockAppInstaller();
 

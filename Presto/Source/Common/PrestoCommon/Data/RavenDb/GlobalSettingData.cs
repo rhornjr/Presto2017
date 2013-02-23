@@ -18,7 +18,9 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<GlobalSetting>(() =>
                 {
                     GlobalSetting globalSetting = QuerySingleResultAndSetEtag(session =>
-                        session.Query<GlobalSetting>().FirstOrDefault()) as GlobalSetting;
+                        session.Query<GlobalSetting>()
+                        .Customize(x => x.WaitForNonStaleResults())
+                        .FirstOrDefault()) as GlobalSetting;
 
                     return globalSetting;
                 });

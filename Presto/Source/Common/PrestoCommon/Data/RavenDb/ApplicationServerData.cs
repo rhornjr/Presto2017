@@ -26,7 +26,7 @@ namespace PrestoCommon.Data.RavenDb
                         .Include(x => x.ApplicationIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                         .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                        .Include(x => x.InstallationEnvironment)
+                        .Include(x => x.InstallationEnvironmentId)
                         .Take(int.MaxValue)
                         ).AsEnumerable().Cast<ApplicationServer>();
 
@@ -57,7 +57,8 @@ namespace PrestoCommon.Data.RavenDb
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                    .Include(x => x.InstallationEnvironment)
+                    .Include(x => x.InstallationEnvironmentId)
+                    .Customize(x => x.WaitForNonStaleResults())
                     .Where(server => server.Name == serverName).FirstOrDefault())
                     as ApplicationServer;
 
@@ -77,7 +78,7 @@ namespace PrestoCommon.Data.RavenDb
                     .Include(x => x.ApplicationIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
                     .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                    .Include(x => x.InstallationEnvironment)
+                    .Include(x => x.InstallationEnvironmentId)
                     .Where(server => server.Id == id).FirstOrDefault())
                     as ApplicationServer;
 

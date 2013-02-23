@@ -14,6 +14,7 @@ namespace PrestoCommon.Data.RavenDb
             {
                 IEnumerable<InstallationEnvironment> items = QueryAndSetEtags(session =>
                     session.Query<InstallationEnvironment>()
+                    .Customize(x => x.WaitForNonStaleResults())
                     .Take(int.MaxValue)
                     ).AsEnumerable().Cast<InstallationEnvironment>();
 

@@ -366,7 +366,7 @@ namespace PrestoViewModel.Tabs
                 string.Format(CultureInfo.CurrentCulture,
                 "{0} selected to be installed in {1} at {2}.",
                 this.SelectedApplication,
-                this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
+                this.SelectedApplication.ForceInstallation.ForceInstallEnvironment,
                 this.SelectedApplication.ForceInstallation.ForceInstallationTime.ToString()));
         }
 
@@ -378,7 +378,7 @@ namespace PrestoViewModel.Tabs
                 string.Format(CultureInfo.CurrentCulture,
                 "Force installation removed: {0} in {1} at {2}.",
                 this.SelectedApplication,
-                this.SelectedApplication.ForceInstallation.ForceInstallationEnvironment,
+                this.SelectedApplication.ForceInstallation.ForceInstallEnvironment,
                 this.SelectedApplication.ForceInstallation.ForceInstallationTime.ToString()));
 
             this.SelectedApplication.ForceInstallation = null;

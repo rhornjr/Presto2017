@@ -64,7 +64,7 @@ namespace PrestoViewModel.Windows
             {
                 if (this._deploymentEnvironments == null)
                 {
-                    this._deploymentEnvironments = InstallationEnvironmentLogic.GetAll().ToList();
+                    this._deploymentEnvironments = InstallationEnvironmentLogic.GetAll().OrderBy(x => x.LogicalOrder).ToList();
                 }
                 return this._deploymentEnvironments;
             }
@@ -89,7 +89,7 @@ namespace PrestoViewModel.Windows
             if (DesignMode.IsInDesignMode) { return; }
 
             // Set the default environment to whatever was used last.
-            if (forceInstallation != null) { this.SelectedDeploymentEnvironment = forceInstallation.ForceInstallationEnvironment; }
+            if (forceInstallation != null) { this.SelectedDeploymentEnvironment = forceInstallation.ForceInstallEnvironment; }
 
             Initialize();            
         }
@@ -105,12 +105,13 @@ namespace PrestoViewModel.Windows
 
         private bool ForceInstallationTimeIsValid()
         {
-            return this.ForceInstallation.ForceInstallationTime != null;
+            return this.ForceInstallation.ForceInstallationTime != null &&
+                this.SelectedDeploymentEnvironment != null;
         }
 
         private void Save()
         {
-            this.ForceInstallation.ForceInstallationEnvironment = this.SelectedDeploymentEnvironment;
+            this.ForceInstallation.ForceInstallEnvironment = this.SelectedDeploymentEnvironment;
             this.Close();
         }
 

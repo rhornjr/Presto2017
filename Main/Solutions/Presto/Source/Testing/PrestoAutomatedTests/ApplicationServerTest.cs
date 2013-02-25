@@ -359,11 +359,11 @@ namespace PrestoAutomatedTests
 
             if (forceInstallEnvironmentShouldMatch)
             {
-                forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;
+                forceInstallation.ForceInstallEnvironment = appServer.InstallationEnvironment;
             }
             else
             {
-                forceInstallation.ForceInstallationEnvironment =
+                forceInstallation.ForceInstallEnvironment =
                     InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder != appServer.InstallationEnvironment.LogicalOrder).First();
             }
 
@@ -404,7 +404,7 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation = new ForceInstallation();
             forceInstallation.ForceInstallationTime = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = // use an environment that's different than our app server's.
+            forceInstallation.ForceInstallEnvironment = // use an environment that's different than our app server's.
                 InstallationEnvironmentLogic.GetAll().Where(x => x.LogicalOrder != appServer.InstallationEnvironment.LogicalOrder).First();
 
             // Use this app and group
@@ -430,7 +430,7 @@ namespace PrestoAutomatedTests
 
             ForceInstallation forceInstallation = new ForceInstallation();
             forceInstallation.ForceInstallationTime = DateTime.Now.AddDays(-1);
-            forceInstallation.ForceInstallationEnvironment = appServer.InstallationEnvironment;  // Make environments match
+            forceInstallation.ForceInstallEnvironment = appServer.InstallationEnvironment;  // Make environments match
 
             // Use this app and group
             ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];

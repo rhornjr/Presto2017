@@ -5,7 +5,7 @@ namespace PrestoCommon.Entities
     public class ForceInstallation : EntityBase
     {
         private DateTime? _forceInstallationTime;
-        private InstallationEnvironment _forceInstallationEnvironment;
+        private InstallationEnvironment _forceInstallEnvironment;
 
         public DateTime? ForceInstallationTime
         {
@@ -18,20 +18,20 @@ namespace PrestoCommon.Entities
             }
         }
 
-        public InstallationEnvironment ForceInstallationEnvironment
+        public InstallationEnvironment ForceInstallEnvironment
         {
-            get { return this._forceInstallationEnvironment; }
+            get { return this._forceInstallEnvironment; }
 
             set
             {
-                this._forceInstallationEnvironment = value;
-                NotifyPropertyChanged(() => this.ForceInstallationEnvironment);
+                this._forceInstallEnvironment = value;
+                NotifyPropertyChanged(() => this.ForceInstallEnvironment);
             }
         }
 
         public override string ToString()
         {
-            return this.ForceInstallationTime + " - " + this.ForceInstallationEnvironment.ToString();
+            return this.ForceInstallationTime + " - " + this.ForceInstallEnvironment.ToString();
         }
     }
 }

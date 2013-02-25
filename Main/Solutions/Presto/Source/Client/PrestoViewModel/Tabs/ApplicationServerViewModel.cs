@@ -112,7 +112,7 @@ namespace PrestoViewModel.Tabs
             {
                 if (this._installationEnvironments == null)
                 {
-                    this._installationEnvironments = InstallationEnvironmentLogic.GetAll().ToList();
+                    this._installationEnvironments = InstallationEnvironmentLogic.GetAll().OrderBy(x => x.LogicalOrder).ToList();
                 }
                 return this._installationEnvironments;
             }

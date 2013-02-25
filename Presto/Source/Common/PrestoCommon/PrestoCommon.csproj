@@ -140,6 +140,7 @@
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperInstallingServer.cs" />
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperThisComputer.cs" />
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperUtc.cs" />
+    <Compile Include="Enums\DeploymentEnvironment.cs" />
     <Compile Include="Enums\InstallationResult.cs" />
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="Exceptions\CustomVariableExistsMoreThanOnceException.cs" />

@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
+using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
@@ -65,6 +66,9 @@ namespace PrestoCommon.Entities
         public bool EnableDebugLogging { get; set; }
 
         public string InstallationEnvironmentId { get; set; }
+
+        // ToDo: Remove this after migrating the data to InstallationEnvironment
+        public DeploymentEnvironment DeploymentEnvironment { get; set; }
 
         [JsonIgnore]
         public InstallationEnvironment InstallationEnvironment { get; set; }
@@ -126,21 +130,28 @@ namespace PrestoCommon.Entities
             // If we find an app that needs to be installed, install it.
             foreach (ApplicationWithOverrideVariableGroup appWithGroup in this.ApplicationsWithOverrideGroup)
             {
-                if (!ApplicationShouldBeInstalled(appWithGroup)) { continue; }
-                
-                // If this was a force install, remove it, so we don't keep trying to install it repeatedly.
-                ServerForceInstallation forceInstallation = this.GetFromForceInstallList(appWithGroup);
-                
-                if (forceInstallation != null)
-                {
-                    this.ForceInstallationsToDo.Remove(forceInstallation);  // Remove so we don't install again.
-                    ApplicationServerLogic.RemoveForceInstallation(forceInstallation);
-                }
+                bool shouldInstall = ApplicationShouldBeInstalled(appWithGroup);
+
+                RemoveForceInstallation(appWithGroup);
+
+                if (!shouldInstall) { continue; }
 
                 LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, PrestoCommonResources.AppWillBeInstalledOnAppServer, appWithGroup, this.Name));
 
                 CommonUtility.Container.Resolve<IAppInstaller>().InstallApplication(this, appWithGroup);
             }                       
+        }
+
+        private void RemoveForceInstallation(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            // If this was a force install, remove it, so we don't keep trying to install it repeatedly.
+            ServerForceInstallation forceInstallation = this.GetFromForceInstallList(appWithGroup);
+
+            if (forceInstallation != null)
+            {
+                this.ForceInstallationsToDo.Remove(forceInstallation);  // Remove so we don't install again.
+                ApplicationServerLogic.RemoveForceInstallation(forceInstallation);
+            }
         }
 
         private bool FinalInstallationChecksPass(ApplicationWithOverrideVariableGroup appWithGroup)
@@ -293,7 +304,7 @@ namespace PrestoCommon.Entities
             if (mostRecentInstallationSummary == null)
             {
                 shouldForce = now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
-                    appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment.Id == this.InstallationEnvironment.Id;
+                    appWithGroup.Application.ForceInstallation.ForceInstallEnvironment.Id == this.InstallationEnvironment.Id;
                 LogForceInstallExistsWithNoInstallationSummaries(appWithGroup, now, shouldForce);
                 return shouldForce;
             }
@@ -301,7 +312,7 @@ namespace PrestoCommon.Entities
             // Check the latest installation. If it's before ForceInstallationTime, then we need to install            
             shouldForce = (mostRecentInstallationSummary.InstallationStart < appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
                 now > appWithGroup.Application.ForceInstallation.ForceInstallationTime &&
-                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment.Id == this.InstallationEnvironment.Id);
+                appWithGroup.Application.ForceInstallation.ForceInstallEnvironment.Id == this.InstallationEnvironment.Id);
 
             LogForceInstallBasedOnInstallationSummary(appWithGroup, now, mostRecentInstallationSummary, shouldForce);
 
@@ -319,7 +330,7 @@ namespace PrestoCommon.Entities
                 shouldForce,
                 now.ToString(),
                 appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString(),
-                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment,
+                appWithGroup.Application.ForceInstallation.ForceInstallEnvironment,
                 this.InstallationEnvironment),
                     this.EnableDebugLogging);
         }
@@ -337,7 +348,7 @@ namespace PrestoCommon.Entities
                 appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString(),
                 now.ToString(),
                 appWithGroup.Application.ForceInstallation.ForceInstallationTime.ToString(),
-                appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment,
+                appWithGroup.Application.ForceInstallation.ForceInstallEnvironment,
                 this.InstallationEnvironment),
                     this.EnableDebugLogging);
         }

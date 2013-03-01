@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
@@ -45,18 +46,49 @@ namespace PrestoCommon.Entities
             }
         }
 
+        public TaskVersionChecker()
+        {
+            this.Description = "Compare versions";
+            this.PrestoTaskType = Enums.TaskType.VersionChecker;
+        }
+
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
             string sourceFileVersion = string.Empty;
             string destinationFileVersion = string.Empty;
 
+            string sourceFolder      = string.Empty;
+            string destinationFolder = string.Empty;
+            string fileName          = string.Empty;
+
             try
             {
-                sourceFileVersion = FileVersionInfo.GetVersionInfo(this.SourceFolder + @"\" + this.FileName).FileVersion;
-                destinationFileVersion = FileVersionInfo.GetVersionInfo(this.DestinationFolder + @"\" + this.FileName).FileVersion;
+                sourceFolder      = CustomVariableGroup.ResolveCustomVariable(this.SourceFolder, applicationServer, applicationWithOverrideVariableGroup);
+                destinationFolder = CustomVariableGroup.ResolveCustomVariable(this.DestinationFolder, applicationServer, applicationWithOverrideVariableGroup);
+                fileName          = CustomVariableGroup.ResolveCustomVariable(this.FileName, applicationServer, applicationWithOverrideVariableGroup);
 
-                this.TaskSucceeded = false;  // default
-                if (sourceFileVersion == destinationFileVersion) { this.TaskSucceeded = true; }
+                // Will throw if file doesn't exist
+                string sourcePathAndFile = SetSourcePathAndFile(sourceFolder, fileName);
+
+                sourceFileVersion = FileVersionInfo.GetVersionInfo(sourcePathAndFile).FileVersion;
+
+                string destinationPathAndFile = destinationFolder + @"\" + fileName;
+
+                // It's okay if the destination file doesn't exist. This just means (hopefully) that this is
+                // the first time we're deploying this file.
+                if (!File.Exists(destinationPathAndFile))
+                {
+                    this.TaskSucceeded = true;
+                }
+                else
+                {
+                    destinationFileVersion = FileVersionInfo.GetVersionInfo(destinationPathAndFile).FileVersion;
+
+                    this.TaskSucceeded = false;  // default
+                    // We want the file versions to be different. Otherwise we're just deploying the same thing again,
+                    // which is what this is designed to detect.
+                    if (sourceFileVersion != destinationFileVersion) { this.TaskSucceeded = true; }
+                }                
             }
             catch (Exception ex)
             {
@@ -69,12 +101,29 @@ namespace PrestoCommon.Entities
                 string logMessage = string.Format(CultureInfo.CurrentCulture,
                     PrestoCommonResources.TaskVersionCheckerLogMessage,
                     this.Description,
-                    this.FileName,
+                    fileName,
                     sourceFileVersion,
-                    destinationFileVersion);
+                    sourceFolder,
+                    destinationFileVersion,
+                    destinationFolder);
                 this.TaskDetails += logMessage;
                 LogUtility.LogInformation(logMessage);
             }
+        }
+
+        private static string SetSourcePathAndFile(string sourceFolder, string fileName)
+        {
+            string sourcePathAndFile = sourceFolder + @"\" + fileName;
+
+            if (!File.Exists(sourcePathAndFile))
+            {
+                string message = string.Format(CultureInfo.CurrentCulture,
+                    "When trying to compare versions on file [{0}], the source file was not found: [{1}]",
+                    fileName,
+                    sourcePathAndFile);
+                throw new ArgumentException(message);
+            }
+            return sourcePathAndFile;
         }
 
         /// <summary>
@@ -102,21 +151,30 @@ namespace PrestoCommon.Entities
 
         public TaskVersionChecker CreateCopyFromThis()
         {
-            TaskVersionChecker newChecker = new TaskVersionChecker();
+            TaskVersionChecker versionChecker = new TaskVersionChecker();
+
+            return Copy(this, versionChecker);
+        }
+
+        public static TaskVersionChecker Copy(TaskVersionChecker source, TaskVersionChecker destination)
+        {
+            if (source == null) { return null; }
+
+            if (destination == null) { throw new ArgumentNullException("destination"); }
 
             // Base class
-            newChecker.Description          = this.Description;
-            newChecker.FailureCausesAllStop = this.FailureCausesAllStop;
-            newChecker.Sequence             = this.Sequence;
-            newChecker.TaskSucceeded        = this.TaskSucceeded;
-            newChecker.PrestoTaskType       = this.PrestoTaskType;
+            destination.Description          = source.Description;
+            destination.FailureCausesAllStop = source.FailureCausesAllStop;
+            destination.Sequence             = source.Sequence;
+            destination.TaskSucceeded        = source.TaskSucceeded;
+            destination.PrestoTaskType       = source.PrestoTaskType;
 
             // Subclass
-            newChecker.FileName          = this.FileName;
-            newChecker.SourceFolder      = this.SourceFolder;
-            newChecker.DestinationFolder = this.DestinationFolder;
+            destination.FileName          = source.FileName;
+            destination.SourceFolder      = source.SourceFolder;
+            destination.DestinationFolder = source.DestinationFolder;
 
-            return newChecker;
+            return destination;
         }
     }
 }

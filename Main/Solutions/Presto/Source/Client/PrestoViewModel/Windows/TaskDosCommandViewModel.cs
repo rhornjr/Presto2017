@@ -80,7 +80,7 @@ namespace PrestoViewModel.Windows
                 return;
             }
 
-            AppyChangesFromCopyToOriginal();
+            ApplyChangesFromCopyToOriginal();
             this.Close();
         }
 
@@ -90,7 +90,7 @@ namespace PrestoViewModel.Windows
             this.Close();
         }
 
-        private void AppyChangesFromCopyToOriginal()
+        private void ApplyChangesFromCopyToOriginal()
         {
             if (this.TaskBase == null)
             {

@@ -98,6 +98,13 @@ namespace PrestoCommon.Entities
             InstallationResultContainer installationResultContainer = new InstallationResultContainer();
             try
             {
+                // Before we try to execute all of the tasks, make sure any pre-tasks execute successfully.
+                if (this.Application.TaskVersionChecker != null)
+                {
+                    this.Application.TaskVersionChecker.Sequence = -1; // Put this before any other tasks.
+                    this.Application.Tasks.Add(this.Application.TaskVersionChecker);
+                }
+
                 // Note: We do a ToList() here because we get a "collection was modified" exception otherwise. The reason we
                 //       get the exception is because, somewhere else in this processing, we make this call:
                 //       CustomVariableGroupLogic.Get(application.Name)

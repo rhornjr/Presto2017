@@ -15,13 +15,8 @@ namespace PrestoCommon.Entities
         private ForceInstallation _forceInstallation;
         private ObservableCollection<TaskBase> _tasks;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
+        private TaskVersionChecker _taskVersionChecker;
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
         public string Name
         {
             get { return this._name; }
@@ -33,20 +28,19 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        /// <value>
-        /// The version.
-        /// </value>
         public string Version { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tasks.
-        /// </summary>
-        /// <value>
-        /// The tasks.
-        /// </value>
+        public TaskVersionChecker TaskVersionChecker
+        {
+            get { return this._taskVersionChecker; }
+
+            set
+            {
+                this._taskVersionChecker = value;
+                this.NotifyPropertyChanged(() => this.TaskVersionChecker);
+            }
+        }
+
         [XmlIgnore]
         public ObservableCollection<TaskBase> Tasks
         {
@@ -62,12 +56,6 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the force installation.
-        /// </summary>
-        /// <value>
-        /// The force installation.
-        /// </value>
         public ForceInstallation ForceInstallation
         {
             get { return this._forceInstallation; }
@@ -79,19 +67,10 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the custom variable group ids.
-        /// </summary>
-        /// <value>
-        /// The custom variable group ids.
-        /// </value>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
-        /// <summary>
-        /// Gets the custom variable groups.
-        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
@@ -106,20 +85,11 @@ namespace PrestoCommon.Entities
             set { this._customVariableGroups = value; }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Application"/> class.
-        /// </summary>
         public Application()
         {
             this.Tasks = new ObservableCollection<TaskBase>();
         }        
 
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
         public override string ToString()
         {
             return this.Name;

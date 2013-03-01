@@ -27,104 +27,47 @@ namespace PrestoViewModel.Tabs
     {
         private ObservableCollection<Application> _applications;
         private Application _selectedApplication;
-        //private TaskBase _selectedTask;
         private ObservableCollection<TaskBase> _selectedTasks = new ObservableCollection<TaskBase>();
 
-        /// <summary>
-        /// Gets a value indicating whether [application is selected].
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [application is selected]; otherwise, <c>false</c>.
-        /// </value>
         public bool ApplicationIsSelected
         {
             get { return ApplicationIsSelectedMethod(); }
         }
 
-        /// <summary>
-        /// Gets the add application command.
-        /// </summary>
         public ICommand AddApplicationCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the delete application command.
-        /// </summary>
         public ICommand DeleteApplicationCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the refresh applications command.
-        /// </summary>
         public ICommand RefreshApplicationsCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the force installation command.
-        /// </summary>
         public ICommand ForceInstallationCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the delete force installation command.
-        /// </summary>
         public ICommand DeleteForceInstallationCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the add command.
-        /// </summary>
+        public ICommand TaskVersionCheckerCommand { get; private set; }
+
+        public ICommand DeleteTaskVersionCheckerCommand { get; private set; }
+
         public ICommand AddTaskCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the delete task command.
-        /// </summary>
         public ICommand DeleteTaskCommand { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the edit command.
-        /// </summary>
-        /// <value>
-        /// The edit command.
-        /// </value>
         public ICommand EditTaskCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the export tasks command.
-        /// </summary>
         public ICommand ExportTasksCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the import tasks command.
-        /// </summary>
         public ICommand ImportTasksCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the move task up command.
-        /// </summary>
         public ICommand MoveTaskUpCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the move task down command.
-        /// </summary>
         public ICommand MoveTaskDownCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the save command.
-        /// </summary>
         public ICommand SaveApplicationCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the add variable group command.
-        /// </summary>
         public ICommand AddVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets the remove variable group command.
-        /// </summary>
         public ICommand RemoveVariableGroupCommand { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the applications.
-        /// </summary>
-        /// <value>
-        /// The applications.
-        /// </value>
         public ObservableCollection<Application> Applications
         {
             get { return this._applications; }
@@ -136,12 +79,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected application.
-        /// </summary>
-        /// <value>
-        /// The selected application.
-        /// </value>
         public Application SelectedApplication
         {
             get
@@ -158,9 +95,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets the selected application tasks.
-        /// </summary>
         public IOrderedEnumerable<TaskBase> AllApplicationTasks
         {
             // Note: This property was created because sorting wasn't working on the grid that showed the tasks.
@@ -172,12 +106,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected task.
-        /// </summary>
-        /// <value>
-        /// The selected task.
-        /// </value>
         public ObservableCollection<TaskBase> SelectedTasks
         {
             get { return this._selectedTasks; }
@@ -189,17 +117,8 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected custom variable group.
-        /// </summary>
-        /// <value>
-        /// The selected custom variable group.
-        /// </value>
         public CustomVariableGroup SelectedCustomVariableGroup { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationViewModel"/> class.
-        /// </summary>
         public ApplicationViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
@@ -218,6 +137,9 @@ namespace PrestoViewModel.Tabs
             this.ForceInstallationCommand       = new RelayCommand(ForceInstallation, ApplicationIsSelectedMethod);
             this.DeleteForceInstallationCommand = new RelayCommand(DeleteForceInstallation, ApplicationIsSelectedAndForceExists);
 
+            this.TaskVersionCheckerCommand       = new RelayCommand(ShowTaskVersionChecker, ApplicationIsSelectedMethod);
+            this.DeleteTaskVersionCheckerCommand = new RelayCommand(DeleteTaskVersionChecker, ApplicationIsSelectedAndVersionCheckerExists);
+
             this.AddTaskCommand            = new RelayCommand(AddTask, ApplicationIsSelectedMethod);
             this.EditTaskCommand           = new RelayCommand(EditTask, TaskIsSelected);
             this.DeleteTaskCommand         = new RelayCommand(DeleteTask, TaskIsSelected);
@@ -228,6 +150,34 @@ namespace PrestoViewModel.Tabs
 
             this.AddVariableGroupCommand    = new RelayCommand(AddVariableGroup);
             this.RemoveVariableGroupCommand = new RelayCommand(RemoveVariableGroup, VariableGroupIsSelected);
+        }
+
+        private bool ApplicationIsSelectedAndVersionCheckerExists()
+        {
+            return this.SelectedApplication != null && this.SelectedApplication.TaskVersionChecker != null;
+        }
+
+        private void DeleteTaskVersionChecker()
+        {
+            if (this.SelectedApplication.TaskVersionChecker == null) { return; }  // Nothing to do.            
+
+            this.AddLogMessageToCache(this.SelectedApplication.Id,
+                string.Format(CultureInfo.CurrentCulture,
+                "Version check removed for app {0}.",
+                this.SelectedApplication));
+
+            this.SelectedApplication.TaskVersionChecker = null;
+        }
+
+        private void ShowTaskVersionChecker()
+        {
+            TaskVersionCheckerViewModel viewModel = new TaskVersionCheckerViewModel(this.SelectedApplication.TaskVersionChecker);
+
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+
+            if (viewModel.UserCanceled) { return; }
+
+            this.SelectedApplication.TaskVersionChecker = viewModel.TaskVersionChecker;
         }
 
         // Named this method this way because we have a property of the same name. The RelayCommands need to specify

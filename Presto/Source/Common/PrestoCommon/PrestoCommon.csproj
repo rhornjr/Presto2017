@@ -131,6 +131,7 @@
     <Compile Include="Entities\TaskCopyFile.cs" />
     <Compile Include="Entities\TaskDetail.cs" />
     <Compile Include="Entities\TaskDosCommand.cs" />
+    <Compile Include="Entities\TaskVersionChecker.cs" />
     <Compile Include="Entities\TaskXmlModify.cs" />
     <Compile Include="EntityHelperClasses\EntityLogMessage.cs" />
     <Compile Include="EntityHelperClasses\InstallationResultContainer.cs" />

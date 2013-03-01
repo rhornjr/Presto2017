@@ -183,6 +183,9 @@
     <Compile Include="Windows\TaskTypeSelectorView.xaml.cs">
       <DependentUpon>TaskTypeSelectorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TaskVersionCheckerView.xaml.cs">
+      <DependentUpon>TaskVersionCheckerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\TaskXmlModifyView.xaml.cs">
       <DependentUpon>TaskXmlModifyView.xaml</DependentUpon>
     </Compile>
@@ -291,6 +294,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\TaskTypeSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\TaskVersionCheckerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

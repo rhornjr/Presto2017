@@ -177,7 +177,7 @@ namespace PrestoViewModel.Tabs
 
             if (viewModel.UserCanceled) { return; }
 
-            this.SelectedApplication.TaskVersionChecker = viewModel.TaskVersionChecker;
+            this.SelectedApplication.TaskVersionChecker = viewModel.TaskBase as TaskVersionChecker;
         }
 
         // Named this method this way because we have a property of the same name. The RelayCommands need to specify

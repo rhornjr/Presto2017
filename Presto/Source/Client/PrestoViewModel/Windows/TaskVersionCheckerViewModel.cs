@@ -1,25 +1,34 @@
 ﻿using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.Enums;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
 {
+    [TaskTypeAttribute(TaskType.VersionChecker)]
     public class TaskVersionCheckerViewModel : TaskViewModel
     {
         // work with a copy until hitting OK
         public TaskVersionChecker TaskVersionCheckerCopy { get; set; }
 
-        public TaskVersionChecker TaskVersionChecker { get; set; }
-
         public ICommand OkCommand { get; set; }
 
-        public ICommand CancelCommand { get; set; }        
+        public ICommand CancelCommand { get; set; }
+
+        public TaskVersionCheckerViewModel()
+        {
+            if (DesignMode.IsInDesignMode) { return; }
+
+            this.TaskVersionCheckerCopy = new TaskVersionChecker();
+
+            Initialize();
+        }
 
         public TaskVersionCheckerViewModel(TaskVersionChecker taskVersionChecker)
         {
             if (DesignMode.IsInDesignMode) { return; }
 
-            this.TaskVersionChecker = taskVersionChecker;  // store the original, even if null
+            this.TaskBase = taskVersionChecker;  // store the original, even if null
 
             this.TaskVersionCheckerCopy = new TaskVersionChecker();
             if (taskVersionChecker != null)
@@ -38,7 +47,7 @@ namespace PrestoViewModel.Windows
 
         private void Save()
         {
-            this.TaskVersionChecker = this.TaskVersionCheckerCopy.CreateCopyFromThis();
+            ApplyChangesFromCopyToOriginal();
             this.Close();
         }
 
@@ -46,6 +55,17 @@ namespace PrestoViewModel.Windows
         {
             this.UserCanceled = true;
             this.Close();
+        }
+
+        private void ApplyChangesFromCopyToOriginal()
+        {
+            if (this.TaskBase == null)
+            {
+                this.TaskBase = TaskVersionChecker.Copy(this.TaskVersionCheckerCopy, new TaskVersionChecker());
+                return;
+            }
+
+            this.TaskBase = TaskVersionChecker.Copy(this.TaskVersionCheckerCopy, this.TaskBase as TaskVersionChecker);
         }
     }
 }

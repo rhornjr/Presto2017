@@ -143,7 +143,8 @@ Process Output  : {3}</value>
   <data name="TaskVersionCheckerLogMessage" xml:space="preserve">
     <value>Task Description: {0}
 File name: {1}
-Source version: {2}
-Destination version: {3}</value>
+Source version: {2} ({3})
+Destination version: {4} ({5})
+If the file versions are the same, this task will fail. This happens to help us ensure that we're installing a new version, instead of the same version on top of itself.</value>
   </data>
 </root>

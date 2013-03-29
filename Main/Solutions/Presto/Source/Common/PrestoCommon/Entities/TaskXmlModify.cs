@@ -8,69 +8,37 @@ using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class TaskXmlModify : TaskBase
     {
-        /// <summary>
-        /// Gets or sets the name of the XML path and file.
-        /// </summary>
-        /// <value>
-        /// The name of the XML path and file.
-        /// </value>
-        public string XmlPathAndFileName { get; set; }
+        private string _xmlPathAndFileName;
 
-        /// <summary>
-        /// Gets or sets the node to change.
-        /// </summary>
-        /// <value>
-        /// The node to change.
-        /// </value>
+        public string XmlPathAndFileName
+        {
+            get { return this._xmlPathAndFileName; }
+
+            set
+            {
+                this._xmlPathAndFileName = value;
+                this.NotifyPropertyChanged(() => this.XmlPathAndFileName);
+            }
+        }
+
+        public string NodeNamespace { get; set; }
+
         public string NodeToChange { get; set; }
 
-        /// <summary>
-        /// Gets or sets the attribute key.
-        /// </summary>
-        /// <value>
-        /// The attribute key.
-        /// </value>
         public string AttributeKey { get; set; }
 
-        /// <summary>
-        /// Gets or sets the attribute key value.
-        /// </summary>
-        /// <value>
-        /// The attribute key value.
-        /// </value>
         public string AttributeKeyValue { get; set; }
 
-        /// <summary>
-        /// Gets or sets the attribute to change.
-        /// </summary>
-        /// <value>
-        /// The attribute to change.
-        /// </value>
         public string AttributeToChange { get; set; }
 
-        /// <summary>
-        /// Gets or sets the attribute to change value.
-        /// </summary>
-        /// <value>
-        /// The attribute to change value.
-        /// </value>
         public string AttributeToChangeValue { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TaskXmlModify"/> class.
-        /// </summary>
         public TaskXmlModify()
             : base(string.Empty, TaskType.XmlModify, 1, 1, false)
         {}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TaskXmlModify"/> class.
-        /// </summary>
         public TaskXmlModify(string description, byte failureCausesAllStop, int sequence, bool taskSucceeded,
             string xmlPathAndFileName, string nodeToChange, string attributeKey, string attributeKeyValue,
             string attributeToChange, string attributeToChangeValue)
@@ -84,9 +52,6 @@ namespace PrestoCommon.Entities
             this.AttributeToChangeValue = attributeToChangeValue;
         }
 
-        /// <summary>
-        /// Executes this instance.
-        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
@@ -101,13 +66,13 @@ namespace PrestoCommon.Entities
                 xmlDocument.Load(taskResolved.XmlPathAndFileName);
                 XmlElement rootElement = xmlDocument.DocumentElement;
 
-                XmlNodeList xmlNodes;
-
                 // Get the node that the user wants to modify
-                if (string.IsNullOrEmpty(taskResolved.AttributeKey.Trim()))
+                XmlNodeList xmlNodes;
+                string nodeNamespace = taskResolved.NodeNamespace ?? string.Empty;  // namespace can't be null
+                if (string.IsNullOrWhiteSpace(taskResolved.AttributeKey))
                 {
                     // No attributes necessary to differentiate this node from any others. Get the matching nodes.
-                    xmlNodes = rootElement.SelectNodes(taskResolved.NodeToChange);
+                    xmlNodes = rootElement.GetElementsByTagName(taskResolved.NodeToChange, nodeNamespace);
                 }
                 else
                 {
@@ -119,7 +84,7 @@ namespace PrestoCommon.Entities
                                                                        taskResolved.AttributeKeyValue));
                 }
 
-                if (xmlNodes == null)
+                if (xmlNodes == null || xmlNodes.Count == 0)
                 {
                     // If this is happening, see the comments section below for a possible reason:
                     // -- xmlnode not found because of namespace attribute --
@@ -168,13 +133,15 @@ namespace PrestoCommon.Entities
             string taskDetails = string.Format(CultureInfo.CurrentCulture,
                                                 "Task Description         : {0}\r\n" +
                                                 "XML File                 : {1}\r\n" +
-                                                "Node to Change           : {2}\r\n" +
-                                                "Attribute Key            : {3}\r\n" +
-                                                "Attribute Key Value      : {4}\r\n" +
-                                                "Attribute to Change      : {5}\r\n" +
-                                                "Attribute to Change Value: {6}\r\n",
+                                                "Node namespace           : {2}\r\n" +
+                                                "Node to Change           : {3}\r\n" +
+                                                "Attribute Key            : {4}\r\n" +
+                                                "Attribute Key Value      : {5}\r\n" +
+                                                "Attribute to Change      : {6}\r\n" +
+                                                "Attribute to Change Value: {7}\r\n",
                                                 taskXmlModify.Description,
                                                 taskXmlModify.XmlPathAndFileName,
+                                                taskXmlModify.NodeNamespace,
                                                 taskXmlModify.NodeToChange,
                                                 taskXmlModify.AttributeKey,
                                                 taskXmlModify.AttributeKeyValue,
@@ -197,6 +164,7 @@ namespace PrestoCommon.Entities
             taskXmlModifyResolved.AttributeKeyValue      = CustomVariableGroup.ResolveCustomVariable(this.AttributeKeyValue, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.AttributeToChange      = CustomVariableGroup.ResolveCustomVariable(this.AttributeToChange, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.AttributeToChangeValue = CustomVariableGroup.ResolveCustomVariable(this.AttributeToChangeValue, applicationServer, applicationWithOverrideVariableGroup);
+            taskXmlModifyResolved.NodeNamespace          = CustomVariableGroup.ResolveCustomVariable(this.NodeNamespace, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.NodeToChange           = CustomVariableGroup.ResolveCustomVariable(this.NodeToChange, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.XmlPathAndFileName     = CustomVariableGroup.ResolveCustomVariable(this.XmlPathAndFileName, applicationServer, applicationWithOverrideVariableGroup);
 
@@ -238,17 +206,13 @@ namespace PrestoCommon.Entities
             destination.AttributeKeyValue      = source.AttributeKeyValue;
             destination.AttributeToChange      = source.AttributeToChange;
             destination.AttributeToChangeValue = source.AttributeToChangeValue;
+            destination.NodeNamespace          = source.NodeNamespace;
             destination.NodeToChange           = source.NodeToChange;
             destination.XmlPathAndFileName     = source.XmlPathAndFileName;
 
             return destination;
         }
 
-        /// <summary>
-        /// Creates the new from legacy task.
-        /// </summary>
-        /// <param name="legacyTaskBase">The legacy task base.</param>
-        /// <returns></returns>
         public static TaskXmlModify CreateNewFromLegacyTask(PrestoCommon.Entities.LegacyPresto.LegacyTaskBase legacyTaskBase)
         {
             if (legacyTaskBase == null) { throw new ArgumentNullException("legacyTaskBase"); }

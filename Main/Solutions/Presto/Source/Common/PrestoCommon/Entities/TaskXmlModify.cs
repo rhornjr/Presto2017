@@ -66,13 +66,22 @@ namespace PrestoCommon.Entities
                 xmlDocument.Load(taskResolved.XmlPathAndFileName);
                 XmlElement rootElement = xmlDocument.DocumentElement;
 
+                XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xmlDocument.NameTable);
+                string prefix = "";  // default
+                string prefixSuffix = "";  // yes, a suffix for a prefix. Eat me.
+                if (!string.IsNullOrWhiteSpace(taskResolved.NodeNamespace))
+                {
+                    prefix = "nssnuh";  // use something that we'll never expect to see in an XML doc.
+                    prefixSuffix = ":";
+                    namespaceManager.AddNamespace(prefix, taskResolved.NodeNamespace);
+                }
+
                 // Get the node that the user wants to modify
-                XmlNodeList xmlNodes;
-                string nodeNamespace = taskResolved.NodeNamespace ?? string.Empty;  // namespace can't be null
+                XmlNodeList xmlNodes;                
                 if (string.IsNullOrWhiteSpace(taskResolved.AttributeKey))
                 {
                     // No attributes necessary to differentiate this node from any others. Get the matching nodes.
-                    xmlNodes = rootElement.GetElementsByTagName(taskResolved.NodeToChange, nodeNamespace);
+                    xmlNodes = rootElement.SelectNodes(prefix + prefixSuffix + taskResolved.NodeToChange, namespaceManager);
                 }
                 else
                 {

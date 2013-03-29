@@ -59,6 +59,8 @@ namespace PrestoCommon.Entities
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
             if (appWithGroup == null) { throw new ArgumentNullException("appWithGroup"); }
 
+            if (String.IsNullOrWhiteSpace(rawString)) { return rawString; }
+
             if (!StringHasCustomVariable(rawString)) { return rawString; }
 
             List<CustomVariable> allCustomVariables = new List<CustomVariable>();

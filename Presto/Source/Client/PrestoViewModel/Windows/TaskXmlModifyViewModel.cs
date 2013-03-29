@@ -16,30 +16,14 @@ namespace PrestoViewModel.Windows
         /// Gets or sets the task XML modify copy. View models will modify this, instead of the real object. We
         /// don't want to alter the real object unless the user saves.
         /// </summary>
-        /// <value>
-        /// The task XML modify copy.
-        /// </value>
         public TaskXmlModify TaskXmlModifyCopy { get; set; }
 
-        /// <summary>
-        /// Gets or sets the ok command.
-        /// </summary>
-        /// <value>
-        /// The ok command.
-        /// </value>
         public ICommand OkCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the cancel command.
-        /// </summary>
-        /// <value>
-        /// The cancel command.
-        /// </value>
         public ICommand CancelCommand { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TaskXmlModifyViewModel"/> class.
-        /// </summary>
+        public ICommand BrowseFileCommand { get; set; }
+
         public TaskXmlModifyViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
@@ -50,10 +34,6 @@ namespace PrestoViewModel.Windows
             this.TaskXmlModifyCopy = new TaskXmlModify();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TaskXmlModifyViewModel"/> class.
-        /// </summary>
-        /// <param name="taskXmlModify">The task XML modify.</param>
         public TaskXmlModifyViewModel(TaskXmlModify taskXmlModify)
         {
             if (taskXmlModify == null) { throw new ArgumentNullException("taskXmlModify"); }
@@ -68,8 +48,14 @@ namespace PrestoViewModel.Windows
 
         private void Initialize()
         {
-            this.OkCommand     = new RelayCommand(Save);
-            this.CancelCommand = new RelayCommand(Cancel);
+            this.OkCommand         = new RelayCommand(Save);
+            this.CancelCommand     = new RelayCommand(Cancel);
+            this.BrowseFileCommand = new RelayCommand(SetXmlDocument);
+        }
+
+        private void SetXmlDocument()
+        {
+            this.TaskXmlModifyCopy.XmlPathAndFileName = GetFilePathAndNameFromUser();
         }
 
         private void Save()

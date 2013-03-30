@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAFF2A9-EEB6-44B7-BC2C-FD92ECBB1A3E}"
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\AllRules.ruleset = Solution Items\AllRules.ruleset
@@ -75,6 +75,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unity", "Unity", "{69BA42F5
 		Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.ServiceLocation.dll = Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.ServiceLocation.dll
 		Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.Configuration.dll = Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.Configuration.dll
 		Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.dll = Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExpressionBlend", "ExpressionBlend", "{1791AD5F-1A61-443C-81AC-9091BF634A92}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\ThirdPartyAssemblies\ExpressionBlend\Microsoft.Expression.Interactions.dll = Solution Items\ThirdPartyAssemblies\ExpressionBlend\Microsoft.Expression.Interactions.dll
+		Solution Items\ThirdPartyAssemblies\ExpressionBlend\System.Windows.Interactivity.dll = Solution Items\ThirdPartyAssemblies\ExpressionBlend\System.Windows.Interactivity.dll
 	EndProjectSection
 EndProject
 Global
@@ -269,6 +275,7 @@ Global
 		{CDBF03AE-5D75-4B74-BB79-EB71D2C7E043} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
 		{0F9AF7A9-4156-444F-A70F-B6030D6F1A82} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
 		{69BA42F5-3038-424E-BFE0-8217E5E170DA} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
+		{1791AD5F-1A61-443C-81AC-9091BF634A92} = {CD04BF98-CC51-4B4E-998E-6C14B4C6771D}
 		{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0} = {D399A7C6-4F03-44BE-B634-F5E54FC48B9C}
 		{75344126-B6A2-4277-9EF5-99E08E147D7E} = {8101847C-2ACD-4993-9FDD-901CC2B07E1D}
 		{46E7415A-4162-4CA9-8AD1-85085DA23D21} = {56F6C77F-E595-4E92-A00D-E4152F0B0241}

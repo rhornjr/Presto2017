@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
     <UserControl.DataContext>
@@ -89,6 +91,11 @@
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"
                       SelectedItem="{Binding SelectedCustomVariable}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <galaSoft:EventToCommand Command="{Binding EditVariableCommand, Mode=OneWay}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Key}" Header="Key" Width="170"/>
                         <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value" Width="*"/>

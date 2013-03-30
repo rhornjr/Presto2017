@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="700">
     <UserControl.DataContext>
@@ -136,6 +138,11 @@
                           ItemsSource="{Binding SelectedApplicationServerApplicationsWithOverrideGroup}"
                           ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedApplicationsWithOverrideGroup}"
                           SelectionMode="Extended">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <galaSoft:EventToCommand Command="{Binding EditApplicationCommand, Mode=OneWay}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Application.Name}" Header="Name" Width="150" />
                         <DataGridTextColumn Binding="{Binding Path=Application.Version}" Header="Version" Width="100"/>

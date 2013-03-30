@@ -86,6 +86,8 @@ namespace PrestoViewModel.Windows
             this.AddCommand    = new RelayCommand(Add, CanAdd);
             this.CancelCommand = new RelayCommand(Cancel);
 
+            this.UserCanceled = true;  // default (do this in case the user closes the window without hitting the cancel button)
+
             LoadCustomVariableGroups();
         }
 
@@ -104,6 +106,7 @@ namespace PrestoViewModel.Windows
 
         private void Add()
         {
+            this.UserCanceled = false;
             this.Close();
         }
 

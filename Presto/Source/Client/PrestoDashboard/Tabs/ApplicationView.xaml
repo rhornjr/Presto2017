@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="760">
 
@@ -134,6 +137,11 @@
                           ItemsSource="{Binding AllApplicationTasks}"
                           ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedTasks}"
                           SelectionMode="Extended">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <galaSoft:EventToCommand Command="{Binding EditTaskCommand, Mode=OneWay}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Path=Sequence}" Header="Order" Width="50"/>
                             <DataGridTextColumn Binding="{Binding Path=Description}" Header="Description" Width="*"/>

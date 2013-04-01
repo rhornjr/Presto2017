@@ -157,7 +157,7 @@
                     <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportApplicationCommand}" />
-                    <Button Style="{StaticResource StandardButton}" Content="Force..." Command="{Binding ForceApplicationCommand}" />
+                    <Button Style="{StaticResource StandardButton}" Content="Install..." Command="{Binding ForceApplicationCommand}" />
                 </StackPanel>
             </Grid>
             

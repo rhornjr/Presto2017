@@ -43,10 +43,13 @@ namespace PrestoViewModel.Windows
         {
             this.OkCommand     = new RelayCommand(Save);
             this.CancelCommand = new RelayCommand(Cancel);
+
+            this.UserCanceled = true;  // default
         }
 
         private void Save()
         {
+            this.UserCanceled = false;
             ApplyChangesFromCopyToOriginal();
             this.Close();
         }

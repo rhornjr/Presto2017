@@ -56,6 +56,32 @@ namespace PrestoCommon.Entities
             }
         }
 
+        /// <summary>
+        /// Gets all of the tasks for an <see cref="Application"/>.
+        /// Main tasks are this.Tasks. Prerequisite tasks are things like this.TaskVersionChecker,
+        /// or anything new we might eventually add. Consuming code will want a way to access all
+        /// tasks, so this property returns all of them.
+        /// </summary>
+        [JsonIgnore] //  We do not want RavenDB to serialize this.
+        public IEnumerable<TaskBase> MainAndPrerequisiteTasks
+        {
+            get
+            {
+                List<TaskBase> allTasks = new List<TaskBase>();
+
+                if (this.TaskVersionChecker != null)
+                {
+                    // Put this before any other tasks, because TaskVersionChecker is a prerequisite.
+                    this.TaskVersionChecker.Sequence = -1;
+                    allTasks.Add(this.TaskVersionChecker);
+                }
+
+                allTasks.AddRange(this.Tasks);
+
+                return allTasks;
+            }
+        }
+
         public ForceInstallation ForceInstallation
         {
             get { return this._forceInstallation; }

@@ -231,6 +231,10 @@ namespace PrestoCommon.Entities
 
         public static MatchCollection GetCustomVariableStringsWithinBiggerString(string sourceString)
         {
+            // A null won't work with regex.Matches. So use an empty string so an empty MatchCollection
+            // will be returned.
+            if (sourceString == null) { sourceString = string.Empty; }
+
             // Use a regex to find all custom variables in sourceString. The pattern is $(variableName).
 
             // Explanation of regular expression below:

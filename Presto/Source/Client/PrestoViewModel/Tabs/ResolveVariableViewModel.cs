@@ -18,7 +18,7 @@ namespace PrestoViewModel.Tabs
     public class ResolveVariableViewModel : ViewModelBase
     {
         private PrestoObservableCollection<CustomVariable> _resolvedCustomVariables = new PrestoObservableCollection<CustomVariable>();
-        private ApplicationServer _applicationServer = new ApplicationServer();
+        private ApplicationServer _applicationServer;
         private ApplicationWithOverrideVariableGroup _applicationWithOverrideVariableGroup = new ApplicationWithOverrideVariableGroup();
 
         /// <summary>
@@ -146,6 +146,7 @@ namespace PrestoViewModel.Tabs
             if (viewModel.UserCanceled) { return; }
 
             this.ApplicationWithGroup.Application = viewModel.SelectedApplication;
+            this.ResolvedCustomVariables.Clear();
         }
 
         private void SelectGroup()
@@ -156,11 +157,13 @@ namespace PrestoViewModel.Tabs
             if (groupViewModel.UserCanceled) { return; }
             
             this.ApplicationWithGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroups[0];
+            this.ResolvedCustomVariables.Clear();
         }
 
         private void RemoveGroup()
         {
             this.ApplicationWithGroup.CustomVariableGroup = null;
+            this.ResolvedCustomVariables.Clear();
         }    
 
         private void SelectServer()
@@ -170,6 +173,7 @@ namespace PrestoViewModel.Tabs
             if (viewModel.UserCanceled) { return; }
 
             this.ApplicationServer = viewModel.SelectedServer;
+            this.ResolvedCustomVariables.Clear();
         }
 
         private void Resolve()
@@ -183,7 +187,7 @@ namespace PrestoViewModel.Tabs
             // since originally running this.
             RefreshAppGroupAndServer();
 
-            foreach (TaskBase task in this.ApplicationWithGroup.Application.Tasks)
+            foreach (TaskBase task in this.ApplicationWithGroup.Application.MainAndPrerequisiteTasks)
             {
                 if (variableFoundMoreThanOnce) { break; }
 

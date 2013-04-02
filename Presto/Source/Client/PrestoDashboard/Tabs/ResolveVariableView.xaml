@@ -63,7 +63,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource StandardButton}" Content="Resolve" Command="{Binding ResolveCommand}"/>
+        <Button Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource StandardButton}" Content="Resolve"
+                Command="{Binding ResolveCommand}" />
         
     </Grid>
     

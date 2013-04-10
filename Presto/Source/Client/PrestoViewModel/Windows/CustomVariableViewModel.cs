@@ -1,49 +1,30 @@
 ﻿using System;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.Misc;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class CustomVariableViewModel : ViewModelBase
     {
         private CustomVariable _copyOfCustomVariable;
 
-        /// <summary>
-        /// Gets a value indicating whether [user canceled].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [user canceled]; otherwise, <c>false</c>.
-        /// </value>
         public bool UserCanceled { get; protected set; }
 
-        /// <summary>
-        /// Gets or sets the ok command.
-        /// </summary>
-        /// <value>
-        /// The ok command.
-        /// </value>
         public ICommand OkCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the cancel command.
-        /// </summary>
-        /// <value>
-        /// The cancel command.
-        /// </value>
         public ICommand CancelCommand { get; set; }
 
-        /// <summary>
-        /// Gets the custom variable.
-        /// </summary>
+        public ICommand EncryptCommand { get; set; }
+
         public CustomVariable CustomVariable { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomVariableViewModel"/> class.
-        /// </summary>
+        public bool ValueIsPlaintext
+        {
+            get { return !this.CustomVariable.ValueIsEncrypted; }
+        }
+
         public CustomVariableViewModel()
         {
             this.CustomVariable = new CustomVariable();
@@ -51,10 +32,6 @@ namespace PrestoViewModel.Windows
             Initialize();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomVariableViewModel"/> class.
-        /// </summary>
-        /// <param name="customVariable">The custom variable.</param>
         public CustomVariableViewModel(CustomVariable customVariable)
         {
             if (customVariable == null) { throw new ArgumentNullException("customVariable"); }
@@ -70,6 +47,7 @@ namespace PrestoViewModel.Windows
         {
             this.OkCommand     = new RelayCommand(Save);
             this.CancelCommand = new RelayCommand(Cancel);
+            this.EncryptCommand = new RelayCommand(Encrypt);
         }
 
         private void Save()
@@ -84,6 +62,13 @@ namespace PrestoViewModel.Windows
 
             this.UserCanceled = true;
             this.Close();
+        }
+
+        private void Encrypt()
+        {
+            this.CustomVariable.Value = AesCrypto.Encrypt(this.CustomVariable.Value);
+            this.CustomVariable.ValueIsEncrypted = true;
+            this.NotifyPropertyChanged(() => this.ValueIsPlaintext);
         }
 
         private void UndoChanges()

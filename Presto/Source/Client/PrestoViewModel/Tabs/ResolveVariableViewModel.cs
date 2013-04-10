@@ -206,7 +206,8 @@ namespace PrestoViewModel.Tabs
                         try
                         {
                             key = match.Value;
-                            value = CustomVariableGroup.ResolveCustomVariable(match.Value, this.ApplicationServer, this.ApplicationWithGroup);
+                            // Note, we pass true so that encrypted values stay encrypted. We don't want the user to see encrypted values.
+                            value = CustomVariableGroup.ResolveCustomVariable(match.Value, this.ApplicationServer, this.ApplicationWithGroup, true);
                         }
                         catch (CustomVariableMissingException)
                         {

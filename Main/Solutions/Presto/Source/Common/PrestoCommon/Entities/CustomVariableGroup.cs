@@ -54,7 +54,8 @@ namespace PrestoCommon.Entities
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup appWithGroup)
+        public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer,
+            ApplicationWithOverrideVariableGroup appWithGroup, bool leaveValueEncrypted = false)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
             if (appWithGroup == null) { throw new ArgumentNullException("appWithGroup"); }
@@ -89,7 +90,7 @@ namespace PrestoCommon.Entities
             if (!CustomVariableExistsInListOfAllCustomVariables(rawString, allCustomVariables))
             { LogMissingVariableAndThrow(rawString); }
 
-            return ResolveCustomVariable(rawString, allCustomVariables);
+            return ResolveCustomVariable(rawString, allCustomVariables, leaveValueEncrypted);
         }
 
         private static void ThrowIfDuplicateCustomVariableKeyExists(List<CustomVariable> allCustomVariables, CustomVariableGroup customVariableGroup)
@@ -166,7 +167,7 @@ namespace PrestoCommon.Entities
         /// <param name="allCustomVariables">All custom variables.</param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        private static string ResolveCustomVariable(string rawString, IEnumerable<CustomVariable> allCustomVariables)
+        private static string ResolveCustomVariable(string rawString, IEnumerable<CustomVariable> allCustomVariables, bool leaveValueEncrypted)
         {
             // If the string doesn't contain a custom variable, nothing to do... just return the string.
             if (!StringHasCustomVariable(rawString)) { return rawString; }
@@ -187,12 +188,20 @@ namespace PrestoCommon.Entities
                 foreach (CustomVariable customVariable in allCustomVariables)
                 {
                     // customVariable.Value could actually contain more custom variables. That's why we need to keep looping.
-                    stringNew.Replace(prefix + customVariable.Key + suffix, customVariable.Value);
+                    stringNew.Replace(prefix + customVariable.Key + suffix,
+                        DecryptedCustomVariableValue(customVariable, leaveValueEncrypted));
                 }
             }
             while (StringHasCustomVariable(stringNew.ToString()));
 
             return stringNew.ToString();
+        }
+
+        private static string DecryptedCustomVariableValue(CustomVariable customVariable, bool leaveValueEncrypted)
+        {
+            if (!customVariable.ValueIsEncrypted || leaveValueEncrypted) { return customVariable.Value; }
+
+            return AesCrypto.Decrypt(customVariable.Value);
         }
 
         private static void LogMissingVariableAndThrow(string rawString)

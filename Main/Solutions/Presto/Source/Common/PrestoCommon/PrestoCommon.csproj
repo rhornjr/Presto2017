@@ -161,6 +161,7 @@
     <Compile Include="Logic\LogMessageLogic.cs" />
     <Compile Include="Logic\PingRequestLogic.cs" />
     <Compile Include="Logic\PingResponseLogic.cs" />
+    <Compile Include="Misc\AesCrypto.cs" />
     <Compile Include="Misc\AppInstaller.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\LogUtility.cs" />

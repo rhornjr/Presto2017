@@ -21,7 +21,9 @@
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
             <Label Style="{StaticResource StandardLabel}" Content="Value:" Width="50" />
-            <TextBox Text="{Binding CustomVariable.Value}" Width="420"/>
+            <TextBox Text="{Binding CustomVariable.Value}" Width="345"/>
+            <Button Command="{Binding EncryptCommand}" Style="{StaticResource StandardButton}" Content="Encrypt"
+                    IsEnabled="{Binding ValueIsPlaintext}" VerticalAlignment="Center" Margin="1" Height="22"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Height="35">

@@ -239,7 +239,7 @@ namespace PrestoViewModel.Tabs
                     this._timer = null;
                 }
 
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.PingItemsRefreshed;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.PingItemsRefreshed);
             }
             finally
             {

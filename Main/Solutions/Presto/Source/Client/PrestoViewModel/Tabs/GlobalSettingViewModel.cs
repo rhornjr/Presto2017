@@ -69,7 +69,7 @@ namespace PrestoViewModel.Tabs
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }
 
@@ -77,7 +77,7 @@ namespace PrestoViewModel.Tabs
         {
             this.LoadGlobalSetting();
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.GlobalSettingsRefreshed;
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.GlobalSettingsRefreshed);
         }
 
         private void Save()
@@ -88,7 +88,7 @@ namespace PrestoViewModel.Tabs
                 "Global settings updated. Freeze all installations is now {0}.",
                 this.GlobalSetting.FreezeAllInstallations));
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.GlobalSettingsSaved;
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.GlobalSettingsSaved);
         }
     }
 }

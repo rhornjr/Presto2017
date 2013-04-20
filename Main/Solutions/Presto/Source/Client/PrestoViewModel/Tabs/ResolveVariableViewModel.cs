@@ -229,10 +229,10 @@ namespace PrestoViewModel.Tabs
                 }
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.VariablesResolved,
                 numberOfProblemsFound.ToString(CultureInfo.CurrentCulture),
-                supplementalStatusMessage);
+                supplementalStatusMessage));
         }
 
         private void RefreshAppGroupAndServer()

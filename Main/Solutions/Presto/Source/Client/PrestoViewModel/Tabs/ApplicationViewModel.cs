@@ -198,7 +198,7 @@ namespace PrestoViewModel.Tabs
         {
             this.LoadApplications();
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
+            ViewModelUtility.MainWindowViewModel.AddUserMessage("Applications refreshed.");
         }
 
         private void AddApplication()
@@ -298,7 +298,7 @@ namespace PrestoViewModel.Tabs
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                ViewModelUtility.MainWindowViewModel.UserMessage = ex.Message;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
             }
         }
 
@@ -371,8 +371,8 @@ namespace PrestoViewModel.Tabs
 
             // If we get here, then we couldn't import either of the two types of tasks (new and legacy).
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                    ViewModelResources.CannotImport);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.CannotImport));
 
             LogUtility.LogException(exceptionFromGettingNewTasks);
             LogUtility.LogException(exceptionFromGettingLegacyTasks);
@@ -457,8 +457,8 @@ namespace PrestoViewModel.Tabs
                 serializer.WriteObject(fileStream, tasksToExport);
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemExported, this.SelectedApplication.Name + " tasks");
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemExported, this.SelectedApplication.Name + " tasks"));
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]
@@ -527,7 +527,7 @@ namespace PrestoViewModel.Tabs
         {
             string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.UnexpectedLegacyTask, legacyTaskTypeName);
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = message;
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
 
             LogUtility.LogWarning(message);
         }
@@ -543,13 +543,13 @@ namespace PrestoViewModel.Tabs
             {
                 string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplication);
 
-                ViewModelUtility.MainWindowViewModel.UserMessage = message;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
 
                 ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemSaved, this.SelectedApplication);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemSaved, this.SelectedApplication));
         }
 
         private void LoadApplications()
@@ -561,7 +561,7 @@ namespace PrestoViewModel.Tabs
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }
 

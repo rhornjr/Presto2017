@@ -126,12 +126,12 @@ namespace PrestoViewModel.Windows
             }
             catch (SocketException ex)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseConnectionFailureMessage;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.DatabaseConnectionFailureMessage);
                 LogUtility.LogException(ex);
             }
             catch (InvalidOperationException ex)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.DatabaseInvalidOperation;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.DatabaseInvalidOperation);
                 LogUtility.LogException(ex);
             }
         }        

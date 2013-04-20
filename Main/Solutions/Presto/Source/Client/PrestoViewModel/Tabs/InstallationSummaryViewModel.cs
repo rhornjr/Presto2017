@@ -124,7 +124,7 @@ namespace PrestoViewModel.Tabs
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }
 
@@ -172,7 +172,7 @@ namespace PrestoViewModel.Tabs
         {
             this.LoadInstallationSummaryList();
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.InstallationListRefreshed;
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.InstallationListRefreshed);
         }
     }
 }

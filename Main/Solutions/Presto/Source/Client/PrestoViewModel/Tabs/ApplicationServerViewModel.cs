@@ -271,8 +271,8 @@ namespace PrestoViewModel.Tabs
                 xmlSerializer.Serialize(fileStream, this.SelectedApplicationsWithOverrideGroup.ToList());
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemExported, filePathAndName);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemExported, filePathAndName));
         }
 
         private string SetFileNameBasedOnSelection()
@@ -323,8 +323,8 @@ namespace PrestoViewModel.Tabs
                 }
                 catch (Exception ex)
                 {
-                    ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                        ViewModelResources.CannotImport);
+                    ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                        ViewModelResources.CannotImport));
                     LogUtility.LogException(ex);
                     return;
                 }
@@ -359,10 +359,10 @@ namespace PrestoViewModel.Tabs
 
         private static void CannotImportGroup(ApplicationWithOverrideVariableGroup importedGroup)
         {
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 "{0} could not be imported because the application ({1}) with which it is associated does not exist.",
                 importedGroup.ToString(),
-                importedGroup.Application.Name);
+                importedGroup.Application.Name));
         }
 
         private void ForceApplication()
@@ -397,8 +397,8 @@ namespace PrestoViewModel.Tabs
                 allAppWithGroupNames,
                 this.SelectedApplicationServer));
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer));
         }
 
         private bool PrestoUpdaterAppIncludedInForceRequestOfMultipleApps()
@@ -406,11 +406,11 @@ namespace PrestoViewModel.Tabs
             if (this.SelectedApplicationsWithOverrideGroup.Count > 1 &&
                 this.SelectedApplicationsWithOverrideGroup.Any(
                     x => x.Application.Name.Equals(_selfUpdatingAppName, StringComparison.OrdinalIgnoreCase)))
-            {                
-                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
+            {
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                     "Cannot include the {0} app with a request to install multiple apps. If you want to install the " +
                     "updater app, select it by itself.",
-                    _selfUpdatingAppName);
+                    _selfUpdatingAppName));
                 return true;
             }
 
@@ -452,8 +452,8 @@ namespace PrestoViewModel.Tabs
             {
                 LogUtility.LogException(ex);
 
-                ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                    ViewModelResources.PrestoUpdaterCouldNotBeInstalled);
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                    ViewModelResources.PrestoUpdaterCouldNotBeInstalled));
             }
         }
 
@@ -483,14 +483,14 @@ namespace PrestoViewModel.Tabs
         {            
             this.LoadApplicationServers();
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
+            ViewModelUtility.MainWindowViewModel.AddUserMessage("Servers refreshed.");
         }
 
         private bool SaveServer()
         {
             if (this.SelectedApplicationServer.InstallationEnvironment == null)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ViewModelResources.ServerNotSavedEnvironmentMissing;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.ServerNotSavedEnvironmentMissing);
                 ShowUserMessage(ViewModelResources.ServerNotSavedEnvironmentMissing, "Missing Environment");
                 return false;
             }
@@ -505,15 +505,15 @@ namespace PrestoViewModel.Tabs
             {
                 string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplicationServer.Name);
 
-                ViewModelUtility.MainWindowViewModel.UserMessage = message;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
 
                 ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
 
                 return false;
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemSaved, this.SelectedApplicationServer.Name);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemSaved, this.SelectedApplicationServer.Name));
 
             return true;
         }   
@@ -617,7 +617,7 @@ namespace PrestoViewModel.Tabs
         {
             if (this.SelectedApplicationsWithOverrideGroup == null || this.SelectedApplicationsWithOverrideGroup.Count != 1)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = "To perform the requested action, please select exactly one row.";
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("To perform the requested action, please select exactly one row.");
                 return null;
             }
             
@@ -674,7 +674,7 @@ namespace PrestoViewModel.Tabs
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }
     }

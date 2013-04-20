@@ -213,7 +213,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                ViewModelUtility.MainWindowViewModel.UserMessage = ex.Message;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
 
                 ShowUserMessage(ex.Message, ViewModelResources.ItemCannotBeDeletedCaption);
 
@@ -234,15 +234,15 @@ namespace PrestoViewModel.Tabs
             {
                 string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedCustomVariableGroup.Name);
 
-                ViewModelUtility.MainWindowViewModel.UserMessage = message;
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
 
                 ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
 
                 actionIfSaveFails.Invoke();
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemSaved, selectedGroupName);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemSaved, selectedGroupName));
         }
 
         private void ImportVariableGroup()
@@ -264,8 +264,8 @@ namespace PrestoViewModel.Tabs
                     }
                     catch (Exception ex)
                     {
-                        ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                            ViewModelResources.CannotImport);
+                        ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                            ViewModelResources.CannotImport));
                         LogUtility.LogException(ex);
                         return;
                     }
@@ -296,8 +296,8 @@ namespace PrestoViewModel.Tabs
                 xmlSerializer.Serialize(fileStream, this.SelectedCustomVariableGroup);
             }
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = string.Format(CultureInfo.CurrentCulture,
-                ViewModelResources.ItemExported, this.SelectedCustomVariableGroup.Name);
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemExported, this.SelectedCustomVariableGroup.Name));
         }
 
         private void RefreshVariableGroups()
@@ -305,7 +305,7 @@ namespace PrestoViewModel.Tabs
             this.LoadCustomVariableGroups();
             InitializeCustomVariableGroupsCollectionView();
 
-            ViewModelUtility.MainWindowViewModel.UserMessage = "Items refreshed.";
+            ViewModelUtility.MainWindowViewModel.AddUserMessage("Variables refreshed.");
         }   
 
         private void LoadCustomVariableGroups()
@@ -317,7 +317,7 @@ namespace PrestoViewModel.Tabs
             catch (Exception ex)
             {
                 LogUtility.LogException(ex);
-                ViewModelUtility.MainWindowViewModel.UserMessage = "Could not load form. Please see log for details.";
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }
     }

@@ -1,50 +1,45 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel
 {
-    /// <summary>
-    /// View model for main window
-    /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
-        private string _userMessage;
+        private int _maxMessagesToDisplay = 5;
+        private ObservableCollection<string> _userMessages = new ObservableCollection<string>();
 
-        /// <summary>
-        /// Gets or sets the view loader.
-        /// </summary>
-        /// <value>
-        /// The view loader.
-        /// </value>
         public static ViewLoader ViewLoader { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user message.
-        /// </summary>
-        /// <value>
-        /// The user message.
-        /// </value>
-        public string UserMessage
+        public ObservableCollection<string> UserMessages
         {
-            get { return this._userMessage; }
-
-            set
-            {
-                this._userMessage = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", DateTime.Now.ToString(), value);
-                this.NotifyPropertyChanged(() => this.UserMessage);
-            }
+            get { return this._userMessages; }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
-        /// </summary>
         public MainWindowViewModel()
         {
             // Set a reference to this view model so other view models can access it.
             // One reason for this is so that other view models can set a user message.
             ViewModelUtility.MainWindowViewModel = this;
+        }
+
+        public void AddUserMessage(string message)
+        {
+            // ToDo: Implement RavenDB push notifications:
+            //       http://ravendb.net/docs/2.0/client-api/changes-api
+            // Do this so we can display new installation summary and log notices.
+
+            this._userMessages.Add(string.Format(CultureInfo.CurrentCulture,
+                    "{0}: {1}",
+                    DateTime.Now.ToString(),
+                    message));
+
+            // If we've exceeded our maximum number of messages to display, remove the first item.
+            if (this._userMessages.Count > _maxMessagesToDisplay) { this._userMessages.RemoveAt(0); }
+
+            this.NotifyPropertyChanged(() => this.UserMessages);
         }
     }
 }

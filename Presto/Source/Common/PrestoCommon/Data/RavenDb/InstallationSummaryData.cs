@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
+using Raven.Client;
 using Raven.Client.Linq;
 
 namespace PrestoCommon.Data.RavenDb

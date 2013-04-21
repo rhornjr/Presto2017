@@ -133,7 +133,7 @@ namespace PrestoCommon.Entities
 
                     process.WaitForExit();
 
-                    Pause();
+                    PossiblyPause();
 
                     // Now I see why I had this commented before. When we run a DOS command, it can return a non-zero exit
                     // code, even though everything is ok. For example, if we need to delete files in a directory, but that
@@ -169,7 +169,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        private void Pause()
+        private void PossiblyPause()
         {
             if (this.AfterTaskPauseInSeconds <= 0) { return; }  // No pause.
 

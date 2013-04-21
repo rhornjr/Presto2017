@@ -5,17 +5,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using PrestoCommon.Entities;
+using PrestoCommon.Misc;
+using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Indexes;
 
 namespace PrestoCommon.Data.RavenDb
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract class DataAccessLayerBase
     {
+        public static event EventHandler<EventArgs<string>> NewInstallationSummaryAddedToDb = delegate { };
+
         private static DocumentStore _database = GetDatabase();
 
         [ThreadStatic]
@@ -160,6 +161,19 @@ namespace PrestoCommon.Data.RavenDb
 
                 // Tell Raven to create our indexes.
                 IndexCreation.CreateIndexes(typeof(DataAccessFactory).Assembly, documentStore);
+                
+                // RavenDB push notifications:
+                // http://ravendb.net/docs/2.0/client-api/changes-api
+                // Do this so we can display new installation summaries.
+                documentStore.Changes()
+                             .ForDocumentsStartingWith("InstallationSummaries")
+                             .Subscribe(change =>
+                             {
+                                 if (change.Type == DocumentChangeTypes.Put)
+                                 {
+                                     NewInstallationSummaryAddedToDb(null, new EventArgs<string>(change.Id));
+                                 }
+                             });
             }
             catch
             {

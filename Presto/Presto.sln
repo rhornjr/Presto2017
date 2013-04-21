@@ -30,10 +30,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MvvmFramework", "MvvmFramew
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDb", "RavenDb", "{B59FBDF3-226E-4F6B-B564-6F795AA85689}"
 	ProjectSection(SolutionItems) = preProject
-		Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll
 		Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll = Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll
-		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll
-		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions.dll
+		Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight.dll = Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WpfToolkit", "WpfToolkit", "{CDBF03AE-5D75-4B74-BB79-EB71D2C7E043}"

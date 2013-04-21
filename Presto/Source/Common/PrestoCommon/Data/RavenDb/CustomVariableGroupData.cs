@@ -46,10 +46,9 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<CustomVariableGroup>(() =>
             {
                 CustomVariableGroup customVariableGroup =
-                    QuerySingleResultAndSetEtag(session => session.Query<CustomVariableGroup>()
-                        .Customize(x => x.WaitForNonStaleResults())
-                        .Where(customGroup => customGroup.Id == id)
-                        .FirstOrDefault())
+                    QuerySingleResultAndSetEtag(session => session
+                        .Include<CustomVariableGroup>(customGroup => customGroup.Id == id)
+                        .Load<CustomVariableGroup>(id))
                         as CustomVariableGroup;
 
                 return customVariableGroup;

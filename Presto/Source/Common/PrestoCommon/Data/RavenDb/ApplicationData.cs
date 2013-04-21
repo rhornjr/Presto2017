@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using PrestoCommon.Data.Interfaces;
 using PrestoCommon.Entities;
+using Raven.Client;
 using Raven.Client.Linq;
 
 namespace PrestoCommon.Data.RavenDb
@@ -63,10 +64,15 @@ namespace PrestoCommon.Data.RavenDb
         {
             return ExecuteQuery<Application>(() =>
             {
+                //Application application = QuerySingleResultAndSetEtag(session =>
+                //    session.Query<Application>()
+                //    .Include(x => x.CustomVariableGroupIds)
+                //    .Where(app => app.Id == id).FirstOrDefault())
+                //    as Application;
+
                 Application application = QuerySingleResultAndSetEtag(session =>
-                    session.Query<Application>()
-                    .Include(x => x.CustomVariableGroupIds)
-                    .Where(app => app.Id == id).FirstOrDefault())
+                    session.Include<Application>(x => x.CustomVariableGroupIds)
+                    .Load<Application>(id))
                     as Application;
 
                 HydrateApplication(application);

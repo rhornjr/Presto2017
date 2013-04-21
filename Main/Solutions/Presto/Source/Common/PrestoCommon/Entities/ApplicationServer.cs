@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.Unity;
-using Newtonsoft.Json;
+using Raven.Imports.Newtonsoft.Json;
 using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;

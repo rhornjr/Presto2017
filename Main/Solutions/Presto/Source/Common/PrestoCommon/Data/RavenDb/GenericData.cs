@@ -50,7 +50,7 @@ namespace PrestoCommon.Data.RavenDb
 
             using (IDocumentSession session = Database.OpenSession())
             {
-                session.Advanced.DatabaseCommands.Delete(objectToDelete.Id, objectToDelete.Etag);
+                session.Advanced.DocumentStore.DatabaseCommands.Delete(objectToDelete.Id, objectToDelete.Etag);
                 session.SaveChanges();
             }
         }

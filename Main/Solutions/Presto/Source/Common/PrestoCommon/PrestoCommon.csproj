@@ -52,24 +52,35 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog">
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Abstractions-3.5">
-      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions-3.5.dll</HintPath>
+    <Reference Include="Raven.Abstractions">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Client.Lightweight-3.5">
-      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight-3.5.dll</HintPath>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\..\packages\Rx-Core.2.1.30214.0\lib\Net40\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\..\packages\Rx-Interfaces.2.1.30214.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\..\packages\Rx-Linq.2.1.30214.0\lib\Net40\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\..\packages\Rx-PlatformServices.2.1.30214.0\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -164,6 +175,7 @@
     <Compile Include="Misc\AesCrypto.cs" />
     <Compile Include="Misc\AppInstaller.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
+    <Compile Include="Misc\EventArgsGeneric.cs" />
     <Compile Include="Misc\LogUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -188,6 +200,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PrestoCommonResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

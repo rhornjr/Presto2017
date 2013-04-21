@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Newtonsoft.Json;
+using Raven.Imports.Newtonsoft.Json;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;

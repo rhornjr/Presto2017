@@ -9,8 +9,8 @@ using PrestoCommon.Misc;
 namespace PrestoAutomatedTests
 {
     // The way this all works, at least for RavenDB at the moment:
-    // 1. Start with a fresh DB - Delete C:\Software\RavenDb\RavenDB-Build-960\Server\Data
-    // 2. Start the DB server: C:\Software\RavenDb\RavenDB-Build-960\Server\Raven.Server.exe
+    // 1. Start with a fresh DB - Delete C:\Software\RavenDb\RavenDB-Build-2230\Server\Database
+    // 2. Start the DB server: C:\Software\RavenDb\RavenDB-Build-2230\Server\Raven.Server.exe
     // 3. Run the tests: Test -> Debug -> All tests
 
     public static class TestUtility

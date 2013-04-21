@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Threading;
+using PrestoCommon.Data.RavenDb;
+using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -8,6 +11,7 @@ namespace PrestoViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private static readonly object _locker = new object();
         private int _maxMessagesToDisplay = 5;
         private ObservableCollection<string> _userMessages = new ObservableCollection<string>();
 
@@ -23,23 +27,34 @@ namespace PrestoViewModel
             // Set a reference to this view model so other view models can access it.
             // One reason for this is so that other view models can set a user message.
             ViewModelUtility.MainWindowViewModel = this;
+
+            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
+        }
+
+        private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
+        {
+            AddUserMessage(e.Value);
         }
 
         public void AddUserMessage(string message)
         {
-            // ToDo: Implement RavenDB push notifications:
-            //       http://ravendb.net/docs/2.0/client-api/changes-api
-            // Do this so we can display new installation summary and log notices.
+            // Note: We need to use Dispatcher.BeginInvoke() because this method is called by the UI
+            //       thread and events (not the UI thread).
+            lock (_locker)
+            {
+                Action action = () =>
+                {
+                    this._userMessages.Add(string.Format(CultureInfo.CurrentCulture,
+                        "{0}: {1}",
+                        DateTime.Now.ToString(),
+                        message));
 
-            this._userMessages.Add(string.Format(CultureInfo.CurrentCulture,
-                    "{0}: {1}",
-                    DateTime.Now.ToString(),
-                    message));
+                    // If we've exceeded our maximum number of messages to display, remove the first item.
+                    if (this._userMessages.Count > _maxMessagesToDisplay) { this._userMessages.RemoveAt(0); }
+                };
 
-            // If we've exceeded our maximum number of messages to display, remove the first item.
-            if (this._userMessages.Count > _maxMessagesToDisplay) { this._userMessages.RemoveAt(0); }
-
-            this.NotifyPropertyChanged(() => this.UserMessages);
+                System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
+            }
         }
     }
 }

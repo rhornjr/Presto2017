@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using PrestoCommon.Data.RavenDb;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
@@ -110,7 +111,19 @@ namespace PrestoViewModel.Tabs
             Initialize();
 
             LoadTimeZones();
-            LoadInstallationSummaryList();            
+            LoadInstallationSummaryList();
+            SubscribeToDatabaseChangeEvents();
+        }
+
+        private void SubscribeToDatabaseChangeEvents()
+        {
+            // When there is a new installation summary, automatically refresh the list.
+            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
+        }
+
+        private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
+        {
+            Refresh();
         }
 
         private void LoadInstallationSummaryList()

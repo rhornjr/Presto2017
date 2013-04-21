@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
 {

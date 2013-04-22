@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.ServiceModel;
 using ConsoleTestRunner.WcfHelpers;
 using PrestoCommon.Entities;
@@ -33,9 +34,12 @@ namespace ConsoleTestRunner
 
         static void Main(string[] args)
         {
-            var channelFactory = new WcfChannelFactory<IPrestoService>();
+            var channelFactory = new WcfChannelFactory<IPrestoService>(new NetTcpBinding());
+            var endpointAddress = ConfigurationManager.AppSettings["endpointAddress"];
 
-            IPrestoService prestoService = channelFactory.CreateChannel(new EndpointAddress("net.tcp://localhost:8087/PrestoWcfService"));
+            // The call to CreateChannel() actually returns a proxy that can intercept calls to the
+            // service. This is done so that the proxy can retry on communication failures.            
+            IPrestoService prestoService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
 
             Console.WriteLine("Enter some information to echo to the Presto service:");
             string message = Console.ReadLine();

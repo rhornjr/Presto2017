@@ -1,4 +1,6 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
+using PrestoCommon.Entities;
 
 namespace PrestoCommon.Interfaces
 {
@@ -7,5 +9,8 @@ namespace PrestoCommon.Interfaces
     {
         [OperationContract]
         string Echo(string message);
+
+        [OperationContract]
+        List<Application> GetAllApplications();
     }
 }

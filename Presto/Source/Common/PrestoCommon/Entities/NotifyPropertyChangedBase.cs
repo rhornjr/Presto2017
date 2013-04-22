@@ -2,12 +2,11 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 
 namespace PrestoCommon.Entities
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    [DataContract]
     public class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
         /// <summary>

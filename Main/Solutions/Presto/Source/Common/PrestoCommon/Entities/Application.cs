@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Raven.Imports.Newtonsoft.Json;
 
@@ -9,14 +10,16 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// An application, or product, that gets installed.
     /// </summary>
+    [DataContract]
     public class Application : EntityBase
-    {
+    {        
         private string _name;
         private ForceInstallation _forceInstallation;
         private ObservableCollection<TaskBase> _tasks;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
         private TaskVersionChecker _taskVersionChecker;
 
+        [DataMember]
         public string Name
         {
             get { return this._name; }

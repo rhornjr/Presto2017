@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceProcess;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoWcfService.WcfServices;
 
 namespace PrestoWcfService
@@ -36,6 +37,8 @@ namespace PrestoWcfService
         protected override void OnStart(string[] args)
         {
             if (_serviceHost != null) { _serviceHost.Close(); }
+
+            CommonUtility.RegisterRavenDataClasses();
 
             _serviceHost = new ServiceHost(typeof(PrestoService));
             _serviceHost.AddServiceEndpoint(typeof(IPrestoService), new NetTcpBinding(), _serviceAddress);

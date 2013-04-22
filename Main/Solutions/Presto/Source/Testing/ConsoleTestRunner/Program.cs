@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
+using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 
 namespace ConsoleTestRunner
@@ -22,6 +24,13 @@ namespace ConsoleTestRunner
             string returnMessage = prestoService.Echo(message);
 
             Console.WriteLine("Presto responds: {0}", returnMessage);
+
+            List<Application> apps = prestoService.GetAllApplications();
+
+            foreach (var app in apps)
+            {
+                Console.WriteLine(app.Name);
+            }
 
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();

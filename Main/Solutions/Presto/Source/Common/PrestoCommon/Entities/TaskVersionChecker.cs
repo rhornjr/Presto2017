@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.Serialization;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
+    [DataContract]
     public class TaskVersionChecker : TaskBase
     {
         private string _fileName;
         private string _sourceFolder;
         private string _destinationFolder;
 
+        [DataMember]
         public string FileName
         {
             get { return this._fileName; }
@@ -24,6 +27,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string SourceFolder
         {
             get { return this._sourceFolder; }
@@ -35,6 +39,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string DestinationFolder
         {
             get { return this._destinationFolder; }

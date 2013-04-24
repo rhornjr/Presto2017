@@ -64,12 +64,6 @@ namespace PrestoCommon.Data.RavenDb
         {
             return ExecuteQuery<Application>(() =>
             {
-                //Application application = QuerySingleResultAndSetEtag(session =>
-                //    session.Query<Application>()
-                //    .Include(x => x.CustomVariableGroupIds)
-                //    .Where(app => app.Id == id).FirstOrDefault())
-                //    as Application;
-
                 Application application = QuerySingleResultAndSetEtag(session =>
                     session.Include<Application>(x => x.CustomVariableGroupIds)
                     .Load<Application>(id))

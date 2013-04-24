@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Xml;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
+    [DataContract]
     public class TaskXmlModify : TaskBase
     {
         private string _xmlPathAndFileName;
 
+        [DataMember]
         public string XmlPathAndFileName
         {
             get { return this._xmlPathAndFileName; }
@@ -23,16 +26,22 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string NodeNamespace { get; set; }
 
+        [DataMember]
         public string NodeToChange { get; set; }
 
+        [DataMember]
         public string AttributeKey { get; set; }
 
+        [DataMember]
         public string AttributeKeyValue { get; set; }
 
+        [DataMember]
         public string AttributeToChange { get; set; }
 
+        [DataMember]
         public string AttributeToChangeValue { get; set; }
 
         public TaskXmlModify()

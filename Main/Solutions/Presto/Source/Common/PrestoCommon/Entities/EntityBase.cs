@@ -9,7 +9,10 @@ namespace PrestoCommon.Entities
     [DataContract]
     public class EntityBase : NotifyPropertyChangedBase
     {
+        [DataMember]
         public string Id { get; set; }  // Required field for all objects with RavenDB.
+
+        [DataMember]
         public Guid Etag { get; set; }  // For RavenDB
     }
 }

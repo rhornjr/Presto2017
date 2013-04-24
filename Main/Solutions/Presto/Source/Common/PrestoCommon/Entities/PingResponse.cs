@@ -1,5 +1,5 @@
 ﻿using System;
-using Raven.Imports.Newtonsoft.Json;
+using System.Runtime.Serialization;
 using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
@@ -7,49 +7,26 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// 
     /// </summary>
+    [DataContract]
     public class PingResponse : EntityBase
     {
-        /// <summary>
-        /// Gets the ping request id.
-        /// </summary>
+        [DataMember]
         public string PingRequestId { get; private set; }
 
-        /// <summary>
-        /// Gets the application server id.
-        /// </summary>
+        [DataMember]
         public string ApplicationServerId { get; set; }
 
-        /// <summary>
-        /// Gets the response time.
-        /// </summary>
+        [DataMember]
         public DateTime ResponseTime { get; private set; }
 
-        /// <summary>
-        /// Gets the application server.
-        /// </summary>
         [JsonIgnore]
         public ApplicationServer ApplicationServer { get; set; }
 
-        /// <summary>
-        /// Gets or sets the comment.
-        /// </summary>
-        /// <value>
-        /// The comment.
-        /// </value>
+        [DataMember]
         public string Comment { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PingResponse"/> class.
-        /// </summary>
         public PingResponse() { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PingResponse"/> class.
-        /// </summary>
-        /// <param name="pingRequestId">The ping request id.</param>
-        /// <param name="responseTime">The response time.</param>
-        /// <param name="applicationServer">The application server.</param>
-        /// <param name="comment">The comment.</param>
         public PingResponse(string pingRequestId, DateTime responseTime, ApplicationServer applicationServer, string comment)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }

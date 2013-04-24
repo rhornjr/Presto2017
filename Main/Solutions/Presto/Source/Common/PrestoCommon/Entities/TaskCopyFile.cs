@@ -2,45 +2,24 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.Serialization;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    [DataContract]
     public class TaskCopyFile : TaskBase
     {
-        /// <summary>
-        /// Gets or sets the source path.
-        /// </summary>
-        /// <value>
-        /// The source path.
-        /// </value>
+        [DataMember]
         public string SourcePath { get; set; }
 
-        /// <summary>
-        /// Gets or sets the name of the source file.
-        /// </summary>
-        /// <value>
-        /// The name of the source file.
-        /// </value>
+        [DataMember]
         public string SourceFileName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the destination path.
-        /// </summary>
-        /// <value>
-        /// The destination path.
-        /// </value>
+        [DataMember]
         public string DestinationPath { get; set; }
 
-        /// <summary>
-        /// Executes this instance.
-        /// </summary>
-        /// <param name="applicationServer"></param>
-        /// <param name="applicationWithOverrideVariableGroup"></param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Desc")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogInformation(System.String)")]
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)

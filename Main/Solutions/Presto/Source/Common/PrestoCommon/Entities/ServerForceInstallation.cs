@@ -1,16 +1,21 @@
-﻿using Raven.Imports.Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
 {
+    [DataContract]
     public class ServerForceInstallation : EntityBase
     {
+        [DataMember]
         public string ApplicationServerId { get; set; }
 
         [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public ApplicationServer ApplicationServer { get; set; }
 
+        [DataMember]
         public string ApplicationId { get; set; }
 
+        [DataMember]
         public string OverrideGroupId { get; set; }
 
         [JsonIgnore]  //  We do not want RavenDB to serialize this.

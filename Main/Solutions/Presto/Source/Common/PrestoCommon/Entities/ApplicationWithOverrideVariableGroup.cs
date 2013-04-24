@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Raven.Imports.Newtonsoft.Json;
+using System.Runtime.Serialization;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
 {
@@ -11,18 +12,14 @@ namespace PrestoCommon.Entities
     /// An application can be installed multiple times on any given app server. Using the canonical example, each
     /// instance needs to be the same as the others except for installation path, and one or more custom variables.
     /// </summary>
+    [DataContract]
     public class ApplicationWithOverrideVariableGroup : EntityBase
     {
         private bool _enabled;
         private Application _application;
         private CustomVariableGroup _customVariableGroup;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="ApplicationWithOverrideVariableGroup"/> is enabled.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
-        /// </value>
+        [DataMember]
         public bool Enabled
         {
             get { return this._enabled; }
@@ -34,20 +31,9 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the application id.
-        /// </summary>
-        /// <value>
-        /// The application id.
-        /// </value>
+        [DataMember]
         public string ApplicationId { get; set; }  // For RavenDB, grrrr...
 
-        /// <summary>
-        /// Gets or sets the application.
-        /// </summary>
-        /// <value>
-        /// The application.
-        /// </value>
         [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public Application Application
         {
@@ -61,20 +47,9 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the custom variable group id.
-        /// </summary>
-        /// <value>
-        /// The custom variable group id.
-        /// </value>
+        [DataMember]
         public string CustomVariableGroupId { get; set; }  // For RavenDB, grrrr...
 
-        /// <summary>
-        /// Gets or sets the custom variable group.
-        /// </summary>
-        /// <value>
-        /// The custom variable group.
-        /// </value>
         [JsonIgnore]  //  We do not want RavenDB to serialize this.
         public CustomVariableGroup CustomVariableGroup
         {

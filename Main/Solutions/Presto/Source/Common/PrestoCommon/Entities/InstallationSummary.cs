@@ -1,30 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using Raven.Imports.Newtonsoft.Json;
+using System.Runtime.Serialization;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
 {
+    [DataContract]
     public class InstallationSummary : EntityBase
     {
+        [DataMember]
         public string ApplicationServerId { get; set; }
 
         [JsonIgnore]
         public ApplicationServer ApplicationServer { get; set; }
 
+        [DataMember]
         public ApplicationWithOverrideVariableGroup ApplicationWithOverrideVariableGroup { get; set; }
 
+        [DataMember]
         public DateTime InstallationStart { get; set; }
 
+        [DataMember]
         public DateTime InstallationEnd { get; set; }
 
+        [DataMember]
         public DateTime InstallationStartUtc { get; set; }
 
+        [DataMember]
         public DateTime InstallationEndUtc { get; set; }
 
+        [DataMember]
         public InstallationResult InstallationResult { get; set; }
 
+        [DataMember]
         public List<TaskDetail> TaskDetails { get; set; }
 
         public InstallationSummary(ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup, ApplicationServer applicationServer, DateTime startTime)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Threading;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
@@ -12,6 +13,7 @@ namespace PrestoCommon.Entities
     /// <summary>
     /// Task for a DOS command (anything you can do at a command prompt)
     /// </summary>
+    [DataContract]
     public class TaskDosCommand : TaskBase
     {
         private string _dosExecutable;
@@ -20,12 +22,7 @@ namespace PrestoCommon.Entities
 
         private readonly int MaxAfterTaskPauseInSeconds = 120;
 
-        /// <summary>
-        /// Gets or sets the dos executable.
-        /// </summary>
-        /// <value>
-        /// The dos executable.
-        /// </value>
+        [DataMember]
         public string DosExecutable
         {
             get { return this._dosExecutable; }
@@ -37,12 +34,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the parameters.
-        /// </summary>
-        /// <value>
-        /// The parameters.
-        /// </value>
+        [DataMember]
         public string Parameters
         {
             get { return this._parameters; }
@@ -65,6 +57,7 @@ namespace PrestoCommon.Entities
         /// to the next task. With this pause, the user can pause processing for a certain amount of
         /// time, giving the task a chance to fully complete.
         /// </remarks>
+        [DataMember]
         public int AfterTaskPauseInSeconds
         {
             get { return this._afterTaskPauseInSeconds; }

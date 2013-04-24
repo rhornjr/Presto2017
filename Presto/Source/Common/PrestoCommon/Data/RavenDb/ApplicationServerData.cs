@@ -23,11 +23,12 @@ namespace PrestoCommon.Data.RavenDb
                 {
                     IEnumerable<ApplicationServer> appServers = QueryAndSetEtags(session =>
                         session.Query<ApplicationServer>()
-                        .Include(x => x.CustomVariableGroupIds)
-                        .Include(x => x.ApplicationIdsForAllAppWithGroups)
-                        .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                        .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                        .Include(x => x.InstallationEnvironmentId)
+
+                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIds))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.ApplicationIdsForAllAppWithGroups))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForAllAppWithGroups))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForGroupsWithinApps))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.InstallationEnvironmentId))
                         .Take(int.MaxValue)
                         ).AsEnumerable().Cast<ApplicationServer>();
 
@@ -74,13 +75,13 @@ namespace PrestoCommon.Data.RavenDb
             return ExecuteQuery<ApplicationServer>(() =>
             {
                 ApplicationServer appServer = QuerySingleResultAndSetEtag(session =>
-                    session.Query<ApplicationServer>()
-                    .Include(x => x.CustomVariableGroupIds)
-                    .Include(x => x.ApplicationIdsForAllAppWithGroups)
-                    .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                    .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                    .Include(x => x.InstallationEnvironmentId)
-                    .Where(server => server.Id == id).FirstOrDefault())
+                    session
+                    .Include<ApplicationServer>(x => x.CustomVariableGroupIds)
+                    .Include<ApplicationServer>(x => x.ApplicationIdsForAllAppWithGroups)
+                    .Include<ApplicationServer>(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                    .Include<ApplicationServer>(x => x.CustomVariableGroupIdsForGroupsWithinApps)
+                    .Include<ApplicationServer>(x => x.InstallationEnvironmentId)
+                    .Load <ApplicationServer>(id))
                     as ApplicationServer;
 
                 if (appServer != null) { HydrateApplicationServer(appServer); }
@@ -98,7 +99,7 @@ namespace PrestoCommon.Data.RavenDb
             // ... however, this kept the NumberOfRequests to just one. Not sure why the difference.
             appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>();
             foreach (string groupId in appServer.CustomVariableGroupIds)
-            {                
+            {
                 appServer.CustomVariableGroups.Add(QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
             }
 

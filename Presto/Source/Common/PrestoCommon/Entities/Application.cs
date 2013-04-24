@@ -31,8 +31,10 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string Version { get; set; }
 
+        [DataMember]
         public TaskVersionChecker TaskVersionChecker
         {
             get { return this._taskVersionChecker; }
@@ -45,6 +47,7 @@ namespace PrestoCommon.Entities
         }
 
         [XmlIgnore]
+        [DataMember]
         public ObservableCollection<TaskBase> Tasks
         {
             get
@@ -85,6 +88,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public ForceInstallation ForceInstallation
         {
             get { return this._forceInstallation; }
@@ -98,6 +102,7 @@ namespace PrestoCommon.Entities
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [DataMember]
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

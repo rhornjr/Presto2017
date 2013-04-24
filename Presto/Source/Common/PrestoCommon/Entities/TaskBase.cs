@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using PrestoCommon.Enums;
 
 namespace PrestoCommon.Entities
 {
-    /// <summary>
-    /// Base class for all tasks
-    /// </summary>
+    [DataContract]
     public abstract class TaskBase : EntityBase
     {
         private string   _description;
@@ -15,12 +14,7 @@ namespace PrestoCommon.Entities
         private bool     _taskSucceeded;        
         private string   _taskDetails;
 
-        /// <summary>
-        /// Gets or sets the failure causes all stop.
-        /// </summary>
-        /// <value>
-        /// The failure causes all stop.
-        /// </value>
+        [DataMember]
         public byte FailureCausesAllStop
         {
             get { return this._failureCausesAllStop; }
@@ -32,12 +26,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
+        [DataMember]
         public string Description
         {
             get { return this._description; }
@@ -49,12 +38,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the type of the task.
-        /// </summary>
-        /// <value>
-        /// The type of the task.
-        /// </value>
+        [DataMember]
         public TaskType PrestoTaskType
         {
             get { return this._taskType; }
@@ -66,12 +50,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the sequence.
-        /// </summary>
-        /// <value>
-        /// The sequence.
-        /// </value>
+        [DataMember]
         public int Sequence
         {
             get { return this._sequence; }
@@ -83,12 +62,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [task succeeded].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [task succeeded]; otherwise, <c>false</c>.
-        /// </value>
+        [DataMember]
         public bool TaskSucceeded
         {
             get { return this._taskSucceeded; }
@@ -100,12 +74,7 @@ namespace PrestoCommon.Entities
             }
         }
 
-        /// <summary>
-        /// Gets or sets the task details.
-        /// </summary>
-        /// <value>
-        /// The task details.
-        /// </value>
+        [DataMember]
         public string TaskDetails
         {
             get { return this._taskDetails; }

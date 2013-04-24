@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using PrestoCommon.Exceptions;
@@ -11,14 +12,19 @@ using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
+    [DataContract]
     public class CustomVariableGroup : EntityBase
     {
         private string _name;
         private ObservableCollection<CustomVariable> _customVariables;
 
+        [DataMember]
         public bool Disabled { get; set; }
+
+        [DataMember]
         public bool Deleted { get; set; }  // Since there is no referential integrity in RavenDB, use this property.
 
+        [DataMember]
         public string Name
         {
             get { return this._name; }
@@ -30,6 +36,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Deserialization")]
         public ObservableCollection<CustomVariable> CustomVariables
         {

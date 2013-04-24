@@ -5,18 +5,17 @@ using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using Microsoft.Practices.Unity;
-using Raven.Imports.Newtonsoft.Json;
 using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
 {
-    /// <summary>
-    /// ApplicationServer entity
-    /// </summary>
+    [DataContract]
     public class ApplicationServer : EntityBase
     {
         private string _name;
@@ -41,6 +40,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string Name
         {
             get { return this._name; }
@@ -52,6 +52,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string Description
         {
             get { return this._description; }
@@ -63,16 +64,20 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public bool EnableDebugLogging { get; set; }
 
+        [DataMember]
         public string InstallationEnvironmentId { get; set; }
 
         // ToDo: Remove this after migrating the data to InstallationEnvironment
+        [DataMember]
         public DeploymentEnvironment DeploymentEnvironment { get; set; }
 
         [JsonIgnore]
         public InstallationEnvironment InstallationEnvironment { get; set; }
 
+        [DataMember]
         public ObservableCollection<ApplicationWithOverrideVariableGroup> ApplicationsWithOverrideGroup
         {
             get
@@ -85,14 +90,18 @@ namespace PrestoCommon.Entities
             set { this._applicationsWithOverrideGroup = value; }
         }
 
+        [DataMember]
         public List<string> ApplicationIdsForAllAppWithGroups { get; set; }  // For RavenDB
 
+        [DataMember]
         public List<string> CustomVariableGroupIdsForAllAppWithGroups { get; set; }  // For RavenDB
 
+        [DataMember]
         public List<string> CustomVariableGroupIdsForGroupsWithinApps { get; set; }  // For RavenDB        
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [DataMember]
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -113,6 +122,7 @@ namespace PrestoCommon.Entities
         {
             return this.Name;
         }
+
         /// <summary>
         /// Finds the matching <see cref="ApplicationWithOverrideVariableGroup"/> from the force install list.
         /// </summary>

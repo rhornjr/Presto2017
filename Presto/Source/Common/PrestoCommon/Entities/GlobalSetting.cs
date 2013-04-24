@@ -1,9 +1,11 @@
-﻿
+﻿using System.Runtime.Serialization;
+
 namespace PrestoCommon.Entities
 {
     /// <summary>
     /// Global settings for Presto.
     /// </summary>
+    [DataContract]
     public class GlobalSetting : EntityBase
     {
         /// <summary>
@@ -12,6 +14,7 @@ namespace PrestoCommon.Entities
         /// then after seeing that no servers started installing when they shouldn't, set this
         /// property back to false.
         /// </summary>
+        [DataMember]
         public bool FreezeAllInstallations { get; set; }
     }
 }

@@ -1,11 +1,14 @@
-﻿
+﻿using System.Runtime.Serialization;
+
 namespace PrestoCommon.Entities
 {
+    [DataContract]
     public class CustomVariable : EntityBase
     {
         private string _key;
         private string _value;
 
+        [DataMember]
         public string Key
         {
             get { return this._key; }
@@ -17,6 +20,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public string Value
         {
             get { return this._value; }
@@ -28,6 +32,7 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
         public bool ValueIsEncrypted { get; set; }
 
         public override string ToString()

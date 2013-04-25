@@ -3,13 +3,14 @@ using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using System.ServiceModel;
 
-namespace ConsoleTestRunner.WcfHelpers
+namespace PrestoCommon.Wcf
 {
     public class WcfClientProxy<T> : RealProxy where T : class
     {
         private WcfChannelFactory<T> _channelFactory;
 
-        public WcfClientProxy(WcfChannelFactory<T> channelFactory) : base(typeof(T))
+        public WcfClientProxy(WcfChannelFactory<T> channelFactory)
+            : base(typeof(T))
         {
             this._channelFactory = channelFactory;
         }
@@ -25,7 +26,7 @@ namespace ConsoleTestRunner.WcfHelpers
             // and we'd end up with a stack overflow. So, call CreateBaseChannel() to get the
             // actual service.
             T wcfService = this._channelFactory.CreateBaseChannel();
-            
+
             try
             {
                 var result = methodBase.Invoke(wcfService, methodCall.Args);
@@ -43,11 +44,11 @@ namespace ConsoleTestRunner.WcfHelpers
                 // This is needed to distinguish between Faults and underlying communication exceptions.
                 throw;
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException)
             {
                 // Handle CommunicationException and implement retries here.
                 throw new NotImplementedException();
-            }            
+            }
         }
     }
 }

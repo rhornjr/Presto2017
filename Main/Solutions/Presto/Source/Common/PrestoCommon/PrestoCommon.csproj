@@ -180,6 +180,7 @@
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\EventArgsGeneric.cs" />
     <Compile Include="Misc\LogUtility.cs" />
+    <Compile Include="Misc\ReflectionUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -191,6 +192,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Wcf\WcfChannelFactory.cs" />
+    <Compile Include="Wcf\WcfClientProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\..\..\Solution Items\CustomDictionary.xml">

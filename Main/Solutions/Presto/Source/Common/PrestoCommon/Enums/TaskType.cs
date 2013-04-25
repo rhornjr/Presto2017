@@ -7,10 +7,10 @@ namespace PrestoCommon.Enums
     [DataContract]
     public enum TaskType
     {
-        [DataMember] CopyFile,
-        [DataMember] DosCommand,        
-        [DataMember] XmlModify,
-        [DataMember] VersionChecker
+        [EnumMember] CopyFile,
+        [EnumMember] DosCommand,        
+        [EnumMember] XmlModify,
+        [EnumMember] VersionChecker
         //Installer  // Will enable this if we ever need it again.
     }
     #pragma warning restore 1591

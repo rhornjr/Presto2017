@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using PrestoCommon.Enums;
+using PrestoCommon.Misc;
 
 namespace PrestoCommon.Entities
 {
+    [KnownType("DerivedTypes")]
     [DataContract]
     public abstract class TaskBase : EntityBase
     {
@@ -130,6 +135,11 @@ namespace PrestoCommon.Entities
         public override string ToString()
         {
             return this.Description;
+        }
+
+        private static Type[] DerivedTypes()
+        {
+            return typeof(TaskBase).GetDerivedTypes(Assembly.GetExecutingAssembly()).ToArray();
         }
     }
 }

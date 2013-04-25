@@ -2,11 +2,11 @@
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 
-namespace ConsoleTestRunner.WcfHelpers
+namespace PrestoCommon.Wcf
 {
     public class WcfChannelFactory<T> : ChannelFactory<T> where T : class
     {
-        public WcfChannelFactory(Binding binding) : base(binding) {}
+        public WcfChannelFactory(Binding binding) : base(binding) { }
 
         public T CreateBaseChannel()
         {
@@ -18,7 +18,7 @@ namespace ConsoleTestRunner.WcfHelpers
             // This is where the magic happens. We don't really return a channel here;
             // we return WcfClientProxy.GetTransparentProxy(). That class will now
             // have the chance to intercept calls to the service.
-            this.Endpoint.Address = address;            
+            this.Endpoint.Address = address;
             var proxy = new WcfClientProxy<T>(this);
             return proxy.GetTransparentProxy() as T;
         }

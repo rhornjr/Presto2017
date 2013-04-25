@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.ServiceModel;
 using System.ServiceProcess;
 using PrestoCommon.Interfaces;
@@ -11,7 +12,7 @@ namespace PrestoWcfService
     {
         private static PrestoServiceHost _prestoServiceHost = new PrestoServiceHost();
         private static ServiceHost _serviceHost = null;
-        private static string _serviceAddress = "net.tcp://localhost:8087/PrestoWcfService";
+        private static string _serviceAddress = ConfigurationManager.AppSettings["serviceAddress"];
 
         public PrestoServiceHost()
         {

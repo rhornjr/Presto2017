@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
-using ConsoleTestRunner.WcfHelpers;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 
 namespace ConsoleTestRunner
 {

@@ -49,9 +49,6 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Gets or sets the number of seconds to pause after a command is executed.
         /// </summary>
-        /// <value>
-        /// The after task pause in seconds.
-        /// </value>
         /// <remarks>
         /// Some DOS commands return immediately, not allowing enough time to complete before moving
         /// to the next task. With this pause, the user can pause processing for a certain amount of
@@ -77,15 +74,6 @@ namespace PrestoCommon.Entities
             this.PrestoTaskType = TaskType.DosCommand;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="failureCausesAllStop">The failure causes all stop.</param>
-        /// <param name="sequence">The sequence.</param>
-        /// <param name="taskSucceeded">if set to <c>true</c> [task succeeded].</param>
-        /// <param name="dosExecutable">The dos executable.</param>
-        /// <param name="parameters">The parameters.</param>
         public TaskDosCommand(string description, byte failureCausesAllStop, int sequence, bool taskSucceeded,
             string dosExecutable, string parameters)
             : base(description, TaskType.DosCommand, failureCausesAllStop, sequence, taskSucceeded)
@@ -94,9 +82,6 @@ namespace PrestoCommon.Entities
             this.Parameters    = parameters;
         }
 
-        /// <summary>
-        /// Executes this instance.
-        /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
@@ -108,18 +93,13 @@ namespace PrestoCommon.Entities
 
                 try
                 {
-                    // Hack: xcopy won't work unless you also redirect standard input. See 
-                    // http://www.tek-tips.com/viewthread.cfm?qid=1421150&page=12:
-                    // "Someone mentioned a quirk of xcopy.exe on one of the MSDN forums. When we redirect
-                    // output we have to redirect input too. If we don’t, it immediately and silently quits
-                    // right after startup."
-
                     process.StartInfo.FileName               = CustomVariableGroup.ResolveCustomVariable(this.DosExecutable, applicationServer, applicationWithOverrideVariableGroup);
                     process.StartInfo.Arguments              = CustomVariableGroup.ResolveCustomVariable(this.Parameters, applicationServer, applicationWithOverrideVariableGroup);
                     process.StartInfo.UseShellExecute        = false;
                     process.StartInfo.RedirectStandardError  = true;
-                    process.StartInfo.RedirectStandardInput  = true;
+                    process.StartInfo.RedirectStandardInput  = false;  // See Note 1 at the bottom of this file.
                     process.StartInfo.RedirectStandardOutput = true;
+
                     process.Start();
 
                     processOutput = process.StandardOutput.ReadToEnd();
@@ -128,21 +108,9 @@ namespace PrestoCommon.Entities
 
                     PossiblyPause();
 
-                    // Now I see why I had this commented before. When we run a DOS command, it can return a non-zero exit
-                    // code, even though everything is ok. For example, if we need to delete files in a directory, but that
-                    // directory doesn't exist, then who cares. All is good. So we either need to make sure all DOS commands
-                    // have an exit code of 0 (maybe by checking the the directory exists first), or just ignore the exit code.
-                    //if (process.ExitCode == 0)
-                    //{
-                    //    this.TaskSucceeded = true;
-                    //    return;                        
-                    //}
+                    // Used to check process.ExitCode here. See Note 2 at the bottom of this file for notes.
 
                     this.TaskSucceeded = true;
-
-                    //LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
-                    //    PrestoCommonResources.TaskDosCommandFailedWithExitCode,
-                    //    process.ExitCode.ToString(CultureInfo.CurrentCulture)));
                 }
                 catch (Exception ex)
                 {
@@ -265,3 +233,32 @@ namespace PrestoCommon.Entities
         }
     }
 }
+
+/*
+
+Note 1:
+    The original note is below. RedirectStandardInput was set to true until now (25-Apr-2013). When
+    RedirectStandardInput was true, process.Start() would hang when running on a background thread.
+    See http://stackoverflow.com/q/16202678/279516. The original reason RedirectStandardInput was
+    set to true was because of a quirk with xcopy (see below). I just tested xcopy and it now works
+    with RedirectStandardInput set to false, so I'm going to leave it that way. Hopefully the
+    original xcopy quirk/problem simply doesn't exist anymore.
+
+    Hack: xcopy won't work unless you also redirect standard input. See 
+    http://www.tek-tips.com/viewthread.cfm?qid=1421150&page=12:
+    "Someone mentioned a quirk of xcopy.exe on one of the MSDN forums. When we redirect
+    output we have to redirect input too. If we don’t, it immediately and silently quits
+    right after startup."
+
+ Note 2:
+    Now I see why I had this commented before. When we run a DOS command, it can return a non-zero exit
+    code, even though everything is ok. For example, if we need to delete files in a directory, but that
+    directory doesn't exist, then who cares. All is good. So we either need to make sure all DOS commands
+    have an exit code of 0 (maybe by checking the the directory exists first), or just ignore the exit code.
+    if (process.ExitCode == 0)
+    {
+        this.TaskSucceeded = true;
+        return;                        
+    }
+
+*/

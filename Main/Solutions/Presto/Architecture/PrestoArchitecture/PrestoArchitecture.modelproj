@@ -27,11 +27,19 @@
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="false" />
   <ItemGroup>
+    <Content Include="Sequence Diagrams\WcfProxy.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Sequence Diagrams\WcfProxy.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>Sequence Diagrams\WcfProxy.sequencediagram</DependentUpon>
+    </Content>
     <Folder Include="ModelDefinition\" />
     <Content Include="ModelDefinition\PrestoArchitecture.uml">
       <SubType>Content</SubType>
     </Content>
     <Folder Include="Layer Diagrams" />
+    <Folder Include="Sequence Diagrams" />
   </ItemGroup>
   <ItemGroup>
     <Validate Include="Layer Diagrams\PrestoOverview.layerdiagram">

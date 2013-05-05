@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner"
   dslVersion="1.0.0.0"
   Id="4a5a783f-cbad-4cb9-ab98-d4f8ac3a3828"
   name="PrestoArchitecture" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
@@ -17,28 +17,1291 @@
         name="StandardProfileL3" />
     </packageHasProfileInstances>
   </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <interaction
+        Id="e9027833-5f54-4593-990f-855afd64c75c"
+        name="WcfProxy Retries"
+        collapseFragmentsFlag="false"
+        isActiveClass="false"
+        isAbstract="false"
+        isLeaf="false"
+        isReentrant="false">
+        <ownedCommentsInternal>
+          <comment
+            Id="d7546ef0-5d1d-4165-aa93-f559d456f676">
+            <body>Retries here</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker
+                Id="c4bdfed8-a610-4121-9849-0dbdd8b5e41a"
+                LastKnownName="BehaviorExecutionSpecification5"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </annotatedElements>
+          </comment>
+        </ownedCommentsInternal>
+        <fragments>
+          <behaviorExecutionSpecification
+            Id="2a2d5c4c-d503-4e63-8b1c-7cd4e0edfc0b"
+            name="BehaviorExecutionSpecification1">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="b63c5fb8-055b-44d2-bb1f-8c66c03afe32"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="8cabf758-0833-42fe-8b5a-07b8cb97e13d"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="2f02a1ac-c2e0-4159-bd6a-46e3bde53849"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="5fb8f60f-19bc-48b7-b9f4-388d7f328a52"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="8cabf758-0833-42fe-8b5a-07b8cb97e13d"
+            name="ExecutionOccurrenceSpecification1">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="e757dee4-c65d-4157-a9d6-e09202691672"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="055de166-f496-4883-8846-c006d4e2ef39"
+            name="MessageOccurrenceSpecification1">
+            <covered>
+              <lifelineMoniker
+                Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+                LastKnownName="ApplicationViewModel"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="2f02a1ac-c2e0-4159-bd6a-46e3bde53849"
+            name="MessageOccurrenceSpecification2">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="5fb8f60f-19bc-48b7-b9f4-388d7f328a52"
+            name="MessageOccurrenceSpecification3">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e8fcd93e-3851-466b-bde5-fa519c3c2458"
+            name="MessageOccurrenceSpecification4">
+            <covered>
+              <lifelineMoniker
+                Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+                LastKnownName="ApplicationViewModel"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="b63c5fb8-055b-44d2-bb1f-8c66c03afe32"
+            name="ExecutionOccurrenceSpecification2">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="c9be206e-a1fc-4753-aafd-2807b8cb20d0"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="5f24a68f-e0fe-4b18-be2f-6872bab6041d"
+            name="BehaviorExecutionSpecification2">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="431e1872-a761-4e24-aaed-d971e216f252"
+                LastKnownName="ExecutionOccurrenceSpecification4"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="c2be313b-ea3c-46ad-8b2a-54af95325eba"
+                LastKnownName="ExecutionOccurrenceSpecification3"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="f7fd6683-e6fe-4841-a9f3-3d336d5ee1a8"
+                LastKnownName="MessageOccurrenceSpecification6"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="2a434f1b-3a14-4026-9d73-ae03cb015ad8"
+                LastKnownName="MessageOccurrenceSpecification9"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="fc32bb91-238d-4c49-a596-211890c09541"
+                LastKnownName="MessageOccurrenceSpecification12"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="3cc91ce8-7b05-4404-8131-bb7ea4696563"
+                LastKnownName="MessageOccurrenceSpecification13"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="4b00db72-6efd-43f1-8231-4cc23232e8fd"
+                LastKnownName="MessageOccurrenceSpecification16"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="bc29a02e-8d32-415d-b31e-ec248df8870a"
+                LastKnownName="MessageOccurrenceSpecification7"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="c2be313b-ea3c-46ad-8b2a-54af95325eba"
+            name="ExecutionOccurrenceSpecification3">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="711e82c2-1c76-41a8-99c4-2e17f4429a97"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="f7fd6683-e6fe-4841-a9f3-3d336d5ee1a8"
+            name="MessageOccurrenceSpecification6">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="72248ed6-7089-4c8e-b3a5-3384d2bdb256"
+            name="MessageOccurrenceSpecification5">
+            <covered>
+              <lifelineMoniker
+                Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+                LastKnownName="ApplicationViewModel"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="2b716659-6e72-47b5-8ac1-6629fbfdfbc5"
+            name="BehaviorExecutionSpecification3">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="67fb8b5e-5e20-4554-9cd0-e062e294b571"
+                LastKnownName="ExecutionOccurrenceSpecification6"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="68da2429-0f2a-4fd5-87f9-1fa41a83107a"
+                LastKnownName="ExecutionOccurrenceSpecification5"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="d56f9a2f-c968-4603-9051-e53a270b317a"
+                LastKnownName="MessageOccurrenceSpecification10"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="5fd6b097-e4c8-4189-aaef-eceb2d83de18"
+                LastKnownName="MessageOccurrenceSpecification11"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="68da2429-0f2a-4fd5-87f9-1fa41a83107a"
+            name="ExecutionOccurrenceSpecification5">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="277dacad-8629-4698-a30d-d60c856ed994"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="d56f9a2f-c968-4603-9051-e53a270b317a"
+            name="MessageOccurrenceSpecification10">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="2a434f1b-3a14-4026-9d73-ae03cb015ad8"
+            name="MessageOccurrenceSpecification9">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="5fd6b097-e4c8-4189-aaef-eceb2d83de18"
+            name="MessageOccurrenceSpecification11">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="fc32bb91-238d-4c49-a596-211890c09541"
+            name="MessageOccurrenceSpecification12">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="67fb8b5e-5e20-4554-9cd0-e062e294b571"
+            name="ExecutionOccurrenceSpecification6">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="892d5116-b189-49fe-bf78-eff60c1073cd"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="e7f4af4c-f41f-4fc4-ab6f-d64cee073e2b"
+            name="BehaviorExecutionSpecification4">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="cc832480-bf3f-4cad-83d5-6e84c660739b"
+                LastKnownName="ExecutionOccurrenceSpecification8"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="1ebd1b92-2e86-4d13-ba07-f194e29806ab"
+                LastKnownName="ExecutionOccurrenceSpecification7"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="86476e6b-82c3-4c15-b29d-2b900a05c2ea"
+                LastKnownName="MessageOccurrenceSpecification14"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="86d09e8c-29b1-4be5-900f-3bb60c63201a"
+                LastKnownName="MessageOccurrenceSpecification15"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="1ebd1b92-2e86-4d13-ba07-f194e29806ab"
+            name="ExecutionOccurrenceSpecification7">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="a47ad90f-2bf5-4260-8c61-850624acd7e3"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="86476e6b-82c3-4c15-b29d-2b900a05c2ea"
+            name="MessageOccurrenceSpecification14">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="3cc91ce8-7b05-4404-8131-bb7ea4696563"
+            name="MessageOccurrenceSpecification13">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="86d09e8c-29b1-4be5-900f-3bb60c63201a"
+            name="MessageOccurrenceSpecification15">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="4b00db72-6efd-43f1-8231-4cc23232e8fd"
+            name="MessageOccurrenceSpecification16">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="cc832480-bf3f-4cad-83d5-6e84c660739b"
+            name="ExecutionOccurrenceSpecification8">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="6ecfaf90-55a2-4cab-a263-8173fd897e2f"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="bc29a02e-8d32-415d-b31e-ec248df8870a"
+            name="MessageOccurrenceSpecification7">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="de69d3d2-f4d8-45ea-a017-46ea79d750cd"
+            name="MessageOccurrenceSpecification8">
+            <covered>
+              <lifelineMoniker
+                Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+                LastKnownName="ApplicationViewModel"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="431e1872-a761-4e24-aaed-d971e216f252"
+            name="ExecutionOccurrenceSpecification4">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="42e8eec9-5eff-499b-b179-f63861b48719"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="c4bdfed8-a610-4121-9849-0dbdd8b5e41a"
+            name="BehaviorExecutionSpecification5">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="3ab99621-14f1-4eb1-88d2-b4c4421469d3"
+                LastKnownName="ExecutionOccurrenceSpecification10"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="897d3f2f-59c8-4445-8c0d-d4e01727ffe8"
+                LastKnownName="ExecutionOccurrenceSpecification9"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="a908ba87-f13e-4261-9f2f-8ab9c5c624e6"
+                LastKnownName="MessageOccurrenceSpecification18"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="47c95a72-79c6-48ba-9a93-d78dae1e67d8"
+                LastKnownName="MessageOccurrenceSpecification21"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="8e622b70-0961-4cd7-bae1-4606548af035"
+                LastKnownName="MessageOccurrenceSpecification24"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="211fe6d6-2695-4405-b68f-7beaff428d7c"
+                LastKnownName="MessageOccurrenceSpecification25"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="7ae9bab6-b2f2-4846-9c6c-113b8beb6a71"
+                LastKnownName="MessageOccurrenceSpecification28"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="9d8f84c8-6195-466c-a40b-7e860e00c382"
+                LastKnownName="MessageOccurrenceSpecification19"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="897d3f2f-59c8-4445-8c0d-d4e01727ffe8"
+            name="ExecutionOccurrenceSpecification9">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="fe7988fb-5822-4c7f-93c6-c5d1db5ebaac"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="a908ba87-f13e-4261-9f2f-8ab9c5c624e6"
+            name="MessageOccurrenceSpecification18">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="b2323028-3907-49f5-b9be-3849c1c35144"
+            name="MessageOccurrenceSpecification17">
+            <covered>
+              <lifelineMoniker
+                Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+                LastKnownName="ApplicationViewModel"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="d67d4f76-b0df-40ca-b998-4901dc3e99c2"
+            name="BehaviorExecutionSpecification6">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="18789f7d-1244-4c49-a5e1-eb3074df70e5"
+                LastKnownName="ExecutionOccurrenceSpecification12"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="c9189de3-6fb5-4f40-91f3-86428d4c0f75"
+                LastKnownName="ExecutionOccurrenceSpecification11"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="8b299eb1-be89-482f-ba4b-8f97f3f1996e"
+                LastKnownName="MessageOccurrenceSpecification22"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="38080827-7e70-4bc7-a9e2-d86df20a3082"
+                LastKnownName="MessageOccurrenceSpecification23"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="c9189de3-6fb5-4f40-91f3-86428d4c0f75"
+            name="ExecutionOccurrenceSpecification11">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="73febd10-4125-4662-a912-5dda5f4a1bec"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="47c95a72-79c6-48ba-9a93-d78dae1e67d8"
+            name="MessageOccurrenceSpecification21">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8b299eb1-be89-482f-ba4b-8f97f3f1996e"
+            name="MessageOccurrenceSpecification22">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="38080827-7e70-4bc7-a9e2-d86df20a3082"
+            name="MessageOccurrenceSpecification23">
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8e622b70-0961-4cd7-bae1-4606548af035"
+            name="MessageOccurrenceSpecification24">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="18789f7d-1244-4c49-a5e1-eb3074df70e5"
+            name="ExecutionOccurrenceSpecification12">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="7c33eca3-d20e-493a-8524-5d360c0d2763"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+                LastKnownName="WcfChannelFactory"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="b7c01d47-28e5-40ad-bd40-6de8288b4b38"
+            name="BehaviorExecutionSpecification7">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="3f2d50c5-f950-4932-a469-7972cb79fa03"
+                LastKnownName="PrestoService"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="100ec114-03c7-4f3c-a193-fed537255bbb"
+                LastKnownName="ExecutionOccurrenceSpecification14"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="f374b41c-7f81-4e2e-9928-6aedcc63bd18"
+                LastKnownName="ExecutionOccurrenceSpecification13"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="ab0e4375-a06b-42cf-a19e-d18924dd417f"
+                LastKnownName="MessageOccurrenceSpecification26"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="a80ccb28-ce52-4fbe-a2e3-9206f704dfa5"
+                LastKnownName="MessageOccurrenceSpecification27"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="f374b41c-7f81-4e2e-9928-6aedcc63bd18"
+            name="ExecutionOccurrenceSpecification13">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="afde12d9-6d36-4793-b613-8555a72e30fe"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="3f2d50c5-f950-4932-a469-7972cb79fa03"
+                LastKnownName="PrestoService"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="211fe6d6-2695-4405-b68f-7beaff428d7c"
+            name="MessageOccurrenceSpecification25">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="ab0e4375-a06b-42cf-a19e-d18924dd417f"
+            name="MessageOccurrenceSpecification26">
+            <covered>
+              <lifelineMoniker
+                Id="3f2d50c5-f950-4932-a469-7972cb79fa03"
+                LastKnownName="PrestoService"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="a80ccb28-ce52-4fbe-a2e3-9206f704dfa5"
+            name="MessageOccurrenceSpecification27">
+            <covered>
+              <lifelineMoniker
+                Id="3f2d50c5-f950-4932-a469-7972cb79fa03"
+                LastKnownName="PrestoService"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="7ae9bab6-b2f2-4846-9c6c-113b8beb6a71"
+            name="MessageOccurrenceSpecification28">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="100ec114-03c7-4f3c-a193-fed537255bbb"
+            name="ExecutionOccurrenceSpecification14">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="1c14c0ff-1904-41e4-9204-23728050d255"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="3f2d50c5-f950-4932-a469-7972cb79fa03"
+                LastKnownName="PrestoService"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="9d8f84c8-6195-466c-a40b-7e860e00c382"
+            name="MessageOccurrenceSpecification19">
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="fb66c950-b268-4ff1-b080-ebb94d919327"
+            name="MessageOccurrenceSpecification20">
+            <covered>
+              <lifelineMoniker
+                Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+                LastKnownName="ApplicationViewModel"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="3ab99621-14f1-4eb1-88d2-b4c4421469d3"
+            name="ExecutionOccurrenceSpecification10">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="4bdc1d8c-ad22-4318-8e92-6d2fe5df9280"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="PrestoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+                LastKnownName="WcfClientProxy"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline
+            Id="2e8e5fdb-8674-4e5f-ad2e-1788ee85bd6b"
+            name="ApplicationViewModel"
+            isActor="false"
+            lifelineDisplayName="ApplicationViewModel">
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="055de166-f496-4883-8846-c006d4e2ef39"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="e8fcd93e-3851-466b-bde5-fa519c3c2458"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="72248ed6-7089-4c8e-b3a5-3384d2bdb256"
+                LastKnownName="MessageOccurrenceSpecification5"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="de69d3d2-f4d8-45ea-a017-46ea79d750cd"
+                LastKnownName="MessageOccurrenceSpecification8"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="b2323028-3907-49f5-b9be-3849c1c35144"
+                LastKnownName="MessageOccurrenceSpecification17"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="fb66c950-b268-4ff1-b080-ebb94d919327"
+                LastKnownName="MessageOccurrenceSpecification20"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="6295273e-8855-4620-bfc1-25bdc4ebbfdc"
+            name="WcfChannelFactory"
+            isActor="false"
+            lifelineDisplayName="WcfChannelFactory">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="8cabf758-0833-42fe-8b5a-07b8cb97e13d"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="b63c5fb8-055b-44d2-bb1f-8c66c03afe32"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="c2be313b-ea3c-46ad-8b2a-54af95325eba"
+                LastKnownName="ExecutionOccurrenceSpecification3"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="431e1872-a761-4e24-aaed-d971e216f252"
+                LastKnownName="ExecutionOccurrenceSpecification4"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="c9189de3-6fb5-4f40-91f3-86428d4c0f75"
+                LastKnownName="ExecutionOccurrenceSpecification11"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="18789f7d-1244-4c49-a5e1-eb3074df70e5"
+                LastKnownName="ExecutionOccurrenceSpecification12"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="c334757b-3e85-45f8-9877-dd228f3d233d"
+            name="WcfClientProxy"
+            isActor="false"
+            lifelineDisplayName="WcfClientProxy">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="68da2429-0f2a-4fd5-87f9-1fa41a83107a"
+                LastKnownName="ExecutionOccurrenceSpecification5"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="67fb8b5e-5e20-4554-9cd0-e062e294b571"
+                LastKnownName="ExecutionOccurrenceSpecification6"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="1ebd1b92-2e86-4d13-ba07-f194e29806ab"
+                LastKnownName="ExecutionOccurrenceSpecification7"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="cc832480-bf3f-4cad-83d5-6e84c660739b"
+                LastKnownName="ExecutionOccurrenceSpecification8"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="897d3f2f-59c8-4445-8c0d-d4e01727ffe8"
+                LastKnownName="ExecutionOccurrenceSpecification9"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="3ab99621-14f1-4eb1-88d2-b4c4421469d3"
+                LastKnownName="ExecutionOccurrenceSpecification10"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="3f2d50c5-f950-4932-a469-7972cb79fa03"
+            name="PrestoService"
+            isActor="false"
+            lifelineDisplayName="PrestoService">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="f374b41c-7f81-4e2e-9928-6aedcc63bd18"
+                LastKnownName="ExecutionOccurrenceSpecification13"
+                LastKnownLocation="PrestoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="100ec114-03c7-4f3c-a193-fed537255bbb"
+                LastKnownName="ExecutionOccurrenceSpecification14"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message
+            Id="3432d05d-ed2f-4ac2-9daf-c8e90c748d31"
+            name="new WcfChannelFactory&lt;IPrestoService&gt;"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="055de166-f496-4883-8846-c006d4e2ef39"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="2f02a1ac-c2e0-4159-bd6a-46e3bde53849"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="28cebfff-4fb1-44ba-b35e-fb35b40788e4"
+            name="WcfChannelFactory&lt;IPrestoService&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="5fb8f60f-19bc-48b7-b9f4-388d7f328a52"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e8fcd93e-3851-466b-bde5-fa519c3c2458"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="25903c61-1d05-43a5-8bc5-59b8087b6f44"
+            name="CreateChannel(EndpointAddress)"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="72248ed6-7089-4c8e-b3a5-3384d2bdb256"
+                LastKnownName="MessageOccurrenceSpecification5"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="f7fd6683-e6fe-4841-a9f3-3d336d5ee1a8"
+                LastKnownName="MessageOccurrenceSpecification6"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="8cad661d-c238-4746-bcf6-e97bf752d3ed"
+            name="new WcfClientProxy&lt;IPrestoService&gt;"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="2a434f1b-3a14-4026-9d73-ae03cb015ad8"
+                LastKnownName="MessageOccurrenceSpecification9"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="d56f9a2f-c968-4603-9051-e53a270b317a"
+                LastKnownName="MessageOccurrenceSpecification10"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="2271d52d-f05f-4164-b49f-f7e7b26c1292"
+            name="WcfClientProxy&lt;IPrestoService&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="5fd6b097-e4c8-4189-aaef-eceb2d83de18"
+                LastKnownName="MessageOccurrenceSpecification11"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="fc32bb91-238d-4c49-a596-211890c09541"
+                LastKnownName="MessageOccurrenceSpecification12"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="e111159b-75e4-41d1-949e-696443a24b65"
+            name="GetTransparentProxy()"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="3cc91ce8-7b05-4404-8131-bb7ea4696563"
+                LastKnownName="MessageOccurrenceSpecification13"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="86476e6b-82c3-4c15-b29d-2b900a05c2ea"
+                LastKnownName="MessageOccurrenceSpecification14"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="d037b8d9-25a7-4a25-9285-95fb830e9b18"
+            name="TransparentProxy as IPrestoService"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="86d09e8c-29b1-4be5-900f-3bb60c63201a"
+                LastKnownName="MessageOccurrenceSpecification15"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="4b00db72-6efd-43f1-8231-4cc23232e8fd"
+                LastKnownName="MessageOccurrenceSpecification16"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="d5379fa5-673e-477a-ac3e-577d21a6f9db"
+            name="IPrestoService"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="bc29a02e-8d32-415d-b31e-ec248df8870a"
+                LastKnownName="MessageOccurrenceSpecification7"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="de69d3d2-f4d8-45ea-a017-46ea79d750cd"
+                LastKnownName="MessageOccurrenceSpecification8"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="27ed1c07-bfcb-4856-99fd-11889d378885"
+            name="GetAllApplications() (intercepted by Invoke())"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="b2323028-3907-49f5-b9be-3849c1c35144"
+                LastKnownName="MessageOccurrenceSpecification17"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="a908ba87-f13e-4261-9f2f-8ab9c5c624e6"
+                LastKnownName="MessageOccurrenceSpecification18"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="bb965895-4dc6-4bfb-af1a-60deadb8ff5a"
+            name="CreateBaseChannel()"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="47c95a72-79c6-48ba-9a93-d78dae1e67d8"
+                LastKnownName="MessageOccurrenceSpecification21"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8b299eb1-be89-482f-ba4b-8f97f3f1996e"
+                LastKnownName="MessageOccurrenceSpecification22"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="10283408-9bd7-45c5-a927-25fbb23175ad"
+            name="IPrestoService"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="38080827-7e70-4bc7-a9e2-d86df20a3082"
+                LastKnownName="MessageOccurrenceSpecification23"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8e622b70-0961-4cd7-bae1-4606548af035"
+                LastKnownName="MessageOccurrenceSpecification24"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="b7393847-9798-403a-b3b2-7c493caa8e26"
+            name="GetAllApplications()"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="211fe6d6-2695-4405-b68f-7beaff428d7c"
+                LastKnownName="MessageOccurrenceSpecification25"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="ab0e4375-a06b-42cf-a19e-d18924dd417f"
+                LastKnownName="MessageOccurrenceSpecification26"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="3be3dac7-4e4c-4367-9e70-dc90b5338fed"
+            name="List&lt;Application&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="a80ccb28-ce52-4fbe-a2e3-9206f704dfa5"
+                LastKnownName="MessageOccurrenceSpecification27"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="7ae9bab6-b2f2-4846-9c6c-113b8beb6a71"
+                LastKnownName="MessageOccurrenceSpecification28"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="94b75542-cea9-461a-af71-ad194411a5fc"
+            name="List&lt;Application&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="9d8f84c8-6195-466c-a40b-7e860e00c382"
+                LastKnownName="MessageOccurrenceSpecification19"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="fb66c950-b268-4ff1-b080-ebb94d919327"
+                LastKnownName="MessageOccurrenceSpecification20"
+                LastKnownLocation="PrestoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+        </messages>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="e757dee4-c65d-4157-a9d6-e09202691672"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="c9be206e-a1fc-4753-aafd-2807b8cb20d0"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="711e82c2-1c76-41a8-99c4-2e17f4429a97"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="42e8eec9-5eff-499b-b179-f63861b48719"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="277dacad-8629-4698-a30d-d60c856ed994"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="892d5116-b189-49fe-bf78-eff60c1073cd"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="a47ad90f-2bf5-4260-8c61-850624acd7e3"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="6ecfaf90-55a2-4cab-a263-8173fd897e2f"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="fe7988fb-5822-4c7f-93c6-c5d1db5ebaac"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="4bdc1d8c-ad22-4318-8e92-6d2fe5df9280"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="73febd10-4125-4662-a912-5dda5f4a1bec"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="7c33eca3-d20e-493a-8524-5d360c0d2763"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="afde12d9-6d36-4793-b613-8555a72e30fe"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="1c14c0ff-1904-41e4-9204-23728050d255"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+  </packagedElements>
   <primitiveType
     Id="220a3521-e091-4221-bae9-3ef9018e845c"
     name="Integer"
     isAbstract="false"
-    isTemplate="false"
     isLeaf="false" />
   <primitiveType
     Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
     name="Boolean"
     isAbstract="false"
-    isTemplate="false"
     isLeaf="false" />
   <primitiveType
     Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
     name="String"
     isAbstract="false"
-    isTemplate="false"
     isLeaf="false" />
   <primitiveType
     Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
     name="UnlimitedNatural"
     isAbstract="false"
-    isTemplate="false"
     isLeaf="false" />
 </modelStoreModel>

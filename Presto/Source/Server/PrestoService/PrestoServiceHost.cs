@@ -41,8 +41,11 @@ namespace PrestoWcfService
 
             CommonUtility.RegisterRavenDataClasses();
 
+            var netTcpBinding = new NetTcpBinding();
+            netTcpBinding.MaxReceivedMessageSize = int.MaxValue;
+
             _serviceHost = new ServiceHost(typeof(PrestoService));
-            _serviceHost.AddServiceEndpoint(typeof(IPrestoService), new NetTcpBinding(), _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IPrestoService), netTcpBinding, _serviceAddress);
             _serviceHost.Open();
         }
 

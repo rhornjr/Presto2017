@@ -560,17 +560,7 @@ namespace PrestoViewModel.Tabs
 
                 // When we move to calling the WCF service, we'll replace the above line with the code below.
                 // Not ready to do this just yet. But hopefully soon.
-
-                //using (var channelFactory = new WcfChannelFactory<IPrestoService>(new NetTcpBinding()))
-                //{
-                //    var endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
-
-                //    // The call to CreateChannel() actually returns a proxy that can intercept calls to the
-                //    // service. This is done so that the proxy can retry on communication failures.            
-                //    IPrestoService prestoService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
-
-                //    this.Applications = new ObservableCollection<Application>(prestoService.GetAllApplications().ToList());
-                //}
+                //this.Applications = new ObservableCollection<Application>(PrestoWcf.Invoke(service => service.GetAllApplications()).ToList());
             }
             catch (Exception ex)
             {

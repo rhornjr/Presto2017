@@ -192,6 +192,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Wcf\PrestoWcf.cs" />
     <Compile Include="Wcf\WcfChannelFactory.cs" />
     <Compile Include="Wcf\WcfClientProxy.cs" />
   </ItemGroup>

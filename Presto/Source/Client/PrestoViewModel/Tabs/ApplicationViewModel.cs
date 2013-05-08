@@ -560,7 +560,10 @@ namespace PrestoViewModel.Tabs
 
                 // When we move to calling the WCF service, we'll replace the above line with the code below.
                 // Not ready to do this just yet. But hopefully soon.
-                //this.Applications = new ObservableCollection<Application>(PrestoWcf.Invoke(service => service.GetAllApplications()).ToList());
+                //using (var prestoWcf = new PrestoWcf())
+                //{
+                //    this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications());
+                //}
             }
             catch (Exception ex)
             {

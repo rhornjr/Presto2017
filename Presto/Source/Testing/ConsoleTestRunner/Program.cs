@@ -48,7 +48,7 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Presto responds: {0}", returnMessage);
 
-            List<Application> apps = prestoService.GetAllApplications();
+            IEnumerable<Application> apps = prestoService.GetAllApplications();
 
             foreach (var app in apps)
             {

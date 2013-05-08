@@ -11,6 +11,6 @@ namespace PrestoCommon.Interfaces
         string Echo(string message);
 
         [OperationContract]
-        List<Application> GetAllApplications();
+        IEnumerable<Application> GetAllApplications();
     }
 }

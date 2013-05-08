@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Logic;
@@ -13,10 +12,9 @@ namespace PrestoWcfService.WcfServices
             return message;
         }
 
-        public List<Application> GetAllApplications()
+        public IEnumerable<Application> GetAllApplications()
         {
-            IEnumerable<Application> apps = ApplicationLogic.GetAll();
-            return apps.ToList();
+            return ApplicationLogic.GetAll();
         }
     }
 }

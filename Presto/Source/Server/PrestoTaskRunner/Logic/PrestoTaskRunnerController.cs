@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Threading;
 using System.Timers;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
 using PrestoCommon.Misc;
-using PrestoServerCommon;
-using PrestoServerCommon.Interfaces;
+using PrestoServer;
+using PrestoServer.Interfaces;
+using PrestoServer.Logic;
 
 namespace PrestoTaskRunner.Logic
 {
@@ -70,8 +70,8 @@ namespace PrestoTaskRunner.Logic
 
         private void Initialize()
         {
-            CommonUtility.RegisterRavenDataClasses();
-            CommonUtility.RegisterRealClasses();
+            PrestoServerUtility.RegisterRavenDataClasses();
+            PrestoServerUtility.RegisterRealClasses();
 
             int timerInterval = Convert.ToInt32(ConfigurationManager.AppSettings["timerInterval"], CultureInfo.InvariantCulture);
 
@@ -115,7 +115,7 @@ namespace PrestoTaskRunner.Logic
 
                 if (pingResponse != null) { return; }  // Already responded.
 
-                string comment = "PTR file version " + PrestoServerCommonUtility.GetFileVersion(Assembly.GetExecutingAssembly()) + " -- " + this.CommentFromServiceHost;
+                string comment = "PTR file version " + PrestoServerUtility.GetFileVersion(Assembly.GetExecutingAssembly()) + " -- " + this.CommentFromServiceHost;
 
                 pingResponse = new PingResponse(pingRequest.Id, DateTime.Now, appServer, comment);
 
@@ -138,7 +138,7 @@ namespace PrestoTaskRunner.Logic
 
                 if (appServer == null) { return; }
 
-                appServer.InstallApplications();
+                ApplicationServerLogic.InstallApplications(appServer);
             }
             catch (Exception ex)
             {

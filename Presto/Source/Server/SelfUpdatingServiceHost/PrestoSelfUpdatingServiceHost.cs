@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceProcess;
-using PrestoServerCommon;
+using PrestoServer;
 
 namespace SelfUpdatingServiceHost
 {
@@ -37,7 +37,7 @@ namespace SelfUpdatingServiceHost
             }
             catch (Exception ex)
             {
-                ServerCommonLogUtility.LogException(ex);
+                ServerLogUtility.LogException(ex);
 
                 if (Environment.UserInteractive)
                 {
@@ -56,11 +56,11 @@ namespace SelfUpdatingServiceHost
 
         protected override void OnStop()
         {
-            ServerCommonLogUtility.LogInformation("Stopping service.");
+            ServerLogUtility.LogInformation("Stopping service.");
 
             if (this._updaterController == null) { return; }
 
-            ServerCommonLogUtility.LogInformation("Calling Stop() and Dispose() on _updaterController.");
+            ServerLogUtility.LogInformation("Calling Stop() and Dispose() on _updaterController.");
 
             this._updaterController.Stop();
             this._updaterController.Dispose();

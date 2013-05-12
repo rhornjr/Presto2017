@@ -4,7 +4,7 @@ using System.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
-using PrestoCommon.Logic;
+using PrestoServer.Logic;
 
 namespace PrestoAutomatedTests
 {

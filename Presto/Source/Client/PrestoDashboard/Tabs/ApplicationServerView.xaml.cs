@@ -1,6 +1,4 @@
 ﻿using System.Windows.Controls;
-using PrestoCommon.Entities;
-using PrestoViewModel.Tabs;
 
 namespace PrestoDashboard.Tabs
 {
@@ -17,9 +15,9 @@ namespace PrestoDashboard.Tabs
             InitializeComponent();
         }
 
-        private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
-        {
-            ((ApplicationServerViewModel)DataContext).SelectedApplicationServer = e.NewValue as ApplicationServer;
-        }
+        //private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        //{
+        //    ((ApplicationServerViewModel)DataContext).SelectedApplicationServer = e.NewValue as ApplicationServer;
+        //}
     }
 }

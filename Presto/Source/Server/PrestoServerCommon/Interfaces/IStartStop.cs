@@ -1,9 +1,6 @@
 ﻿
-namespace PrestoServerCommon.Interfaces
+namespace PrestoServer.Interfaces
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public interface IStartStop
     {
         /// <summary>

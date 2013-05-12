@@ -2,8 +2,9 @@
 using System.Globalization;
 using System.Windows.Input;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -62,7 +63,10 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.GlobalSetting = GlobalSettingLogic.GetItem();
+                using (var prestoWcf = new PrestoWcf<IBaseService>())
+                {
+                    this.GlobalSetting = prestoWcf.Service.GetGlobalSettingItem();
+                }
 
                 if (this.GlobalSetting == null) { this.GlobalSetting = new GlobalSetting(); }
             }
@@ -82,11 +86,17 @@ namespace PrestoViewModel.Tabs
 
         private void Save()
         {
-            GlobalSettingLogic.Save(this.GlobalSetting);
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                this.GlobalSetting = prestoWcf.Service.SaveGlobalSetting(this.GlobalSetting);
+            }
 
-            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
                 "Global settings updated. Freeze all installations is now {0}.",
                 this.GlobalSetting.FreezeAllInstallations));
+            }
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.GlobalSettingsSaved);
         }

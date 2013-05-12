@@ -8,10 +8,11 @@ using System.Windows.Threading;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Factories.OpenFileDialog;
-using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
+using PrestoCommon.Interfaces;
 
 namespace PrestoDashboard
 {
@@ -30,9 +31,6 @@ namespace PrestoDashboard
 
             base.OnStartup(e);
 
-            CommonUtility.RegisterRavenDataClasses();
-            CommonUtility.RegisterRealClasses();
-
             // Use a real (as opposed to mock) open file dialog.
             CommonUtility.Container.RegisterType<IOpenFileDialogService, OpenFileDialogService>();
 
@@ -43,13 +41,17 @@ namespace PrestoDashboard
 
         private static void EnsureInitialNecessaryDataExists()
         {
-            PossiblyAddGlobalSetting();
             PossiblyAddInstallationEnvironments();
+            PossiblyAddGlobalSetting();
         }
 
         private static void PossiblyAddGlobalSetting()
         {
-            GlobalSetting globalSetting = GlobalSettingLogic.GetItem();
+            GlobalSetting globalSetting;
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                globalSetting = prestoWcf.Service.GetGlobalSettingItem();
+            }
 
             if (globalSetting != null) { return; }
 
@@ -61,18 +63,25 @@ namespace PrestoDashboard
             GlobalSetting globalSetting = new GlobalSetting();
             globalSetting.FreezeAllInstallations = false;
 
-            GlobalSettingLogic.Save(globalSetting);
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.SaveGlobalSetting(globalSetting);
 
-            string logMessage = string.Format(CultureInfo.CurrentCulture,
-                "Global setting didn't exist, so it was created with Freeze All Installations set to [{0}].",
-                globalSetting.FreezeAllInstallations);
-
-            LogMessageLogic.SaveLogMessage(logMessage);
+                string logMessage = string.Format(CultureInfo.CurrentCulture,
+                    "Global setting didn't exist, so it was created with Freeze All Installations set to [{0}].",
+                    globalSetting.FreezeAllInstallations);
+            
+                prestoWcf.Service.SaveLogMessage(logMessage);
+            }
         }
 
         private static void PossiblyAddInstallationEnvironments()
         {
-            List<InstallationEnvironment> environments = InstallationEnvironmentLogic.GetAll().ToList();
+            List<InstallationEnvironment> environments;
+            using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+            {
+                environments = prestoWcf.Service.GetAllInstallationEnvironments().ToList();
+            }
 
             if (environments.Count > 0) { return; }
 
@@ -87,14 +96,21 @@ namespace PrestoDashboard
             InstallationEnvironment env = new InstallationEnvironment();
             env.Name = name;
             env.LogicalOrder = logicalOrder;
-            InstallationEnvironmentLogic.Save(env);
+
+            using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+            {
+                prestoWcf.Service.Save(env);
+            }
 
             string logMessage = string.Format(CultureInfo.CurrentCulture,
                 "Created environment [{0}] with logical order of [{1}]",
                 env.Name,
                 env.LogicalOrder);
 
-            LogMessageLogic.SaveLogMessage(logMessage);
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.SaveLogMessage(logMessage);
+            }
         }
 
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

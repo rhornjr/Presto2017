@@ -18,6 +18,12 @@
          implement INotifyPropertyChanged. -->
     <UserControl.Resources>
 
+        <CollectionViewSource x:Key="SortedServers" Source="{Binding ApplicationServers}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        
         <!-- I got this solution from http://bea.stollnitz.com/blog/?p=18 -->
 
         <CollectionViewSource x:Key="cvs" Source="{Binding ApplicationServers}">
@@ -61,8 +67,14 @@
             </StackPanel>
 
             <!-- Note: The Groups path refers to the groups property of the CollectionViewSource.-->
-            <TreeView DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource cvs}, Path=Groups}"
-                  ItemTemplate="{StaticResource categoryTemplate}" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+            <!--<TreeView DockPanel.Dock="Bottom" ItemsSource="{Binding Source={StaticResource cvs}, Path=Groups}"
+                  ItemTemplate="{StaticResource categoryTemplate}" SelectedItemChanged="TreeView_SelectedItemChanged"/>-->
+            <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+                <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding InstallationEnvironments}"
+                          SelectedItem="{Binding SelectedInstallationEnvironment}" />
+                <ListBox ItemsSource="{Binding Source={StaticResource SortedServers}}" DisplayMemberPath="Name"
+                     SelectedItem="{Binding SelectedApplicationServer}" />
+            </DockPanel>            
         </DockPanel>
 
         <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding AppServerIsSelected}">            

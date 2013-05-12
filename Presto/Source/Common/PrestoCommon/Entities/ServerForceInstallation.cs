@@ -9,7 +9,8 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string ApplicationServerId { get; set; }
 
-        [JsonIgnore]  //  We do not want RavenDB to serialize this.
+        [JsonIgnore]  // We do not want RavenDB to serialize this...
+        [DataMember]  // ... but we still want it to go over WCF
         public ApplicationServer ApplicationServer { get; set; }
 
         [DataMember]
@@ -18,7 +19,8 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string OverrideGroupId { get; set; }
 
-        [JsonIgnore]  //  We do not want RavenDB to serialize this.
+        [JsonIgnore]  // We do not want RavenDB to serialize this...
+        [DataMember]  // ... but we still want it to go over WCF
         public ApplicationWithOverrideVariableGroup ApplicationWithOverrideGroup { get; set; }
 
         public ServerForceInstallation(ApplicationServer server, ApplicationWithOverrideVariableGroup appWithGroup)

@@ -8,8 +8,9 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
@@ -208,7 +209,12 @@ namespace PrestoViewModel.Tabs
             try
             {
                 CustomVariableGroup deletedGroup = this.CustomVariableGroups.Where(x => x.Id == this.SelectedCustomVariableGroup.Id).FirstOrDefault();
-                CustomVariableGroupLogic.Delete(deletedGroup);                
+
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    prestoWcf.Service.DeleteGroup(deletedGroup);
+                }
+
                 this.CustomVariableGroups.Remove(deletedGroup);
             }
             catch (Exception ex)
@@ -227,7 +233,10 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                CustomVariableGroupLogic.Save(this.SelectedCustomVariableGroup);
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    this.SelectedCustomVariableGroup = prestoWcf.Service.SaveGroup(this.SelectedCustomVariableGroup);
+                }
                 InitializeCustomVariableGroupsCollectionView();
             }
             catch (ConcurrencyException)
@@ -253,34 +262,39 @@ namespace PrestoViewModel.Tabs
 
             CustomVariableGroup customVariableGroup;
 
-            foreach (string filePathAndName in filePathAndNames)
+            using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
             {
-                using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
+                foreach (string filePathAndName in filePathAndNames)
                 {
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
-                    try
+                    using (FileStream fileStream = new FileStream(filePathAndName, FileMode.Open))
                     {
-                        customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(CustomVariableGroup));
+                        try
+                        {
+                            customVariableGroup = xmlSerializer.Deserialize(fileStream) as CustomVariableGroup;
+                        }
+                        catch (Exception ex)
+                        {
+                            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                                ViewModelResources.CannotImport));
+                            LogUtility.LogException(ex);
+                            return;
+                        }
                     }
-                    catch (Exception ex)
+
+                    // If the variable group name exists, append " - copy" to it.
+                    if (this.CustomVariableGroups.Any(group => group.Name == customVariableGroup.Name))
                     {
-                        ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
-                            ViewModelResources.CannotImport));
-                        LogUtility.LogException(ex);
-                        return;
+                        customVariableGroup.Name += " - copy";
                     }
-                }
 
-                // If the variable group name exists, append " - copy" to it.
-                if (this.CustomVariableGroups.Any(group => group.Name == customVariableGroup.Name))
-                {
-                    customVariableGroup.Name += " - copy";
-                }
+                    customVariableGroup.Id = null;  // This is new.
+                    customVariableGroup.Etag = Guid.Empty;
 
-                customVariableGroup.Id = null;  // This is new.
-                customVariableGroup.Etag = Guid.Empty;
-                CustomVariableGroupLogic.Save(customVariableGroup);
-                this.CustomVariableGroups.Add(customVariableGroup);
+                    prestoWcf.Service.SaveGroup(customVariableGroup);
+
+                    this.CustomVariableGroups.Add(customVariableGroup);
+                }
             }
         }
 
@@ -312,7 +326,12 @@ namespace PrestoViewModel.Tabs
         {            
             try
             {
-                this.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(CustomVariableGroupLogic.GetAll().ToList());
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    this.CustomVariableGroups =
+                        new ObservableCollection<CustomVariableGroup>(
+                            prestoWcf.Service.GetAllGroups().ToList());
+                }
             }
             catch (Exception ex)
             {

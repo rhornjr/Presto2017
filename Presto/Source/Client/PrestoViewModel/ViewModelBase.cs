@@ -7,12 +7,12 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Forms;
-using PrestoCommon.EntityHelperClasses;
-using PrestoCommon.Factories;
-using PrestoCommon.Factories.OpenFileDialog;
-using PrestoCommon.Logic;
-using PrestoCommon.Misc;
 using Microsoft.Practices.Unity;
+using PrestoCommon.Interfaces;
+using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.Factories.OpenFileDialog;
+using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 
 namespace PrestoViewModel
 {
@@ -38,9 +38,15 @@ namespace PrestoViewModel
 
         protected void SaveCachedLogMessages(string entityId)
         {
-            foreach (EntityLogMessage entityLogMessage in this._logMessagesToSaveIfUserHitsSave)
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
             {
-                if (entityLogMessage.EntityId == entityId) { LogMessageLogic.SaveLogMessage(entityLogMessage.LogMessage); }
+                foreach (EntityLogMessage entityLogMessage in this._logMessagesToSaveIfUserHitsSave)
+                {
+                    if (entityLogMessage.EntityId == entityId)
+                    {
+                        prestoWcf.Service.SaveLogMessage(entityLogMessage.LogMessage);
+                    }
+                }
             }
 
             // Remove the processed messages.

@@ -86,9 +86,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PrestoServerCommon\PrestoServerCommon.csproj">
+    <ProjectReference Include="..\PrestoServerCommon\PrestoServer.csproj">
       <Project>{2F01965F-4A1E-455C-9975-A17BF129EBD0}</Project>
-      <Name>PrestoServerCommon</Name>
+      <Name>PrestoServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

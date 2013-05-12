@@ -3,7 +3,7 @@ using System.Configuration;
 using System.ServiceModel;
 using System.ServiceProcess;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
+using PrestoServer;
 using PrestoWcfService.WcfServices;
 
 namespace PrestoWcfService
@@ -39,13 +39,20 @@ namespace PrestoWcfService
         {
             if (_serviceHost != null) { _serviceHost.Close(); }
 
-            CommonUtility.RegisterRavenDataClasses();
+            PrestoServerUtility.RegisterRavenDataClasses();
 
             var netTcpBinding = new NetTcpBinding();
             netTcpBinding.MaxReceivedMessageSize = int.MaxValue;
 
             _serviceHost = new ServiceHost(typeof(PrestoService));
-            _serviceHost.AddServiceEndpoint(typeof(IPrestoService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IBaseService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IApplicationService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IServerService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(ICustomVariableGroupService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IInstallationEnvironmentService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IInstallationSummaryService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(IPingService), netTcpBinding, _serviceAddress);
+
             _serviceHost.Open();
         }
 

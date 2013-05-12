@@ -56,7 +56,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfUpdatingServiceHost", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSelectBehavior", "Source\MvvmFramework\MultiSelectBehavior\MultiSelectBehavior.csproj", "{9E41ADBA-A55C-4F71-BF0A-463C82334B13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServerCommon", "Source\Server\PrestoServerCommon\PrestoServerCommon.csproj", "{2F01965F-4A1E-455C-9975-A17BF129EBD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoServer", "Source\Server\PrestoServerCommon\PrestoServer.csproj", "{2F01965F-4A1E-455C-9975-A17BF129EBD0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoAutomatedTests", "Source\Testing\PrestoAutomatedTests\PrestoAutomatedTests.csproj", "{75344126-B6A2-4277-9EF5-99E08E147D7E}"
 EndProject
@@ -120,28 +120,28 @@ Global
 		SccProjectTopLevelParentUniqueName7 = Presto.sln
 		SccProjectName7 = Source/MvvmFramework/MultiSelectBehavior
 		SccLocalPath7 = Source\\MvvmFramework\\MultiSelectBehavior
-		SccProjectUniqueName8 = Source\\Server\\PrestoServerCommon\\PrestoServerCommon.csproj
+		SccProjectUniqueName8 = Source\\Testing\\PrestoAutomatedTests\\PrestoAutomatedTests.csproj
 		SccProjectTopLevelParentUniqueName8 = Presto.sln
-		SccProjectName8 = Source/Server/PrestoServerCommon
-		SccLocalPath8 = Source\\Server\\PrestoServerCommon
-		SccProjectUniqueName9 = Source\\Testing\\PrestoAutomatedTests\\PrestoAutomatedTests.csproj
-		SccProjectTopLevelParentUniqueName9 = Presto.sln
-		SccProjectName9 = Source/Testing/PrestoAutomatedTests
-		SccLocalPath9 = Source\\Testing\\PrestoAutomatedTests
-		SccProjectUniqueName10 = Source\\Installers\\DashboardInstaller\\DashboardInstaller.wixproj
-		SccProjectName10 = Source/Installers/DashboardInstaller
-		SccLocalPath10 = Source\\Installers\\DashboardInstaller
-		SccProjectUniqueName11 = Source\\Installers\\SelfUpdatingServiceHostInstaller\\SelfUpdatingServiceHostInstaller.wixproj
-		SccProjectName11 = Source/Installers/SelfUpdatingServiceHostInstaller
-		SccLocalPath11 = Source\\Installers\\SelfUpdatingServiceHostInstaller
-		SccProjectUniqueName12 = Source\\Server\\PrestoService\\PrestoWcfService.csproj
+		SccProjectName8 = Source/Testing/PrestoAutomatedTests
+		SccLocalPath8 = Source\\Testing\\PrestoAutomatedTests
+		SccProjectUniqueName9 = Source\\Installers\\DashboardInstaller\\DashboardInstaller.wixproj
+		SccProjectName9 = Source/Installers/DashboardInstaller
+		SccLocalPath9 = Source\\Installers\\DashboardInstaller
+		SccProjectUniqueName10 = Source\\Installers\\SelfUpdatingServiceHostInstaller\\SelfUpdatingServiceHostInstaller.wixproj
+		SccProjectName10 = Source/Installers/SelfUpdatingServiceHostInstaller
+		SccLocalPath10 = Source\\Installers\\SelfUpdatingServiceHostInstaller
+		SccProjectUniqueName11 = Source\\Server\\PrestoService\\PrestoWcfService.csproj
+		SccProjectTopLevelParentUniqueName11 = Presto.sln
+		SccProjectName11 = Source/Server/PrestoService
+		SccLocalPath11 = Source\\Server\\PrestoService
+		SccProjectUniqueName12 = Source\\Testing\\ConsoleTestRunner\\ConsoleTestRunner.csproj
 		SccProjectTopLevelParentUniqueName12 = Presto.sln
-		SccProjectName12 = Source/Server/PrestoService
-		SccLocalPath12 = Source\\Server\\PrestoService
-		SccProjectUniqueName13 = Source\\Testing\\ConsoleTestRunner\\ConsoleTestRunner.csproj
+		SccProjectName12 = Source/Testing/ConsoleTestRunner
+		SccLocalPath12 = Source\\Testing\\ConsoleTestRunner
+		SccProjectUniqueName13 = Source\\Server\\PrestoServerCommon\\PrestoServer.csproj
 		SccProjectTopLevelParentUniqueName13 = Presto.sln
-		SccProjectName13 = Source/Testing/ConsoleTestRunner
-		SccLocalPath13 = Source\\Testing\\ConsoleTestRunner
+		SccProjectName13 = Source/Server/PrestoServerCommon
+		SccLocalPath13 = Source\\Server\\PrestoServerCommon
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Presto.vsmdi

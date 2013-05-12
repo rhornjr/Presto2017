@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -120,9 +122,12 @@ namespace PrestoViewModel.Windows
         {
             try
             {
-                this.CustomVariableGroups =
-                    new Collection<CustomVariableGroup>(
-                        CustomVariableGroupLogic.GetAll().Where(x => x.Disabled == false).OrderBy(x => x.Name).ToList());
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    this.CustomVariableGroups =
+                        new Collection<CustomVariableGroup>(
+                            prestoWcf.Service.GetAllGroups().Where(x => x.Disabled == false).OrderBy(x => x.Name).ToList());
+                }
             }
             catch (SocketException ex)
             {

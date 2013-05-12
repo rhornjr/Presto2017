@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+using PrestoServer.Logic;
 
 namespace PrestoAutomatedTests
 {

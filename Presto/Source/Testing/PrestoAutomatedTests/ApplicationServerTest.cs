@@ -5,8 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using PrestoServer.Logic;
 
 namespace PrestoAutomatedTests
 {
@@ -411,7 +411,7 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            appServer.InstallApplications();            
+            ApplicationServerLogic.InstallApplications(appServer);
             mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
                 It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
@@ -436,7 +436,7 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithGroup = appServer.ApplicationsWithOverrideGroup[0];
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
-            appServer.InstallApplications();
+            ApplicationServerLogic.InstallApplications(appServer);
             mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
                 It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Once());
         }

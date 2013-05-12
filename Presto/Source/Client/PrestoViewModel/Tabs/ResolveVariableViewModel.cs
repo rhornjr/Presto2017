@@ -5,7 +5,8 @@ using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Exceptions;
-using PrestoCommon.Logic;
+using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
@@ -239,14 +240,25 @@ namespace PrestoViewModel.Tabs
         {
             // Refresh the entities that were previously selected by the user.
 
-            this.ApplicationWithGroup.Application = ApplicationLogic.GetById(this.ApplicationWithGroup.Application.Id);
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                this.ApplicationWithGroup.Application =
+                    prestoWcf.Service.GetById(this.ApplicationWithGroup.Application.Id);
+            }
 
             if (this.ApplicationWithGroup.CustomVariableGroup != null)
             {
-                this.ApplicationWithGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById(this.ApplicationWithGroup.CustomVariableGroup.Id);
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    this.ApplicationWithGroup.CustomVariableGroup =
+                        prestoWcf.Service.GetById(this.ApplicationWithGroup.CustomVariableGroup.Id);
+                }
             }
 
-            this.ApplicationServer = ApplicationServerLogic.GetById(this.ApplicationServer.Id);
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                this.ApplicationServer = prestoWcf.Service.GetServerById(this.ApplicationServer.Id);
+            }
         }
     }
 }

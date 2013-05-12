@@ -2,8 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Threading;
-using PrestoCommon.Data.RavenDb;
-using PrestoCommon.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -28,13 +26,15 @@ namespace PrestoViewModel
             // One reason for this is so that other view models can set a user message.
             ViewModelUtility.MainWindowViewModel = this;
 
-            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
+            // ToDo: Replace this with SignalR
+            //DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
         }
 
-        private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
-        {
-            AddUserMessage(e.Value);
-        }
+        // See ToDo above.
+        //private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
+        //{
+        //    AddUserMessage(e.Value);
+        //}
 
         public void AddUserMessage(string message)
         {

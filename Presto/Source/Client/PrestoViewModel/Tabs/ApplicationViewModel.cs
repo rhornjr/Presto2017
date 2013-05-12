@@ -11,8 +11,9 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Entities.LegacyPresto;
-using PrestoCommon.Logic;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
@@ -214,7 +215,11 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedApplication.Name)) { return; }
 
-            LogicBase.Delete(this.SelectedApplication);
+
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.Delete(this.SelectedApplication);
+            }
 
             this.Applications.Remove(this.SelectedApplication);
         }
@@ -536,7 +541,10 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                ApplicationLogic.Save(this.SelectedApplication);
+                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                {
+                    this.SelectedApplication = prestoWcf.Service.SaveApplication(this.SelectedApplication);
+                }
                 this.SaveCachedLogMessages(this.SelectedApplication.Id);
             }
             catch (ConcurrencyException)
@@ -556,14 +564,10 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.Applications = new ObservableCollection<Application>(ApplicationLogic.GetAll().ToList());
-
-                // When we move to calling the WCF service, we'll replace the above line with the code below.
-                // Not ready to do this just yet. But hopefully soon.
-                //using (var prestoWcf = new PrestoWcf())
-                //{
-                //    this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications());
-                //}
+                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                {
+                    this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications());
+                }
             }
             catch (Exception ex)
             {

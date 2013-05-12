@@ -34,7 +34,8 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string ApplicationId { get; set; }  // For RavenDB, grrrr...
 
-        [JsonIgnore]  //  We do not want RavenDB to serialize this.
+        [JsonIgnore]  // We do not want RavenDB to serialize this...
+        [DataMember]  // ... but we still want it to go over WCF
         public Application Application
         {
             get { return this._application; }
@@ -50,7 +51,8 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string CustomVariableGroupId { get; set; }  // For RavenDB, grrrr...
 
-        [JsonIgnore]  //  We do not want RavenDB to serialize this.
+        [JsonIgnore]  // We do not want RavenDB to serialize this...
+        [DataMember]  // ... but we still want it to go over WCF
         public CustomVariableGroup CustomVariableGroup
         {
             get { return this._customVariableGroup; }

@@ -11,8 +11,9 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
-using PrestoCommon.Logic;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
@@ -25,6 +26,8 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
+        private IEnumerable<ApplicationServer> _allServers;
+        private InstallationEnvironment _selectedInstallationEnvironment;
         private List<InstallationEnvironment> _installationEnvironments;
         private PrestoObservableCollection<ApplicationServer> _applicationServers = new PrestoObservableCollection<ApplicationServer>();
         private ApplicationServer _selectedApplicationServer;
@@ -112,7 +115,11 @@ namespace PrestoViewModel.Tabs
             {
                 if (this._installationEnvironments == null)
                 {
-                    this._installationEnvironments = InstallationEnvironmentLogic.GetAll().OrderBy(x => x.LogicalOrder).ToList();
+                    using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+                    {
+                        this._installationEnvironments =
+                            prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+                    }
                 }
                 return this._installationEnvironments;
             }
@@ -185,13 +192,31 @@ namespace PrestoViewModel.Tabs
                 if (this.SelectedApplicationServer == null || this.SelectedApplicationServer.InstallationEnvironment == null)
                     { return null; }
 
-                return this.InstallationEnvironments.Where(
-                    x => x.Id == this.SelectedApplicationServer.InstallationEnvironment.Id).First();
+                return this.InstallationEnvironments.First(x => x.Id == this.SelectedApplicationServer.InstallationEnvironment.Id);
             }
 
             set
             {
                 this.SelectedApplicationServer.InstallationEnvironment = value;
+            }
+        }
+
+        public InstallationEnvironment SelectedInstallationEnvironment
+        {
+            get
+            {
+                if (this._selectedInstallationEnvironment == null)
+                {
+                    this._selectedInstallationEnvironment = this.InstallationEnvironments.First();
+                }
+                return this._selectedInstallationEnvironment;
+            }
+
+            set
+            {
+                if (this._selectedInstallationEnvironment == value) { return; }
+                this._selectedInstallationEnvironment = value;
+                LoadApplicationServers(false);
             }
         }
 
@@ -335,7 +360,11 @@ namespace PrestoViewModel.Tabs
             {
                 importedGroup.Enabled = false;  // default
 
-                Application appFromDb = ApplicationLogic.GetByName(importedGroup.Application.Name);
+                Application appFromDb;
+                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                {
+                    appFromDb = prestoWcf.Service.GetByName(importedGroup.Application.Name);
+                }
 
                 if (appFromDb == null)
                 {
@@ -347,8 +376,11 @@ namespace PrestoViewModel.Tabs
 
                 if (importedGroup.CustomVariableGroup != null)
                 {
-                    CustomVariableGroup groupFromDb = CustomVariableGroupLogic.GetByName(importedGroup.CustomVariableGroup.Name);
-                    importedGroup.CustomVariableGroup = groupFromDb;
+                    using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                    {
+                        CustomVariableGroup groupFromDb = prestoWcf.Service.GetCustomVariableGroupByName(importedGroup.CustomVariableGroup.Name);
+                        importedGroup.CustomVariableGroup = groupFromDb;
+                    }
                 }
 
                 this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(importedGroup);
@@ -385,17 +417,25 @@ namespace PrestoViewModel.Tabs
                 ServerForceInstallation serverForceInstallation = new ServerForceInstallation(this.SelectedApplicationServer, appWithGroup);
                 serverForceInstallations.Add(serverForceInstallation);
             }
-            ApplicationServerLogic.SaveForceInstallations(serverForceInstallations);
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                prestoWcf.Service.SaveForceInstallations(serverForceInstallations);
+            }
 
             LogAndShowAppToBeInstalled(allAppWithGroupNames);
         }
 
         private void LogAndShowAppToBeInstalled(string allAppWithGroupNames)
         {
-            LogMessageLogic.SaveLogMessage(string.Format(CultureInfo.CurrentCulture,
-                "{0} selected to be installed on {1}.",
-                allAppWithGroupNames,
-                this.SelectedApplicationServer));
+            string message = string.Format(CultureInfo.CurrentCulture,
+                                           "{0} selected to be installed on {1}.",
+                                           allAppWithGroupNames,
+                                           this.SelectedApplicationServer);
+
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.SaveLogMessage(message);
+            }
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer));
@@ -446,7 +486,10 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.SelectedApplicationServer.InstallPrestoSelfUpdater();
+                using (var prestoWcf = new PrestoWcf<IServerService>())
+                {
+                    prestoWcf.Service.InstallPrestoSelfUpdater(this.SelectedApplicationServer);
+                }
             }
             catch (Exception ex)
             {
@@ -474,7 +517,10 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedApplicationServer.Name)) { return; }
 
-            LogicBase.Delete(this.SelectedApplicationServer);
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.Delete(this.SelectedApplicationServer);
+            }
 
             this.ApplicationServers.Remove(this.SelectedApplicationServer);
         }
@@ -497,7 +543,11 @@ namespace PrestoViewModel.Tabs
               
             try
             {
-                ApplicationServerLogic.Save(this.SelectedApplicationServer);
+                using (var prestoWcf = new PrestoWcf<IServerService>())
+                {
+                    this.SelectedApplicationServer = prestoWcf.Service.SaveServer(this.SelectedApplicationServer);
+                }
+
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerCustomVariableGroups);
             }
@@ -542,7 +592,10 @@ namespace PrestoViewModel.Tabs
                 "{0} was just added with the enabled property set to {1} on {2}.",
                 viewModel.ApplicationWithGroup.ToString(), viewModel.ApplicationWithGroup.Enabled, this.SelectedApplicationServer.Name);
 
-            LogMessageLogic.SaveLogMessage(message);
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.SaveLogMessage(message);
+            }
 
             SaveServer();
         }
@@ -567,7 +620,11 @@ namespace PrestoViewModel.Tabs
                 string message = string.Format(CultureInfo.CurrentCulture,
                     "For {0}, the enabled property was changed from {1} to {2} on {3}",
                     selectedAppWithGroup.ToString(), originalEnabledValue, selectedAppWithGroup.Enabled, this.SelectedApplicationServer.Name);
-                LogMessageLogic.SaveLogMessage(message);
+
+                using (var prestoWcf = new PrestoWcf<IBaseService>())
+                {
+                    prestoWcf.Service.SaveLogMessage(message);
+                }
             }
 
             SaveServer();
@@ -602,13 +659,22 @@ namespace PrestoViewModel.Tabs
             // If this app group was selected to be force installed, remove it from that list as well.
             ServerForceInstallation forceInstallGroup = this.SelectedApplicationServer.GetFromForceInstallList(selectedAppWithGroup);
 
-            if (forceInstallGroup != null) { ApplicationServerLogic.RemoveForceInstallation(forceInstallGroup); }
+            if (forceInstallGroup != null)
+            {
+                using (var prestoWcf = new PrestoWcf<IServerService>())
+                {
+                    prestoWcf.Service.RemoveForceInstallation(forceInstallGroup);
+                }
+            }
 
             string message = string.Format(CultureInfo.CurrentCulture,
                 "{0} was just removed from {1}.",
                 selectedAppWithGroup.ToString(), this.SelectedApplicationServer.Name);
 
-            LogMessageLogic.SaveLogMessage(message);
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.SaveLogMessage(message);
+            }
 
             SaveServer();
         }
@@ -659,7 +725,7 @@ namespace PrestoViewModel.Tabs
             SaveServer();
         }     
 
-        private void LoadApplicationServers()
+        private void LoadApplicationServers(bool refreshServersFromService = true)
         {
             try
             {
@@ -669,7 +735,17 @@ namespace PrestoViewModel.Tabs
 
                 this.ApplicationServers.ClearItemsAndNotifyChangeOnlyWhenDone();
 
-                this.ApplicationServers.AddRange(ApplicationServerLogic.GetAll());
+                if (refreshServersFromService)
+                {
+                    using (var prestoWcf = new PrestoWcf<IServerService>())
+                    {
+                        this._allServers = prestoWcf.Service.GetAllServers();
+                    }
+                }
+
+                // Only show the servers for the selected environment.
+                this.ApplicationServers.AddRange(
+                    _allServers.Where(x => x.InstallationEnvironment.Id == this.SelectedInstallationEnvironment.Id));
             }
             catch (Exception ex)
             {

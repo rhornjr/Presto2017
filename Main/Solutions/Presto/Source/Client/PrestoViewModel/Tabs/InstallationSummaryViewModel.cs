@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using PrestoCommon.Data.RavenDb;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
-using PrestoCommon.Logic;
+
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -112,14 +113,16 @@ namespace PrestoViewModel.Tabs
 
             LoadTimeZones();
             LoadInstallationSummaryList();
-            SubscribeToDatabaseChangeEvents();
+            // ToDo: Do this when I implement SignalR.
+            //SubscribeToDatabaseChangeEvents();
         }
 
-        private void SubscribeToDatabaseChangeEvents()
-        {
-            // When there is a new installation summary, automatically refresh the list.
-            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
-        }
+        //private void SubscribeToDatabaseChangeEvents()
+        //{
+        //    // ToDo: Enable this when I get SignalR working.
+        //    // When there is a new installation summary, automatically refresh the list.
+        //    //DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
+        //}
 
         private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
         {
@@ -130,7 +133,11 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.InstallationSummaryList = new Collection<InstallationSummary>(InstallationSummaryLogic.GetMostRecentByStartTime(50).ToList());
+                using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+                {
+                    this.InstallationSummaryList = new Collection<InstallationSummary>(
+                        prestoWcf.Service.GetMostRecentByStartTime(50).ToList());
+                }
                 SetInstallationSummaryDtos();
                 this.SelectedInstallationSummary = null;
             }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
-using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Entities;
 using PrestoCommon.Wcf;
 
 namespace ConsoleTestRunner
@@ -34,21 +34,23 @@ namespace ConsoleTestRunner
 
         static void Main(string[] args)
         {
-            var channelFactory = new WcfChannelFactory<IPrestoService>(new NetTcpBinding());
+            var channelFactory = new WcfChannelFactory<IApplicationService>(new NetTcpBinding());
             var endpointAddress = ConfigurationManager.AppSettings["endpointAddress"];
 
             // The call to CreateChannel() actually returns a proxy that can intercept calls to the
             // service. This is done so that the proxy can retry on communication failures.            
-            IPrestoService prestoService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
+            IApplicationService appService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
 
             Console.WriteLine("Enter some information to echo to the Presto service:");
             string message = Console.ReadLine();
 
-            string returnMessage = prestoService.Echo(message);
+            var channelFactoryBase = new WcfChannelFactory<IBaseService>(new NetTcpBinding());
+            IBaseService baseService = channelFactoryBase.CreateChannel(new EndpointAddress(endpointAddress));
+            string returnMessage = baseService.Echo(message);
 
             Console.WriteLine("Presto responds: {0}", returnMessage);
 
-            IEnumerable<Application> apps = prestoService.GetAllApplications();
+            IEnumerable<Application> apps = appService.GetAllApplications();
 
             foreach (var app in apps)
             {

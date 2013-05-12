@@ -13,7 +13,8 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string ApplicationServerId { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore]  // We do not want RavenDB to serialize this...
+        [DataMember]  // ... but we still want it to go over WCF
         public ApplicationServer ApplicationServer { get; set; }
 
         [DataMember]

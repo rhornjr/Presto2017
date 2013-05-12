@@ -44,9 +44,6 @@
       <Component Id="Raven.Abstractions.dll">
         <File Id="Raven.Abstractions.dll" Source="$(var.PrestoDashboard.TargetDir)Raven.Abstractions.dll" />
       </Component>
-      <Component Id="Raven.Client.Lightweight.dll">
-        <File Id="Raven.Client.Lightweight.dll" Source="$(var.PrestoDashboard.TargetDir)Raven.Client.Lightweight.dll" />
-      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

@@ -6,10 +6,10 @@ namespace PrestoCommon.Enums
     [DataContract]
     public enum InstallationResult
     {
-        [DataMember] Unknown,
-        [DataMember] Success,
-        [DataMember] PartialSuccess, // At least one task succeeded
-        [DataMember] Failure  // No tasks succeeded
+        [EnumMember] Unknown,
+        [EnumMember] Success,
+        [EnumMember] PartialSuccess, // At least one task succeeded
+        [EnumMember] Failure  // No tasks succeeded
     }
     #pragma warning restore 1591
 }

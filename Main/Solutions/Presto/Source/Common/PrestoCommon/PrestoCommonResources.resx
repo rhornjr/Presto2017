@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApplicationInstalled" xml:space="preserve">
-    <value>{0} installed on {1}, from {2} to {3}. Result: {4}</value>
-  </data>
-  <data name="AppWillBeInstalledOnAppServer" xml:space="preserve">
-    <value>Application {0} will be installed on app server {1}</value>
-  </data>
   <data name="TaskDosCommandFailedWithExitCode" xml:space="preserve">
     <value>TaskDOSCommand failed with exit code {0}.</value>
   </data>
@@ -130,15 +124,6 @@
     <value>Task Description: {0}
 Command         : {1} {2}
 Process Output  : {3}</value>
-  </data>
-  <data name="FreezeAllInstallationsTrueSoNoInstallation" xml:space="preserve">
-    <value>In the global setting entity, FreezeAllInstallations is true, so the installation will not happen: {0} on {1}.</value>
-  </data>
-  <data name="GlobalSettingNullSoNoInstallation" xml:space="preserve">
-    <value>The global setting entity is null, so the installation will not happen: {0} on {1}.</value>
-  </data>
-  <data name="PrestoSelfUpdaterAppNotFound" xml:space="preserve">
-    <value>An attempt was made to install the Presto self-updating application, but that application was not found in the list of applications for the server {0}.</value>
   </data>
   <data name="TaskVersionCheckerLogMessage" xml:space="preserve">
     <value>Task Description: {0}

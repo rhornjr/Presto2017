@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
-using PrestoCommon.Logic;
-using PrestoCommon.Misc;
+using PrestoServer;
+using PrestoServer.Logic;
 
 namespace PrestoAutomatedTests
 {
@@ -30,7 +30,7 @@ namespace PrestoAutomatedTests
         {
             if (_dataPopulated) { return; }
 
-            CommonUtility.RegisterRavenDataClasses();
+            PrestoServerUtility.RegisterRavenDataClasses();
 
             PossiblyAddInstallationEnvironments();
             AddApplications();

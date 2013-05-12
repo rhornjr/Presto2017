@@ -68,7 +68,7 @@ namespace PrestoCommon.Entities
         /// or anything new we might eventually add. Consuming code will want a way to access all
         /// tasks, so this property returns all of them.
         /// </summary>
-        [JsonIgnore] //  We do not want RavenDB to serialize this.
+        [JsonIgnore]  // We do not want RavenDB to serialize this. (We also don't need this to go over WCF.)
         public IEnumerable<TaskBase> MainAndPrerequisiteTasks
         {
             get
@@ -106,7 +106,8 @@ namespace PrestoCommon.Entities
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        [JsonIgnore]  //  We do not want RavenDB to serialize this.
+        [JsonIgnore]  // We do not want RavenDB to serialize this...
+        [DataMember]  // ... but we still want it to go over WCF
         public ObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
             get

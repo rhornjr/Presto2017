@@ -8,10 +8,10 @@ namespace PrestoCommon.Enums
     [DataContract]
     public enum DeploymentEnvironment
     {
-        [DataMember] Unknown,
-        [DataMember] Development,
-        [DataMember] QA,
-        [DataMember] Production
+        [EnumMember] Unknown,
+        [EnumMember] Development,
+        [EnumMember] QA,
+        [EnumMember] Production
     }
 #pragma warning restore 1591
 }

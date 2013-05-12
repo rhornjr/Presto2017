@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Configuration;
 using System.ServiceModel;
-using PrestoCommon.Interfaces;
 
 namespace PrestoCommon.Wcf
 {
     /// <summary>
     /// Helper class to encapsulate the details of making a Presto WCF call
     /// </summary>
-    public class PrestoWcf : IDisposable
+    public class PrestoWcf<TService> : IDisposable where TService : class
     {
-        private WcfChannelFactory<IPrestoService> _channelFactory;
+        private WcfChannelFactory<TService> _channelFactory;
 
         /// <summary>
         /// Helper property to make Presto WCF calls
@@ -21,15 +20,16 @@ namespace PrestoCommon.Wcf
         ///     this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications());
         /// }
         /// </example>
-        public IPrestoService Service
+        public TService Service
         {
             get
             {
                 var netTcpBinding = new NetTcpBinding();
                 netTcpBinding.MaxReceivedMessageSize = int.MaxValue;
 
-                _channelFactory = new WcfChannelFactory<IPrestoService>(netTcpBinding);
-                var endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
+                _channelFactory = new WcfChannelFactory<TService>(netTcpBinding);
+
+                string endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
 
                 // The call to CreateChannel() actually returns a proxy that can intercept calls to the
                 // service. This is done so that the proxy can retry on communication failures.            
@@ -38,27 +38,27 @@ namespace PrestoCommon.Wcf
         }
 
         /// <summary>
-        /// Invokes the func on a WCF implementation of IPrestoService
+        /// Invokes the func on a WCF implementation of a specific IPrestoService (T)
         /// </summary>
         /// <typeparam name="T">The type to return</typeparam>
         /// <param name="func">The action to take against the service</param>
         /// <example>
         /// this.Applications = new ObservableCollection<Application>(PrestoWcf.Invoke(service => service.GetAllApplications()));
         /// </example>
-        public static T Invoke<T>(Func<IPrestoService, T> func)
+        public TReturn Invoke<TReturn>(Func<TService, TReturn> func)
         {
             if (func == null) { throw new ArgumentNullException("func"); }
 
             var netTcpBinding = new NetTcpBinding();
             netTcpBinding.MaxReceivedMessageSize = int.MaxValue;
 
-            using (var channelFactory = new WcfChannelFactory<IPrestoService>(netTcpBinding))
+            using (var channelFactory = new WcfChannelFactory<TService>(netTcpBinding))
             {
                 var endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
 
                 // The call to CreateChannel() actually returns a proxy that can intercept calls to the
                 // service. This is done so that the proxy can retry on communication failures.            
-                IPrestoService prestoService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
+                TService prestoService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
                 return func(prestoService);
             }
         }

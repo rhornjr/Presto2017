@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Input;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -107,7 +110,10 @@ namespace PrestoViewModel.Tabs
             {
                 if (this._pingRequest == null)
                 {
-                    this._pingRequest = PingRequestLogic.GetMostRecent();
+                    using (var prestoWcf = new PrestoWcf<IPingService>())
+                    {
+                        this._pingRequest = prestoWcf.Service.GetMostRecentPingRequest();
+                    }
                 }
                 
                 return this._pingRequest;
@@ -131,7 +137,11 @@ namespace PrestoViewModel.Tabs
                 {
                     this._serverPingDtoList = new ObservableCollection<ServerPingDto>();
 
-                    IEnumerable allServers = ApplicationServerLogic.GetAll();
+                    IEnumerable allServers;
+                    using (var prestoWcf = new PrestoWcf<IServerService>())
+                    {
+                        allServers = prestoWcf.Service.GetAllServers();
+                    }
 
                     foreach (ApplicationServer server in allServers)
                     {
@@ -163,9 +173,12 @@ namespace PrestoViewModel.Tabs
 
         private void Ping()
         {
-            PingRequest pingRequest = new PingRequest(DateTime.Now, WindowsIdentity.GetCurrent().Name);            
+            PingRequest pingRequest = new PingRequest(DateTime.Now, WindowsIdentity.GetCurrent().Name);
 
-            PingRequestLogic.Save(pingRequest);
+            using (var prestoWcf = new PrestoWcf<IPingService>())
+            {
+                prestoWcf.Service.SavePingRequest(pingRequest);
+            }
 
             this.PingRequest = pingRequest;
 
@@ -194,7 +207,10 @@ namespace PrestoViewModel.Tabs
             PingRequest latestPingRequest;
             try
             {
-                latestPingRequest = PingRequestLogic.GetMostRecent();
+                using (var prestoWcf = new PrestoWcf<IPingService>())
+                {
+                    latestPingRequest = prestoWcf.Service.GetMostRecentPingRequest();
+                }
             }
             catch (Exception ex)
             {
@@ -222,7 +238,13 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                foreach (PingResponse response in PingResponseLogic.GetAllForPingRequest(this.PingRequest))
+                IEnumerable<PingResponse> pingResponses;
+                using (var prestoWcf = new PrestoWcf<IPingService>())
+                {
+                    pingResponses = prestoWcf.Service.GetAllForPingRequest(this.PingRequest);
+                }
+
+                foreach (PingResponse response in pingResponses)
                 {
                     ServerPingDto serverPingDto = this.ServerPingDtoList.Where(x => x.ApplicationServer.Id == response.ApplicationServerId).FirstOrDefault();
 

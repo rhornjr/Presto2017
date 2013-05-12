@@ -92,9 +92,9 @@
       <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
       <Name>PrestoCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PrestoServerCommon\PrestoServerCommon.csproj">
+    <ProjectReference Include="..\PrestoServerCommon\PrestoServer.csproj">
       <Project>{2F01965F-4A1E-455C-9975-A17BF129EBD0}</Project>
-      <Name>PrestoServerCommon</Name>
+      <Name>PrestoServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

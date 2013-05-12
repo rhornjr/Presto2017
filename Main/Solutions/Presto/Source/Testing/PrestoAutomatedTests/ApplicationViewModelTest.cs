@@ -3,8 +3,8 @@ using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrestoCommon.Entities;
 using PrestoCommon.Factories.OpenFileDialog;
-using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using PrestoServer.Logic;
 using PrestoViewModel;
 using PrestoViewModel.Tabs;
 

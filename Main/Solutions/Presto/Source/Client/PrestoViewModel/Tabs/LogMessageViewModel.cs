@@ -2,9 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -52,7 +53,11 @@ namespace PrestoViewModel.Tabs
         {
             try
             {
-                this.LogMessages = new Collection<LogMessage>(LogMessageLogic.GetMostRecentByCreatedTime(50).ToList());
+                using (var prestoWcf = new PrestoWcf<IBaseService>())
+                {
+                    this.LogMessages =
+                        new Collection<LogMessage>(prestoWcf.Service.GetMostRecentLogMessagesByCreatedTime(50).ToList());
+                }
             }
             catch (Exception ex)
             {

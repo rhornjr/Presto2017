@@ -3,9 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+
 using PrestoCommon.Misc;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -104,7 +106,11 @@ namespace PrestoViewModel.Windows
         {
             try
             {
-                this.Applications = new Collection<Application>(ApplicationLogic.GetAll().OrderBy(x => x.Name).ToList());
+                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                {
+                    this.Applications = new Collection<Application>(
+                        prestoWcf.Service.GetAllApplications().OrderBy(x => x.Name).ToList());
+                }
             }
             catch (SocketException ex)
             {

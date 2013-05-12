@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Practices.Unity;
-using PrestoCommon.Data.Interfaces;
-using PrestoCommon.Data.RavenDb;
 using PrestoCommon.Entities;
-using PrestoCommon.Interfaces;
 
 namespace PrestoCommon.Misc
 {
@@ -16,27 +13,6 @@ namespace PrestoCommon.Misc
         public static UnityContainer Container
         {
             get { return _container; }
-        }
-
-        public static void RegisterRavenDataClasses()
-        {
-            CommonUtility.Container.RegisterType<IApplicationData,             ApplicationData>();
-            CommonUtility.Container.RegisterType<IApplicationServerData,       ApplicationServerData>();
-            CommonUtility.Container.RegisterType<ICustomVariableGroupData,     CustomVariableGroupData>();
-            CommonUtility.Container.RegisterType<IGenericData,                 GenericData>();
-            CommonUtility.Container.RegisterType<IGlobalSettingData,           GlobalSettingData>();
-            CommonUtility.Container.RegisterType<IInstallationSummaryData,     InstallationSummaryData>();
-            CommonUtility.Container.RegisterType<ILogMessageData,              LogMessageData>();
-            CommonUtility.Container.RegisterType<IPingRequestData,             PingRequestData>();
-            CommonUtility.Container.RegisterType<IPingResponseData,            PingResponseData>();
-            CommonUtility.Container.RegisterType<IInstallationEnvironmentData, InstallationEnvironmentData>();
-        }
-
-        public static void RegisterRealClasses()
-        {
-            // This is so we can make the actual app installations. When running test code, we don't
-            // want an app to actually be installed.
-            CommonUtility.Container.RegisterType<IAppInstaller, AppInstaller>();
         }
 
         public static ApplicationWithOverrideVariableGroup GetAppWithGroup(

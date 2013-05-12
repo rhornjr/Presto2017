@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
-using PrestoCommon.Logic;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
@@ -64,7 +65,11 @@ namespace PrestoViewModel.Windows
             {
                 if (this._deploymentEnvironments == null)
                 {
-                    this._deploymentEnvironments = InstallationEnvironmentLogic.GetAll().OrderBy(x => x.LogicalOrder).ToList();
+                    using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+                    {
+                        this._deploymentEnvironments =
+                            prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+                    }
                 }
                 return this._deploymentEnvironments;
             }

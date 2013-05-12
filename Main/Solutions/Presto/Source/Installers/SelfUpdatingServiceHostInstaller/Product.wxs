@@ -35,7 +35,7 @@
         <File Id="SelfUpdatingServiceHost.exe.config" Source="$(var.SelfUpdatingServiceHost.TargetDir)SelfUpdatingServiceHost.exe.config" />
       </Component>
       <Component Id="PrestoServerCommon.dll">
-        <File Id="PrestoServerCommon.dll" Source="$(var.SelfUpdatingServiceHost.TargetDir)PrestoServerCommon.dll" />
+        <File Id="PrestoServer.dll" Source="$(var.SelfUpdatingServiceHost.TargetDir)PrestoServer.dll" />
       </Component>
       <Component Id="SelfUpdatingServiceHost.pdb">
         <File Id="SelfUpdatingServiceHost.pdb" Source="$(var.SelfUpdatingServiceHost.TargetDir)SelfUpdatingServiceHost.pdb" />

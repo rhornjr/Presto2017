@@ -6,10 +6,11 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
+using Raven.Abstractions.Exceptions;
 using Xanico.Core;
+using Xanico.Core.Wcf;
 
 namespace PrestoServer.Logic
 {
@@ -32,7 +33,16 @@ namespace PrestoServer.Logic
 
         public static void Save(ApplicationServer applicationServer)
         {
-            DataAccessFactory.GetDataInterface<IApplicationServerData>().Save(applicationServer);
+            try
+            {
+                DataAccessFactory.GetDataInterface<IApplicationServerData>().Save(applicationServer);
+            }
+            catch (ConcurrencyException ex)
+            {
+                ex.Data[ExceptionDataKey.UserSafeMessage] =
+                    string.Format(CultureInfo.CurrentCulture, PrestoServerResources.ItemCannotBeSavedConcurrency, applicationServer.Name);
+                throw;
+            }
         }
 
         #region [ServerForceInstallation]

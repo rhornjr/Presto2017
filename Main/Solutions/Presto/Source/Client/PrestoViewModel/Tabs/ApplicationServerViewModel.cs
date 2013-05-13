@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -17,7 +18,6 @@ using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
-using Raven.Abstractions.Exceptions;
 using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
@@ -554,13 +554,11 @@ namespace PrestoViewModel.Tabs
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerCustomVariableGroups);
             }
-            catch (ConcurrencyException)
+            catch (FaultException ex)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedApplicationServer.Name);
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
 
-                ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
-
-                ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
+                ShowUserMessage(ex.Message, ViewModelResources.ItemNotSavedCaption);
 
                 return false;
             }

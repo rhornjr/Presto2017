@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using System.ServiceModel;
@@ -46,6 +47,15 @@ namespace PrestoCommon.Wcf
                           0, // Out arguments count
                           methodCall.LogicalCallContext, // Call context
                           methodCall); // Original message
+                }
+                catch (TargetInvocationException ex)
+                {
+                    if (ex.InnerException is FaultException) { throw ex.InnerException; }
+
+                    exceptions.Add(ex);
+                    Logger.LogException(ex);
+                    this.CloseOrAbortService();
+                    this.CreateService();
                 }
                 catch (FaultException)
                 {

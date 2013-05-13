@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using System.ServiceModel;
-using PrestoCommon.Misc;
+using Xanico.Core;
 
 namespace PrestoCommon.Wcf
 {
@@ -56,7 +56,7 @@ namespace PrestoCommon.Wcf
                 catch (CommunicationException ex)
                 {
                     exceptions.Add(ex);
-                    LogUtility.LogException(ex);
+                    Logger.LogException(ex);
                     this.CloseOrAbortService();
                     this.CreateService();
                 }

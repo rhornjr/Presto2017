@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using PrestoCommon.Entities;
-using PrestoCommon.Misc;
 using PrestoServer.Data.Interfaces;
 using Raven.Client;
+using Xanico.Core;
 
 namespace PrestoServer.Data.RavenDb
 {
@@ -44,7 +44,7 @@ namespace PrestoServer.Data.RavenDb
                     "Attempted to delete an object that doesn't have an ID. Ignoring delete. Note: This usually happens when " +
                     "a user creates an object, never saved it, and is trying to delete it. Object as string: {0}",
                     objectToDelete.ToString());
-                LogUtility.LogWarning(message);
+                Logger.LogWarning(message);
                 return;
             }
 

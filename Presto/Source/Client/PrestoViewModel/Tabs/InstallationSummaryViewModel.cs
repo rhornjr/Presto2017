@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
-
+using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
+using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -143,7 +143,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

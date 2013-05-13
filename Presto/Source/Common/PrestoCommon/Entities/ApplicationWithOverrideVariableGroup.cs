@@ -3,8 +3,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
-using PrestoCommon.Misc;
 using Raven.Imports.Newtonsoft.Json;
+using Xanico.Core;
 
 namespace PrestoCommon.Entities
 {
@@ -105,7 +105,7 @@ namespace PrestoCommon.Entities
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
                 return FinalInstallationResultContainer(installationResultContainer, InstallationResult.Failure);
             }
         }

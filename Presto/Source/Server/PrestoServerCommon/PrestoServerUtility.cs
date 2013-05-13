@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using PrestoCommon.Interfaces;
 using PrestoServer.Data.Interfaces;
 using PrestoServer.Data.RavenDb;
@@ -37,25 +34,6 @@ namespace PrestoServer
             // This is so we can mock the actual app installations. When running test code, we don't
             // want an app to actually be installed.
             PrestoServerUtility.Container.RegisterType<IAppInstaller, AppInstaller>();
-        }
-
-        /// <summary>
-        /// Gets the file version. This method will not throw an exception and it will not return null.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetFileVersion(Assembly assembly)
-        {
-            try
-            {
-                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-
-                return fileVersionInfo.ProductVersion;
-            }
-            catch (Exception ex)
-            {
-                ServerLogUtility.LogException(ex);
-                return string.Empty;
-            }
         }
     }
 }

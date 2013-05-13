@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Runtime.Serialization;
 using System.Xml;
 using PrestoCommon.Enums;
-using PrestoCommon.Misc;
+using Xanico.Core;
 
 namespace PrestoCommon.Entities
 {
@@ -135,13 +135,13 @@ namespace PrestoCommon.Entities
                 this.TaskSucceeded = true;
 
                 this.TaskDetails = taskDetails;
-                LogUtility.LogInformation(taskDetails);
+                Logger.LogInformation(taskDetails);
             }
             catch (Exception ex)
             {
                 this.TaskSucceeded = false;
                 this.TaskDetails = ex.Message + Environment.NewLine + taskDetails;
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
         }
 

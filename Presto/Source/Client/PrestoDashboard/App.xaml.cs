@@ -13,6 +13,7 @@ using PrestoCommon.Wcf;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
 using PrestoCommon.Interfaces;
+using Xanico.Core;
 
 namespace PrestoDashboard
 {
@@ -115,7 +116,7 @@ namespace PrestoDashboard
 
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            LogUtility.LogException(e.Exception);
+            Logger.LogException(e.Exception);
 
             string message = string.Format(CultureInfo.CurrentCulture, PrestoDashboardResource.ErrorMessage, e.Exception.Message);
 

@@ -18,6 +18,7 @@ using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
 using Raven.Abstractions.Exceptions;
+using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -26,7 +27,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
-        private IEnumerable<ApplicationServer> _allServers;
+        private List<ApplicationServer> _allServers;
         private InstallationEnvironment _selectedInstallationEnvironment;
         private List<InstallationEnvironment> _installationEnvironments;
         private PrestoObservableCollection<ApplicationServer> _applicationServers = new PrestoObservableCollection<ApplicationServer>();
@@ -350,40 +351,41 @@ namespace PrestoViewModel.Tabs
                 {
                     ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                         ViewModelResources.CannotImport));
-                    LogUtility.LogException(ex);
+                    Logger.LogException(ex);
                     return;
                 }
             }
 
             // When importing, get the apps and custom variable groups from the DB. We'll use those to populate the properties.            
-            foreach (ApplicationWithOverrideVariableGroup importedGroup in applicationsWithOverrideVariableGroup)
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
             {
-                importedGroup.Enabled = false;  // default
-
-                Application appFromDb;
-                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                foreach (ApplicationWithOverrideVariableGroup importedGroup in applicationsWithOverrideVariableGroup)
                 {
+                    importedGroup.Enabled = false;  // default
+
+                    Application appFromDb;
+
                     appFromDb = prestoWcf.Service.GetByName(importedGroup.Application.Name);
-                }
 
-                if (appFromDb == null)
-                {
-                    CannotImportGroup(importedGroup);
-                    return;
-                }
-
-                importedGroup.Application = appFromDb;
-
-                if (importedGroup.CustomVariableGroup != null)
-                {
-                    using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                    if (appFromDb == null)
                     {
-                        CustomVariableGroup groupFromDb = prestoWcf.Service.GetCustomVariableGroupByName(importedGroup.CustomVariableGroup.Name);
-                        importedGroup.CustomVariableGroup = groupFromDb;
+                        CannotImportGroup(importedGroup);
+                        return;
                     }
-                }
 
-                this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(importedGroup);
+                    importedGroup.Application = appFromDb;
+
+                    if (importedGroup.CustomVariableGroup != null)
+                    {
+                        using (var prestoWcf2 = new PrestoWcf<ICustomVariableGroupService>())
+                        {
+                            CustomVariableGroup groupFromDb = prestoWcf2.Service.GetCustomVariableGroupByName(importedGroup.CustomVariableGroup.Name);
+                            importedGroup.CustomVariableGroup = groupFromDb;
+                        }
+                    }
+
+                    this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Add(importedGroup);
+                }
             }
 
             SaveServer();
@@ -493,7 +495,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
 
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                     ViewModelResources.PrestoUpdaterCouldNotBeInstalled));
@@ -546,6 +548,7 @@ namespace PrestoViewModel.Tabs
                 using (var prestoWcf = new PrestoWcf<IServerService>())
                 {
                     this.SelectedApplicationServer = prestoWcf.Service.SaveServer(this.SelectedApplicationServer);
+                    UpdateCacheWithSavedItem(this.SelectedApplicationServer);
                 }
 
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
@@ -566,7 +569,14 @@ namespace PrestoViewModel.Tabs
                 ViewModelResources.ItemSaved, this.SelectedApplicationServer.Name));
 
             return true;
-        }   
+        }
+
+        private void UpdateCacheWithSavedItem(ApplicationServer savedServer)
+        {
+            int index = this._allServers.FindIndex(x => x.Id == savedServer.Id);
+
+            this._allServers[index] = savedServer;
+        }
 
         private void AddApplication()
         {
@@ -739,7 +749,7 @@ namespace PrestoViewModel.Tabs
                 {
                     using (var prestoWcf = new PrestoWcf<IServerService>())
                     {
-                        this._allServers = prestoWcf.Service.GetAllServers();
+                        this._allServers = prestoWcf.Service.GetAllServers().ToList();
                     }
                 }
 
@@ -749,7 +759,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
-using PrestoCommon.Misc;
+using Xanico.Core;
 
 namespace PrestoCommon.Entities
 {
@@ -99,7 +99,7 @@ namespace PrestoCommon.Entities
             {
                 this.TaskSucceeded = false;
                 this.TaskDetails = ex.Message + Environment.NewLine;
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
             finally
             {
@@ -112,7 +112,7 @@ namespace PrestoCommon.Entities
                     destinationFileVersion,
                     destinationFolder);
                 this.TaskDetails += logMessage;
-                LogUtility.LogInformation(logMessage);
+                Logger.LogInformation(logMessage);
             }
         }
 

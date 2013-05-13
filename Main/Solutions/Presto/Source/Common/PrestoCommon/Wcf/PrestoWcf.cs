@@ -73,7 +73,7 @@ namespace PrestoCommon.Wcf
         {
             if (calledFromDisposeAndNotFromFinalizer)
             {
-                if (_channelFactory != null) { (_channelFactory as IDisposable).Dispose(); }
+                if (_channelFactory != null) { _channelFactory.Close(); }
             }
         }
     }

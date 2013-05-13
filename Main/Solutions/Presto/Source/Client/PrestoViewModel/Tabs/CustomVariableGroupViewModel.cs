@@ -9,12 +9,12 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
 using Raven.Abstractions.Exceptions;
+using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -277,7 +277,7 @@ namespace PrestoViewModel.Tabs
                         {
                             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                                 ViewModelResources.CannotImport));
-                            LogUtility.LogException(ex);
+                            Logger.LogException(ex);
                             return;
                         }
                     }
@@ -335,7 +335,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

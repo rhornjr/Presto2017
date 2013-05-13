@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using PrestoCommon.Exceptions;
 using PrestoCommon.Misc;
+using Xanico.Core;
 
 namespace PrestoCommon.Entities
 {
@@ -215,7 +216,7 @@ namespace PrestoCommon.Entities
         {
             string message = string.Format(CultureInfo.CurrentCulture,
                     "{0} contains a custom variable that does not exist in the list of custom variables.", rawString);
-            LogUtility.LogWarning(message);
+            Logger.LogWarning(message);
             throw new CustomVariableMissingException(message);
         }
 
@@ -223,7 +224,7 @@ namespace PrestoCommon.Entities
         {
             string message = string.Format(CultureInfo.CurrentCulture,
                     "A custom variable key ({0}) exists more than once. Only one is allowed.", customVariableKey);
-            LogUtility.LogWarning(message);
+            Logger.LogWarning(message);
             throw new CustomVariableExistsMoreThanOnceException(message);
         }
 

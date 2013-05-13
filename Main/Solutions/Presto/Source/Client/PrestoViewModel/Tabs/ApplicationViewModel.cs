@@ -12,12 +12,12 @@ using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Entities.LegacyPresto;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
 using Raven.Abstractions.Exceptions;
+using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -302,7 +302,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
             }
         }
@@ -379,8 +379,8 @@ namespace PrestoViewModel.Tabs
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                     ViewModelResources.CannotImport));
 
-            LogUtility.LogException(exceptionFromGettingNewTasks);
-            LogUtility.LogException(exceptionFromGettingLegacyTasks);
+            Logger.LogException(exceptionFromGettingNewTasks);
+            Logger.LogException(exceptionFromGettingLegacyTasks);
         }
 
         private static List<TaskBase> TryGetNewTasks(string filePathAndName)
@@ -466,7 +466,7 @@ namespace PrestoViewModel.Tabs
                 ViewModelResources.ItemExported, this.SelectedApplication.Name + " tasks"));
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogWarning(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.Logger.LogWarning(System.String)")]
         private static TaskBase CreateTaskFromLegacyTask(LegacyTaskBase legacyTask)
         {
             Debug.WriteLine(legacyTask.GetType().ToString());
@@ -534,7 +534,7 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
 
-            LogUtility.LogWarning(message);
+            Logger.LogWarning(message);
         }
 
         private void SaveApplication()
@@ -571,7 +571,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

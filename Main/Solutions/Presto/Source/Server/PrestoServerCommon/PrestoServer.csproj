@@ -66,6 +66,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xanico.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
@@ -96,7 +100,6 @@
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
     <Compile Include="Data\RavenDb\PingRequestData.cs" />
     <Compile Include="Data\RavenDb\PingResponseData.cs" />
-    <Compile Include="Interfaces\IStartStop.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
@@ -113,7 +116,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PrestoServerResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ServerLogUtility.cs" />
     <Compile Include="PrestoServerUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

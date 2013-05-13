@@ -3,8 +3,8 @@ using System.Globalization;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
 using PrestoServer.Logic;
+using Xanico.Core;
 
 namespace PrestoServer.Misc
 {
@@ -27,7 +27,7 @@ namespace PrestoServer.Misc
         {
             InstallationSummaryLogic.Save(installationSummary);
 
-            LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+            Logger.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoServerResources.ApplicationInstalled,
                 installationSummary.ApplicationWithOverrideVariableGroup.ToString(),
                 installationSummary.ApplicationServer.Name,

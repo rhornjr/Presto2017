@@ -3,13 +3,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
-using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
-
-using PrestoCommon.Misc;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
+using Xanico.Core;
 
 namespace PrestoViewModel.Windows
 {
@@ -113,12 +112,12 @@ namespace PrestoViewModel.Windows
             catch (SocketException ex)
             {
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.DatabaseConnectionFailureMessage);
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
             catch (InvalidOperationException ex)
             {
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.DatabaseInvalidOperation);
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
         }
     }

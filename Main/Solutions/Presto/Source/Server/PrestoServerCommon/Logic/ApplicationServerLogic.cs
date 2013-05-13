@@ -9,6 +9,7 @@ using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
+using Xanico.Core;
 
 namespace PrestoServer.Logic
 {
@@ -75,7 +76,7 @@ namespace PrestoServer.Logic
 
                 if (!shouldInstall) { continue; }
 
-                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                Logger.LogInformation(string.Format(CultureInfo.CurrentCulture,
                     PrestoServerResources.AppWillBeInstalledOnAppServer,
                     appWithGroup,
                     appServer.Name));
@@ -108,7 +109,7 @@ namespace PrestoServer.Logic
                     PrestoServerResources.GlobalSettingNullSoNoInstallation,
                     appWithGroup.ToString(),
                     appServer.Name);
-                LogUtility.LogWarning(warning);
+                Logger.LogWarning(warning);
                 LogMessageLogic.SaveLogMessage(warning);
                 return false;
             }
@@ -119,7 +120,7 @@ namespace PrestoServer.Logic
                     PrestoServerResources.FreezeAllInstallationsTrueSoNoInstallation,
                     appWithGroup.ToString(),
                     appServer.Name);
-                LogUtility.LogWarning(warning);
+                Logger.LogWarning(warning);
                 LogMessageLogic.SaveLogMessage(warning);
                 return false;
             }
@@ -155,7 +156,7 @@ namespace PrestoServer.Logic
 
         private static bool AppGroupEnabled(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
+            Logger.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "Checking if app should be installed. ApplicationWithOverrideVariableGroup enabled: {0}.",
                 appWithGroup.Enabled), appServer.EnableDebugLogging);
 
@@ -170,7 +171,7 @@ namespace PrestoServer.Logic
 
             if (forceInstall != null) { forceInstallIsThisAppWithGroup = true; }
 
-            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
+            Logger.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "Checking if app should be installed. App server's ApplicationWithGroupToForceInstall matches the app group's " +
                 "application in name and version: {0}. If this value is true, then the app will be installed. Note: If there " +
                 "was a custom variable group, that matched by name as well. ApplicationServer.ApplicationWithGroupToForceInstall: {1}." +
@@ -217,7 +218,7 @@ namespace PrestoServer.Logic
             bool forceInstallationExists =
                 (appWithGroup.Application.ForceInstallation != null && appWithGroup.Application.ForceInstallation.ForceInstallationTime != null);
 
-            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
+            Logger.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "Checking if app should be installed. ApplicationWithOverrideVariableGroup.Application.ForceInstallation exists: {0}. " +
                 "ForceInstallationTime={1}",
                 forceInstallationExists,
@@ -271,7 +272,7 @@ namespace PrestoServer.Logic
         private static void LogForceInstallExistsWithNoInstallationSummaries(
             ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup, DateTime now, bool shouldForce)
         {
-            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
+            Logger.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "{0} should be installed on {1}: {2}. A force installation exists, there are no installation summaries, " +
                 "**AND** now ({3}) > appWithGroup.Application.ForceInstallation.ForceInstallationTime ({4}) " +
                 "**AND** appWithGroup.Application.ForceInstallation.ForceInstallationEnvironment ({5}) == this.DeploymentEnvironment ({6}).",
@@ -288,7 +289,7 @@ namespace PrestoServer.Logic
         private static void LogForceInstallBasedOnInstallationSummary(ApplicationServer appServer,
             ApplicationWithOverrideVariableGroup appWithGroup, DateTime now, InstallationSummary mostRecentInstallationSummary, bool shouldForce)
         {
-            LogUtility.LogDebug(string.Format(CultureInfo.CurrentCulture,
+            Logger.LogDebug(string.Format(CultureInfo.CurrentCulture,
                 "Checking if app should be installed. Force installation should happen: {0}. If true, the following is true: " +
                 "mostRecentInstallationSummary.InstallationStart ({1}) < appWithGroup.Application.ForceInstallation.ForceInstallationTime ({2}) " +
                 "**AND** now ({3}) > appWithGroup.Application.ForceInstallation.ForceInstallationTime ({4}) " +

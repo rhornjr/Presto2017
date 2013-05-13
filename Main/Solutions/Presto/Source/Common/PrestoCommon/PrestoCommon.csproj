@@ -89,6 +89,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xanico.Core">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
@@ -149,8 +152,6 @@
     <Compile Include="Misc\AesCrypto.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\EventArgsGeneric.cs" />
-    <Compile Include="Misc\LogUtility.cs" />
-    <Compile Include="Misc\ReflectionUtility.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

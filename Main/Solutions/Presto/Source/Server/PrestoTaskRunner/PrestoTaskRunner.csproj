@@ -55,6 +55,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xanico.Core">
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">

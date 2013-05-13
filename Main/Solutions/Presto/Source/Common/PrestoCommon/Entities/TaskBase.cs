@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using PrestoCommon.Enums;
-using PrestoCommon.Misc;
+using Xanico.Core;
 
 namespace PrestoCommon.Entities
 {

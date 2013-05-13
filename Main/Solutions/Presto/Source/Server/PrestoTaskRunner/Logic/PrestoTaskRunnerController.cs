@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Threading;
 using System.Timers;
 using PrestoCommon.Entities;
-using PrestoCommon.Misc;
 using PrestoServer;
-using PrestoServer.Interfaces;
 using PrestoServer.Logic;
+using Xanico.Core;
+using Xanico.Core.Interfaces;
 
 namespace PrestoTaskRunner.Logic
 {
@@ -51,7 +51,7 @@ namespace PrestoTaskRunner.Logic
         /// </summary>
         public void Stop()
         {
-            LogUtility.LogInformation("PrestoTaskRunnerController stopping timer.");
+            Logger.LogInformation("PrestoTaskRunnerController stopping timer.");
             this._timer.Stop();
             Thread.Sleep(2000);  // HACK: Give threads a chance to complete before the self-updating service unloads this app domain.
         }
@@ -115,18 +115,18 @@ namespace PrestoTaskRunner.Logic
 
                 if (pingResponse != null) { return; }  // Already responded.
 
-                string comment = "PTR file version " + PrestoServerUtility.GetFileVersion(Assembly.GetExecutingAssembly()) + " -- " + this.CommentFromServiceHost;
+                string comment = "PTR file version " + ReflectionUtility.GetFileVersion(Assembly.GetExecutingAssembly()) + " -- " + this.CommentFromServiceHost;
 
                 pingResponse = new PingResponse(pingRequest.Id, DateTime.Now, appServer, comment);
 
                 PingResponseLogic.Save(pingResponse);
 
-                LogUtility.LogInformation(string.Format(CultureInfo.CurrentCulture, "{0} responded to ping request", appServer.Name));
+                Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "{0} responded to ping request", appServer.Name));
             }
             catch (Exception ex)
             {
                 // Just eat it. We don't want ping response failures to stop processing.
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
         }
 
@@ -143,7 +143,7 @@ namespace PrestoTaskRunner.Logic
             catch (Exception ex)
             {
                 // Log it and keep processing.
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
         }
 
@@ -155,7 +155,7 @@ namespace PrestoTaskRunner.Logic
 
             if (appServer == null)
             {
-                LogUtility.LogWarning(string.Format(CultureInfo.CurrentCulture,
+                Logger.LogWarning(string.Format(CultureInfo.CurrentCulture,
                     PrestoTaskRunnerResources.AppServerNotFound,
                     serverName));
             }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using PrestoCommon.Enums;
 using PrestoCommon.Misc;
+using Xanico.Core;
 
 namespace PrestoCommon.Entities
 {
@@ -21,7 +22,7 @@ namespace PrestoCommon.Entities
         public string DestinationPath { get; set; }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Desc")]
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.LogUtility.LogInformation(System.String)")]
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PrestoCommon.Misc.Logger.LogInformation(System.String)")]
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
@@ -56,7 +57,7 @@ namespace PrestoCommon.Entities
             {
                 this.TaskSucceeded = false;
                 status = ex.Message;
-                LogUtility.LogException(ex);
+                Logger.LogException(ex);
             }
             finally
             {                
@@ -67,7 +68,7 @@ namespace PrestoCommon.Entities
                                  "Result     : " + status;
 
                 this.TaskDetails = message;
-                LogUtility.LogInformation(message);
+                Logger.LogInformation(message);
             }
         }
 

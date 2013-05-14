@@ -2,6 +2,7 @@
 using PrestoCommon.Entities;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
+using Raven.Abstractions.Exceptions;
 
 namespace PrestoServer.Logic
 {
@@ -29,7 +30,15 @@ namespace PrestoServer.Logic
 
         public static void Save(CustomVariableGroup customVariableGroup)
         {
-            DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().Save(customVariableGroup);
+            try
+            {
+                DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().Save(customVariableGroup);
+            }
+            catch (ConcurrencyException ex)
+            {
+                LogicBase.SetConcurrencyUserSafeMessage(ex, customVariableGroup.Name);
+                throw;
+            }
         }
     }
 }

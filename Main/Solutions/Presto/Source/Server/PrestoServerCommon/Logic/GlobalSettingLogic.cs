@@ -1,6 +1,7 @@
 ﻿using PrestoCommon.Entities;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
+using Raven.Abstractions.Exceptions;
 
 namespace PrestoServer.Logic
 {
@@ -24,7 +25,15 @@ namespace PrestoServer.Logic
         /// <param name="globalSetting">The global setting.</param>
         public static void Save(GlobalSetting globalSetting)
         {
-            DataAccessFactory.GetDataInterface<IGlobalSettingData>().Save(globalSetting);
+            try
+            {
+                DataAccessFactory.GetDataInterface<IGlobalSettingData>().Save(globalSetting);
+            }
+            catch (ConcurrencyException ex)
+            {
+                LogicBase.SetConcurrencyUserSafeMessage(ex, "Global setting");
+                throw;
+            }
         }
     }
 }

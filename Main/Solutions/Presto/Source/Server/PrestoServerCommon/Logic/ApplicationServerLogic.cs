@@ -10,7 +10,6 @@ using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
 using Raven.Abstractions.Exceptions;
 using Xanico.Core;
-using Xanico.Core.Wcf;
 
 namespace PrestoServer.Logic
 {
@@ -39,8 +38,7 @@ namespace PrestoServer.Logic
             }
             catch (ConcurrencyException ex)
             {
-                ex.Data[ExceptionDataKey.UserSafeMessage] =
-                    string.Format(CultureInfo.CurrentCulture, PrestoServerResources.ItemCannotBeSavedConcurrency, applicationServer.Name);
+                LogicBase.SetConcurrencyUserSafeMessage(ex, applicationServer.Name);
                 throw;
             }
         }

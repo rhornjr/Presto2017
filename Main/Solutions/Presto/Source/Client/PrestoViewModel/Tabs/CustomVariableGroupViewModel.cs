@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -13,7 +14,6 @@ using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
-using Raven.Abstractions.Exceptions;
 using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
@@ -239,15 +239,15 @@ namespace PrestoViewModel.Tabs
                 }
                 InitializeCustomVariableGroupsCollectionView();
             }
-            catch (ConcurrencyException)
+            catch (FaultException ex)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, ViewModelResources.ItemCannotBeSavedConcurrency, this.SelectedCustomVariableGroup.Name);
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
 
-                ViewModelUtility.MainWindowViewModel.AddUserMessage(message);
+                ShowUserMessage(ex.Message, ViewModelResources.ItemNotSavedCaption);
 
-                ShowUserMessage(message, ViewModelResources.ItemNotSavedCaption);
+                if (actionIfSaveFails != null) { actionIfSaveFails.Invoke(); }
 
-                actionIfSaveFails.Invoke();
+                return;
             }
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,

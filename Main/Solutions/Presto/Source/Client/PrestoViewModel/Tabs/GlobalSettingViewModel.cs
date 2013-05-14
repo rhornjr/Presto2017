@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.ServiceModel;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -86,9 +87,20 @@ namespace PrestoViewModel.Tabs
 
         private void Save()
         {
-            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            try
             {
-                this.GlobalSetting = prestoWcf.Service.SaveGlobalSetting(this.GlobalSetting);
+                using (var prestoWcf = new PrestoWcf<IBaseService>())
+                {
+                    this.GlobalSetting = prestoWcf.Service.SaveGlobalSetting(this.GlobalSetting);
+                }
+            }
+            catch (FaultException ex)
+            {
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
+
+                ShowUserMessage(ex.Message, ViewModelResources.ItemNotSavedCaption);
+
+                return;
             }
 
             using (var prestoWcf = new PrestoWcf<IBaseService>())

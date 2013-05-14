@@ -136,7 +136,7 @@ namespace PrestoServer.Logic
             return true;
         }
 
-        private static bool ApplicationShouldBeInstalled(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
+        internal static bool ApplicationShouldBeInstalled(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             if (IndividualChecksPass(appServer, appWithGroup) == false) { return false; }
 

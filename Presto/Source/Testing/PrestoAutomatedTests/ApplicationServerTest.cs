@@ -86,8 +86,7 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -106,12 +105,20 @@ namespace PrestoAutomatedTests
             
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithNullGroup);
+
+
+
+            // We're getting an exception that the force installation list is null. This is the reason why.
+            // Now that we're saving over WCF, the local appServer variable isn't updated. We need the Save()
+            // to return an appServer and use that.
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+
+
+
 
             SetGlobalFreeze(false);
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithNullGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithNullGroup);
             Assert.AreEqual(true, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -137,8 +144,7 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
             Assert.AreEqual(true, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -160,8 +166,7 @@ namespace PrestoAutomatedTests
             SetGlobalFreeze(false);
 
             // Note: We are *not* adding our app to the *force install* list of the server
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -190,8 +195,7 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithDifferentGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithDifferentGroup);
             Assert.AreEqual(false, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -228,8 +232,7 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
-            PrivateObject privateObject = new PrivateObject(appServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", appWithValidGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
             Assert.AreEqual(false, actual);
 
             ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
@@ -245,8 +248,7 @@ namespace PrestoAutomatedTests
             TestEntityContainer container = CreateTestEntityContainer("UseCase07", x => DateTime.Now, true, false, 0);
             container.AppWithGroup.Application.ForceInstallation = null;
 
-            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -259,8 +261,7 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase08", x => DateTime.Now.AddDays(10), true, false, 0);
 
-            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -273,8 +274,8 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase09", x => DateTime.Now.AddDays(-1), true, false, 0);
 
-            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+
             Assert.AreEqual(true, actual);
         }
 
@@ -287,8 +288,7 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase10", x => DateTime.Now.AddDays(-1), false, false, 0);
 
-            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
             Assert.AreEqual(false, actual);
         }
 
@@ -302,8 +302,7 @@ namespace PrestoAutomatedTests
             TestEntityContainer container = CreateTestEntityContainer("UseCase11", x => x.InstallationStart.AddSeconds(-86400),
                 true, false, 5);  // 86400 seconds in a day
 
-            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
             Assert.AreEqual(false, actual);  // False because an installation has occurred after the force deployment time.
         }
 
@@ -317,8 +316,7 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase12", x => x.InstallationStart.AddSeconds(1), true, false, 5);
 
-            PrivateObject privateObject = new PrivateObject(container.ApplicationServer);
-            bool actual = (bool)privateObject.Invoke("ApplicationShouldBeInstalled", container.AppWithGroup);
+            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
             Assert.AreEqual(true, actual);  // True because an installation has not yet occurred after the force deployment time.
 
             /*************************************************************************************
@@ -327,7 +325,7 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(true);
 
-            bool actualUsingFreeze = (bool)privateObject.Invoke("FinalInstallationChecksPass", container.AppWithGroup);
+            bool actualUsingFreeze = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
             Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
         }
 

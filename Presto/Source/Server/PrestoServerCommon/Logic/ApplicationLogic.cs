@@ -2,6 +2,7 @@
 using PrestoCommon.Entities;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
+using Raven.Abstractions.Exceptions;
 
 namespace PrestoServer.Logic
 {
@@ -17,14 +18,22 @@ namespace PrestoServer.Logic
             return DataAccessFactory.GetDataInterface<IApplicationData>().GetByName(name);
         }
 
-        public static void Save(Application application)
-        {
-            DataAccessFactory.GetDataInterface<IApplicationData>().Save(application);
-        }
-
         public static Application GetById(string id)
         {
             return DataAccessFactory.GetDataInterface<IApplicationData>().GetById(id);
+        }
+
+        public static void Save(Application application)
+        {
+            try
+            {
+                DataAccessFactory.GetDataInterface<IApplicationData>().Save(application);
+            }
+            catch (ConcurrencyException ex)
+            {
+                LogicBase.SetConcurrencyUserSafeMessage(ex, application.Name);
+                throw;
+            }
         }
     }
 }

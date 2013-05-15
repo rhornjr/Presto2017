@@ -11,8 +11,6 @@ namespace PrestoServer.Data.RavenDb
     {
         public IEnumerable<CustomVariableGroup> GetAll()
         {
-            IRavenQueryable<string> snuh;
-
             return ExecuteQuery<IEnumerable<CustomVariableGroup>>(() =>
             {
                 IEnumerable<CustomVariableGroup> customGroups =

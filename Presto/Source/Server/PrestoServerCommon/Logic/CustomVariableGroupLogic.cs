@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PrestoCommon.Entities;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
@@ -30,6 +31,8 @@ namespace PrestoServer.Logic
 
         public static void Save(CustomVariableGroup customVariableGroup)
         {
+            if (customVariableGroup == null) { throw new ArgumentNullException("customVariableGroup"); }
+
             try
             {
                 DataAccessFactory.GetDataInterface<ICustomVariableGroupData>().Save(customVariableGroup);

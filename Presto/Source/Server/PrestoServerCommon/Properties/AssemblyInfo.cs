@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -18,3 +20,5 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("4c25e6de-813f-415a-b769-a360f390e937")]
 [assembly: InternalsVisibleTo("PrestoAutomatedTests")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]
+[assembly: CLSCompliant(true)]

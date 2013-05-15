@@ -32,6 +32,8 @@ namespace PrestoServer.Logic
 
         public static void Save(ApplicationServer applicationServer)
         {
+            if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
+
             try
             {
                 DataAccessFactory.GetDataInterface<IApplicationServerData>().Save(applicationServer);
@@ -75,6 +77,8 @@ namespace PrestoServer.Logic
 
         public static void InstallApplications(ApplicationServer appServer)
         {
+            if (appServer == null) { throw new ArgumentNullException("appServer"); }
+
             // If we find an app that needs to be installed, install it.
             foreach (ApplicationWithOverrideVariableGroup appWithGroup in appServer.ApplicationsWithOverrideGroup)
             {
@@ -175,6 +179,7 @@ namespace PrestoServer.Logic
         {
             bool forceInstallIsThisAppWithGroup = false;  // default
 
+            PossiblyRefreshForceInstallationsToDo(appServer);
             ServerForceInstallation forceInstall = appServer.GetFromForceInstallList(appWithGroup);
 
             if (forceInstall != null) { forceInstallIsThisAppWithGroup = true; }
@@ -189,6 +194,16 @@ namespace PrestoServer.Logic
                 ApplicationWithGroupAsString(appWithGroup)), appServer.EnableDebugLogging);
 
             return forceInstallIsThisAppWithGroup;
+        }
+
+        // We don't persist these; this is just used in memory when determing what force installations to process.
+        // Because of this, when the Presto Task Runner removes from ServerForceInstallations (completely separate
+        // in the database from the ApplicationServer class), we won't get concurrency issues.
+        private static void PossiblyRefreshForceInstallationsToDo(ApplicationServer appServer)
+        {
+            if (appServer.ForceInstallationsToDo != null) { return; }  // already have force installations ready to process
+            
+            appServer.ForceInstallationsToDo = new List<ServerForceInstallation>(ApplicationServerLogic.GetForceInstallationsByServerId(appServer.Id));
         }
 
         private static string ForceInstallAsString(ServerForceInstallation forceInstall)
@@ -314,6 +329,8 @@ namespace PrestoServer.Logic
 
         public static void InstallPrestoSelfUpdater(ApplicationServer appServer)
         {
+            if (appServer == null) { throw new ArgumentNullException("appServer"); }
+
             string selfUpdatingAppName = ConfigurationManager.AppSettings["selfUpdatingAppName"];
 
             // Get the self-updater app from the DB
@@ -327,18 +344,6 @@ namespace PrestoServer.Logic
             }
 
             PrestoServerUtility.Container.Resolve<IAppInstaller>().InstallApplication(appServer, appWithGroup);
-        }
-
-        // We don't persist these; this is just used in memory when determing what force installations to process.
-        // Because of this, when the Presto Task Runner removes from ServerForceInstallations (completely separate
-        // in the database from the ApplicationServer class), we won't get concurrency issues.
-        private static List<ServerForceInstallation> ForceInstallationsToDo(ApplicationServer appServer)
-        {
-            if (appServer.ForceInstallationsToDo == null)
-            {
-                appServer.ForceInstallationsToDo = new List<ServerForceInstallation>(ApplicationServerLogic.GetForceInstallationsByServerId(appServer.Id));
-            }
-            return appServer.ForceInstallationsToDo;
         }
 
         #endregion

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
+using PrestoServer;
 using PrestoServer.Logic;
 
 namespace PrestoAutomatedTests
@@ -106,15 +106,7 @@ namespace PrestoAutomatedTests
             // Add our app to the force install list of the server
             ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithNullGroup);
 
-
-
-            // We're getting an exception that the force installation list is null. This is the reason why.
-            // Now that we're saving over WCF, the local appServer variable isn't updated. We need the Save()
-            // to return an appServer and use that.
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
-
-
-
 
             SetGlobalFreeze(false);
 
@@ -447,7 +439,7 @@ namespace PrestoAutomatedTests
             mockAppInstaller.Setup(m => m.InstallApplication(It.IsAny<ApplicationServer>(),
                 It.IsAny<ApplicationWithOverrideVariableGroup>()));
 
-            CommonUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller.Object);
+            PrestoServerUtility.Container.RegisterInstance<IAppInstaller>(mockAppInstaller.Object);
 
             return mockAppInstaller;
         }

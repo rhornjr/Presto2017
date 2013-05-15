@@ -3,8 +3,10 @@
 <Dictionary>
   <Words>
     <Recognized>
+      <Word>ForceInstallation</Word>
       <Word>Ip</Word>
       <Word>IpAddress</Word>
+      <Word>ServerForceInstallation</Word>
     </Recognized>
   </Words>
 </Dictionary>

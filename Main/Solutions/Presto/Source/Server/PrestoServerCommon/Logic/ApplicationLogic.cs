@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PrestoCommon.Entities;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
@@ -25,6 +26,8 @@ namespace PrestoServer.Logic
 
         public static void Save(Application application)
         {
+            if (application == null) { throw new ArgumentNullException("application"); }
+
             try
             {
                 DataAccessFactory.GetDataInterface<IApplicationData>().Save(application);

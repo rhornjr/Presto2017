@@ -6,7 +6,7 @@ using PrestoServer.Misc;
 
 namespace PrestoServer
 {
-    public class PrestoServerUtility
+    public static class PrestoServerUtility
     {
         private static UnityContainer _container = new UnityContainer();
 

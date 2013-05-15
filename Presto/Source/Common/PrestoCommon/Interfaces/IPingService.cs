@@ -11,7 +11,7 @@ namespace PrestoCommon.Interfaces
         PingRequest GetMostRecentPingRequest();
 
         [OperationContract]
-        void SavePingRequest(PingRequest pingRequest);
+        PingRequest SavePingRequest(PingRequest pingRequest);
 
         [OperationContract]
         IEnumerable<PingResponse> GetAllForPingRequest(PingRequest pingRequest);

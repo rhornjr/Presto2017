@@ -176,10 +176,8 @@ namespace PrestoViewModel.Tabs
 
             using (var prestoWcf = new PrestoWcf<IPingService>())
             {
-                prestoWcf.Service.SavePingRequest(pingRequest);
+                this.PingRequest = prestoWcf.Service.SavePingRequest(pingRequest);
             }
-
-            this.PingRequest = pingRequest;
 
             ClearResponseTimes();
 

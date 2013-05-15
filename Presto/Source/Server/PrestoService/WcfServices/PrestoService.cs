@@ -340,11 +340,12 @@ namespace PrestoWcfService.WcfServices
             }
         }
 
-        public void SavePingRequest(PingRequest pingRequest)
+        public PingRequest SavePingRequest(PingRequest pingRequest)
         {
             try
             {
                 PingRequestLogic.Save(pingRequest);
+                return pingRequest;
             }
             catch (Exception ex)
             {

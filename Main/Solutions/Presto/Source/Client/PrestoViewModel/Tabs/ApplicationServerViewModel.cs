@@ -573,7 +573,14 @@ namespace PrestoViewModel.Tabs
         {
             int index = this._allServers.FindIndex(x => x.Id == savedServer.Id);
 
-            this._allServers[index] = savedServer;
+            if (index >= 0)
+            {
+                this._allServers[index] = savedServer;
+            }
+            else
+            {
+                this._allServers.Add(savedServer);
+            }
         }
 
         private void AddApplication()

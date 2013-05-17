@@ -29,11 +29,9 @@ namespace PrestoCommon.Wcf
 
                 _channelFactory = new WcfChannelFactory<TService>(netTcpBinding);
 
-                string endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
-
                 // The call to CreateChannel() actually returns a proxy that can intercept calls to the
                 // service. This is done so that the proxy can retry on communication failures.            
-                return _channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
+                return _channelFactory.CreateChannel(GetEndpointAddress());
             }
         }
 
@@ -54,13 +52,21 @@ namespace PrestoCommon.Wcf
 
             using (var channelFactory = new WcfChannelFactory<TService>(netTcpBinding))
             {
-                var endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
-
                 // The call to CreateChannel() actually returns a proxy that can intercept calls to the
                 // service. This is done so that the proxy can retry on communication failures.            
-                TService prestoService = channelFactory.CreateChannel(new EndpointAddress(endpointAddress));
+                TService prestoService = channelFactory.CreateChannel(GetEndpointAddress());
                 return func(prestoService);
             }
+        }
+
+        private static EndpointAddress GetEndpointAddress()
+        {
+            // We need to use a dummy SPN here because we were getting "target principal name is incorrect" errors.
+            // http://inaspiralarray.blogspot.com/2013/05/wcf-security-issue-target-principal.html
+            var uri              = new Uri(ConfigurationManager.AppSettings["prestoServiceAddress"]);
+            var endpointIdentity = EndpointIdentity.CreateSpnIdentity(string.Empty);
+
+            return new EndpointAddress(uri, endpointIdentity);
         }
 
         public void Dispose()

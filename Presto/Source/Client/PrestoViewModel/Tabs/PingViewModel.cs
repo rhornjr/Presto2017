@@ -81,7 +81,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class PingViewModel : ViewModelBase, IDisposable
     {
-        private const int TotalTimerRunTimeInMinutes = 5;
+        private const int TotalTimerRunTimeInMinutes = 1;  // Keep refreshing automatically for a minute (after a ping request).
 
         private Timer _timer;
         private DateTime _timerStartTime;        

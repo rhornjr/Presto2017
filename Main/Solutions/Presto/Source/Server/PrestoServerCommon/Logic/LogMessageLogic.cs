@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Principal;
 using PrestoCommon.Entities;
 using PrestoServer.Data;
 using PrestoServer.Data.Interfaces;
+using Xanico.Core.Security;
 
 namespace PrestoServer.Logic
 {
@@ -25,7 +25,7 @@ namespace PrestoServer.Logic
         /// <param name="message">The message.</param>
         public static void SaveLogMessage(string message)
         {
-            LogMessage logMessage = new LogMessage(message, DateTime.Now, WindowsIdentity.GetCurrent().Name);
+            LogMessage logMessage = new LogMessage(message, DateTime.Now, IdentityHelper.UserName);
 
             DataAccessFactory.GetDataInterface<ILogMessageData>().Save(logMessage);
         }

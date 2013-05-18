@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Xanico.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Xanico.Core.CoreResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Xanico.Core.CoreResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Xanico.Core.CoreResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Xanico.Core.CoreResources.StandardWcfErrorMessage">
+            <summary>
+              Looks up a localized string similar to An error occurred on the server. Please see the log for details..
+            </summary>
+        </member>
+        <member name="T:Xanico.Core.Interfaces.IStartStop">
+            <summary>
+            Contract for classes that will be started and stopped.
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.Interfaces.IStartStop.Start">
+            <summary>
+            Starts this instance.
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.Interfaces.IStartStop.Stop">
+            <summary>
+            Stops this instance.
+            </summary>
+        </member>
+        <member name="P:Xanico.Core.Interfaces.IStartStop.CommentFromServiceHost">
+            <summary>
+            Gets or sets the comment from service host.
+            </summary>
+            <value>
+            The comment from service host.
+            </value>
+        </member>
+        <member name="T:Xanico.Core.Logger">
+            <summary>
+            Logging operations
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.Logger.LogDebug(System.String,System.Boolean)">
+            <summary>
+            Logs the message, but only if debug logging is true.
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.Logger.LogInformation(System.String)">
+            <summary>
+            Logs the information.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Xanico.Core.Logger.LogWarning(System.String)">
+            <summary>
+            Logs the warning.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Xanico.Core.Logger.LogException(System.Exception)">
+            <summary>
+            Logs the exception.
+            </summary>
+            <param name="ex">The ex.</param>
+        </member>
+        <member name="T:Xanico.Core.ReflectionUtility">
+            <summary>
+            Utility/helper class for activities involving reflection.
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.ReflectionUtility.GetFileVersion(System.Reflection.Assembly)">
+            <summary>
+            Gets the file version. This method will not throw an exception and it will not return null.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Xanico.Core.ReflectionUtility.GetDerivedTypes(System.Type,System.Reflection.Assembly)">
+            <summary>
+            Gets the types that are derived from the base type.
+            </summary>
+        </member>
+        <member name="T:Xanico.Core.Security.IdentityHelper">
+            <summary>
+            Helper class for Windows identity operations
+            </summary>
+        </member>
+        <member name="P:Xanico.Core.Security.IdentityHelper.UserName">
+            <summary>
+            Gets the user name by context, either from the <see cref="T:System.ServiceModel.ServiceSecurityContext"/> if present, otherwise 
+            from the current Windows identity.
+            </summary>
+        </member>
+        <member name="P:Xanico.Core.Security.IdentityHelper.CurrentWindowsIdentityByContext">
+            <summary>
+            Gets the current Windows identity by context, either <see cref="T:System.ServiceModel.ServiceSecurityContext"/> if present, otherwise 
+            the current Windows identity.
+            </summary>
+        </member>
+        <member name="T:Xanico.Core.Wcf.ExceptionDataKey">
+            <summary>
+            Enum for storing keys in the <see cref="P:System.Exception.Data"/> collection of exceptions
+            </summary>
+        </member>
+        <member name="F:Xanico.Core.Wcf.ExceptionDataKey.UserSafeMessage">
+            <summary>
+            The key for a user-safe message stored in the <see cref="P:System.Exception.Data"/> collection.
+            </summary>
+        </member>
+        <member name="T:Xanico.Core.Wcf.FaultUtility">
+            <summary>
+            Helper class for WCF fault operations
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.Wcf.FaultUtility.GetFaultMessage(System.Exception)">
+            <summary>
+            If the exception contains a user-safe message, return that. Otherwise, return
+            a standard WCF general-purpose message.
+            </summary>
+            <param name="exception"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

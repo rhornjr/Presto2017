@@ -90,6 +90,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xanico", "Xanico", "{3BA65A
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.dll = Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.dll
 		Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.pdb = Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.pdb
+		Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.XML = Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.XML
 	EndProjectSection
 EndProject
 Global

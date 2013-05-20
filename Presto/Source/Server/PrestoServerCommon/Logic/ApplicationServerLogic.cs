@@ -201,7 +201,7 @@ namespace PrestoServer.Logic
         // in the database from the ApplicationServer class), we won't get concurrency issues.
         private static void PossiblyRefreshForceInstallationsToDo(ApplicationServer appServer)
         {
-            if (appServer.ForceInstallationsToDo != null) { return; }  // already have force installations ready to process
+            if (appServer.ForceInstallationsToDo != null && appServer.ForceInstallationsToDo.Count > 0) { return; }  // already have force installations ready to process
             
             appServer.ForceInstallationsToDo = new List<ServerForceInstallation>(ApplicationServerLogic.GetForceInstallationsByServerId(appServer.Id));
         }

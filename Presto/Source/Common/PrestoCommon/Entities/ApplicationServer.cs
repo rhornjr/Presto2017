@@ -15,7 +15,7 @@ namespace PrestoCommon.Entities
         private string _description;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _applicationsWithOverrideGroup;
         private ObservableCollection<CustomVariableGroup> _customVariableGroups;
-        private List<ServerForceInstallation> _forceInstallationsToDo;
+        private List<ServerForceInstallation> _forceInstallationsToDo = new List<ServerForceInstallation>();
 
         [JsonIgnore]  // We do not want RavenDB to serialize this...
         [DataMember]  // ... but we still want it to go over WCF

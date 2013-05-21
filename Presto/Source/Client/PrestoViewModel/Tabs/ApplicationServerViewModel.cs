@@ -547,8 +547,9 @@ namespace PrestoViewModel.Tabs
             {
                 using (var prestoWcf = new PrestoWcf<IServerService>())
                 {
-                    this.SelectedApplicationServer = prestoWcf.Service.SaveServer(this.SelectedApplicationServer);
-                    UpdateCacheWithSavedItem(this.SelectedApplicationServer);
+                    var savedServer = prestoWcf.Service.SaveServer(this.SelectedApplicationServer);
+                    UpdateCacheWithSavedItem(savedServer);
+                    this.SelectedApplicationServer = savedServer;
                 }
 
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
@@ -581,6 +582,10 @@ namespace PrestoViewModel.Tabs
             {
                 this._allServers.Add(savedServer);
             }
+
+            // We have two lists (_allServers, above), and the servers for the selected environment (below).
+            // Refresh the servers for the selcted environment:
+            LoadApplicationServers(false);
         }
 
         private void AddApplication()

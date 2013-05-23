@@ -543,7 +543,9 @@ namespace PrestoViewModel.Tabs
             {
                 using (var prestoWcf = new PrestoWcf<IApplicationService>())
                 {
-                    this.SelectedApplication = prestoWcf.Service.SaveApplication(this.SelectedApplication);
+                    var savedApplication = prestoWcf.Service.SaveApplication(this.SelectedApplication);
+                    this.SelectedApplication = savedApplication;
+                    UpdateCacheWithSavedItem(savedApplication);
                 }
                 this.SaveCachedLogMessages(this.SelectedApplication.Id);
             }
@@ -558,6 +560,21 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, this.SelectedApplication));
+        }
+
+        private void UpdateCacheWithSavedItem(Application savedApplication)
+        {
+            var cachedApp = this.Applications.FirstOrDefault(x => x.Id == savedApplication.Id);
+
+            if (cachedApp == null)
+            {
+                this.Applications.Add(savedApplication);
+            }
+            else
+            {
+                int index = this.Applications.IndexOf(cachedApp);
+                this.Applications[index] = savedApplication;
+            }
         }
 
         private void LoadApplications()

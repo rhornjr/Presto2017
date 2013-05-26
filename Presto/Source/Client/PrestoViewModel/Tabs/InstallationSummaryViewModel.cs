@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Input;
+using Microsoft.AspNet.SignalR.Client.Hubs;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -113,18 +114,19 @@ namespace PrestoViewModel.Tabs
 
             LoadTimeZones();
             LoadInstallationSummaryList();
-            // ToDo: Do this when I implement SignalR.
-            //SubscribeToDatabaseChangeEvents();
+            InitializeSignalR();
         }
 
-        //private void SubscribeToDatabaseChangeEvents()
-        //{
-        //    // ToDo: Enable this when I get SignalR working.
-        //    // When there is a new installation summary, automatically refresh the list.
-        //    //DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
-        //}
+        private void InitializeSignalR()
+        {
+            var signalrAddress = ConfigurationManager.AppSettings["signalrAddress"];
+            var hubConnection = new HubConnection(signalrAddress);
+            var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
+            prestoHubProxy.On<string>("OnDatabaseItemAdded", OnDatabaseItemAdded);
+            hubConnection.Start();
+        }
 
-        private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
+        private void OnDatabaseItemAdded(string data)
         {
             Refresh();
         }

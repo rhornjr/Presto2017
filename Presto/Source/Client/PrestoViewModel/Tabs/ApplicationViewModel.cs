@@ -568,6 +568,13 @@ namespace PrestoViewModel.Tabs
 
             if (cachedApp == null)
             {
+                // We've just added an app and it has a null ID. That's our new one.
+                // Note: We can have more than one app with a null ID because a user can add multiple apps without hitting save.
+                cachedApp = this.Applications.FirstOrDefault(x => x.Id == null && x.Name == savedApplication.Name);
+            }
+
+            if (cachedApp == null)
+            {
                 this.Applications.Add(savedApplication);
             }
             else

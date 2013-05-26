@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.AspNet.SignalR.Client;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Factories.OpenFileDialog;
@@ -14,6 +16,8 @@ using PrestoViewModel;
 using PrestoViewModel.Mvvm;
 using PrestoCommon.Interfaces;
 using Xanico.Core;
+using Microsoft.AspNet.SignalR.Client.Hubs;
+using System.Configuration;
 
 namespace PrestoDashboard
 {
@@ -38,6 +42,22 @@ namespace PrestoDashboard
             MainWindowViewModel.ViewLoader = RegisterViewModelsAndTypes();
 
             EnsureInitialNecessaryDataExists();
+
+            InitializeSignalR();
+        }
+
+        private static void InitializeSignalR()
+        {
+            var signalrAddress = ConfigurationManager.AppSettings["signalrAddress"];
+            var hubConnection = new HubConnection(signalrAddress);
+            var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
+            prestoHubProxy.On<string>("OnSignalRMessage", OnSignalRMessage);
+            hubConnection.Start();
+        }
+
+        private static void OnSignalRMessage(string data)
+        {
+            MessageBox.Show(data);
         }
 
         private static void EnsureInitialNecessaryDataExists()

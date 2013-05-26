@@ -2,8 +2,11 @@
 using System.Configuration;
 using System.ServiceModel;
 using System.ServiceProcess;
+using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Hosting;
 using PrestoCommon.Interfaces;
 using PrestoServer;
+using PrestoWcfService.SignalR;
 using PrestoWcfService.WcfServices;
 
 namespace PrestoWcfService
@@ -32,14 +35,33 @@ namespace PrestoWcfService
             Console.WriteLine("Presto WCF service started: " + _serviceAddress);
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
+            hubContext.Clients.All.OnSignalRMessage("snuh");
+            Console.WriteLine("Sent 'snuh' to all clients...");
+            Console.ReadKey();
+            hubContext.Clients.All.OnSignalRMessage("snuh2");
+            Console.WriteLine("Sent 'snuh' to all clients...");
+            Console.ReadKey();
+
             _prestoServiceHost.OnStop();
         }
 
         protected override void OnStart(string[] args)
         {
-            if (_serviceHost != null) { _serviceHost.Close(); }
+            RegisterDependencies();
+            InitializeAndOpenPrestoService();
+            StartSignalRHost();
+        }
 
-            PrestoServerUtility.RegisterRavenDataClasses();
+        private void StartSignalRHost()
+        {
+            var url = ConfigurationManager.AppSettings["signalrAddress"];
+            WebApplication.Start<Startup>(url);
+        }
+
+        private void InitializeAndOpenPrestoService()
+        {
+            if (_serviceHost != null) { _serviceHost.Close(); }
 
             var netTcpBinding = new NetTcpBinding();
             netTcpBinding.MaxReceivedMessageSize = int.MaxValue;
@@ -54,6 +76,11 @@ namespace PrestoWcfService
             _serviceHost.AddServiceEndpoint(typeof(IPingService), netTcpBinding, _serviceAddress);
 
             _serviceHost.Open();
+        }
+
+        private void RegisterDependencies()
+        {
+            PrestoServerUtility.RegisterRavenDataClasses();
         }
 
         protected override void OnStop()

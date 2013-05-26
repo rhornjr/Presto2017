@@ -5,7 +5,9 @@ using System.ServiceProcess;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoServer;
+using PrestoServer.Data.RavenDb;
 using PrestoWcfService.SignalR;
 using PrestoWcfService.WcfServices;
 
@@ -34,13 +36,20 @@ namespace PrestoWcfService
             _prestoServiceHost.OnStart(args);
             Console.WriteLine("Presto WCF service started: " + _serviceAddress);
             Console.WriteLine("Press any key to stop the program.");
-            Console.ReadKey();
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
-            hubContext.Clients.All.OnSignalRMessage("snuh");
-            Console.WriteLine("Sent 'snuh' to all clients...");
-            Console.ReadKey();
-            hubContext.Clients.All.OnSignalRMessage("snuh2");
-            Console.WriteLine("Sent 'snuh' to all clients...");
+            
+            //Console.ReadKey();
+            //var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
+            //hubContext.Clients.All.OnSignalRMessage("snuh");
+            //Console.WriteLine("Sent 'snuh' to all clients...");
+
+            //Console.ReadKey();
+            //hubContext.Clients.All.OnDatabaseItemAdded("db item added");
+            //Console.WriteLine("DB item added...");
+
+            //Console.ReadKey();
+            //hubContext.Clients.All.OnSignalRMessage("snuh2");
+            //Console.WriteLine("Sent 'snuh' to all clients...");
+            
             Console.ReadKey();
 
             _prestoServiceHost.OnStop();
@@ -51,6 +60,19 @@ namespace PrestoWcfService
             RegisterDependencies();
             InitializeAndOpenPrestoService();
             StartSignalRHost();
+            SubscribeToDatabaseChangeEvents();
+        }
+
+        private void SubscribeToDatabaseChangeEvents()
+        {
+            // When there is a new installation summary, automatically refresh the list.
+            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
+        }
+
+        private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
+        {
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
+            hubContext.Clients.All.OnDatabaseItemAdded("snuh");
         }
 
         private void StartSignalRHost()

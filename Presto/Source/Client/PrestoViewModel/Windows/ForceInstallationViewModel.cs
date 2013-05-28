@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
-using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Mvvm;
 
@@ -103,6 +103,8 @@ namespace PrestoViewModel.Windows
         {
             this.ForceInstallation = new ForceInstallation();
 
+            this.UserCanceled = true;  // default
+
             this.OkCommand                   = new RelayCommand(Save, ForceInstallationTimeIsValid);
             this.CancelCommand               = new RelayCommand(Cancel);
             this.ForceInstallationNowCommand = new RelayCommand(ForceInstallationNow);
@@ -116,6 +118,7 @@ namespace PrestoViewModel.Windows
 
         private void Save()
         {
+            this.UserCanceled = false;
             this.ForceInstallation.ForceInstallEnvironment = this.SelectedDeploymentEnvironment;
             this.Close();
         }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNet.SignalR;
 
-namespace PrestoWcfService.SignalR
+namespace PrestoServer.SignalR
 {
-    public class PrestoHub : Hub {}
+    public class PrestoHub : Hub { }
 
     // Note: Our hub doesn't need any methods. When we want to send a message, we do so
     //       using the hub context. Something like this:

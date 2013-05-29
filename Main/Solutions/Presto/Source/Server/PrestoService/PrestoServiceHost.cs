@@ -2,12 +2,9 @@
 using System.Configuration;
 using System.ServiceModel;
 using System.ServiceProcess;
-using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
 using PrestoCommon.Interfaces;
-using PrestoCommon.Misc;
 using PrestoServer;
-using PrestoServer.Data.RavenDb;
 using PrestoWcfService.SignalR;
 using PrestoWcfService.WcfServices;
 
@@ -60,19 +57,6 @@ namespace PrestoWcfService
             RegisterDependencies();
             InitializeAndOpenPrestoService();
             StartSignalRHost();
-            SubscribeToDatabaseChangeEvents();
-        }
-
-        private void SubscribeToDatabaseChangeEvents()
-        {
-            // When there is a new installation summary, automatically refresh the list.
-            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
-        }
-
-        private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
-        {
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
-            hubContext.Clients.All.OnDatabaseItemAdded("snuh");
         }
 
         private void StartSignalRHost()

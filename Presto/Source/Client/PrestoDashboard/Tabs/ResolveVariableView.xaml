@@ -36,14 +36,14 @@
         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource StandardLabel}" Content="Application:"/>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0" Grid.Column="1">
-            <TextBox Text="{Binding ApplicationWithGroup.Application.Name}" Width="180" IsEnabled="False"/>
+            <TextBox Text="{Binding ApplicationWithGroup.Application.Name}" Width="360" IsEnabled="False"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectApplicationCommand}" />
         </StackPanel>
 
         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource StandardLabel}" Content="Override Group:"/>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1" Grid.Column="1">
-            <TextBox Text="{Binding ApplicationWithGroup.CustomVariableGroup.Name}" Width="180" IsEnabled="False"/>
+            <TextBox Text="{Binding ApplicationWithGroup.CustomVariableGroup.Name}" Width="360" IsEnabled="False"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectGroupCommand}"/>
             <Button Content="X" Width="25" Height="25" Command="{Binding RemoveGroupCommand}"/>
         </StackPanel>
@@ -51,7 +51,7 @@
         <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource StandardLabel}" Content="Server:"/>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="2" Grid.Column="1">
-            <TextBox Text="{Binding ApplicationServer.Name}" Width="180" IsEnabled="False"/>
+            <TextBox Text="{Binding ApplicationServer.Name}" Width="360" IsEnabled="False"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectServerCommand}" />
         </StackPanel>
         

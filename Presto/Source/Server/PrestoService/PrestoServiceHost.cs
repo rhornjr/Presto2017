@@ -34,19 +34,6 @@ namespace PrestoWcfService
             Console.WriteLine("Presto WCF service started: " + _serviceAddress);
             Console.WriteLine("Press any key to stop the program.");
             
-            //Console.ReadKey();
-            //var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
-            //hubContext.Clients.All.OnSignalRMessage("snuh");
-            //Console.WriteLine("Sent 'snuh' to all clients...");
-
-            //Console.ReadKey();
-            //hubContext.Clients.All.OnDatabaseItemAdded("db item added");
-            //Console.WriteLine("DB item added...");
-
-            //Console.ReadKey();
-            //hubContext.Clients.All.OnSignalRMessage("snuh2");
-            //Console.WriteLine("Sent 'snuh' to all clients...");
-            
             Console.ReadKey();
 
             _prestoServiceHost.OnStop();
@@ -87,6 +74,7 @@ namespace PrestoWcfService
         private void RegisterDependencies()
         {
             PrestoServerUtility.RegisterRavenDataClasses();
+            PrestoServerUtility.RegisterRealClasses();  // Necessary for this service to install the self-updater
         }
 
         protected override void OnStop()

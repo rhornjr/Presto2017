@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
@@ -17,8 +19,10 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class ApplicationServerSelectorViewModel : ViewModelBase
     {
-        private Collection<ApplicationServer> _servers;
+        private IEnumerable<ApplicationServer> _servers;
         private ApplicationServer _selectedServers;
+        private List<InstallationEnvironment> _installationEnvironments;
+        private InstallationEnvironment _selectedInstallationEnvironment;
 
         /// <summary>
         /// Gets the add command.
@@ -38,19 +42,59 @@ namespace PrestoViewModel.Windows
         /// </value>
         public bool UserCanceled { get; private set; }
 
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<InstallationEnvironment> InstallationEnvironments
+        {
+            get
+            {
+                if (this._installationEnvironments == null)
+                {
+                    using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+                    {
+                        this._installationEnvironments =
+                            prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+                    }
+                }
+                return this._installationEnvironments;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the applications.
         /// </summary>
         /// <value>
         /// The applications.
         /// </value>
-        public Collection<ApplicationServer> Servers
+        public IEnumerable<ApplicationServer> Servers
         {
-            get { return this._servers; }
+            get
+            {
+                if (this.InstallationEnvironments == null || this._servers == null) { return null; }
+                return this._servers.Where(x => x.InstallationEnvironment.Id == this.SelectedInstallationEnvironment.Id);
+            }
 
             private set
             {
                 this._servers = value;
+                this.NotifyPropertyChanged(() => this.Servers);
+            }
+        }
+
+        public InstallationEnvironment SelectedInstallationEnvironment
+        {
+            get
+            {
+                if (this._selectedInstallationEnvironment == null)
+                {
+                    this._selectedInstallationEnvironment = this.InstallationEnvironments.First();
+                }
+                return this._selectedInstallationEnvironment;
+            }
+
+            set
+            {
+                if (this._selectedInstallationEnvironment == value) { return; }
+                this._selectedInstallationEnvironment = value;
                 this.NotifyPropertyChanged(() => this.Servers);
             }
         }
@@ -82,10 +126,16 @@ namespace PrestoViewModel.Windows
 
         private void Initialize()
         {
-            this.AddCommand    = new RelayCommand(Add);
+            this.AddCommand    = new RelayCommand(Add, CanAdd);
             this.CancelCommand = new RelayCommand(Cancel);
 
-            LoadApplications();
+            LoadServers();
+        }
+
+        private bool CanAdd()
+        {
+            if (this.SelectedServer == null) { return false; }
+            return true;
         }
 
         private void Add()
@@ -99,7 +149,7 @@ namespace PrestoViewModel.Windows
             this.Close();
         }
 
-        private void LoadApplications()
+        private void LoadServers()
         {
             try
             {

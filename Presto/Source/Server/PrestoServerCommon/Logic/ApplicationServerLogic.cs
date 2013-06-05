@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
-using System.Linq;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -334,12 +333,16 @@ namespace PrestoServer.Logic
             string selfUpdatingAppName = ConfigurationManager.AppSettings["selfUpdatingAppName"];
 
             // Get the self-updater app from the DB
-            ApplicationWithOverrideVariableGroup appWithGroup =
-                appServer.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == selfUpdatingAppName).FirstOrDefault();
+            //var appWithGroup =
+            //    appServer.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == selfUpdatingAppName).FirstOrDefault();
 
-            if (appWithGroup == null)
+            var appWithGroup = new ApplicationWithOverrideVariableGroup();
+            var app = ApplicationLogic.GetByName(selfUpdatingAppName);
+            appWithGroup.Application = app;
+
+            if (app == null)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, PrestoServerResources.PrestoSelfUpdaterAppNotFound, appServer.Name);
+                string message = string.Format(CultureInfo.CurrentCulture, PrestoServerResources.PrestoSelfUpdaterAppNotFound, selfUpdatingAppName);
                 throw new InvalidOperationException(message);
             }
 

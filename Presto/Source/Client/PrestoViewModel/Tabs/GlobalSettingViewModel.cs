@@ -11,22 +11,13 @@ using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class GlobalSettingViewModel : ViewModelBase
     {
         private GlobalSetting _globalSetting;
 
-        /// <summary>
-        /// Gets the refresh command.
-        /// </summary>
         public ICommand RefreshCommand { get; private set; }
-
-        /// <summary>
-        /// Gets the save command.
-        /// </summary>
         public ICommand SaveCommand { get; private set; }
+        public ICommand UpdateSelfUpdaterCommand { get; private set; }
 
         /// <summary>
         /// Gets the global setting.
@@ -56,8 +47,26 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.RefreshCommand = new RelayCommand(Refresh);
-            this.SaveCommand = new RelayCommand(Save);
+            this.RefreshCommand           = new RelayCommand(Refresh);
+            this.SaveCommand              = new RelayCommand(Save);
+            this.UpdateSelfUpdaterCommand = new RelayCommand(UpdateSelfUpdater);
+        }
+
+        private void UpdateSelfUpdater()
+        {
+            if (!UserChoosesYes("Update the self-updating service host on *every* app server? Be sure you want to do this " +
+                "because this is a significant and irreversible action.")) { return; }
+
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                var allServers = prestoWcf.Service.GetAllServers();
+
+                foreach (var server in allServers)
+                {
+                    if (server.Name != "FS-6103") { continue; }
+                    prestoWcf.Service.InstallPrestoSelfUpdater(server);
+                }
+            }
         }
 
         private void LoadGlobalSetting()

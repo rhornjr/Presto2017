@@ -130,7 +130,7 @@
     <value>The global setting entity is null, so the installation will not happen: {0} on {1}.</value>
   </data>
   <data name="PrestoSelfUpdaterAppNotFound" xml:space="preserve">
-    <value>An attempt was made to install the Presto self-updating application, but that application was not found in the list of applications for the server {0}.</value>
+    <value>An attempt was made to install the Presto self-updating application, but that application ({0}) was not found in the database.</value>
   </data>
   <data name="ItemCannotBeSavedConcurrency" xml:space="preserve">
     <value>{0} was not saved because another user has changed it. Please refresh and try again.</value>

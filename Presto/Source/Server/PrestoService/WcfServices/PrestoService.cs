@@ -14,6 +14,7 @@ namespace PrestoWcfService.WcfServices
     /// calls can specify specific service interfaces (IApplicationService, IServerService, etc...)
     /// and deal only with the methods for the entity they care about.
     /// </summary>
+    [ServiceBehavior(MaxItemsInObjectGraph = int.MaxValue)]
     public class PrestoService : IBaseService, IApplicationService, ICustomVariableGroupService, IServerService,
         IInstallationEnvironmentService, IInstallationSummaryService, IPingService
     {

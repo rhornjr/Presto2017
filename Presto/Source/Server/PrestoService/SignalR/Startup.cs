@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNet.SignalR;
 using Owin;
 
 namespace PrestoWcfService.SignalR
 {
     public class Startup
     {
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void Configuration(IAppBuilder app)
         {
             var config = new HubConfiguration { EnableCrossDomain = true };

@@ -26,63 +26,31 @@ namespace PrestoWcfService.WcfServices
 
         public void Delete(EntityBase objectToDelete)
         {
-            try
-            {
-                LogicBase.Delete(objectToDelete);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => LogicBase.Delete(objectToDelete));
         }
 
         public IEnumerable<LogMessage> GetMostRecentLogMessagesByCreatedTime(int numberToRetrieve)
         {
-            try
-            {
-                return LogMessageLogic.GetMostRecentByCreatedTime(numberToRetrieve);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => LogMessageLogic.GetMostRecentByCreatedTime(numberToRetrieve));
         }
 
         public void SaveLogMessage(string message)
         {
-            try
-            {
-                LogMessageLogic.SaveLogMessage(message);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => LogMessageLogic.SaveLogMessage(message));
         }
 
         public GlobalSetting GetGlobalSettingItem()
         {
-            try
-            {
-                return GlobalSettingLogic.GetItem();
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => GlobalSettingLogic.GetItem());
         }
 
         public GlobalSetting SaveGlobalSetting(GlobalSetting globalSetting)
         {
-            try
+            return Invoke(() =>
             {
                 GlobalSettingLogic.Save(globalSetting);
                 return globalSetting;
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            });
         }
 
         #endregion
@@ -91,51 +59,26 @@ namespace PrestoWcfService.WcfServices
 
         public Application GetById(string id)
         {
-            try
-            {
-                return ApplicationLogic.GetById(id);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => ApplicationLogic.GetById(id));
         }
 
         public IEnumerable<Application> GetAllApplications()
         {
-            try
-            {
-                return ApplicationLogic.GetAll();
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => ApplicationLogic.GetAll());
         }
 
         public Application GetByName(string name)
         {
-            try
-            {
-                return ApplicationLogic.GetByName(name);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => ApplicationLogic.GetByName(name));
         }
 
         public Application SaveApplication(Application application)
         {
-            try
+            return Invoke(() =>
             {
                 ApplicationLogic.Save(application);
                 return application;
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            });
         }
 
         #endregion
@@ -144,75 +87,36 @@ namespace PrestoWcfService.WcfServices
 
         public ApplicationServer GetServerById(string id)
         {
-            try
-            {
-                return ApplicationServerLogic.GetById(id);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => ApplicationServerLogic.GetById(id));
         }
 
         public IEnumerable<ApplicationServer> GetAllServers()
         {
-            try
-            {
-                return ApplicationServerLogic.GetAll();
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => ApplicationServerLogic.GetAll());
         }
 
         public void InstallPrestoSelfUpdater(ApplicationServer appServer)
         {
-            try
-            {
-                ApplicationServerLogic.InstallPrestoSelfUpdater(appServer);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => ApplicationServerLogic.InstallPrestoSelfUpdater(appServer));
         }
 
         public ApplicationServer SaveServer(ApplicationServer applicationServer)
         {
-            try
+            return Invoke(() =>
             {
                 ApplicationServerLogic.Save(applicationServer);
                 return applicationServer;
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            });
         }
 
         public void SaveForceInstallations(List<ServerForceInstallation> serverForceInstallations)
         {
-            try
-            {
-                ApplicationServerLogic.SaveForceInstallations(serverForceInstallations);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => ApplicationServerLogic.SaveForceInstallations(serverForceInstallations));
         }
 
         public void RemoveForceInstallation(ServerForceInstallation forceInstallation)
         {
-            try
-            {
-                ApplicationServerLogic.RemoveForceInstallation(forceInstallation);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => ApplicationServerLogic.RemoveForceInstallation(forceInstallation));
         }
 
         #endregion
@@ -221,26 +125,12 @@ namespace PrestoWcfService.WcfServices
 
         public IEnumerable<InstallationEnvironment> GetAllInstallationEnvironments()
         {
-            try
-            {
-                return InstallationEnvironmentLogic.GetAll();
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => InstallationEnvironmentLogic.GetAll());
         }
 
         public void Save(InstallationEnvironment environment)
         {
-            try
-            {
-                InstallationEnvironmentLogic.Save(environment);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => InstallationEnvironmentLogic.Save(environment));
         }
 
         #endregion
@@ -249,14 +139,7 @@ namespace PrestoWcfService.WcfServices
 
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
         {
-            try
-            {
-                return InstallationSummaryLogic.GetMostRecentByStartTime(numberToRetrieve);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTime(numberToRetrieve));
         }
 
         #endregion
@@ -265,63 +148,31 @@ namespace PrestoWcfService.WcfServices
 
         CustomVariableGroup ICustomVariableGroupService.GetById(string id)
         {
-            try
-            {
-                return CustomVariableGroupLogic.GetById(id);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => CustomVariableGroupLogic.GetById(id));
         }
 
         public IEnumerable<CustomVariableGroup> GetAllGroups()
         {
-            try
-            {
-                return CustomVariableGroupLogic.GetAll();
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => CustomVariableGroupLogic.GetAll());
         }
 
         public CustomVariableGroup GetCustomVariableGroupByName(string name)
         {
-            try
-            {
-                return CustomVariableGroupLogic.GetByName(name);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => CustomVariableGroupLogic.GetByName(name));
         }
 
         public CustomVariableGroup SaveGroup(CustomVariableGroup customVariableGroup)
         {
-            try
+            return Invoke(() =>
             {
                 CustomVariableGroupLogic.Save(customVariableGroup);
                 return customVariableGroup;
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            });
         }
 
         public void DeleteGroup(CustomVariableGroup customVariableGroup)
         {
-            try
-            {
-                CustomVariableGroupLogic.Delete(customVariableGroup);
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            Invoke(() => CustomVariableGroupLogic.Delete(customVariableGroup));
         }
         
         #endregion
@@ -330,42 +181,47 @@ namespace PrestoWcfService.WcfServices
 
         public PingRequest GetMostRecentPingRequest()
         {
-            try
-            {
-                return PingRequestLogic.GetMostRecent();
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            return Invoke(() => PingRequestLogic.GetMostRecent());
         }
 
         public PingRequest SavePingRequest(PingRequest pingRequest)
         {
-            try
+            return Invoke(() =>
             {
                 PingRequestLogic.Save(pingRequest);
                 return pingRequest;
-            }
-            catch (Exception ex)
-            {
-                throw LogAndThrowFaultException(ex);
-            }
+            });
         }
 
         public IEnumerable<PingResponse> GetAllForPingRequest(PingRequest pingRequest)
         {
+            return Invoke(() => PingResponseLogic.GetAllForPingRequest(pingRequest));
+        }
+
+        #endregion
+
+        private static void Invoke(Action action)
+        {
+            // Most of the methods in this class call the Invoke() that takes a func. Some of the methods
+            // don't want to use a func because they don't return anything. So, in order for all of the
+            // calls to be the same, accept an action is this method, and call the other Invoke().
+            // Note, we return a dummy value of 0 here just so we can call the func Invoke().
+
+            Invoke(() => { action(); return 0; });
+        }
+
+        private static T Invoke<T>(Func<T> func)
+        {
+            // This method exists simply to encapsulate the exception handling for the methods in this class.
             try
             {
-                return PingResponseLogic.GetAllForPingRequest(pingRequest);
+                return func.Invoke();
             }
             catch (Exception ex)
             {
                 throw LogAndThrowFaultException(ex);
             }
         }
-
-        #endregion
 
         private static FaultException LogAndThrowFaultException(Exception exception)
         {

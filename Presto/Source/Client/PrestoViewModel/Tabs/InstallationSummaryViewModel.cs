@@ -122,11 +122,11 @@ namespace PrestoViewModel.Tabs
             var signalrAddress = ConfigurationManager.AppSettings["signalrAddress"];
             var hubConnection = new HubConnection(signalrAddress);
             var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
-            prestoHubProxy.On<string>("OnDatabaseItemAdded", OnDatabaseItemAdded);
+            prestoHubProxy.On("OnInstallationSummaryAdded", OnInstallationSummaryAdded);
             hubConnection.Start();
         }
 
-        private void OnDatabaseItemAdded(string data)
+        private void OnInstallationSummaryAdded()
         {
             Refresh();
         }

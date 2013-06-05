@@ -38,9 +38,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\PrestoService\bin\Debug\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.SignalR.Core.1.1.1\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Unity\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll</HintPath>
     </Reference>

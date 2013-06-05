@@ -32,7 +32,7 @@ namespace PrestoCommon.Wcf
             CreateService();
 
             // ToDo: Make the number of retries configurable.
-            const int numberOfTimesToTryServiceCall = 5;
+            const int numberOfTimesToTryServiceCall = 2;
             for (int i = 1; i <= numberOfTimesToTryServiceCall; i++)
             {
                 try

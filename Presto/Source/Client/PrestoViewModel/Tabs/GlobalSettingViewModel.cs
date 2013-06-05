@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -8,6 +9,7 @@ using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using Xanico.Core;
+using Xanico.Core.Security;
 
 namespace PrestoViewModel.Tabs
 {
@@ -57,16 +59,41 @@ namespace PrestoViewModel.Tabs
             if (!UserChoosesYes("Update the self-updating service host on *every* app server? Be sure you want to do this " +
                 "because this is a significant and irreversible action.")) { return; }
 
-            using (var prestoWcf = new PrestoWcf<IServerService>())
-            {
-                var allServers = prestoWcf.Service.GetAllServers();
+            Logger.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                "[{0}] selected the option to update the self-updaters on all servers.", IdentityHelper.UserName));
 
-                foreach (var server in allServers)
+            ViewModelUtility.MainWindowViewModel.AddUserMessage("Updating self-updater on all servers...");
+
+            Task.Factory.StartNew(() =>
+            {
+                try
                 {
-                    if (server.Name != "FS-6103") { continue; }
-                    prestoWcf.Service.InstallPrestoSelfUpdater(server);
+                    using (var prestoWcf = new PrestoWcf<IServerService>())
+                    {
+                        var allServers = prestoWcf.Service.GetAllServers();
+
+                        foreach (var server in allServers)
+                        {
+                            try
+                            {
+                                prestoWcf.Service.InstallPrestoSelfUpdater(server);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Just log and keep trying to process the rest of the servers.
+                                Logger.LogException(ex);
+                            }
+                        }
+                    }
+
+                    Logger.LogInformation("Done updating self-updater on all servers.");
                 }
-            }
+                catch (Exception ex)
+                {
+                    // Just log and keep trying to process the rest of the servers.
+                    Logger.LogException(ex);
+                }
+            });
         }
 
         private void LoadGlobalSetting()

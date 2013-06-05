@@ -46,13 +46,13 @@ namespace PrestoWcfService
             StartSignalRHost();
         }
 
-        private void StartSignalRHost()
+        private static void StartSignalRHost()
         {
             var url = ConfigurationManager.AppSettings["signalrAddress"];
             WebApplication.Start<Startup>(url);
         }
 
-        private void InitializeAndOpenPrestoService()
+        private static void InitializeAndOpenPrestoService()
         {
             if (_serviceHost != null) { _serviceHost.Close(); }
 
@@ -71,7 +71,7 @@ namespace PrestoWcfService
             _serviceHost.Open();
         }
 
-        private void RegisterDependencies()
+        private static void RegisterDependencies()
         {
             PrestoServerUtility.RegisterRavenDataClasses();
             PrestoServerUtility.RegisterRealClasses();  // Necessary for this service to install the self-updater

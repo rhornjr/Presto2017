@@ -25,16 +25,7 @@ namespace PrestoViewModel
             // Set a reference to this view model so other view models can access it.
             // One reason for this is so that other view models can set a user message.
             ViewModelUtility.MainWindowViewModel = this;
-
-            // ToDo: Replace this with SignalR
-            //DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
         }
-
-        // See ToDo above.
-        //private void OnDatabaseItemAdded(object sender, EventArgs<string> e)
-        //{
-        //    AddUserMessage(e.Value);
-        //}
 
         public void AddUserMessage(string message)
         {

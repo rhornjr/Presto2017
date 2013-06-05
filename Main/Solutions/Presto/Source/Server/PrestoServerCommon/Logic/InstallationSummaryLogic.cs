@@ -14,7 +14,7 @@ namespace PrestoServer.Logic
         static InstallationSummaryLogic()
         {
             // When there is a new installation summary, automatically refresh the list.
-            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnDatabaseItemAdded;
+            DataAccessLayerBase.NewInstallationSummaryAddedToDb += OnInstallationSummaryAdded;
         }
 
         public static InstallationSummary GetMostRecentByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
@@ -32,10 +32,10 @@ namespace PrestoServer.Logic
             DataAccessFactory.GetDataInterface<IInstallationSummaryData>().Save(installationSummary);
         }
 
-        private static void OnDatabaseItemAdded(object sender, EventArgs<string> e)
+        private static void OnInstallationSummaryAdded(object sender, EventArgs<string> e)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<PrestoHub>();
-            hubContext.Clients.All.OnDatabaseItemAdded("snuh");
+            hubContext.Clients.All.OnInstallationSummaryAdded();
         }
     }
 }

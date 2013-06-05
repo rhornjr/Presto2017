@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 using Xanico.Core;
 
 namespace PrestoCommon.Wcf
@@ -28,10 +29,7 @@ namespace PrestoCommon.Wcf
             var methodBase = methodCall.MethodBase;
             List<Exception> exceptions = new List<Exception>();
 
-            // We can't call CreateChannel() because that creates an instance of this class,
-            // and we'd end up with a stack overflow. So, call CreateBaseChannel() to get the
-            // actual service.
-            this._wcfService = this._channelFactory.CreateBaseChannel();
+            CreateService();
 
             // ToDo: Make the number of retries configurable.
             const int numberOfTimesToTryServiceCall = 5;
@@ -79,6 +77,18 @@ namespace PrestoCommon.Wcf
 
         private void CreateService()
         {
+            foreach (var operation in this._channelFactory.Endpoint.Contract.Operations)
+            {
+                var dataContractBehavior = operation.Behaviors.Find<DataContractSerializerOperationBehavior>();
+                if (dataContractBehavior != null)
+                {
+                    dataContractBehavior.MaxItemsInObjectGraph = int.MaxValue;
+                }
+            }
+
+            // We can't call CreateChannel() because that creates an instance of this class,
+            // and we'd end up with a stack overflow. So, call CreateBaseChannel() to get the
+            // actual service.
             this._wcfService = this._channelFactory.CreateBaseChannel();
         }
 

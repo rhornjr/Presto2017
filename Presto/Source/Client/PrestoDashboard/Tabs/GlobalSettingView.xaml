@@ -62,10 +62,12 @@
                 <Label Content="The name of the server where the application is being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
             <Border Grid.Column="0" Grid.Row="5" BorderBrush="Black" BorderThickness="1">
-                <Button Content="Self-updater" Width="100" Style="{StaticResource StandardButton}" Command="{Binding UpdateSelfUpdaterCommand}" />
+                <Button Content="Self-updater" Width="100" HorizontalAlignment="Right" IsEnabled="False"
+                        Style="{StaticResource StandardButton}" Command="{Binding UpdateSelfUpdaterCommand}" />
             </Border>
             <Border Grid.Column="1" Grid.Row="5" BorderBrush="Black" BorderThickness="1">
-                <Label Content="Updates the self-updating service host on every server" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+                <Label Content="Updates the self-updating service host on every server. Disabled until future release."
+                       Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
         </Grid>
         

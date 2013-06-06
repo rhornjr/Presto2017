@@ -155,6 +155,11 @@ namespace PrestoServer.Data.RavenDb
                 documentStore.ConnectionStringName = "RavenDb";                
                 documentStore.Initialize();
 
+                // This isn't recommended by RavenDB, but I had to do it to get the Include() to
+                // work correctly when getting an app server by ID.
+                // http://stackoverflow.com/q/16973807/279516
+                documentStore.Conventions.AllowQueriesOnId = true;
+
                 // Pre-authenticate so each save doesn't need to do authentication.
                 // http://stackoverflow.com/a/13645513/279516
                 documentStore.JsonRequestFactory.ConfigureRequest += (sender, e) => ((HttpWebRequest)e.Request).PreAuthenticate = true;

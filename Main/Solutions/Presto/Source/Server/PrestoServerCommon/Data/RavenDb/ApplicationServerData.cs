@@ -75,14 +75,14 @@ namespace PrestoServer.Data.RavenDb
             return ExecuteQuery<ApplicationServer>(() =>
             {
                 ApplicationServer appServer = QuerySingleResultAndSetEtag(session =>
-                    session
-                    .Include<ApplicationServer>(x => x.CustomVariableGroupIds)
-                    .Include<ApplicationServer>(x => x.ApplicationIdsForAllAppWithGroups)
-                    .Include<ApplicationServer>(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                    .Include<ApplicationServer>(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                    .Include<ApplicationServer>(x => x.InstallationEnvironmentId)
-                    .Load <ApplicationServer>(id))
-                    as ApplicationServer;
+                    session.Query<ApplicationServer>()
+                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIds))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.ApplicationIdsForAllAppWithGroups))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForAllAppWithGroups))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForGroupsWithinApps))
+                        .Customize(x => x.Include<ApplicationServer>(y => y.InstallationEnvironmentId))
+                        .Where(server => server.Id == id).FirstOrDefault())
+                        as ApplicationServer;
 
                 if (appServer != null) { HydrateApplicationServer(appServer); }
 

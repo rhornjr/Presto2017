@@ -64,6 +64,8 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage("Updating self-updater on all servers...");
 
+            // ToDo: Do this on the SERVER side. The user can close the Dashboard and cause this to stop.
+
             Task.Factory.StartNew(() =>
             {
                 try

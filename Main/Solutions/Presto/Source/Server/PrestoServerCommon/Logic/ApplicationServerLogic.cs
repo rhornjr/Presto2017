@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -14,6 +15,8 @@ namespace PrestoServer.Logic
 {
     public static class ApplicationServerLogic
     {
+        private static object _locker = new object();
+
         public static IEnumerable<ApplicationServer> GetAll()
         {
             return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetAll();
@@ -328,25 +331,31 @@ namespace PrestoServer.Logic
 
         public static void InstallPrestoSelfUpdater(ApplicationServer appServer)
         {
-            if (appServer == null) { throw new ArgumentNullException("appServer"); }
+            // Install on a separate thread and return so the user isn't waiting.
+            Task.Factory.StartNew(() => InstallPrestoSelfUpdaterPrivate(appServer));
+        }
 
-            string selfUpdatingAppName = ConfigurationManager.AppSettings["selfUpdatingAppName"];
-
-            // Get the self-updater app from the DB
-            //var appWithGroup =
-            //    appServer.ApplicationsWithOverrideGroup.Where(x => x.Application.Name == selfUpdatingAppName).FirstOrDefault();
-
-            var appWithGroup = new ApplicationWithOverrideVariableGroup();
-            var app = ApplicationLogic.GetByName(selfUpdatingAppName);
-            appWithGroup.Application = app;
-
-            if (app == null)
+        private static void InstallPrestoSelfUpdaterPrivate(ApplicationServer appServer)
+        {
+            // ToDo: Todd Pike mentioned using NET USE without using a mapped drive. Maybe check into that.
+            lock (_locker) // only allow one at a time (x: drive gets mapped on WCF server)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, PrestoServerResources.PrestoSelfUpdaterAppNotFound, selfUpdatingAppName);
-                throw new InvalidOperationException(message);
-            }
+                if (appServer == null) { throw new ArgumentNullException("appServer"); }
 
-            PrestoServerUtility.Container.Resolve<IAppInstaller>().InstallApplication(appServer, appWithGroup);
+                string selfUpdatingAppName = ConfigurationManager.AppSettings["selfUpdatingAppName"];
+
+                var appWithGroup = new ApplicationWithOverrideVariableGroup();
+                var app = ApplicationLogic.GetByName(selfUpdatingAppName);
+                appWithGroup.Application = app;
+
+                if (app == null)
+                {
+                    string message = string.Format(CultureInfo.CurrentCulture, PrestoServerResources.PrestoSelfUpdaterAppNotFound, selfUpdatingAppName);
+                    throw new InvalidOperationException(message);
+                }
+
+                PrestoServerUtility.Container.Resolve<IAppInstaller>().InstallApplication(appServer, appWithGroup);
+            }
         }
 
         #endregion

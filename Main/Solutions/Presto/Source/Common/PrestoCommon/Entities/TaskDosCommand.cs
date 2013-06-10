@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.Serialization;
+using System.Security;
 using System.Threading;
 using PrestoCommon.Enums;
 using Xanico.Core;
@@ -66,6 +67,12 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [DataMember]
+        public string RunAsUser { get; set; }
+
+        [DataMember]
+        public string RunAsPassword { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDosCommand"/> class.
         /// </summary>
@@ -83,7 +90,7 @@ namespace PrestoCommon.Entities
         }
 
         [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-        public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
+        public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             if (applicationServer == null) { throw new ArgumentNullException("applicationServer"); }
 
@@ -93,12 +100,14 @@ namespace PrestoCommon.Entities
 
                 try
                 {
-                    process.StartInfo.FileName               = CustomVariableGroup.ResolveCustomVariable(this.DosExecutable, applicationServer, applicationWithOverrideVariableGroup);
-                    process.StartInfo.Arguments              = CustomVariableGroup.ResolveCustomVariable(this.Parameters, applicationServer, applicationWithOverrideVariableGroup);
+                    process.StartInfo.FileName               = CustomVariableGroup.ResolveCustomVariable(this.DosExecutable, applicationServer, appWithGroup);
+                    process.StartInfo.Arguments              = CustomVariableGroup.ResolveCustomVariable(this.Parameters, applicationServer, appWithGroup);
                     process.StartInfo.UseShellExecute        = false;
                     process.StartInfo.RedirectStandardError  = true;
                     process.StartInfo.RedirectStandardInput  = false;  // See Note 1 at the bottom of this file.
                     process.StartInfo.RedirectStandardOutput = true;
+
+                    SetProcessCredentials(applicationServer, appWithGroup, process);
 
                     process.Start();
 
@@ -127,6 +136,35 @@ namespace PrestoCommon.Entities
                     this.TaskDetails += logMessage;
                     Logger.LogInformation(logMessage);
                 }
+            }
+        }
+
+        private void SetProcessCredentials(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup appWithGroup, Process process)
+        {
+            // If this task contains a user name, use those credentials.
+            if (string.IsNullOrWhiteSpace(this.RunAsUser)) { return; }
+
+            string domainAndUser = CustomVariableGroup.ResolveCustomVariable(this.RunAsUser, applicationServer, appWithGroup);
+
+            int indexOfBackslash = domainAndUser.IndexOf(@"\", StringComparison.OrdinalIgnoreCase);
+
+            if (indexOfBackslash < 0)
+            {
+                throw new InvalidOperationException("User name missing backslash. Unable to parse domain name.");
+            }
+
+            string domain = domainAndUser.Substring(0, indexOfBackslash);
+            string user = domainAndUser.Substring(indexOfBackslash + 1);
+
+            process.StartInfo.Domain = domain;
+            process.StartInfo.UserName = user;
+            process.StartInfo.Password = new SecureString();
+
+            string password = CustomVariableGroup.ResolveCustomVariable(this.RunAsPassword, applicationServer, appWithGroup);
+
+            foreach (char c in password)
+            {
+                process.StartInfo.Password.AppendChar(c);
             }
         }
 
@@ -172,6 +210,8 @@ namespace PrestoCommon.Entities
             destination.DosExecutable           = source.DosExecutable;
             destination.Parameters              = source.Parameters;
             destination.AfterTaskPauseInSeconds = source.AfterTaskPauseInSeconds;
+            destination.RunAsUser               = source.RunAsUser;
+            destination.RunAsPassword           = source.RunAsPassword;
 
             return destination;
         }
@@ -199,6 +239,8 @@ namespace PrestoCommon.Entities
             // Subclass
             newTask.DosExecutable = legacyTask.DosExecutable;
             newTask.Parameters    = legacyTask.Parameters;
+            newTask.RunAsUser     = null;
+            newTask.RunAsPassword = null;
 
             return newTask;
         }
@@ -228,6 +270,8 @@ namespace PrestoCommon.Entities
 
             taskProperties.Add(this.DosExecutable);
             taskProperties.Add(this.Parameters);
+            taskProperties.Add(this.RunAsUser);
+            taskProperties.Add(this.RunAsPassword);
 
             return taskProperties;
         }

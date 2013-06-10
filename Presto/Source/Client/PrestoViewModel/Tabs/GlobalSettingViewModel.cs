@@ -78,7 +78,7 @@ namespace PrestoViewModel.Tabs
                         {
                             try
                             {
-                                prestoWcf.Service.InstallPrestoSelfUpdater(server);
+                                prestoWcf.Service.InstallPrestoSelfUpdater(server, null);
                             }
                             catch (Exception ex)
                             {

@@ -466,12 +466,11 @@ namespace PrestoViewModel.Tabs
             if (this.SelectedApplicationsWithOverrideGroup.Count == 1 &&
                 this.SelectedApplicationsWithOverrideGroup[0].Application.Name.Equals(_selfUpdatingAppName, StringComparison.OrdinalIgnoreCase))
             {
-                LogAndShowAppToBeInstalled(_selfUpdatingAppName);
+                var appWithGroup = this.SelectedApplicationsWithOverrideGroup[0];
 
-                Task.Factory.StartNew(() =>
-                {
-                    InstallPrestoUpdater();
-                });
+                LogAndShowAppToBeInstalled(appWithGroup.Application.Name);
+
+                Task.Factory.StartNew(() => InstallPrestoUpdater(appWithGroup));
 
                 return true;
             }
@@ -484,13 +483,13 @@ namespace PrestoViewModel.Tabs
             return ConfigurationManager.AppSettings["selfUpdatingAppName"];
         }
 
-        private void InstallPrestoUpdater()
+        private void InstallPrestoUpdater(ApplicationWithOverrideVariableGroup appWithGroup)
         {
             try
             {
                 using (var prestoWcf = new PrestoWcf<IServerService>())
                 {
-                    prestoWcf.Service.InstallPrestoSelfUpdater(this.SelectedApplicationServer);
+                    prestoWcf.Service.InstallPrestoSelfUpdater(this.SelectedApplicationServer, appWithGroup);
                 }
             }
             catch (Exception ex)
@@ -506,13 +505,13 @@ namespace PrestoViewModel.Tabs
         {
             string newServerName = "New server - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
 
-            ApplicationServer server = new ApplicationServer();
+            var server = new ApplicationServer();
             server.Name = newServerName;
             //server.InstallationEnvironment = this.InstallationEnvironments[0]; // Use first one as default.
 
             this.ApplicationServers.Add(server);
 
-            this.SelectedApplicationServer = this.ApplicationServers.Where(x => x.Name == newServerName).FirstOrDefault();
+            this.SelectedApplicationServer = this.ApplicationServers.FirstOrDefault(x => x.Name == newServerName);
         }        
 
         private void DeleteServer()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
@@ -329,13 +330,13 @@ namespace PrestoServer.Logic
                 appServer.EnableDebugLogging);
         }
 
-        public static void InstallPrestoSelfUpdater(ApplicationServer appServer)
+        public static void InstallPrestoSelfUpdater(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             // Install on a separate thread and return so the user isn't waiting.
-            Task.Factory.StartNew(() => InstallPrestoSelfUpdaterPrivate(appServer));
+            Task.Factory.StartNew(() => InstallPrestoSelfUpdaterPrivate(appServer, appWithGroup));
         }
 
-        private static void InstallPrestoSelfUpdaterPrivate(ApplicationServer appServer)
+        private static void InstallPrestoSelfUpdaterPrivate(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             // ToDo: Todd Pike mentioned using NET USE without using a mapped drive. Maybe check into that.
             lock (_locker) // only allow one at a time (x: drive gets mapped on WCF server)
@@ -344,11 +345,14 @@ namespace PrestoServer.Logic
 
                 string selfUpdatingAppName = ConfigurationManager.AppSettings["selfUpdatingAppName"];
 
-                var appWithGroup = new ApplicationWithOverrideVariableGroup();
-                var app = ApplicationLogic.GetByName(selfUpdatingAppName);
-                appWithGroup.Application = app;
+                if (appWithGroup == null)
+                {
+                    // User wants the default self-updater installed (with no override group).
+                    appWithGroup = appServer.ApplicationsWithOverrideGroup.FirstOrDefault(
+                        x => x.Application.Name == selfUpdatingAppName && x.CustomVariableGroup == null);
+                }
 
-                if (app == null)
+                if (appWithGroup == null || appWithGroup.Application == null)
                 {
                     string message = string.Format(CultureInfo.CurrentCulture, PrestoServerResources.PrestoSelfUpdaterAppNotFound, selfUpdatingAppName);
                     throw new InvalidOperationException(message);

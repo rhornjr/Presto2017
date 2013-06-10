@@ -14,7 +14,7 @@ namespace PrestoCommon.Interfaces
         IEnumerable<ApplicationServer> GetAllServers();
 
         [OperationContract]
-        void InstallPrestoSelfUpdater(ApplicationServer appServer);
+        void InstallPrestoSelfUpdater(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup);
 
         [OperationContract]
         ApplicationServer SaveServer(ApplicationServer applicationServer);

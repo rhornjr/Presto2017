@@ -55,13 +55,13 @@ namespace PrestoServer.Data.RavenDb
             {
                 ApplicationServer appServer = QuerySingleResultAndSetEtag(session =>
                     session.Query<ApplicationServer>()
-                    .Include(x => x.CustomVariableGroupIds)
-                    .Include(x => x.ApplicationIdsForAllAppWithGroups)
-                    .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
-                    .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
-                    .Include(x => x.InstallationEnvironmentId)
-                    .Customize(x => x.WaitForNonStaleResults())
-                    .Where(server => server.Name == serverName).FirstOrDefault())
+                           .Include(x => x.CustomVariableGroupIds)
+                           .Include(x => x.ApplicationIdsForAllAppWithGroups)
+                           .Include(x => x.CustomVariableGroupIdsForAllAppWithGroups)
+                           .Include(x => x.CustomVariableGroupIdsForGroupsWithinApps)
+                           .Include(x => x.InstallationEnvironmentId)
+                           .Customize(x => x.WaitForNonStaleResults())
+                           .FirstOrDefault(server => server.Name == serverName))
                     as ApplicationServer;
 
                 if (appServer != null) { HydrateApplicationServer(appServer); }
@@ -76,12 +76,12 @@ namespace PrestoServer.Data.RavenDb
             {
                 ApplicationServer appServer = QuerySingleResultAndSetEtag(session =>
                     session.Query<ApplicationServer>()
-                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIds))
-                        .Customize(x => x.Include<ApplicationServer>(y => y.ApplicationIdsForAllAppWithGroups))
-                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForAllAppWithGroups))
-                        .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForGroupsWithinApps))
-                        .Customize(x => x.Include<ApplicationServer>(y => y.InstallationEnvironmentId))
-                        .Where(server => server.Id == id).FirstOrDefault())
+                           .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIds))
+                           .Customize(x => x.Include<ApplicationServer>(y => y.ApplicationIdsForAllAppWithGroups))
+                           .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForAllAppWithGroups))
+                           .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForGroupsWithinApps))
+                           .Customize(x => x.Include<ApplicationServer>(y => y.InstallationEnvironmentId))
+                           .FirstOrDefault(server => server.Id == id))
                         as ApplicationServer;
 
                 if (appServer != null) { HydrateApplicationServer(appServer); }

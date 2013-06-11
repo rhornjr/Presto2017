@@ -21,6 +21,8 @@ namespace PrestoTaskRunner.Logic
         private System.Timers.Timer _timer;
         private static readonly object _locker = new object();
 
+        internal const string PrestoTaskRunnerName = "Presto Task Runner";
+
         /// <summary>
         /// Gets or sets the comment from service host. This comment is displayed in a ping response. It's typically
         /// used for the service host to pass in its file version, so it can be displayed with the ping response.
@@ -51,7 +53,7 @@ namespace PrestoTaskRunner.Logic
         /// </summary>
         public void Stop()
         {
-            Logger.LogInformation("PrestoTaskRunnerController stopping timer.");
+            Logger.LogInformation("PrestoTaskRunnerController stopping timer.", PrestoTaskRunnerName);
             this._timer.Stop();
             Thread.Sleep(2000);  // HACK: Give threads a chance to complete before the self-updating service unloads this app domain.
         }
@@ -121,12 +123,13 @@ namespace PrestoTaskRunner.Logic
 
                 PingResponseLogic.Save(pingResponse);
 
-                Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "{0} responded to ping request", appServer.Name));
+                Logger.LogInformation(string.Format(CultureInfo.CurrentCulture,
+                    "{0} responded to ping request", appServer.Name), PrestoTaskRunnerName);
             }
             catch (Exception ex)
             {
                 // Just eat it. We don't want ping response failures to stop processing.
-                Logger.LogException(ex);
+                Logger.LogException(ex, PrestoTaskRunnerName);
             }
         }
 
@@ -143,7 +146,7 @@ namespace PrestoTaskRunner.Logic
             catch (Exception ex)
             {
                 // Log it and keep processing.
-                Logger.LogException(ex);
+                Logger.LogException(ex, PrestoTaskRunnerName);
             }
         }
 
@@ -157,7 +160,8 @@ namespace PrestoTaskRunner.Logic
             {
                 Logger.LogWarning(string.Format(CultureInfo.CurrentCulture,
                     PrestoTaskRunnerResources.AppServerNotFound,
-                    serverName));
+                    serverName),
+                    PrestoTaskRunnerName);
             }
 
             return appServer;

@@ -46,7 +46,7 @@ namespace PrestoTaskProcessor
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                Logger.LogException(ex, PrestoTaskRunnerController.PrestoTaskRunnerName);
 
                 if (Environment.UserInteractive)
                 {

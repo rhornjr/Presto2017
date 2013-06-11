@@ -195,11 +195,11 @@ namespace PrestoViewModel.Tabs
         {
             string newGroupName = "New group - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
 
-            CustomVariableGroup newGroup = new CustomVariableGroup() { Name = newGroupName }; 
+            var newGroup = new CustomVariableGroup() { Name = newGroupName }; 
 
             this.CustomVariableGroups.Add(newGroup);
 
-            this.SelectedCustomVariableGroup = this.CustomVariableGroups.Where(group => group.Name == newGroupName).FirstOrDefault();
+            this.SelectedCustomVariableGroup = this.CustomVariableGroups.FirstOrDefault(group => @group.Name == newGroupName);
         }
 
         private void DeleteVariableGroup()
@@ -208,7 +208,7 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                CustomVariableGroup deletedGroup = this.CustomVariableGroups.Where(x => x.Id == this.SelectedCustomVariableGroup.Id).FirstOrDefault();
+                CustomVariableGroup deletedGroup = this.CustomVariableGroups.FirstOrDefault(x => x.Id == this.SelectedCustomVariableGroup.Id);
 
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {

@@ -53,28 +53,38 @@
             Logging operations
             </summary>
         </member>
-        <member name="M:Xanico.Core.Logger.LogDebug(System.String,System.Boolean)">
+        <member name="M:Xanico.Core.Logger.LogDebug(System.String,System.Boolean,System.String)">
             <summary>
             Logs the message, but only if debug logging is true.
             </summary>
+            <param name="message">The message.</param>
+            <param name="debugLoggingEnabled">if set to <c>true</c> [debug logging enabled].</param>
+            <param name="source">The name of the app/process calling the logging method. If not provided,
+            an attempt will be made to get the name of the calling process.</param>
         </member>
-        <member name="M:Xanico.Core.Logger.LogInformation(System.String)">
+        <member name="M:Xanico.Core.Logger.LogInformation(System.String,System.String)">
             <summary>
             Logs the information.
             </summary>
             <param name="message">The message.</param>
+            <param name="source">The name of the app/process calling the logging method. If not provided,
+            an attempt will be made to get the name of the calling process.</param>
         </member>
-        <member name="M:Xanico.Core.Logger.LogWarning(System.String)">
+        <member name="M:Xanico.Core.Logger.LogWarning(System.String,System.String)">
             <summary>
             Logs the warning.
             </summary>
             <param name="message">The message.</param>
+            <param name="source">The name of the app/process calling the logging method. If not provided,
+            an attempt will be made to get the name of the calling process.</param>
         </member>
-        <member name="M:Xanico.Core.Logger.LogException(System.Exception)">
+        <member name="M:Xanico.Core.Logger.LogException(System.Exception,System.String)">
             <summary>
             Logs the exception.
             </summary>
             <param name="ex">The ex.</param>
+            <param name="source">The name of the app/process calling the logging method. If not provided,
+            an attempt will be made to get the name of the calling process.</param>
         </member>
         <member name="T:Xanico.Core.ReflectionUtility">
             <summary>

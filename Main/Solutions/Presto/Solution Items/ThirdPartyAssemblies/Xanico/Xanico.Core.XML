@@ -86,6 +86,17 @@
             <param name="source">The name of the app/process calling the logging method. If not provided,
             an attempt will be made to get the name of the calling process.</param>
         </member>
+        <member name="P:Xanico.Core.Logger.Source">
+            <summary>
+            Gets or sets the source/caller. When logging, this logger class will attempt to get the
+            name of the executing/entry assembly and use that as the source when writing to a log.
+            In some cases, this class can't get the name of the executing assembly. This only seems
+            to happen though when the caller is in a separate domain created by its caller. So,
+            unless you're in that situation, there is no reason to set this. However, if there is
+            any reason that the source isn't being correctly logged, just set it here when your
+            process starts.
+            </summary>
+        </member>
         <member name="T:Xanico.Core.ReflectionUtility">
             <summary>
             Utility/helper class for activities involving reflection.

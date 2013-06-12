@@ -141,10 +141,10 @@ namespace PrestoCommon.Entities
 
         private void SetProcessCredentials(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup appWithGroup, Process process)
         {
-            // If this task contains a user name, use those credentials.
-            if (string.IsNullOrWhiteSpace(this.RunAsUser)) { return; }
-
             string domainAndUser = CustomVariableGroup.ResolveCustomVariable(this.RunAsUser, applicationServer, appWithGroup);
+
+            // If this task contains a user name, use those credentials.
+            if (string.IsNullOrWhiteSpace(domainAndUser)) { return; }
 
             int indexOfBackslash = domainAndUser.IndexOf(@"\", StringComparison.OrdinalIgnoreCase);
 

@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using Microsoft.AspNet.SignalR.Client;
-using Microsoft.AspNet.SignalR.Infrastructure;
+using Microsoft.AspNet.SignalR.Client.Hubs;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Factories.OpenFileDialog;
+using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel;
 using PrestoViewModel.Mvvm;
-using PrestoCommon.Interfaces;
 using Xanico.Core;
-using Microsoft.AspNet.SignalR.Client.Hubs;
-using System.Configuration;
 
 namespace PrestoDashboard
 {

@@ -72,6 +72,8 @@ namespace PrestoTaskRunner.Logic
 
         private void Initialize()
         {
+            Utility.SetLoggerSource();
+
             PrestoServerUtility.RegisterRavenDataClasses();
             PrestoServerUtility.RegisterRealClasses();
 

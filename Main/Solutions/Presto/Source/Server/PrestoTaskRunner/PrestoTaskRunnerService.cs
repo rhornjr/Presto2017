@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.ServiceProcess;
 using PrestoTaskRunner;
 using PrestoTaskRunner.Logic;
@@ -68,7 +67,7 @@ namespace PrestoTaskProcessor
         /// <param name="args">Data passed by the start command.</param>
         protected override void OnStart(string[] args)
         {
-            Logger.Source = ConfigurationManager.AppSettings["processName"];
+            Utility.SetLoggerSource();
 
             this._controller = new PrestoTaskRunnerController();
 

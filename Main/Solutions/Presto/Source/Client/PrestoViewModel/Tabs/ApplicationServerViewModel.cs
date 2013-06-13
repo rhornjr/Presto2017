@@ -583,7 +583,7 @@ namespace PrestoViewModel.Tabs
             }
 
             // We have two lists (_allServers, above), and the servers for the selected environment (below).
-            // Refresh the servers for the selcted environment:
+            // Refresh the servers for the selected environment:
             LoadApplicationServers(false);
         }
 

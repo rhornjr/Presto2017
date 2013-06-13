@@ -140,6 +140,13 @@ namespace PrestoViewModel.Windows
 
         private void Add()
         {
+            // Since we're dealing with the slim version of servers, get the fully-hydrated version of the
+            // selected server.
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                this.SelectedServer = prestoWcf.Service.GetServerById(this.SelectedServer.Id);
+            }
+
             this.Close();
         }
 
@@ -156,7 +163,7 @@ namespace PrestoViewModel.Windows
                 using (var prestoWcf = new PrestoWcf<IServerService>())
                 {
                     this.Servers = new Collection<ApplicationServer>(
-                        prestoWcf.Service.GetAllServers().OrderBy(x => x.Name).ToList());
+                        prestoWcf.Service.GetAllServersSlim().OrderBy(x => x.Name).ToList());
                 }
             }
             catch (SocketException ex)

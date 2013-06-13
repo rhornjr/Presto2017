@@ -23,7 +23,6 @@ namespace PrestoServer.Data.RavenDb
                 {
                     IEnumerable<ApplicationServer> appServers = QueryAndSetEtags(session =>
                         session.Query<ApplicationServer>()
-
                         .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIds))
                         .Customize(x => x.Include<ApplicationServer>(y => y.ApplicationIdsForAllAppWithGroups))
                         .Customize(x => x.Include<ApplicationServer>(y => y.CustomVariableGroupIdsForAllAppWithGroups))
@@ -45,7 +44,27 @@ namespace PrestoServer.Data.RavenDb
                 stopwatch.Stop();
                 Debug.WriteLine("ApplicationServerData.GetAll(): " + stopwatch.ElapsedMilliseconds);
             }
-        }        
+        }
+
+        public IEnumerable<ApplicationServer> GetAllSlim()
+        {
+            return ExecuteQuery<IEnumerable<ApplicationServer>>(() =>
+            {
+                IEnumerable<ApplicationServer> appServers = QueryAndSetEtags(session =>
+                    session.Query<ApplicationServer>()
+                    .Customize(x => x.Include<ApplicationServer>(y => y.InstallationEnvironmentId))
+                    .Take(int.MaxValue)
+                    ).AsEnumerable().Cast<ApplicationServer>();
+
+                foreach (ApplicationServer appServer in appServers)
+                {
+                    appServer.InstallationEnvironment = QuerySingleResultAndSetEtag(session =>
+                        session.Load<InstallationEnvironment>(appServer.InstallationEnvironmentId)) as InstallationEnvironment;
+                }
+
+                return appServers;
+            });
+        }
 
         public ApplicationServer GetByName(string serverName)
         {

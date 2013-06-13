@@ -7,6 +7,8 @@ namespace PrestoServer.Data.Interfaces
     {
         IEnumerable<ApplicationServer> GetAll();
 
+        IEnumerable<ApplicationServer> GetAllSlim();
+
         ApplicationServer GetByName(string serverName);
 
         ApplicationServer GetById(string id);

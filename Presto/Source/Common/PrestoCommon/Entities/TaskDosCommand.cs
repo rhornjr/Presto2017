@@ -104,7 +104,7 @@ namespace PrestoCommon.Entities
                     process.StartInfo.Arguments              = CustomVariableGroup.ResolveCustomVariable(this.Parameters, applicationServer, appWithGroup);
                     process.StartInfo.UseShellExecute        = false;
                     process.StartInfo.RedirectStandardError  = true;
-                    process.StartInfo.RedirectStandardInput  = false;  // See Note 1 at the bottom of this file.
+                    process.StartInfo.RedirectStandardInput  = true;  // See Note 1 at the bottom of this file.
                     process.StartInfo.RedirectStandardOutput = true;
 
                     SetProcessCredentials(applicationServer, appWithGroup, process);
@@ -281,6 +281,8 @@ namespace PrestoCommon.Entities
 /*
 
 Note 1:
+    This issue happened again on 12-Jun-2013. Apparently RedirectStandardInput really needs to be true.
+    
     The original note is below. RedirectStandardInput was set to true until now (25-Apr-2013). When
     RedirectStandardInput was true, process.Start() would hang when running on a background thread.
     See http://stackoverflow.com/q/16202678/279516. The original reason RedirectStandardInput was

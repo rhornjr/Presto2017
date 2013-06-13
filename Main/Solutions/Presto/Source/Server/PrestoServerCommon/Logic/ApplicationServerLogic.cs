@@ -23,6 +23,11 @@ namespace PrestoServer.Logic
             return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetAll();
         }
 
+        public static IEnumerable<ApplicationServer> GetAllSlim()
+        {
+            return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetAllSlim();
+        }
+
         public static ApplicationServer GetByName(string serverName)
         {
             return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetByName(serverName);

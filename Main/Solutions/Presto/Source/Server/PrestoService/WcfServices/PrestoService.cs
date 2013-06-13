@@ -96,6 +96,11 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => ApplicationServerLogic.GetAll());
         }
 
+        public IEnumerable<ApplicationServer> GetAllServersSlim()
+        {
+            return Invoke(() => ApplicationServerLogic.GetAllSlim());
+        }
+
         public void InstallPrestoSelfUpdater(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
             Invoke(() => ApplicationServerLogic.InstallPrestoSelfUpdater(appServer, appWithGroup));

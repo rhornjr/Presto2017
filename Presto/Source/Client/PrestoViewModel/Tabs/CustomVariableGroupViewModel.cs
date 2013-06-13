@@ -193,18 +193,29 @@ namespace PrestoViewModel.Tabs
 
         private void AddVariableGroup()
         {
-            string newGroupName = "New group - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
+            string newGroupName = "New group - " + Guid.NewGuid().ToString();
 
-            var newGroup = new CustomVariableGroup() { Name = newGroupName }; 
+            var newGroup = new CustomVariableGroup() { Name = newGroupName };
 
-            this.CustomVariableGroups.Add(newGroup);
+            this.SelectedCustomVariableGroup = newGroup;
 
-            this.SelectedCustomVariableGroup = this.CustomVariableGroups.FirstOrDefault(group => @group.Name == newGroupName);
+            SaveVariableGroup(null);
+
+            //this.CustomVariableGroups.Add(newGroup);
+
+            //this.SelectedCustomVariableGroup = this.CustomVariableGroups.FirstOrDefault(group => @group.Name == newGroupName);
         }
 
         private void DeleteVariableGroup()
         {
             if (!UserConfirmsDelete(this.SelectedCustomVariableGroup.Name)) { return; }
+
+            if (string.IsNullOrEmpty(this.SelectedCustomVariableGroup.Id))
+            {
+                // Group hasn't ever been saved. Just remove it from the list.
+                this.CustomVariableGroups.Remove(this.SelectedCustomVariableGroup);
+                return;
+            }
 
             try
             {
@@ -235,7 +246,9 @@ namespace PrestoViewModel.Tabs
             {
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {
-                    this.SelectedCustomVariableGroup = prestoWcf.Service.SaveGroup(this.SelectedCustomVariableGroup);
+                    var savedGroup = prestoWcf.Service.SaveGroup(this.SelectedCustomVariableGroup);
+                    UpdateCacheWithSavedItem(savedGroup);
+                    this.SelectedCustomVariableGroup = savedGroup;
                 }
                 InitializeCustomVariableGroupsCollectionView();
             }
@@ -252,6 +265,20 @@ namespace PrestoViewModel.Tabs
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.ItemSaved, selectedGroupName));
+        }
+
+        private void UpdateCacheWithSavedItem(CustomVariableGroup savedGroup)
+        {
+            int index = this._customVariableGroups.ToList().FindIndex(x => x.Id == savedGroup.Id);
+
+            if (index >= 0)
+            {
+                this._customVariableGroups[index] = savedGroup;
+            }
+            else
+            {
+                this._customVariableGroups.Add(savedGroup);
+            }
         }
 
         private void ImportVariableGroup()

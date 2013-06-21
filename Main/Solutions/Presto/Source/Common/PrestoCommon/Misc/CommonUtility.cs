@@ -8,6 +8,7 @@ using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using Xanico.Core;
 using Xanico.Core.Email;
+using Xanico.Core.Security;
 
 namespace PrestoCommon.Misc
 {
@@ -77,28 +78,53 @@ namespace PrestoCommon.Misc
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public static void ProcessException(Exception ex, string source = "")
         {
-            if (ex == null) { return; }
-
-            Logger.LogException(ex, source);
-
-            EmailSettings emailSettings = new EmailSettings();
-
-            emailSettings.EmailHost = ConfigurationManager.AppSettings["emailHost"];
-            emailSettings.EmailFrom = ConfigurationManager.AppSettings["emailFrom"];
-            emailSettings.EmailTo   = ConfigurationManager.AppSettings["emailTo"];
-
-            if (emailSettings.EmailHost == null || emailSettings.EmailFrom == null || emailSettings.EmailTo == null)
+            try
             {
-                Logger.LogWarning(String.Format(CultureInfo.CurrentCulture,
-                    "An attempt was made to send an email for an exception, but email settings were not found in the app.config file. Stack trace: {0}",
-                    Environment.StackTrace));
-                return;
+                if (ex == null)
+                {
+                    Logger.LogWarning(String.Format(CultureInfo.CurrentCulture,
+                        "An attempt was made to send an email for an exception, but the exception object was null. Stack trace: {0}",
+                        Environment.StackTrace));
+                    return;
+                }
+
+                Logger.LogException(ex, source);
+
+                EmailSettings emailSettings = new EmailSettings();
+
+                emailSettings.EmailHost = ConfigurationManager.AppSettings["emailHost"];
+                emailSettings.EmailFrom = ConfigurationManager.AppSettings["emailFrom"];
+                emailSettings.EmailTo = ConfigurationManager.AppSettings["emailTo"];
+
+                if (emailSettings.EmailHost == null || emailSettings.EmailFrom == null || emailSettings.EmailTo == null)
+                {
+                    Logger.LogWarning(String.Format(CultureInfo.CurrentCulture,
+                        "An attempt was made to send an email for an exception, but one or more of the email settings " +
+                        "(emailHost, emailFrom, emailTo) were not found in the app.config file. Stack trace: {0}",
+                        Environment.StackTrace));
+                    return;
+                }
+
+                emailSettings.Subject = "Presto Exception - " + Environment.MachineName + " - " + IdentityHelper.UserName;
+                emailSettings.Message = "Time: " + DateTime.Now + Environment.NewLine +
+                                        "Server: " + Environment.MachineName + Environment.NewLine +
+                                        "User: " + IdentityHelper.UserName + Environment.NewLine + Environment.NewLine +
+                                        ex;
+
+                EmailUtility.SendEmail(emailSettings);
             }
-
-            emailSettings.Subject = "Presto Exception - " + Environment.MachineName;
-            emailSettings.Message = ex.ToString();
-
-            EmailUtility.SendEmail(emailSettings);
+            catch (Exception exception)
+            {
+                try
+                {
+                    Logger.LogException(exception);
+                }
+                catch
+                {
+                    // Eat it. If we can't log while processing an exception, there is nothing else we can do.
+                    // We don't want to throw an exception while processing an exception.
+                }
+            }
         }
     }
 }

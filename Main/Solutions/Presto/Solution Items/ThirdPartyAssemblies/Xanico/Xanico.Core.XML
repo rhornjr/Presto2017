@@ -25,6 +25,24 @@
               Looks up a localized string similar to An error occurred on the server. Please see the log for details..
             </summary>
         </member>
+        <member name="T:Xanico.Core.Email.EmailUtility">
+            <summary>
+            Utility class for sending emails.
+            </summary>
+        </member>
+        <member name="T:Xanico.Core.ExtensionMethods.StringExtension">
+            <summary>
+            String extensions
+            </summary>
+        </member>
+        <member name="M:Xanico.Core.ExtensionMethods.StringExtension.GetValueOrNullAsEmptyString(System.String)">
+            <summary>
+            Gets the value or null as empty string.
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
         <member name="T:Xanico.Core.Interfaces.IStartStop">
             <summary>
             Contract for classes that will be started and stopped.
@@ -112,6 +130,14 @@
             <summary>
             Gets the types that are derived from the base type.
             </summary>
+        </member>
+        <member name="M:Xanico.Core.ReflectionUtility.GetObjectsForAnInterface``1(System.Reflection.Assembly)">
+            <summary>
+            Scans the types in the assembly, and gets the objects that implement an interface.
+            </summary>
+            <typeparam name="T">The type of object to find.</typeparam>
+            <param name="assembly">The assembly.</param>
+            <returns>List of objects that implement the specified interface.</returns>
         </member>
         <member name="T:Xanico.Core.Security.IdentityHelper">
             <summary>

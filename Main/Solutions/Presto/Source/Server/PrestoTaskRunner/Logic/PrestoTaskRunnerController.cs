@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using System.Timers;
 using PrestoCommon.Entities;
+using PrestoCommon.Misc;
 using PrestoServer;
 using PrestoServer.Logic;
 using Xanico.Core;
@@ -131,7 +132,7 @@ namespace PrestoTaskRunner.Logic
             catch (Exception ex)
             {
                 // Just eat it. We don't want ping response failures to stop processing.
-                Logger.LogException(ex, PrestoTaskRunnerName);
+                CommonUtility.ProcessException(ex, PrestoTaskRunnerName);
             }
         }
 
@@ -148,7 +149,7 @@ namespace PrestoTaskRunner.Logic
             catch (Exception ex)
             {
                 // Log it and keep processing.
-                Logger.LogException(ex, PrestoTaskRunnerName);
+                CommonUtility.ProcessException(ex, PrestoTaskRunnerName);
             }
         }
 

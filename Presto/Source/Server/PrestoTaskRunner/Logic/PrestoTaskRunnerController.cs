@@ -93,7 +93,7 @@ namespace PrestoTaskRunner.Logic
             try
             {
                 AnswerPingRequest();
-                CheckForApplicationsToInstall();
+                CheckForApplicationsToInstall();               
             }
             finally
             {
@@ -118,7 +118,7 @@ namespace PrestoTaskRunner.Logic
 
                 PingResponse pingResponse = PingResponseLogic.GetByPingRequestAndServer(pingRequest, appServer);
 
-                if (pingResponse != null) { return; }  // Already responded.
+                if (pingResponse != null) { throw new ArgumentException("snuh"); /* return; */}  // Already responded.
 
                 string comment = "PTR file version " + ReflectionUtility.GetFileVersion(Assembly.GetExecutingAssembly()) + " -- " + this.CommentFromServiceHost;
 

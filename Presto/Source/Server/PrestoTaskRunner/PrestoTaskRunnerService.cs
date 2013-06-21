@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ServiceProcess;
+using PrestoCommon.Misc;
 using PrestoTaskRunner;
 using PrestoTaskRunner.Logic;
-using Xanico.Core;
 
 namespace PrestoTaskProcessor
 {
@@ -46,7 +46,7 @@ namespace PrestoTaskProcessor
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex, PrestoTaskRunnerController.PrestoTaskRunnerName);
+                CommonUtility.ProcessException(ex, PrestoTaskRunnerController.PrestoTaskRunnerName);
 
                 if (Environment.UserInteractive)
                 {

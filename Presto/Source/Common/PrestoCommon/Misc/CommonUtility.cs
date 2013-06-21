@@ -58,17 +58,15 @@ namespace PrestoCommon.Misc
 
             if (appWithGroupToFind.CustomVariableGroup == null)
             {
-                return forceInstallationsToDo.Where(forceInstallationToDo =>
+                return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
                     forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
-                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup == null)
-                    .FirstOrDefault();
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup == null);
             }
 
-            return forceInstallationsToDo.Where(forceInstallationToDo =>
+            return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
                 forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
                 forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup != null && 
-                forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroupId)
-                .FirstOrDefault();
+                forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroupId);
         }
 
         /// <summary>

@@ -110,6 +110,8 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
+            ApplicationServerLogic.HydrateForceInstallationsToDo(appServer);
+
             bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithNullGroup);
             Assert.AreEqual(true, actual);
 
@@ -135,6 +137,8 @@ namespace PrestoAutomatedTests
             ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
 
             SetGlobalFreeze(false);
+
+            ApplicationServerLogic.HydrateForceInstallationsToDo(appServer);
 
             bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
             Assert.AreEqual(true, actual);

@@ -189,16 +189,14 @@ namespace PrestoAutomatedTests
             // Set the group to something that doesn't already exist within the server...
             appWithDifferentGroup.CustomVariableGroup = TestHelper.CreateCustomVariableGroup(rootName + " " + Guid.NewGuid().ToString());
 
-            // Add our app to the force install list of the server
-            ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithDifferentGroup);
-            ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+            ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithDifferentGroup));
 
             SetGlobalFreeze(false);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithDifferentGroup);
-            Assert.AreEqual(false, actual);
+            ApplicationServerLogic.InstallApplications(appServer);
 
-            ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]

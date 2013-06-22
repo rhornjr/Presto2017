@@ -216,23 +216,21 @@ namespace PrestoAutomatedTests
             ApplicationServerLogic.Save(appServer);  // To save with a valid group.
 
             // Create a new app group with a new app, but an existing group
-            ApplicationWithOverrideVariableGroup appWithValidGroup = new ApplicationWithOverrideVariableGroup();
+            var appWithValidGroup = new ApplicationWithOverrideVariableGroup();
             appWithValidGroup.Application = TestHelper.CreateApp(rootName + " " + Guid.NewGuid().ToString());
             appWithValidGroup.CustomVariableGroup = appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroup;
 
             // Set the app to something that doesn't already exist within the server...
             // Leave the group alone because it already exists.
 
-            // Add our app to the force install list of the server
-            ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithValidGroup);
-            ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+            ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithValidGroup));
 
             SetGlobalFreeze(false);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
-            Assert.AreEqual(false, actual);
+            ApplicationServerLogic.InstallApplications(appServer);
 
-            ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -245,8 +243,10 @@ namespace PrestoAutomatedTests
             TestEntityContainer container = CreateTestEntityContainer("UseCase07", x => DateTime.Now, true, false, 0);
             container.AppWithGroup.Application.ForceInstallation = null;
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
-            Assert.AreEqual(false, actual);
+            ApplicationServerLogic.InstallApplications(container.ApplicationServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -258,8 +258,13 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase08", x => DateTime.Now.AddDays(10), true, false, 0);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
-            Assert.AreEqual(false, actual);
+            //bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+            //Assert.AreEqual(false, actual);
+
+            ApplicationServerLogic.InstallApplications(container.ApplicationServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -271,9 +276,13 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase09", x => DateTime.Now.AddDays(-1), true, false, 0);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+            //bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+            //Assert.AreEqual(true, actual);
 
-            Assert.AreEqual(true, actual);
+            ApplicationServerLogic.InstallApplications(container.ApplicationServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Once());
         }
 
         [TestMethod()]
@@ -285,8 +294,13 @@ namespace PrestoAutomatedTests
 
             TestEntityContainer container = CreateTestEntityContainer("UseCase10", x => DateTime.Now.AddDays(-1), false, false, 0);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
-            Assert.AreEqual(false, actual);
+            //bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+            //Assert.AreEqual(false, actual);
+
+            ApplicationServerLogic.InstallApplications(container.ApplicationServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -299,8 +313,13 @@ namespace PrestoAutomatedTests
             TestEntityContainer container = CreateTestEntityContainer("UseCase11", x => x.InstallationStart.AddSeconds(-86400),
                 true, false, 5);  // 86400 seconds in a day
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
-            Assert.AreEqual(false, actual);  // False because an installation has occurred after the force deployment time.
+            //bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+            //Assert.AreEqual(false, actual);  // False because an installation has occurred after the force deployment time.
+
+            ApplicationServerLogic.InstallApplications(container.ApplicationServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -322,8 +341,13 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(true);
 
-            bool actualUsingFreeze = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
-            Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
+            //bool actualUsingFreeze = ApplicationServerLogic.ApplicationShouldBeInstalled(container.ApplicationServer, container.AppWithGroup);
+            //Assert.AreEqual(false, actualUsingFreeze);  // False because FreezeAllInstallations is true.
+
+            ApplicationServerLogic.InstallApplications(container.ApplicationServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         private TestEntityContainer CreateTestEntityContainer(string rootName,

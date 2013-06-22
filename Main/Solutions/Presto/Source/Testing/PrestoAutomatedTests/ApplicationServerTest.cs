@@ -17,8 +17,14 @@ namespace PrestoAutomatedTests
     [TestClass()]
     public class ApplicationServerTest
     {
-        private TestContext testContextInstance;
-        bool _enableAppServerDebugLogging = true;
+        // ToDo: It is possible for the tests to pass for the wrong reasons. For example, if we set up a test to fail
+        //       because we never saved/added a force installation, it's possible the install wouldn't happen because
+        //       the appWithGroup is not enabled. So, it would be cool to know the actual reason the installation
+        //       didn't happen, then we could confirm that it didn't install for the right reason.
+
+        private TestContext _testContextInstance;
+        private const bool _enableAppServerDebugLogging = true;
+        private readonly Mock<IAppInstaller> _mockAppInstaller = RegisterMockAppInstaller();
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -28,11 +34,11 @@ namespace PrestoAutomatedTests
         {
             get
             {
-                return testContextInstance;
+                return _testContextInstance;
             }
             set
             {
-                testContextInstance = value;
+                _testContextInstance = value;
             }
         }
 
@@ -79,15 +85,19 @@ namespace PrestoAutomatedTests
             // Use Case #1 -- app group is not enabled
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
             
             // If disabled, don't install.
-            ApplicationWithOverrideVariableGroup appWithGroup = new ApplicationWithOverrideVariableGroup() { Enabled = false };
+            ApplicationWithOverrideVariableGroup appWithNullGroup = appServer.ApplicationsWithOverrideGroup[0];
+            appWithNullGroup.Enabled = false;
+
+            ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithNullGroup));
 
             SetGlobalFreeze(false);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithGroup);
-            Assert.AreEqual(false, actual);
+            ApplicationServerLogic.InstallApplications(appServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -98,24 +108,18 @@ namespace PrestoAutomatedTests
             //             -- with *null* custom variable group
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithNullGroup = appServer.ApplicationsWithOverrideGroup[0];
-            
-            // Add our app to the force install list of the server
-            ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithNullGroup);
 
-            ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+            ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithNullGroup));
 
             SetGlobalFreeze(false);
 
-            ApplicationServerLogic.HydrateForceInstallationsToDo(appServer);
+            ApplicationServerLogic.InstallApplications(appServer);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithNullGroup);
-            Assert.AreEqual(true, actual);
-
-            ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Once());
         }
 
         [TestMethod()]
@@ -126,24 +130,19 @@ namespace PrestoAutomatedTests
             //             -- with *valid* custom variable group
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
             appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
 
-            // Add our app to the force install list of the server
-            ServerForceInstallation serverForceInstallation = new ServerForceInstallation(appServer, appWithValidGroup);
-            ApplicationServerLogic.SaveForceInstallation(serverForceInstallation);
+            ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithValidGroup));
 
             SetGlobalFreeze(false);
 
-            ApplicationServerLogic.HydrateForceInstallationsToDo(appServer);
+            ApplicationServerLogic.InstallApplications(appServer);
 
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
-            Assert.AreEqual(true, actual);
-
-            ApplicationServerLogic.RemoveForceInstallation(serverForceInstallation);  // Clean-up
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Once());
         }
 
         [TestMethod()]
@@ -153,7 +152,6 @@ namespace PrestoAutomatedTests
             // Use Case #4 -- app group does not exist in the server's ApplicationWithGroupToForceInstallList
 
             ApplicationServer appServer = GetAppServerWithInstallationSummariesFromDb();
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
@@ -161,9 +159,16 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
-            // Note: We are *not* adding our app to the *force install* list of the server
-            bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
-            Assert.AreEqual(false, actual);
+            // Note: We are *not* adding our app to the *force install* list of the server.
+            //       In other words, there is no force installation.
+
+            //bool actual = ApplicationServerLogic.ApplicationShouldBeInstalled(appServer, appWithValidGroup);
+            //Assert.AreEqual(false, actual);
+
+            ApplicationServerLogic.InstallApplications(appServer);
+
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+                It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
         [TestMethod()]
@@ -178,7 +183,6 @@ namespace PrestoAutomatedTests
             TestHelper.CreateAndPersistEntitiesForAUseCase(rootName, 0);
 
             ApplicationServer appServer = ApplicationServerLogic.GetByName(TestHelper.GetServerName(rootName));
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             ApplicationWithOverrideVariableGroup appWithDifferentGroup = new ApplicationWithOverrideVariableGroup();
             appWithDifferentGroup.Application = appServer.ApplicationsWithOverrideGroup[0].Application;
@@ -209,7 +213,6 @@ namespace PrestoAutomatedTests
             TestHelper.CreateAndPersistEntitiesForAUseCase(rootName, 0);
 
             ApplicationServer appServer = ApplicationServerLogic.GetByName(TestHelper.GetServerName(rootName));
-            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
 
             appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroup = TestHelper.CreateCustomVariableGroup(rootName);
             ApplicationServerLogic.Save(appServer);  // To save with a valid group.
@@ -392,8 +395,6 @@ namespace PrestoAutomatedTests
 
             SetGlobalFreeze(false);
 
-            var mockAppInstaller = RegisterMockAppInstaller();
-
             ApplicationServer appServer = GetAppServerWithNoInstallationSummariesFromDb();
 
             ForceInstallation forceInstallation = new ForceInstallation();
@@ -406,7 +407,7 @@ namespace PrestoAutomatedTests
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
             ApplicationServerLogic.InstallApplications(appServer);
-            mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
                 It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Never());
         }
 
@@ -417,8 +418,6 @@ namespace PrestoAutomatedTests
             // An install is supposed to happen. Make sure the installer was invoked.
 
             SetGlobalFreeze(false);
-
-            var mockAppInstaller = RegisterMockAppInstaller();
 
             ApplicationServer appServer = GetAppServerWithNoInstallationSummariesFromDb();
 
@@ -431,7 +430,7 @@ namespace PrestoAutomatedTests
             appWithGroup.Application.ForceInstallation = forceInstallation;
 
             ApplicationServerLogic.InstallApplications(appServer);
-            mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
+            _mockAppInstaller.Verify(x => x.InstallApplication(It.IsAny<ApplicationServer>(),
                 It.IsAny<ApplicationWithOverrideVariableGroup>()), Times.Once());
         }
 
@@ -448,14 +447,18 @@ namespace PrestoAutomatedTests
             return mockAppInstaller;
         }
 
-        private static ApplicationServer GetAppServerWithInstallationSummariesFromDb()
+        private ApplicationServer GetAppServerWithInstallationSummariesFromDb()
         {
-            return ApplicationServerLogic.GetByName("server4");
+            var appServer = ApplicationServerLogic.GetByName("server4");
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
+            return appServer;
         }
 
-        private static ApplicationServer GetAppServerWithNoInstallationSummariesFromDb()
+        private ApplicationServer GetAppServerWithNoInstallationSummariesFromDb()
         {
-            return ApplicationServerLogic.GetByName("server10");
+            var appServer = ApplicationServerLogic.GetByName("server10");
+            appServer.EnableDebugLogging = _enableAppServerDebugLogging;
+            return appServer;
         }
     }
 }

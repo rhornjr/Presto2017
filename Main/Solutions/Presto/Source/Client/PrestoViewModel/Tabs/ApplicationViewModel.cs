@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Entities.LegacyPresto;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -302,7 +303,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
             }
         }
@@ -595,7 +596,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

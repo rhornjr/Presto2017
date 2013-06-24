@@ -351,7 +351,7 @@ namespace PrestoViewModel.Tabs
                 {
                     ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                         ViewModelResources.CannotImport));
-                    Logger.LogException(ex);
+                    CommonUtility.ProcessException(ex);
                     return;
                 }
             }
@@ -494,7 +494,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
 
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                     ViewModelResources.PrestoUpdaterCouldNotBeInstalled));
@@ -768,7 +768,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

@@ -9,6 +9,7 @@ using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -145,7 +146,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

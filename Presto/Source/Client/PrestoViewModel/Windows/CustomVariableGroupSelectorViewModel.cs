@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -131,12 +132,12 @@ namespace PrestoViewModel.Windows
             catch (SocketException ex)
             {
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.DatabaseConnectionFailureMessage);
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
             }
             catch (InvalidOperationException ex)
             {
                 ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.DatabaseInvalidOperation);
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
             }
         }        
     }

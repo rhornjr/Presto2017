@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -83,7 +84,7 @@ namespace PrestoViewModel.Tabs
                             catch (Exception ex)
                             {
                                 // Just log and keep trying to process the rest of the servers.
-                                Logger.LogException(ex);
+                                CommonUtility.ProcessException(ex);
                             }
                         }
                     }
@@ -93,7 +94,7 @@ namespace PrestoViewModel.Tabs
                 catch (Exception ex)
                 {
                     // Just log and keep trying to process the rest of the servers.
-                    Logger.LogException(ex);
+                    CommonUtility.ProcessException(ex);
                 }
             });
         }
@@ -111,7 +112,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

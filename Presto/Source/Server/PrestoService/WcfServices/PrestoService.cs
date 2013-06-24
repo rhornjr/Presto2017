@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoServer.Logic;
 using Xanico.Core;
 using Xanico.Core.Wcf;
@@ -231,7 +232,7 @@ namespace PrestoWcfService.WcfServices
 
         private static FaultException LogAndThrowFaultException(Exception exception)
         {
-            Logger.LogException(exception);
+            CommonUtility.ProcessException(exception);
 
             return new FaultException(FaultUtility.GetFaultMessage(exception));
         }

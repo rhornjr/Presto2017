@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -304,7 +305,7 @@ namespace PrestoViewModel.Tabs
                         {
                             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                                 ViewModelResources.CannotImport));
-                            Logger.LogException(ex);
+                            CommonUtility.ProcessException(ex);
                             return;
                         }
                     }
@@ -362,7 +363,7 @@ namespace PrestoViewModel.Tabs
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
             }
         }

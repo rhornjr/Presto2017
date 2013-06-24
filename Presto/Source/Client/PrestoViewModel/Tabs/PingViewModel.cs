@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -213,7 +214,7 @@ namespace PrestoViewModel.Tabs
             {
                 // We need to catch exceptions here because this method is called by the constructor. If this method throws
                 // an exception, the app will just flash open and then close.
-                Logger.LogException(ex);
+                CommonUtility.ProcessException(ex);
                 return;
             }
 

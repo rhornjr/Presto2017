@@ -33,17 +33,15 @@ namespace PrestoCommon.Misc
 
             if (appWithGroupToFind.CustomVariableGroup == null)
             {
-                return appWithGroupList.Where(groupFromList =>
+                return appWithGroupList.FirstOrDefault(groupFromList =>
                     groupFromList.Application.Id == appWithGroupToFind.Application.Id &&
-                    groupFromList.CustomVariableGroup == null)
-                    .FirstOrDefault();
+                    groupFromList.CustomVariableGroup == null);
             }
 
-            return appWithGroupList.Where(groupFromList =>
+            return appWithGroupList.FirstOrDefault(groupFromList =>
                 groupFromList.Application.Id == appWithGroupToFind.Application.Id &&                
                 groupFromList.CustomVariableGroup != null &&
-                groupFromList.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroup.Id)
-                .FirstOrDefault();
+                groupFromList.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroup.Id);
         }
 
         public static ServerForceInstallation GetAppWithGroup(
@@ -56,17 +54,33 @@ namespace PrestoCommon.Misc
             // 1. Both custom variable groups are null, or
             // 2. Both custom variable groups are the same.
 
-            if (appWithGroupToFind.CustomVariableGroup == null)
+            try
             {
+                if (appWithGroupToFind.CustomVariableGroup == null)
+                {
+                    return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
+                        forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
+                        forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup == null);
+                }
+
                 return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
                     forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
-                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup == null);
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup != null &&
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroupId);
             }
-
-            return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
-                forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
-                forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup != null && 
-                forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroupId);
+            catch
+            {
+                try
+                {
+                    Logger.LogObjectDump(forceInstallationsToDo, "forceInstallationsToDo");
+                    Logger.LogObjectDump(appWithGroupToFind, "appWithGroupToFind");
+                }
+                catch
+                {
+                    // Eat it. We don't want logging object dumps to stop us from throwing the initial exception.
+                }
+                throw;
+            }
         }
 
         /// <summary>

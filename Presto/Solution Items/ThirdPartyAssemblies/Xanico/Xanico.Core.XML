@@ -104,6 +104,12 @@
             <param name="source">The name of the app/process calling the logging method. If not provided,
             an attempt will be made to get the name of the calling process.</param>
         </member>
+        <member name="M:Xanico.Core.Logger.LogObjectDump(System.Object,System.String,System.String)">
+            <summary>
+            Recursively gets the properties and values of an object and dumps that to the log.
+            </summary>
+            <param name="theObject">The object to log</param>
+        </member>
         <member name="P:Xanico.Core.Logger.Source">
             <summary>
             Gets or sets the source/caller. When logging, this logger class will attempt to get the
@@ -115,23 +121,23 @@
             process starts.
             </summary>
         </member>
-        <member name="T:Xanico.Core.ReflectionUtility">
+        <member name="T:Xanico.Core.Utilities.ReflectionUtility">
             <summary>
             Utility/helper class for activities involving reflection.
             </summary>
         </member>
-        <member name="M:Xanico.Core.ReflectionUtility.GetFileVersion(System.Reflection.Assembly)">
+        <member name="M:Xanico.Core.Utilities.ReflectionUtility.GetFileVersion(System.Reflection.Assembly)">
             <summary>
             Gets the file version. This method will not throw an exception and it will not return null.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Xanico.Core.ReflectionUtility.GetDerivedTypes(System.Type,System.Reflection.Assembly)">
+        <member name="M:Xanico.Core.Utilities.ReflectionUtility.GetDerivedTypes(System.Type,System.Reflection.Assembly)">
             <summary>
             Gets the types that are derived from the base type.
             </summary>
         </member>
-        <member name="M:Xanico.Core.ReflectionUtility.GetObjectsForAnInterface``1(System.Reflection.Assembly)">
+        <member name="M:Xanico.Core.Utilities.ReflectionUtility.GetObjectsForAnInterface``1(System.Reflection.Assembly)">
             <summary>
             Scans the types in the assembly, and gets the objects that implement an interface.
             </summary>

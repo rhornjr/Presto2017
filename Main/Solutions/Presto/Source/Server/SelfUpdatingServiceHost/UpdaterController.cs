@@ -9,6 +9,7 @@ using System.Threading;
 using System.Xml.Serialization;
 using Xanico.Core;
 using Xanico.Core.Interfaces;
+using Xanico.Core.Utilities;
 
 namespace SelfUpdatingServiceHost
 {

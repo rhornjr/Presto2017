@@ -97,6 +97,7 @@
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Entities\AdGroupWithRoles.cs" />
     <Compile Include="Entities\Application.cs" />
     <Compile Include="Entities\ApplicationServer.cs" />
     <Compile Include="Entities\ApplicationWithOverrideVariableGroup.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperUtc.cs" />
     <Compile Include="Enums\DeploymentEnvironment.cs" />
     <Compile Include="Enums\InstallationResult.cs" />
+    <Compile Include="Enums\PrestoRole.cs" />
     <Compile Include="Enums\TaskType.cs" />
     <Compile Include="Exceptions\CustomVariableExistsMoreThanOnceException.cs" />
     <Compile Include="Exceptions\CustomVariableMissingException.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="Interfaces\IInstallationEnvironmentService.cs" />
     <Compile Include="Interfaces\IInstallationSummaryService.cs" />
     <Compile Include="Interfaces\IPingService.cs" />
+    <Compile Include="Interfaces\ISecurityService.cs" />
     <Compile Include="Interfaces\IServerService.cs" />
     <Compile Include="Misc\AesCrypto.cs" />
     <Compile Include="Misc\CommonUtility.cs" />

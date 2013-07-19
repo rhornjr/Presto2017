@@ -161,6 +161,7 @@ namespace PrestoViewModel.Tabs
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerApplicationsWithOverrideGroup);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerCustomVariableGroups);
                 this.NotifyPropertyChanged(() => this.SelectedApplicationServerInstallationEnvironment);
+                this.NotifyPropertyChanged(() => this.UserCanAlter);
             }
         }
 
@@ -262,7 +263,7 @@ namespace PrestoViewModel.Tabs
         {
             this.AddServerCommand      = new RelayCommand(AddServer);
             this.DeleteServerCommand   = new RelayCommand(DeleteServer, AppServerIsSelectedMethod);
-            this.SaveServerCommand     = new RelayCommand(_ => SaveServer(), AppServerIsSelectedMethod);
+            this.SaveServerCommand = new RelayCommand(_ => SaveServer(), UserCanAlterMethod);
             this.RefreshServersCommand = new RelayCommand(RefreshServers);
 
             this.AddApplicationCommand    = new RelayCommand(AddApplication);
@@ -281,6 +282,46 @@ namespace PrestoViewModel.Tabs
         private bool AppServerIsSelectedMethod()
         {
             return this.SelectedApplicationServer != null;
+        }
+
+        public bool UserCanAlter
+        {
+            get { return UserCanAlterMethod(); }
+        }
+
+        public bool UserCanAlterMethod()
+        {
+            if (!AppServerIsSelectedMethod()) { return false; }
+
+            try
+            {
+                return UserHasEnvironmentRights(this.SelectedApplicationServer.InstallationEnvironment);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                return false;
+            }            
+        }
+
+        private static bool UserHasEnvironmentRights(InstallationEnvironment installationEnvironment)
+        {
+            foreach (var group in ViewModelUtility.AdGroupRolesList)
+            {
+                try
+                {
+                    if (ViewModelUtility.UserCanAccessEnvironment(group, installationEnvironment))
+                    {
+                        return true;
+                    }
+                }
+                catch (SystemException)
+                {
+                    // We get a SystemException if a group name is misspelled. Ignore and continue.
+                }
+            }
+
+            return false;
         }
 
         private void ExportApplication()

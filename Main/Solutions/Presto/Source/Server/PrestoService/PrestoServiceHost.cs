@@ -67,6 +67,7 @@ namespace PrestoWcfService
             _serviceHost.AddServiceEndpoint(typeof(IInstallationEnvironmentService), netTcpBinding, _serviceAddress);
             _serviceHost.AddServiceEndpoint(typeof(IInstallationSummaryService), netTcpBinding, _serviceAddress);
             _serviceHost.AddServiceEndpoint(typeof(IPingService), netTcpBinding, _serviceAddress);
+            _serviceHost.AddServiceEndpoint(typeof(ISecurityService), netTcpBinding, _serviceAddress);
 
             _serviceHost.Open();
         }

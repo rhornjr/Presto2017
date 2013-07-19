@@ -99,6 +99,7 @@
     <Compile Include="Tabs\LogMessageViewModel.cs" />
     <Compile Include="Tabs\PingViewModel.cs" />
     <Compile Include="Tabs\ResolveVariableViewModel.cs" />
+    <Compile Include="Tabs\SecurityViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -111,6 +112,7 @@
     <Compile Include="Windows\CustomVariableGroupSelectorViewModel.cs" />
     <Compile Include="Windows\CustomVariableViewModel.cs" />
     <Compile Include="Windows\ForceInstallationViewModel.cs" />
+    <Compile Include="Windows\RoleSelectorViewModel.cs" />
     <Compile Include="Windows\TaskCopyFileViewModel.cs" />
     <Compile Include="Windows\TaskDosCommandViewModel.cs" />
     <Compile Include="Windows\TaskTypeSelectorViewModel.cs" />

@@ -23,6 +23,7 @@
             <TabItem Header="Log"><tabs:LogMessageView/></TabItem>
             <TabItem Header="Ping"><tabs:PingView/></TabItem>
             <TabItem Header="Global"><tabs:GlobalSettingView/></TabItem>
+            <TabItem Header="Security"><tabs:SecurityView/></TabItem>
         </TabControl>
         <!-- <TextBlock Grid.Row="1" Text="{Binding UserMessage}" Foreground="Black" FontWeight="Bold" Background="DarkKhaki" TextWrapping="Wrap" Margin="2" Padding="2"/> -->
         <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"

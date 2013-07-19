@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
-using PrestoCommon.Enums;
 using PrestoCommon.Misc;
 using Raven.Imports.Newtonsoft.Json;
 
@@ -54,10 +53,6 @@ namespace PrestoCommon.Entities
 
         [DataMember]
         public string InstallationEnvironmentId { get; set; }
-
-        // ToDo: Remove this after migrating the data to InstallationEnvironment
-        [DataMember]
-        public DeploymentEnvironment DeploymentEnvironment { get; set; }
 
         [JsonIgnore]  // We do not want RavenDB to serialize this...
         [DataMember]  // ... but we still want it to go over WCF

@@ -14,6 +14,7 @@
       <vmtab:LogMessageViewModel x:Key="LogMessageViewModel" />
       <vmtab:PingViewModel x:Key="PingViewModel" />
       <vmtab:GlobalSettingViewModel x:Key="GlobalSettingViewModel" />
+      <vmtab:SecurityViewModel x:Key="SecurityViewModel" />
       <Style x:Key="StandardLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
         <Setter Property="Foreground" Value="White" />
         <Setter Property="VerticalAlignment" Value="Center" />

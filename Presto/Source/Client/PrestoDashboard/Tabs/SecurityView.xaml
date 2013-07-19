@@ -74,7 +74,7 @@
                       ItemsSource="{Binding SelectedAdGroupWithRoles.PrestoRoles}"
                       SelectedItem="{Binding SelectedPrestoRole}">                    
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding PrestoRole}" Header="Role" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding}" Header="Role" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

@@ -105,7 +105,7 @@
                             <DataGridTextColumn Binding="{Binding Path=Name}" Header="Name" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" IsEnabled="{Binding UserCanAlter}">
                         <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" />
                         <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveVariableGroupCommand}" />
                     </StackPanel>
@@ -136,7 +136,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" IsEnabled="{Binding UserCanAlter}">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />

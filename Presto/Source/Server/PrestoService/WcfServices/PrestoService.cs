@@ -5,7 +5,6 @@ using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoServer.Logic;
-using Xanico.Core;
 using Xanico.Core.Wcf;
 
 namespace PrestoWcfService.WcfServices
@@ -17,7 +16,7 @@ namespace PrestoWcfService.WcfServices
     /// </summary>
     [ServiceBehavior(MaxItemsInObjectGraph = int.MaxValue)]
     public class PrestoService : IBaseService, IApplicationService, ICustomVariableGroupService, IServerService,
-        IInstallationEnvironmentService, IInstallationSummaryService, IPingService
+        IInstallationEnvironmentService, IInstallationSummaryService, IPingService, ISecurityService
     {
         #region [Base Methods]
 
@@ -207,6 +206,22 @@ namespace PrestoWcfService.WcfServices
 
         #endregion
 
+        #region [Security]
+
+        public IEnumerable<AdGroupWithRoles> GetAllAdGroupWithRoles()
+        {
+            return Invoke(() => SecurityLogic.GetAll());
+        }
+
+        public void SaveAdGroupWithRoles(AdGroupWithRoles adGroupWithRoles)
+        {
+            Invoke(() => SecurityLogic.Save(adGroupWithRoles));
+        }
+
+        #endregion
+
+        #region [Private Helper Methods]
+
         private static void Invoke(Action action)
         {
             // Most of the methods in this class call the Invoke() that takes a func. Some of the methods
@@ -236,5 +251,7 @@ namespace PrestoWcfService.WcfServices
 
             return new FaultException(FaultUtility.GetFaultMessage(exception));
         }
+
+        #endregion
     }
 }

@@ -94,6 +94,7 @@
     <Compile Include="Data\Interfaces\ILogMessageData.cs" />
     <Compile Include="Data\Interfaces\IPingRequestData.cs" />
     <Compile Include="Data\Interfaces\IPingResponseData.cs" />
+    <Compile Include="Data\Interfaces\ISecurityData.cs" />
     <Compile Include="Data\RavenDb\ApplicationData.cs" />
     <Compile Include="Data\RavenDb\ApplicationServerData.cs" />
     <Compile Include="Data\RavenDb\CustomVariableGroupData.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
     <Compile Include="Data\RavenDb\PingRequestData.cs" />
     <Compile Include="Data\RavenDb\PingResponseData.cs" />
+    <Compile Include="Data\RavenDb\SecurityData.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Logic\LogMessageLogic.cs" />
     <Compile Include="Logic\PingRequestLogic.cs" />
     <Compile Include="Logic\PingResponseLogic.cs" />
+    <Compile Include="Logic\SecurityLogic.cs" />
     <Compile Include="Misc\AppInstaller.cs" />
     <Compile Include="PrestoServerResources.Designer.cs">
       <AutoGen>True</AutoGen>

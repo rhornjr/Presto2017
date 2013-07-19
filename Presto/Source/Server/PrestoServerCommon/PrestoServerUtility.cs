@@ -27,6 +27,7 @@ namespace PrestoServer
             PrestoServerUtility.Container.RegisterType<IPingRequestData, PingRequestData>();
             PrestoServerUtility.Container.RegisterType<IPingResponseData, PingResponseData>();
             PrestoServerUtility.Container.RegisterType<IInstallationEnvironmentData, InstallationEnvironmentData>();
+            PrestoServerUtility.Container.RegisterType<ISecurityData, SecurityData>();
         }
 
         public static void RegisterRealClasses()

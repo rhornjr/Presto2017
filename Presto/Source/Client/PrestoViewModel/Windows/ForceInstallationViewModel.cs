@@ -6,6 +6,7 @@ using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
+using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
@@ -67,8 +68,21 @@ namespace PrestoViewModel.Windows
                 {
                     using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
                     {
-                        this._deploymentEnvironments =
-                            prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+                        var allEnvironments = prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+                        this._deploymentEnvironments = new List<InstallationEnvironment>();
+
+                        foreach (var environment in allEnvironments)
+                        {
+                            // If the user is part of an AD group that has this environment, then add it to the list.
+                            foreach (var group in ViewModelUtility.AdGroupRolesList)
+                            {
+                                if (ViewModelUtility.UserCanAccessEnvironment(group, environment))
+                                {
+                                    this._deploymentEnvironments.Add(environment);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 return this._deploymentEnvironments;

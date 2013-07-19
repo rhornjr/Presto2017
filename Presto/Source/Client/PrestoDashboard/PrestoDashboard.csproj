@@ -181,6 +181,9 @@
     <Compile Include="Tabs\ResolveVariableView.xaml.cs">
       <DependentUpon>ResolveVariableView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tabs\SecurityView.xaml.cs">
+      <DependentUpon>SecurityView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Windows\ApplicationSelectorView.xaml.cs">
@@ -200,6 +203,9 @@
     </Compile>
     <Compile Include="Windows\ForceInstallationView.xaml.cs">
       <DependentUpon>ForceInstallationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\RoleSelectorView.xaml.cs">
+      <DependentUpon>RoleSelectorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\TaskCopyFileView.xaml.cs">
       <DependentUpon>TaskCopyFileView.xaml</DependentUpon>
@@ -260,6 +266,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Tabs\SecurityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\BureauBlack.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -309,6 +319,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ForceInstallationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RoleSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

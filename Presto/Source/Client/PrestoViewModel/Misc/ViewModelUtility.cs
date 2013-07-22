@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Security.Principal;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
+using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
 
@@ -15,9 +17,6 @@ namespace PrestoViewModel.Misc
     /// </summary>
     internal static class ViewModelUtility
     {
-        public static AdGroupWithRoles _adGroup = new AdGroupWithRoles()
-            { AdGroupName = "MES PBG Developers", PrestoRoles = new List<PrestoRole>() { PrestoRole.ModifyDevelopment } };
-
         private static List<AdGroupWithRoles> _adGroupRolesList = null; 
 
         public static List<AdGroupWithRoles> AdGroupRolesList
@@ -26,7 +25,10 @@ namespace PrestoViewModel.Misc
             {
                 if (_adGroupRolesList == null)
                 {
-                    _adGroupRolesList = new List<AdGroupWithRoles> { _adGroup };
+                    using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                    {
+                        _adGroupRolesList = prestoWcf.Service.GetAllAdGroupWithRoles().ToList();
+                    }
                 }
 
                 return _adGroupRolesList;
@@ -48,12 +50,24 @@ namespace PrestoViewModel.Misc
             }
         }
 
-        public static bool UserCanAccessEnvironment(AdGroupWithRoles groupRoles, InstallationEnvironment environment)
+        public static bool UserCanAccessEnvironment(AdGroupWithRoles groupWithRoles, InstallationEnvironment environment)
         {
-            return PrestoUser.IsInRole(groupRoles.AdGroupName) &&
-                   (groupRoles.PrestoRoles.Exists(
-                       r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant()) ||
-                    groupRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN"));
+            if (!PrestoUser.IsInRole(groupWithRoles.AdGroupName)) { return false; }
+
+            bool environmentExistsInRoles = groupWithRoles.PrestoRoles.Exists(
+                r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant());
+
+            bool adminExistsInRoles = groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN");
+
+            if (environmentExistsInRoles || adminExistsInRoles) { return true; }
+
+            return false;
+
+            // Original
+            //return PrestoUser.IsInRole(groupWithRoles.AdGroupName) &&
+            //       (groupWithRoles.PrestoRoles.Exists(
+            //           r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant()) ||
+            //        groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN"));
         }
 
         /// <summary>

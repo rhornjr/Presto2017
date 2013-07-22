@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
@@ -39,7 +40,22 @@ namespace PrestoViewModel.Tabs
                 _selectedAdGroupWithRoles = value;
                 this.NotifyPropertyChanged(() => this.SelectedAdGroupWithRoles);
                 this.NotifyPropertyChanged(() => this.AdGroupIsSelected);
+
+                if (_selectedAdGroupWithRoles == null) { return; }
+
+                // Every time the group changes, set the observable collection of roles
+                _prestoRoles = new PrestoObservableCollection<PrestoRole>();
+                if (_selectedAdGroupWithRoles.PrestoRoles != null) { _prestoRoles.AddRange(_selectedAdGroupWithRoles.PrestoRoles); }
+                this.NotifyPropertyChanged(() => this.PrestoRoles);
             }
+        }
+
+        private PrestoObservableCollection<PrestoRole> _prestoRoles;
+
+        // Why I created a separate property: http://stackoverflow.com/a/17788086/279516
+        public PrestoObservableCollection<PrestoRole> PrestoRoles
+        {
+            get { return _prestoRoles; }
         }
 
         public PrestoRole SelectedPrestoRole { get; set; }
@@ -103,7 +119,7 @@ namespace PrestoViewModel.Tabs
             {
                 using (var prestoWcf = new PrestoWcf<ISecurityService>())
                 {
-                    prestoWcf.Service.SaveAdGroupWithRoles(this.SelectedAdGroupWithRoles);
+                    this.SelectedAdGroupWithRoles = prestoWcf.Service.SaveAdGroupWithRoles(this.SelectedAdGroupWithRoles);
                 }
             }
             catch (FaultException ex)
@@ -151,11 +167,18 @@ namespace PrestoViewModel.Tabs
             if (this.SelectedAdGroupWithRoles.PrestoRoles == null) { this.SelectedAdGroupWithRoles.PrestoRoles = new List<PrestoRole>(); }
 
             this.SelectedAdGroupWithRoles.PrestoRoles.Add(viewModel.SelectedRole);
+            this.PrestoRoles.Add(viewModel.SelectedRole);
+            this.SaveGroup();
         }
 
-        private void RemoveRole(object obj)
+        private void RemoveRole()
         {
-            throw new System.NotImplementedException();
+            if (!UserConfirmsDelete(this.SelectedPrestoRole.ToString())) { return; }
+
+            this.SelectedAdGroupWithRoles.PrestoRoles.Remove(this.SelectedPrestoRole);
+            this.PrestoRoles.Remove(this.SelectedPrestoRole);
+
+            SaveGroup();
         }
 
         private bool ExactlyOneRoleIsSelected()

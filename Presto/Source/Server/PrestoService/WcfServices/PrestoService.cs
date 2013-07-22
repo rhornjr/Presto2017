@@ -213,9 +213,10 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => SecurityLogic.GetAll());
         }
 
-        public void SaveAdGroupWithRoles(AdGroupWithRoles adGroupWithRoles)
+        public AdGroupWithRoles SaveAdGroupWithRoles(AdGroupWithRoles adGroupWithRoles)
         {
             Invoke(() => SecurityLogic.Save(adGroupWithRoles));
+            return adGroupWithRoles;
         }
 
         #endregion

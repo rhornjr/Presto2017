@@ -61,7 +61,7 @@
 
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddRoleCommand}" />
-                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteRoleCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding RemoveRoleCommand}" />
             </StackPanel>
 
             <Grid>
@@ -71,7 +71,7 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Roles" FontWeight="Bold"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedAdGroupWithRoles.PrestoRoles}"
+                      ItemsSource="{Binding PrestoRoles}"
                       SelectedItem="{Binding SelectedPrestoRole}">                    
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding}" Header="Role" Width="*"/>

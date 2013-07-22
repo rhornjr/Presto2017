@@ -11,6 +11,6 @@ namespace PrestoCommon.Interfaces
         IEnumerable<AdGroupWithRoles> GetAllAdGroupWithRoles();
 
         [OperationContract]
-        void SaveAdGroupWithRoles(AdGroupWithRoles adGroupWithRoles);
+        AdGroupWithRoles SaveAdGroupWithRoles(AdGroupWithRoles adGroupWithRoles);
     }
 }

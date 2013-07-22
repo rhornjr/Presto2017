@@ -103,28 +103,28 @@ namespace PrestoViewModel.Windows
         /// <summary>
         /// Initializes a new instance of the <see cref="ForceInstallationViewModel"/> class.
         /// </summary>
-        public ForceInstallationViewModel(ForceInstallation forceInstallation)
+        public ForceInstallationViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
-
-            // Set the default environment to whatever was used last.
-            if (forceInstallation != null) { this.SelectedDeploymentEnvironment = forceInstallation.ForceInstallEnvironment; }
 
             Initialize();            
         }
 
         private void Initialize()
         {
+            if (this.DeploymentEnvironments.Count > 0) { this.SelectedDeploymentEnvironment = this.DeploymentEnvironments[0]; }
+
             this.ForceInstallation = new ForceInstallation();
+            this.ForceInstallation.ForceInstallationTime = DateTime.Now;  // default
 
             this.UserCanceled = true;  // default
 
-            this.OkCommand                   = new RelayCommand(Save, ForceInstallationTimeIsValid);
+            this.OkCommand                   = new RelayCommand(Save, UserCanSave);
             this.CancelCommand               = new RelayCommand(Cancel);
             this.ForceInstallationNowCommand = new RelayCommand(ForceInstallationNow);
         }
 
-        private bool ForceInstallationTimeIsValid()
+        private bool UserCanSave()
         {
             return this.ForceInstallation.ForceInstallationTime != null &&
                 this.SelectedDeploymentEnvironment != null;

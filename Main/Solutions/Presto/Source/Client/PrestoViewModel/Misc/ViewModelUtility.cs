@@ -8,6 +8,7 @@ using System.Security.Principal;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
@@ -96,7 +97,7 @@ namespace PrestoViewModel.Misc
             string domainConnection = string.Format(CultureInfo.InvariantCulture, "{0}.{1}:{2}", AdInfo.Domain, AdInfo.DomainSuffix, AdInfo.DomainPort);
             string container        = string.Format(CultureInfo.InvariantCulture, "dc={0},dc={1}", AdInfo.Domain, AdInfo.DomainSuffix);
             string adQueryUser      = AdInfo.ActiveDirectoryAccountUser;
-            string adQueryPassword  = AdInfo.ActiveDirectoryAccountPassword;
+            string adQueryPassword  = AesCrypto.Decrypt(AdInfo.ActiveDirectoryAccountPassword);
 
             using (var principalContext = new PrincipalContext(ContextType.Domain, domainConnection, container, adQueryUser, adQueryPassword))
             using (var userPrincipal = UserPrincipal.FindByIdentity(principalContext, IdentityType.SamAccountName, PrestoUser.Identity.Name))

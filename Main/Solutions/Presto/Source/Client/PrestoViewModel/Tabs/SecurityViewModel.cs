@@ -47,6 +47,7 @@ namespace PrestoViewModel.Tabs
                 _prestoRoles = new PrestoObservableCollection<PrestoRole>();
                 if (_selectedAdGroupWithRoles.PrestoRoles != null) { _prestoRoles.AddRange(_selectedAdGroupWithRoles.PrestoRoles); }
                 this.NotifyPropertyChanged(() => this.PrestoRoles);
+                this.SelectedPrestoRole = null;
             }
         }
 
@@ -58,7 +59,7 @@ namespace PrestoViewModel.Tabs
             get { return _prestoRoles; }
         }
 
-        public PrestoRole SelectedPrestoRole { get; set; }
+        public PrestoRole? SelectedPrestoRole { get; set; }
 
         public bool AdGroupIsSelected
         {
@@ -74,6 +75,7 @@ namespace PrestoViewModel.Tabs
         public ICommand RemoveRoleCommand { get; private set; }
 
         public ICommand SaveAdInfoCommand { get; private set; }
+        public ICommand EncryptCommand { get; set; }
 
         public ActiveDirectoryInfo ActiveDirectoryInfo { get; set; }
 
@@ -147,6 +149,7 @@ namespace PrestoViewModel.Tabs
             this.RemoveRoleCommand = new RelayCommand(RemoveRole, ExactlyOneRoleIsSelected);
 
             this.SaveAdInfoCommand = new RelayCommand(SaveAdInfo);
+            this.EncryptCommand = new RelayCommand(Encrypt);
         }
 
         private void SaveAdInfo()
@@ -204,9 +207,9 @@ namespace PrestoViewModel.Tabs
             this.SelectedAdGroupWithRoles = this.AdGroupWithRolesList.FirstOrDefault(x => x.AdGroupName == newGroupName);
         }
 
-        private void DeleteGroup(object obj)
+        private void DeleteGroup()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void RefreshGroupList()
@@ -235,16 +238,21 @@ namespace PrestoViewModel.Tabs
         {
             if (!UserConfirmsDelete(this.SelectedPrestoRole.ToString())) { return; }
 
-            this.SelectedAdGroupWithRoles.PrestoRoles.Remove(this.SelectedPrestoRole);
-            this.PrestoRoles.Remove(this.SelectedPrestoRole);
+            this.SelectedAdGroupWithRoles.PrestoRoles.Remove((PrestoRole)SelectedPrestoRole);
+            this.PrestoRoles.Remove((PrestoRole)SelectedPrestoRole);
 
             SaveGroup();
         }
 
         private bool ExactlyOneRoleIsSelected()
         {
-            // ToDo: Do this right
-            return true;
+            return this.SelectedPrestoRole != null;
+        }
+
+        private void Encrypt()
+        {
+            ActiveDirectoryInfo.ActiveDirectoryAccountPassword = AesCrypto.Encrypt(ActiveDirectoryInfo.ActiveDirectoryAccountPassword);
+            this.NotifyPropertyChanged(() => ActiveDirectoryInfo);
         }
     }
 }

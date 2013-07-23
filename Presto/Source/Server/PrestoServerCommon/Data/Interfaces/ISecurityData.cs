@@ -7,5 +7,7 @@ namespace PrestoServer.Data.Interfaces
     {
         IEnumerable<AdGroupWithRoles> GetAll();
         void Save(AdGroupWithRoles groupWithRoles);
+        ActiveDirectoryInfo GetActiveDirectoryInfo();
+        void SaveActiveDirectoryInfo(ActiveDirectoryInfo adInfo);
     }
 }

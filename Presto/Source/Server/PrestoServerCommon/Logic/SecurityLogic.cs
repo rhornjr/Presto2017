@@ -28,5 +28,25 @@ namespace PrestoServer.Logic
                 throw;
             }
         }
+
+        public static ActiveDirectoryInfo GetActiveDirectoryInfo()
+        {
+            return DataAccessFactory.GetDataInterface<ISecurityData>().GetActiveDirectoryInfo();
+        }
+
+        public static void SaveActiveDirectoryInfo(ActiveDirectoryInfo adInfo)
+        {
+            if (adInfo == null) { throw new ArgumentNullException("adInfo"); }
+
+            try
+            {
+                DataAccessFactory.GetDataInterface<ISecurityData>().SaveActiveDirectoryInfo(adInfo);
+            }
+            catch (ConcurrencyException ex)
+            {
+                LogicBase.SetConcurrencyUserSafeMessage(ex, adInfo.Id);
+                throw;
+            }
+        }
     }
 }

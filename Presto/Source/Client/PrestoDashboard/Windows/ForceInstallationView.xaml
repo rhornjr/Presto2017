@@ -21,7 +21,7 @@
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
             <Label Style="{StaticResource StandardLabel}" Content="Environment:" Width="85" />
-            <ComboBox ItemsSource="{Binding DeploymentEnvironments}" SelectedItem="{Binding SelectedDeploymentEnvironment}" Width="185"/>
+            <ComboBox ItemsSource="{Binding AllowedEnvironments}" SelectedItem="{Binding SelectedDeploymentEnvironment}" Width="185"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Height="35">

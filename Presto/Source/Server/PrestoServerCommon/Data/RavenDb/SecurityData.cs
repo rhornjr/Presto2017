@@ -27,5 +27,23 @@ namespace PrestoServer.Data.RavenDb
 
             new GenericData().Save(groupWithRoles);
         }
+
+        public ActiveDirectoryInfo GetActiveDirectoryInfo()
+        {
+            return ExecuteQuery<ActiveDirectoryInfo>(() =>
+            {
+                return QuerySingleResultAndSetEtag(session =>
+                    session.Query<ActiveDirectoryInfo>()
+                    .Customize(x => x.WaitForNonStaleResults())
+                    .FirstOrDefault()) as ActiveDirectoryInfo;
+            });
+        }
+
+        public void SaveActiveDirectoryInfo(ActiveDirectoryInfo adInfo)
+        {
+            if (adInfo == null) { throw new ArgumentNullException("adInfo"); }
+
+            new GenericData().Save(adInfo);
+        }
     }
 }

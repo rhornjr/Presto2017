@@ -77,6 +77,22 @@ namespace PrestoViewModel.Tabs
 
         public ActiveDirectoryInfo ActiveDirectoryInfo { get; set; }
 
+        public bool UserCanModifySecurity
+        {
+            get
+            {
+                if (ActiveDirectoryInfo.SecurityEnabled == false) { return true; }
+
+                // Security is enabled. Only allow admins to modify.
+                return ViewModelUtility.UserIsPrestoAdmin;
+            }
+        }
+
+        public bool UserCanModifyRoles
+        {
+            get { return UserCanModifySecurity && AdGroupIsSelected; }
+        }
+
         public SecurityViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }

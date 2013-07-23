@@ -73,6 +73,8 @@ namespace PrestoViewModel.Misc
 
         public static List<InstallationEnvironment> _allowedEnvironments = InitializeAllowedEnvironments();
 
+        public static bool UserIsPrestoAdmin { get; private set; }
+
         private static List<InstallationEnvironment> InitializeAllEnvironments()
         {
             List<InstallationEnvironment> allEnvironments;
@@ -111,6 +113,8 @@ namespace PrestoViewModel.Misc
                             r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant());
 
                         bool adminExistsInRoles = groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN");
+
+                        if (adminExistsInRoles && !UserIsPrestoAdmin) { UserIsPrestoAdmin = true; }
 
                         if (environmentExistsInRoles || adminExistsInRoles)
                         {

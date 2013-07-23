@@ -24,7 +24,8 @@
 
         <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="AD Groups" HorizontalAlignment="Center" FontWeight="Bold"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center"
+                        IsEnabled="{Binding UserCanModifySecurity}">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddGroupCommand}" Height="20" />
                     <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshGroupCommand}" Height="20" />
@@ -57,14 +58,15 @@
                     <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected AD Group" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                     <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
-                    <TextBox Grid.Column="1" Text="{Binding SelectedAdGroupWithRoles.AdGroupName}" Grid.RowSpan="2"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedAdGroupWithRoles.AdGroupName}" />
 
-                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveGroupCommand}" />
+                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save"
+                            IsEnabled="{Binding UserCanModifySecurity}" Command="{Binding SaveGroupCommand}" />
                 </Grid>
 
             </StackPanel>
 
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" IsEnabled="{Binding AdGroupIsSelected}">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" IsEnabled="{Binding UserCanModifySecurity}">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddRoleCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding RemoveRoleCommand}" />
             </StackPanel>
@@ -89,7 +91,8 @@
         <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True">
 
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveAdInfoCommand}" />
+                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveAdInfoCommand}"
+                        IsEnabled="{Binding UserCanModifySecurity}"/>
             </StackPanel>
 
             <Grid DockPanel.Dock="Top">

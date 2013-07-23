@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
@@ -50,24 +52,85 @@ namespace PrestoViewModel.Misc
             }
         }
 
-        public static bool UserCanAccessEnvironment(AdGroupWithRoles groupWithRoles, InstallationEnvironment environment)
+        private static ActiveDirectoryInfo _adInfo;
+
+        internal static ActiveDirectoryInfo AdInfo
         {
-            if (!PrestoUser.IsInRole(groupWithRoles.AdGroupName)) { return false; }
+            get
+            {
+                if (_adInfo == null)
+                {
+                    using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                    {
+                        _adInfo = prestoWcf.Service.GetActiveDirectoryInfo();
+                    }
+                }
+                return _adInfo;
+            }
+        }
 
-            bool environmentExistsInRoles = groupWithRoles.PrestoRoles.Exists(
-                r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant());
+        private static List<InstallationEnvironment> _allEnvironments = InitializeAllEnvironments();
 
-            bool adminExistsInRoles = groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN");
+        public static List<InstallationEnvironment> _allowedEnvironments = InitializeAllowedEnvironments();
 
-            if (environmentExistsInRoles || adminExistsInRoles) { return true; }
+        private static List<InstallationEnvironment> InitializeAllEnvironments()
+        {
+            List<InstallationEnvironment> allEnvironments;
 
-            return false;
+            using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+            {
+                allEnvironments = prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+            }
 
-            // Original
-            //return PrestoUser.IsInRole(groupWithRoles.AdGroupName) &&
-            //       (groupWithRoles.PrestoRoles.Exists(
-            //           r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant()) ||
-            //        groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN"));
+            return allEnvironments;
+        }
+
+        private static List<InstallationEnvironment> InitializeAllowedEnvironments()
+        {
+            // Cache the environment and access (true/false) so we don't constantly make an active directory call during view/view model binding.
+
+            var allowedEnvironments = new List<InstallationEnvironment>();
+
+            string domainConnection = string.Format(CultureInfo.InvariantCulture, "{0}.{1}:{2}", AdInfo.Domain, AdInfo.DomainSuffix, AdInfo.DomainPort);
+            string container        = string.Format(CultureInfo.InvariantCulture, "dc={0},dc={1}", AdInfo.Domain, AdInfo.DomainSuffix);
+            string adQueryUser      = AdInfo.ActiveDirectoryAccountUser;
+            string adQueryPassword  = AdInfo.ActiveDirectoryAccountPassword;
+
+            using (var principalContext = new PrincipalContext(ContextType.Domain, domainConnection, container, adQueryUser, adQueryPassword))
+            using (var userPrincipal = UserPrincipal.FindByIdentity(principalContext, IdentityType.SamAccountName, PrestoUser.Identity.Name))
+            {
+                foreach (var environment in _allEnvironments)
+                {
+                    foreach (var groupWithRoles in AdGroupRolesList)
+                    {
+                        if (!userPrincipal.IsMemberOf(principalContext, IdentityType.SamAccountName, groupWithRoles.AdGroupName)) { continue; }
+
+                        // If we reach here, the user is in the group passed into this method.
+
+                        bool environmentExistsInRoles = groupWithRoles.PrestoRoles.Exists(
+                            r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant());
+
+                        bool adminExistsInRoles = groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN");
+
+                        if (environmentExistsInRoles || adminExistsInRoles)
+                        {
+                            if (!allowedEnvironments.Exists(x => x.Name == environment.Name))
+                            {
+                                allowedEnvironments.Add(environment);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return allowedEnvironments;
+        }
+
+        public static bool UserCanAccessEnvironment(InstallationEnvironment environment)
+        {
+            if (AdInfo.SecurityEnabled == false) { return true; } // Security not enabled, so let it fly.
+
+            return _allowedEnvironments.Exists(x => x.Name == environment.Name);
         }
 
         /// <summary>

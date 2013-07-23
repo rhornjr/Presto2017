@@ -17,7 +17,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Column="0" LastChildFill="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="AD Groups" HorizontalAlignment="Center" FontWeight="Bold"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="80" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
@@ -33,7 +38,7 @@
                      SelectedItem="{Binding SelectedAdGroupWithRoles}" Height="auto">
             </ListBox>
         </DockPanel>
-        <DockPanel Grid.Column="1" LastChildFill="True" IsEnabled="{Binding AdGroupIsSelected}">
+        <DockPanel Grid.Column="1" Grid.Row="0" LastChildFill="True" IsEnabled="{Binding AdGroupIsSelected}">
 
             <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
 
@@ -52,14 +57,14 @@
                     <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected AD Group" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                     <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
-                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedAdGroupWithRoles.AdGroupName}"/>
+                    <TextBox Grid.Column="1" Text="{Binding SelectedAdGroupWithRoles.AdGroupName}" Grid.RowSpan="2"/>
 
                     <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveGroupCommand}" />
                 </Grid>
 
             </StackPanel>
 
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" IsEnabled="{Binding AdGroupIsSelected}">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddRoleCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding RemoveRoleCommand}" />
             </StackPanel>
@@ -72,7 +77,7 @@
                 <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Roles" FontWeight="Bold"/>
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       ItemsSource="{Binding PrestoRoles}"
-                      SelectedItem="{Binding SelectedPrestoRole}">                    
+                      SelectedItem="{Binding SelectedPrestoRole}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding}" Header="Role" Width="*"/>
                     </DataGrid.Columns>
@@ -80,5 +85,51 @@
             </Grid>
 
         </DockPanel>
+
+        <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True">
+
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveAdInfoCommand}" />
+            </StackPanel>
+
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Domain: "/>
+                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ActiveDirectoryInfo.Domain}" />
+
+                <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Domain suffix: "/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding ActiveDirectoryInfo.DomainSuffix}" />
+
+                <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardLabel}" Content="Domain port: "/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding ActiveDirectoryInfo.DomainPort}" />
+
+                <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource StandardLabel}" Content="AD query account user: "/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ActiveDirectoryInfo.ActiveDirectoryAccountUser}" />
+
+                <Label Grid.Column="0" Grid.Row="4" Style="{StaticResource StandardLabel}" Content="AD query account password: "/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding ActiveDirectoryInfo.ActiveDirectoryAccountPassword}" />
+
+                <Label Grid.Column="0" Grid.Row="5" Style="{StaticResource StandardLabel}" Content="Security enabled: "/>
+                <CheckBox  Grid.Column="1" Grid.Row="5" Style="{StaticResource StandardCheckBox}"
+                           IsChecked="{Binding ActiveDirectoryInfo.SecurityEnabled}"
+                           VerticalAlignment="Center" Width="140" HorizontalAlignment="Left"/>
+
+            </Grid>
+
+        </DockPanel>
+
     </Grid>
 </UserControl>

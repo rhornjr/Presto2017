@@ -73,12 +73,35 @@ namespace PrestoViewModel.Tabs
         public ICommand AddRoleCommand { get; private set; }
         public ICommand RemoveRoleCommand { get; private set; }
 
+        public ICommand SaveAdInfoCommand { get; private set; }
+
+        public ActiveDirectoryInfo ActiveDirectoryInfo { get; set; }
+
         public SecurityViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
+            LoadAdInfo();
             LoadAdGroupWithRolesList();
+        }
+
+        private void LoadAdInfo()
+        {
+            try
+            {
+                using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                {
+                    this.ActiveDirectoryInfo = prestoWcf.Service.GetActiveDirectoryInfo();
+                }
+                if (this.ActiveDirectoryInfo == null) { this.ActiveDirectoryInfo = new ActiveDirectoryInfo(); }
+                this.NotifyPropertyChanged(() => this.ActiveDirectoryInfo);
+            }
+            catch (Exception ex)
+            {
+                CommonUtility.ProcessException(ex);
+                ViewModelUtility.MainWindowViewModel.AddUserMessage("Could not load form. Please see log for details.");
+            }
         }
 
         private void LoadAdGroupWithRolesList()
@@ -106,6 +129,27 @@ namespace PrestoViewModel.Tabs
 
             this.AddRoleCommand    = new RelayCommand(AddRole);
             this.RemoveRoleCommand = new RelayCommand(RemoveRole, ExactlyOneRoleIsSelected);
+
+            this.SaveAdInfoCommand = new RelayCommand(SaveAdInfo);
+        }
+
+        private void SaveAdInfo()
+        {
+            try
+            {
+                using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                {
+                    this.ActiveDirectoryInfo = prestoWcf.Service.SaveActiveDirectoryInfo(this.ActiveDirectoryInfo);
+                }
+            }
+            catch (FaultException ex)
+            {
+                ViewModelUtility.MainWindowViewModel.AddUserMessage(ex.Message);
+                ShowUserMessage(ex.Message, ViewModelResources.ItemNotSavedCaption);
+            }
+
+            ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
+                ViewModelResources.ItemSaved, this.ActiveDirectoryInfo.Id));
         }
 
         private bool GroupIsSelectedMethod()

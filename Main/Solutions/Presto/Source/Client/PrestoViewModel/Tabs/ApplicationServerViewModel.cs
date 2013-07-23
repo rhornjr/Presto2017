@@ -306,22 +306,7 @@ namespace PrestoViewModel.Tabs
 
         private static bool UserHasEnvironmentRights(InstallationEnvironment installationEnvironment)
         {
-            foreach (var group in ViewModelUtility.AdGroupRolesList)
-            {
-                try
-                {
-                    if (ViewModelUtility.UserCanAccessEnvironment(group, installationEnvironment))
-                    {
-                        return true;
-                    }
-                }
-                catch (SystemException)
-                {
-                    // We get a SystemException if a group name is misspelled. Ignore and continue.
-                }
-            }
-
-            return false;
+            return ViewModelUtility.UserCanAccessEnvironment(installationEnvironment);
         }
 
         private void ExportApplication()

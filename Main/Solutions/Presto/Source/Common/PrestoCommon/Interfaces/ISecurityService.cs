@@ -12,5 +12,11 @@ namespace PrestoCommon.Interfaces
 
         [OperationContract]
         AdGroupWithRoles SaveAdGroupWithRoles(AdGroupWithRoles adGroupWithRoles);
+
+        [OperationContract]
+        ActiveDirectoryInfo GetActiveDirectoryInfo();
+
+        [OperationContract]
+        ActiveDirectoryInfo SaveActiveDirectoryInfo(ActiveDirectoryInfo adInfo);
     }
 }

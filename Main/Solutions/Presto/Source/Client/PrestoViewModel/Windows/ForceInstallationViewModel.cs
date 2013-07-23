@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
-using PrestoCommon.Interfaces;
-using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 
@@ -16,7 +13,6 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class ForceInstallationViewModel : ViewModelBase
     {
-        private List<InstallationEnvironment> _deploymentEnvironments;
         private InstallationEnvironment _selectedDeploymentEnvironment;
 
         /// <summary>
@@ -57,35 +53,14 @@ namespace PrestoViewModel.Windows
         public ForceInstallation ForceInstallation { get; set; }
 
         /// <summary>
-        /// Gets the deployment environments.
+        /// Gets the deployment environments that the user is allowed to access.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-        public List<InstallationEnvironment> DeploymentEnvironments
+        public static List<InstallationEnvironment> AllowedEnvironments
         {
             get
             {
-                if (this._deploymentEnvironments == null)
-                {
-                    using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
-                    {
-                        var allEnvironments = prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
-                        this._deploymentEnvironments = new List<InstallationEnvironment>();
-
-                        foreach (var environment in allEnvironments)
-                        {
-                            // If the user is part of an AD group that has this environment, then add it to the list.
-                            foreach (var group in ViewModelUtility.AdGroupRolesList)
-                            {
-                                if (ViewModelUtility.UserCanAccessEnvironment(group, environment))
-                                {
-                                    this._deploymentEnvironments.Add(environment);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                return this._deploymentEnvironments;
+                return ViewModelUtility._allowedEnvironments;
             }
         }
 
@@ -112,7 +87,7 @@ namespace PrestoViewModel.Windows
 
         private void Initialize()
         {
-            if (this.DeploymentEnvironments.Count > 0) { this.SelectedDeploymentEnvironment = this.DeploymentEnvironments[0]; }
+            if (AllowedEnvironments.Count > 0) { this.SelectedDeploymentEnvironment = AllowedEnvironments[0]; }
 
             this.ForceInstallation = new ForceInstallation();
             this.ForceInstallation.ForceInstallationTime = DateTime.Now;  // default

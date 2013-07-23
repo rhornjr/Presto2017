@@ -219,6 +219,17 @@ namespace PrestoWcfService.WcfServices
             return adGroupWithRoles;
         }
 
+        public ActiveDirectoryInfo GetActiveDirectoryInfo()
+        {
+            return Invoke(() => SecurityLogic.GetActiveDirectoryInfo());
+        }
+
+        public ActiveDirectoryInfo SaveActiveDirectoryInfo(ActiveDirectoryInfo adInfo)
+        {
+            Invoke(() => SecurityLogic.SaveActiveDirectoryInfo(adInfo));
+            return adInfo;
+        }
+
         #endregion
 
         #region [Private Helper Methods]

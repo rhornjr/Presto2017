@@ -209,7 +209,18 @@ namespace PrestoViewModel.Tabs
 
         private void DeleteGroup()
         {
-            throw new NotImplementedException();
+            if (!UserConfirmsDelete(this.SelectedAdGroupWithRoles.AdGroupName)) { return; }
+
+            using (var prestoWcf = new PrestoWcf<IBaseService>())
+            {
+                prestoWcf.Service.Delete(this.SelectedAdGroupWithRoles);
+            }
+
+            this.AdGroupWithRolesList.Remove(this.SelectedAdGroupWithRoles);
+
+            ViewModelUtility.MainWindowViewModel.AddUserMessage("AD group deleted.");
+
+            RefreshGroupList();
         }
 
         private void RefreshGroupList()

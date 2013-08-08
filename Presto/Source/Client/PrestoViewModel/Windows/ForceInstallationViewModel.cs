@@ -60,7 +60,7 @@ namespace PrestoViewModel.Windows
         {
             get
             {
-                return ViewModelUtility._allowedEnvironments;
+                return ViewModelUtility.AllowedEnvironments;
             }
         }
 

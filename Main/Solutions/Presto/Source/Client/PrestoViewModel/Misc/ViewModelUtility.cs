@@ -65,6 +65,13 @@ namespace PrestoViewModel.Misc
                     {
                         _adInfo = prestoWcf.Service.GetActiveDirectoryInfo();
                     }
+
+                    // If it's still null after making the WCF call, create it with security set to false.
+                    // We do this so we don't keep trying to get this information repeatedly during view/view-model binding.
+                    if (_adInfo == null)
+                    {
+                        _adInfo = new ActiveDirectoryInfo() {SecurityEnabled = false};
+                    }
                 }
                 return _adInfo;
             }
@@ -73,6 +80,11 @@ namespace PrestoViewModel.Misc
         private static List<InstallationEnvironment> _allEnvironments = InitializeAllEnvironments();
 
         public static List<InstallationEnvironment> _allowedEnvironments = InitializeAllowedEnvironments();
+
+        public static List<InstallationEnvironment> AllowedEnvironments
+        {
+            get { return _allowedEnvironments; }
+        }
 
         public static bool UserIsPrestoAdmin { get; private set; }
 
@@ -93,6 +105,9 @@ namespace PrestoViewModel.Misc
             // Cache the environment and access (true/false) so we don't constantly make an active directory call during view/view model binding.
 
             var allowedEnvironments = new List<InstallationEnvironment>();
+
+            // It's possible that security hasn't been set up yet, so no AdInfo will exist. Let all environments be accessed.
+            if (AdInfo == null || AdInfo.SecurityEnabled == false) { return _allEnvironments; }
 
             string domainConnection = string.Format(CultureInfo.InvariantCulture, "{0}.{1}:{2}", AdInfo.Domain, AdInfo.DomainSuffix, AdInfo.DomainPort);
             string container        = string.Format(CultureInfo.InvariantCulture, "dc={0},dc={1}", AdInfo.Domain, AdInfo.DomainSuffix);
@@ -133,9 +148,9 @@ namespace PrestoViewModel.Misc
 
         public static bool UserCanAccessEnvironment(InstallationEnvironment environment)
         {
-            if (AdInfo.SecurityEnabled == false) { return true; } // Security not enabled, so let it fly.
+            if (AdInfo == null || AdInfo.SecurityEnabled == false) { return true; } // Security not enabled, so let it fly.
 
-            return _allowedEnvironments.Exists(x => x.Name == environment.Name);
+            return AllowedEnvironments.Exists(x => x.Name == environment.Name);
         }
 
         /// <summary>

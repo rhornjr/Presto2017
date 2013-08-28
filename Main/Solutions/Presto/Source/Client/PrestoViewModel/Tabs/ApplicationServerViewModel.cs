@@ -295,7 +295,7 @@ namespace PrestoViewModel.Tabs
 
             try
             {
-                return UserHasEnvironmentRights(this.SelectedApplicationServer.InstallationEnvironment);
+                return UserHasEnvironmentRights(this.SelectedInstallationEnvironment);
             }
             catch (Exception ex)
             {

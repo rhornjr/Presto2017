@@ -9,9 +9,9 @@ namespace PrestoServer.Logic
 {
     public static class ApplicationLogic
     {
-        public static IEnumerable<Application> GetAll()
+        public static IEnumerable<Application> GetAll(bool includeArchivedApps)
         {
-            return DataAccessFactory.GetDataInterface<IApplicationData>().GetAll();
+            return DataAccessFactory.GetDataInterface<IApplicationData>().GetAll(includeArchivedApps);
         }
 
         public static Application GetByName(string name)

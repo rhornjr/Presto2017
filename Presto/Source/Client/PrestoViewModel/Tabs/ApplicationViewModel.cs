@@ -119,6 +119,8 @@ namespace PrestoViewModel.Tabs
             }
         }
 
+        public bool ShowAllApps { get; set; }
+
         public CustomVariableGroup SelectedCustomVariableGroup { get; set; }
 
         public ApplicationViewModel()
@@ -591,7 +593,7 @@ namespace PrestoViewModel.Tabs
             {
                 using (var prestoWcf = new PrestoWcf<IApplicationService>())
                 {
-                    this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications());
+                    this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications(this.ShowAllApps));
                 }
             }
             catch (Exception ex)

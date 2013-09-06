@@ -109,7 +109,7 @@ namespace PrestoViewModel.Windows
                 using (var prestoWcf = new PrestoWcf<IApplicationService>())
                 {
                     this.Applications = new Collection<Application>(
-                        prestoWcf.Service.GetAllApplications().OrderBy(x => x.Name).ToList());
+                        prestoWcf.Service.GetAllApplications(false).OrderBy(x => x.Name).ToList());
                 }
             }
             catch (SocketException ex)

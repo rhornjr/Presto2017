@@ -132,7 +132,7 @@ namespace PrestoAutomatedTests
         {
             AllInstallationSummaries = new List<InstallationSummary>();
 
-            List<Application> allApps          = new List<Application>(ApplicationLogic.GetAll());
+            List<Application> allApps          = new List<Application>(ApplicationLogic.GetAll(true));
             List<ApplicationServer> allServers = new List<ApplicationServer>(ApplicationServerLogic.GetAll());
 
             ApplicationWithOverrideVariableGroup appWithGroup;

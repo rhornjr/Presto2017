@@ -18,7 +18,7 @@ namespace PrestoServer.Data.RavenDb
         /// Gets all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Application> GetAll()
+        public IEnumerable<Application> GetAll(bool includeArchivedApps)
         {
             return ExecuteQuery<IEnumerable<Application>>(() =>
             {
@@ -28,9 +28,18 @@ namespace PrestoServer.Data.RavenDb
                     .Take(int.MaxValue))
                     .AsEnumerable().Cast<Application>();
 
-                foreach (Application app in apps) { HydrateApplication(app);                }
+                if (includeArchivedApps)
+                {
+                    foreach (Application app in apps) { HydrateApplication(app); }
 
-                return apps;
+                    return apps;
+                }
+
+                var appsNotArchived = apps.Where(x => x.Archived != true);
+
+                foreach (Application app in appsNotArchived) { HydrateApplication(app); }
+
+                return appsNotArchived;
             });
         }        
 

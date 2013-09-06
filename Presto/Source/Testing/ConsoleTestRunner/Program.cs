@@ -50,7 +50,7 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Presto responds: {0}", returnMessage);
 
-            IEnumerable<Application> apps = appService.GetAllApplications();
+            IEnumerable<Application> apps = appService.GetAllApplications(true);
 
             foreach (var app in apps)
             {

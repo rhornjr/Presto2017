@@ -11,7 +11,7 @@ namespace PrestoCommon.Interfaces
         Application GetById(string id);
 
         [OperationContract]
-        IEnumerable<Application> GetAllApplications();
+        IEnumerable<Application> GetAllApplications(bool includeArchivedApps);
 
         [OperationContract]
         Application GetByName(string name);

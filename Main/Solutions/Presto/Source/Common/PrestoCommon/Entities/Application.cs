@@ -32,6 +32,9 @@ namespace PrestoCommon.Entities
         }
 
         [DataMember]
+        public bool Archived { get; set; }
+
+        [DataMember]
         public string Version { get; set; }
 
         [DataMember]

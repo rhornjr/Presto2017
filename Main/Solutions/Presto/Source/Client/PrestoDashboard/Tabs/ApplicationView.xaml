@@ -34,11 +34,12 @@
         
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label Style="{StaticResource StandardLabel}" DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center" FontWeight="Bold"/>            
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="40" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="60" HorizontalAlignment="Center">
+                <CheckBox Content="Show all" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ShowAllApps}" />
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshApplicationsCommand}" />
-                    <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />-->
+                    <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />-->                    
                 </StackPanel>
             </StackPanel>
             <ListBox ItemsSource="{Binding Source={StaticResource SortedApplications}}" DisplayMemberPath="Name"
@@ -62,7 +63,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource StandardLabel}" Content="Selected Application" HorizontalAlignment="Center" FontWeight="Bold"/>
-
+                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" Content="Archived" IsChecked="{Binding SelectedApplication.Archived}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                
                 <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource StandardLabel}" Content="Name: "/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedApplication.Name}"/>
 

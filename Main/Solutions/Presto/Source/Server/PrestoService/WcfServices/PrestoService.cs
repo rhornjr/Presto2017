@@ -63,9 +63,9 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => ApplicationLogic.GetById(id));
         }
 
-        public IEnumerable<Application> GetAllApplications()
+        public IEnumerable<Application> GetAllApplications(bool includeArchivedApps)
         {
-            return Invoke(() => ApplicationLogic.GetAll());
+            return Invoke(() => ApplicationLogic.GetAll(includeArchivedApps));
         }
 
         public Application GetByName(string name)

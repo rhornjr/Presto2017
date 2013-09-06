@@ -31,14 +31,15 @@ namespace PrestoServer.Data.RavenDb
                 if (includeArchivedApps)
                 {
                     foreach (Application app in apps) { HydrateApplication(app); }
-
                     return apps;
                 }
 
+                // Note: We can't put this WHERE clause in the above query because the Archived
+                //       property was added after all of the other properties. It won't exist
+                //       for all apps, so we can't query by that property.
+                //       http://stackoverflow.com/a/11644645/279516
                 var appsNotArchived = apps.Where(x => x.Archived != true);
-
                 foreach (Application app in appsNotArchived) { HydrateApplication(app); }
-
                 return appsNotArchived;
             });
         }        

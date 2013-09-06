@@ -77,12 +77,17 @@ namespace PrestoCommon.Entities
             }
         }
 
+        public static void SetInstallationStartTimestamp(DateTime dateTime)
+        {
+            InstallationStartTimestamp = dateTime.ToString("yyyyMMdd.HHmmss", CultureInfo.CurrentCulture);
+        }
+
         /// <summary>
         /// Installs this instance.
         /// </summary>
         public InstallationResultContainer Install(ApplicationServer applicationServer, DateTime installationStartTime)
         {
-            InstallationStartTimestamp = installationStartTime.ToString("yyyyMMdd.hhmmss", CultureInfo.CurrentCulture);
+            SetInstallationStartTimestamp(installationStartTime);
 
             bool atLeastOneTaskFailed = false;
             int numberOfSuccessfulTasks = 0;

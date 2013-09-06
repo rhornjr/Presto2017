@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -187,6 +188,10 @@ namespace PrestoViewModel.Tabs
             // Need to get the latest app, group, and server each time we do this. The user could have made changes to them
             // since originally running this.
             RefreshAppGroupAndServer();
+
+            // This is normally set when calling Install(), but since we're not doing that
+            // here, set it explicitly.
+            ApplicationWithOverrideVariableGroup.SetInstallationStartTimestamp(DateTime.Now);
 
             foreach (TaskBase task in this.ApplicationWithGroup.Application.MainAndPrerequisiteTasks)
             {

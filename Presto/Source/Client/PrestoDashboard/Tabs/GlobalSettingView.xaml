@@ -24,6 +24,7 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -54,7 +55,6 @@
             <Border Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1">
                 <Label Content="The version string of the application being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
-
             <Border Grid.Column="0" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
                 <TextBox IsReadOnly="True" Text="$(sys:serverName)" HorizontalAlignment="Right" Margin="8"/>
             </Border>
@@ -62,10 +62,17 @@
                 <Label Content="The name of the server where the application is being installed" Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
             <Border Grid.Column="0" Grid.Row="5" BorderBrush="Black" BorderThickness="1">
-                <Button Content="Self-updater" Width="100" HorizontalAlignment="Right" IsEnabled="False"
-                        Style="{StaticResource StandardButton}" Command="{Binding UpdateSelfUpdaterCommand}" />
+                <TextBox IsReadOnly="True" Text="$(sys:installationTimestamp)" HorizontalAlignment="Right" Margin="8"/>
             </Border>
             <Border Grid.Column="1" Grid.Row="5" BorderBrush="Black" BorderThickness="1">
+                <Label Content="Installation start time (yyyyMMdd.hhmmss). Unique value for an installation."
+                       Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
+            </Border>
+            <Border Grid.Column="0" Grid.Row="6" BorderBrush="Black" BorderThickness="1">
+                <Button Content="Self-updater" Width="100" HorizontalAlignment="Right" IsEnabled="False"
+                        Style="{StaticResource StandardButton}" Command="{Binding UpdateSelfUpdaterCommand}" />
+            </Border>            
+            <Border Grid.Column="1" Grid.Row="6" BorderBrush="Black" BorderThickness="1">
                 <Label Content="Updates the self-updating service host on every server. Disabled until future release."
                        Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>

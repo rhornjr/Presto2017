@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using PrestoCommon.EntityHelperClasses;
@@ -18,6 +19,17 @@ namespace PrestoCommon.Entities
         private bool _enabled;
         private Application _application;
         private CustomVariableGroup _customVariableGroup;
+
+        /// <summary>
+        /// For each installation, this is set to the installation start time. It is used as a unique
+        /// indentifer for each installation so that it can be used in custom variables. The original
+        /// need for this was to create backups during a deployment. That way one task can create a
+        /// backup folder (say c:\backup\app\20130906.112004), and the rest of the tasks can also 
+        /// refer to that same folder.
+        /// The format of this property is: "yyyyMMdd.hhmmss".
+        /// </summary>
+        [JsonIgnore] // Only necessary in memory during a deployment
+        public static string InstallationStartTimestamp { get; set; }
 
         [DataMember]
         public bool Enabled
@@ -68,8 +80,10 @@ namespace PrestoCommon.Entities
         /// <summary>
         /// Installs this instance.
         /// </summary>
-        public InstallationResultContainer Install(ApplicationServer applicationServer)
+        public InstallationResultContainer Install(ApplicationServer applicationServer, DateTime installationStartTime)
         {
+            InstallationStartTimestamp = installationStartTime.ToString("yyyyMMdd.hhmmss", CultureInfo.CurrentCulture);
+
             bool atLeastOneTaskFailed = false;
             int numberOfSuccessfulTasks = 0;
             InstallationResultContainer installationResultContainer = new InstallationResultContainer();

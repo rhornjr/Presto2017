@@ -14,9 +14,11 @@ namespace PrestoServer.Misc
         {
             if (appWithGroup == null) { throw new ArgumentNullException("appWithGroup"); }
 
-            InstallationSummary installationSummary = new InstallationSummary(appWithGroup, server, DateTime.Now);
+            DateTime installationStartTime = DateTime.Now;
 
-            InstallationResultContainer resultContainer = appWithGroup.Install(server);
+            var installationSummary = new InstallationSummary(appWithGroup, server, installationStartTime);
+
+            InstallationResultContainer resultContainer = appWithGroup.Install(server, installationStartTime);
 
             installationSummary.SetResults(resultContainer, DateTime.Now);
 

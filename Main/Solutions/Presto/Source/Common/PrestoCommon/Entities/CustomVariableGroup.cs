@@ -124,9 +124,10 @@ namespace PrestoCommon.Entities
         private static void AddSystemVariables(List<CustomVariable> allCustomVariables, ApplicationServer applicationServer,
             ApplicationWithOverrideVariableGroup appWithOverrideGroup)
         {
-            allCustomVariables.Add(new CustomVariable() { Key = "sys:applicationName",    Value = appWithOverrideGroup.Application.Name });
-            allCustomVariables.Add(new CustomVariable() { Key = "sys:applicationVersion", Value = appWithOverrideGroup.Application.Version });
-            allCustomVariables.Add(new CustomVariable() { Key = "sys:serverName",         Value = applicationServer.Name });
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:applicationName",       Value = appWithOverrideGroup.Application.Name });
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:applicationVersion",    Value = appWithOverrideGroup.Application.Version });
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:serverName",            Value = applicationServer.Name });
+            allCustomVariables.Add(new CustomVariable() { Key = "sys:installationTimestamp", Value = ApplicationWithOverrideVariableGroup.InstallationStartTimestamp });
         }
 
         private static void AddRangeOverride(List<CustomVariable> allCustomVariables, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)

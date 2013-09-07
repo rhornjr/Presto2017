@@ -22,7 +22,7 @@
             router.mapNav('ping');
             router.mapNav('global');
             router.mapNav('security');
-            log('Hot Towel SPA Loaded!', null, true);
+            log('Presto loaded!', null, true);
             return router.activate('apps');
         }
 

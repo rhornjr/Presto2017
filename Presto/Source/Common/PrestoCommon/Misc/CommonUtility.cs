@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
+using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 using Xanico.Core;
 using Xanico.Core.Email;
 using Xanico.Core.Security;
@@ -15,10 +17,26 @@ namespace PrestoCommon.Misc
     public static class CommonUtility
     {
         private static UnityContainer _container = new UnityContainer();
+        private static string _signalRAddress;
 
         public static UnityContainer Container
         {
             get { return _container; }
+        }
+
+        public static string SignalRAddress
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_signalRAddress))
+                {
+                    using (var prestoWcf = new PrestoWcf<IBaseService>())
+                    {
+                        _signalRAddress = prestoWcf.Service.GetSignalRAddress();
+                    }
+                }
+                return _signalRAddress;
+            }
         }
 
         public static ApplicationWithOverrideVariableGroup GetAppWithGroup(

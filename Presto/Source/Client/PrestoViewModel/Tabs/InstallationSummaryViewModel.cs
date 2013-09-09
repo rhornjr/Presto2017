@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.AspNet.SignalR.Client.Hubs;
@@ -13,7 +12,6 @@ using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
-using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -120,8 +118,7 @@ namespace PrestoViewModel.Tabs
 
         private void InitializeSignalR()
         {
-            var signalrAddress = ConfigurationManager.AppSettings["signalrAddress"];
-            var hubConnection = new HubConnection(signalrAddress);
+            var hubConnection = new HubConnection(CommonUtility.SignalRAddress);
             var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
             prestoHubProxy.On("OnInstallationSummaryAdded", OnInstallationSummaryAdded);
             hubConnection.Start();

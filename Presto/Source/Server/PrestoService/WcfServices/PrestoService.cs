@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.ServiceModel;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -52,6 +53,11 @@ namespace PrestoWcfService.WcfServices
                 GlobalSettingLogic.Save(globalSetting);
                 return globalSetting;
             });
+        }
+
+        public string GetSignalRAddress()
+        {
+            return ConfigurationManager.AppSettings["signalrAddress"];
         }
 
         #endregion

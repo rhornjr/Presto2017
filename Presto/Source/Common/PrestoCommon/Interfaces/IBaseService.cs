@@ -24,5 +24,8 @@ namespace PrestoCommon.Interfaces
 
         [OperationContract]
         GlobalSetting SaveGlobalSetting(GlobalSetting globalSetting);
+
+        [OperationContract]
+        string GetSignalRAddress();
     }
 }

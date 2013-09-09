@@ -65,7 +65,7 @@
                 <TextBox IsReadOnly="True" Text="$(sys:installationTimestamp)" HorizontalAlignment="Right" Margin="8"/>
             </Border>
             <Border Grid.Column="1" Grid.Row="5" BorderBrush="Black" BorderThickness="1">
-                <Label Content="Installation start time (yyyyMMdd.hhmmss). Unique value for an installation."
+                <Label Content="Installation start time (yyyyMMdd.HHmmss). Unique value for an installation."
                        Style="{StaticResource StandardLabel}" HorizontalAlignment="Left" Margin="8"/>
             </Border>
             <Border Grid.Column="0" Grid.Row="6" BorderBrush="Black" BorderThickness="1">

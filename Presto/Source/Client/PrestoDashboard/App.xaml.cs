@@ -46,8 +46,7 @@ namespace PrestoDashboard
 
         private static void InitializeSignalR()
         {
-            var signalrAddress = ConfigurationManager.AppSettings["signalrAddress"];
-            var hubConnection = new HubConnection(signalrAddress);
+            var hubConnection = new HubConnection(CommonUtility.SignalRAddress);
             var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
             prestoHubProxy.On<string>("OnSignalRMessage", OnSignalRMessage);
             hubConnection.Start();

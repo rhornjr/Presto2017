@@ -22,6 +22,7 @@
             router.mapNav('ping');
             router.mapNav('global');
             router.mapNav('security');
+            //router.mapRoute('security', null, 'Security', false);
             log('Presto loaded!', null, true);
             return router.activate('apps');
         }

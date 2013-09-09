@@ -13,6 +13,7 @@ namespace PrestoWeb
             bundles.Add(
               new ScriptBundle("~/scripts/vendor")
                 .Include("~/scripts/jquery-{version}.js")
+                .Include("~/scripts/jquery.mobile-{version}.js")
                 .Include("~/scripts/knockout-{version}.debug.js")
                 .Include("~/scripts/sammy-{version}.js")
                 .Include("~/scripts/toastr.js")
@@ -25,6 +26,9 @@ namespace PrestoWeb
             bundles.Add(
               new StyleBundle("~/Content/css")
                 .Include("~/Content/ie10mobile.css")
+                .Include("~/Content/jquery.mobile-{version}.css")
+                .Include("~/Content/jquery.mobile.structure-{version}.css")
+                .Include("~/Content/jquery.mobile.theme-{version}.css")
                 .Include("~/Content/bootstrap.css")
                 .Include("~/Content/bootstrap-responsive.css")
                 .Include("~/Content/durandal.css")

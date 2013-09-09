@@ -220,10 +220,21 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\durandal.css" />
     <Content Include="Content\ie10mobile.css" />
+    <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\icon.png" />
+    <Content Include="Content\images\icons-18-black.png" />
+    <Content Include="Content\images\icons-18-white.png" />
+    <Content Include="Content\images\icons-36-black.png" />
+    <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\wizard1.ico" />
+    <Content Include="Content\jquery.mobile-1.3.2.css" />
+    <Content Include="Content\jquery.mobile-1.3.2.min.css" />
+    <Content Include="Content\jquery.mobile.structure-1.3.2.css" />
+    <Content Include="Content\jquery.mobile.structure-1.3.2.min.css" />
+    <Content Include="Content\jquery.mobile.theme-1.3.2.css" />
+    <Content Include="Content\jquery.mobile.theme-1.3.2.min.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
@@ -236,6 +247,8 @@
     <Content Include="Scripts\breeze.min.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\jquery.mobile-1.3.2.js" />
+    <Content Include="Scripts\jquery.mobile-1.3.2.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -259,6 +272,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\HotTowel\index.cshtml" />
     <Content Include="Views\HotTowel\_splash.cshtml" />
+    <Content Include="Scripts\jquery.mobile-1.3.2.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

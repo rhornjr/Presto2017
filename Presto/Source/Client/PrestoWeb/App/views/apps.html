@@ -9,11 +9,26 @@
             <br/>
         </div>
     </header>    
-    <section data-bind="foreach: apps" class="media-list">
-        <article>
+        <!--<section data-bind="foreach: apps" class="media-list">-->
+    <!--<article>
             <div>
                 <address data-bind="text: Name"></address>
             </div>
-        </article>
-    </section>
+        </article>-->
+
+    <!-- From http://view.jquerymobile.com/1.3.2/dist/demos/widgets/listviews/#&ui-state=dialog-->
+    
+    <!--<ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true" data-bind="foreach: apps">-->
+        <!--<li><address data-bind="text: Name"></address></li>-->
+    <!--</ul>-->
+    <ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
+        <li><a href="index.html">Adam Kinkaid</a></li>
+        <li><a href="index.html">Alex Wickerham</a></li>
+        <li><a href="index.html">Avery Johnson</a></li>
+        <li><a href="index.html">Bob Cabot</a></li>
+        <li><a href="index.html">Caleb Booth</a></li>
+        <li><a href="index.html">Christopher Adams</a></li>
+        <li><a href="index.html">Culver James</a></li>
+    </ul>
+        <!--</section>-->
 </section>

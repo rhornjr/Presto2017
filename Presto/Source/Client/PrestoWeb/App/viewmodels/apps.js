@@ -24,7 +24,7 @@
 
     // Got the idea to use canActivate from http://stackoverflow.com/a/18679833/279516.
     function canActivate() {
-        if (initialized) { router.navigateTo("#/ping"); return false; }
+        // if (initialized) { router.navigateTo("#/ping"); return false; }  // testing
 
         return true;
     }

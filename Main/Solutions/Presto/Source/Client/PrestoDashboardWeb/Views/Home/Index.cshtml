@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrestoCommon.Entities.Application>
+﻿@model PrestoDashboardWeb.Models.EntityContainer
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -22,7 +22,7 @@
             <ul>
                 <li onclick="showApps()"><a href="#" class="ui-btn-active">Apps</a></li>
                 <li onclick="showServers()"><a href="#">Servers</a></li>
-                <li><a href="#">Variables</a></li>
+                <li onclick="showVariableGroups()"><a href="#">Variables</a></li>
                 <li><a href="#">Resolve</a></li>
                 <li><a href="#">Installs</a></li>
                 <li><a href="#">Log</a></li>
@@ -37,16 +37,20 @@
         </div>
 
         <div id="appList">
-            @Html.Partial("~/Views/PartialViews/AppList.cshtml", Model)
+            @Html.Partial("~/Views/PartialViews/AppList.cshtml", Model.Applications)
         </div>
       
         <div id="serverList">
-            @Html.Partial("~/Views/PartialViews/ServerList.cshtml")
+            @Html.Partial("~/Views/PartialViews/ServerList.cshtml", Model.Servers)
+        </div>
+        
+        <div id="variableGroupList">
+            @Html.Partial("~/Views/PartialViews/VariableGroupList.cshtml", Model.VariableGroups)
         </div>
     </body>
     <script>
         $(function () {
-            $('#serverList').hide();
+            showApps();
         });
 
         function showApps() {
@@ -59,9 +63,15 @@
             $('#serverList').show();
         }
 
+        function showVariableGroups() {
+            hideAll();
+            $('#variableGroupList').show();
+        }
+
         function hideAll() {
             $('#appList').hide();
             $('#serverList').hide();
+            $('#variableGroupList').hide();
         }
     </script>
 </html>

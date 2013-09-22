@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using PrestoCommon.Entities;
+using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 
 namespace PrestoDashboardWeb.Controllers
 {
@@ -10,9 +11,23 @@ namespace PrestoDashboardWeb.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            var apps = new List<Application>();
 
-            return View();
+            //var app1 = new Application() { Name = "app1", Archived = false, Version = "1.0", Etag = Guid.NewGuid() };
+            //var app2 = new Application() { Name = "app2", Archived = false, Version = "2.0", Etag = Guid.NewGuid() };
+            //var app3 = new Application() { Name = "app3", Archived = false, Version = "3.0", Etag = Guid.NewGuid() };
+            //var app4 = new Application() { Name = "bapp4", Archived = false, Version = "4.0", Etag = Guid.NewGuid() };
+            //apps.Add(app1);
+            //apps.Add(app2);
+            //apps.Add(app3);
+            //apps.Add(app4);
+
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                apps = prestoWcf.Service.GetAllApplications(true).ToList();
+            }
+
+            return View(apps);
         }
 
         public ActionResult About()

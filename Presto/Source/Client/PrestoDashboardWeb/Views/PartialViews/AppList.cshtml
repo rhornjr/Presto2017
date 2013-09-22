@@ -1,0 +1,8 @@
+﻿@model IEnumerable<PrestoCommon.Entities.Application>
+
+<ul data-role="listview" data-autodividers="true" @*data-filter="true"*@ data-count-theme="c" data-inset="true">
+    @foreach (var app in Model)
+    { 
+        <li><a href="#snuh">@app.Name</a></li>
+    }
+</ul>

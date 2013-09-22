@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
+using PrestoDashboardWeb.Models;
 
 namespace PrestoDashboardWeb.Controllers
 {
@@ -11,7 +10,7 @@ namespace PrestoDashboardWeb.Controllers
     {
         public ActionResult Index()
         {
-            var apps = new List<Application>();
+            var container = new EntityContainer();
 
             //var app1 = new Application() { Name = "app1", Archived = false, Version = "1.0", Etag = Guid.NewGuid() };
             //var app2 = new Application() { Name = "app2", Archived = false, Version = "2.0", Etag = Guid.NewGuid() };
@@ -24,10 +23,20 @@ namespace PrestoDashboardWeb.Controllers
 
             using (var prestoWcf = new PrestoWcf<IApplicationService>())
             {
-                apps = prestoWcf.Service.GetAllApplications(true).ToList();
+                container.Applications = prestoWcf.Service.GetAllApplications(true).OrderBy(x => x.Name);
             }
 
-            return View(apps);
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                container.Servers = prestoWcf.Service.GetAllServersSlim().OrderBy(x => x.Name);
+            }
+
+            using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+            {
+                container.VariableGroups = prestoWcf.Service.GetAllGroups().OrderBy(x => x.Name);
+            }
+
+            return View(container);
         }
 
         public ActionResult About()

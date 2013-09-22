@@ -3,7 +3,7 @@
 <!-- Note: Instead of receiving a list of entities, receive nothing. Only when this partial view is
            shown, load the entities. That way we don't load them all at once. -->
 
-<ul data-role="listview" data-autodividers="true" @*data-filter="true"*@ data-count-theme="c" data-inset="true">
+<ul data-role="listview" data-autodividers="true" @*data-filter="true"*@ data-count-theme="c" data-inset="true" data-divider-theme="d">
     @foreach (var server in Model)
     { 
         <li><a href="#snuh">@server.Name</a></li>

@@ -14,8 +14,9 @@
 
     <body>
       
-        <div data-role="header" data-theme="b">
-            <h1>Presto</h1>
+        <div data-role="header" data-theme="a">
+            <img src="~/Content/images/wizard1.ico" height="48" width="48" style="float: right"/>
+            <h1 style="font-size: 32px">Presto</h1>
         </div>
 
         <div data-role="navbar" data-grid="d">
@@ -32,8 +33,8 @@
             </ul>
         </div><!-- /navbar -->
       
-        <div data-role="header">
-            <h1>---</h1>
+        <div data-role="header" data-theme="b">
+            <h1 id="selectedTab"><span>Apps</span></h1>
         </div>
 
         <div id="appList">
@@ -56,16 +57,19 @@
         function showApps() {
             hideAll();
             $('#appList').show();
+            $('#selectedTab').text('Apps');
         }
 
         function showServers() {
             hideAll();
             $('#serverList').show();
+            $('#selectedTab').text('Servers');
         }
 
         function showVariableGroups() {
             hideAll();
             $('#variableGroupList').show();
+            $('#selectedTab').text('Variable Groups');
         }
 
         function hideAll() {

@@ -1,0 +1,14 @@
+﻿@*@model PrestoCommon.Entities.Application*@
+
+<div onclick="showId()">Click here to see the app ID (as a test).</div>
+
+<script>
+    $(function() {
+        // Note: This will execute as soon as the main page is loaded. The partial views
+        //       initialize right away. Need to decide if (and how) I want to change this.
+    });
+
+    function showId() {
+        alert($('#txtAppId').val());  // Just show the ID for testing.
+    }
+</script>

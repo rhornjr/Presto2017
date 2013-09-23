@@ -273,6 +273,7 @@
     <Content Include="Views\PartialViews\AppList.cshtml" />
     <Content Include="Views\PartialViews\ServerList.cshtml" />
     <Content Include="Views\PartialViews\VariableGroupList.cshtml" />
+    <Content Include="Views\PartialViews\App.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

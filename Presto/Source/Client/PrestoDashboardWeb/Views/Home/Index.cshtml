@@ -10,12 +10,13 @@
     <script src="~/Scripts/jquery-1.8.2.min.js"></script>
     <script src="~/Scripts/jquery.mobile-1.3.2.min.js"></script>
     <title>Presto</title>
+    
     </head>
 
     <body>
       
         <div data-role="header" data-theme="a">
-            <img src="~/Content/images/wizard1.ico" height="48" width="48" style="float: right"/>
+            <img src="~/Content/images/wizard1.ico" height="48" width="48" style="display: block; float: right;"/>
             <h1 style="font-size: 32px">Presto</h1>
         </div>
 
@@ -33,6 +34,8 @@
             </ul>
         </div><!-- /navbar -->
       
+        <input type="hidden" id="txtAppId" />
+
         <div data-role="header" data-theme="b">
             <h1 id="selectedTab"><span>Apps</span></h1>
         </div>
@@ -48,7 +51,12 @@
         <div id="variableGroupList">
             @Html.Partial("~/Views/PartialViews/VariableGroupList.cshtml", Model.VariableGroups)
         </div>
-    </body>
+        
+        <div id="app">
+            @Html.Partial("~/Views/PartialViews/App.cshtml")
+        </div>
+    </body>    
+    
     <script>
         $(function () {
             showApps();
@@ -76,6 +84,15 @@
             $('#appList').hide();
             $('#serverList').hide();
             $('#variableGroupList').hide();
+
+            $('#app').hide();
         }
-    </script>
+
+        function showApp(id) {
+            hideAll();
+            $('#txtAppId').val(id);  // Store the app ID so the app view can load the app
+            $('#app').show();
+            $('#selectedTab').text('App');            
+        }
+    </script>    
 </html>

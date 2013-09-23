@@ -3,6 +3,6 @@
 <ul data-role="listview" data-autodividers="true" @*data-filter="true"*@ data-count-theme="c" data-inset="true" data-divider-theme="d">
     @foreach (var app in Model)
     { 
-        <li><a href="#snuh">@app.Name</a></li>
+        <li onclick="showApp('@app.Id');"><a href="#">@app.Name</a></li>
     }
 </ul>

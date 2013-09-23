@@ -1,14 +1,31 @@
 ﻿@*@model PrestoCommon.Entities.Application*@
 
-<div onclick="showId()">Click here to see the app ID (as a test).</div>
-
 <script>
     $(function() {
-        // Note: This will execute as soon as the main page is loaded. The partial views
-        //       initialize right away. Need to decide if (and how) I want to change this.
+        // Note: This will execute as soon as the main page is loaded.
     });
 
-    function showId() {
-        alert($('#txtAppId').val());  // Just show the ID for testing.
+    function appInitialize(id) {
+        $('#selectedTab').text(id);  // Show the name of the app in the header
+        $('#text-14').val(id);  // Just show the ID for testing.
     }
 </script>
+
+<form>
+    <div data-role="fieldcontain">
+         <label for="text-14">Text input:</label>
+         <input type="text" data-mini="true" name="text-14" id="text-14" value="">
+    </div>
+    <div data-role="fieldcontain">
+         <label for="text-15">Text input: data-clear-btn="true"</label>
+         <input type="text" data-clear-btn="true" data-mini="true" name="text-15" id="text-15" value="">
+    </div>
+    <div data-role="fieldcontain">
+     <label for="search-9">Search:</label>
+     <input type="search" data-mini="true" name="search-9" id="search-9" value="">
+    </div>
+    <div data-role="fieldcontain">
+    <label for="textarea-14">Textarea:</label>
+    <textarea data-mini="true" cols="40" rows="8" name="textarea-14" id="textarea-14"></textarea>
+    </div>
+</form>

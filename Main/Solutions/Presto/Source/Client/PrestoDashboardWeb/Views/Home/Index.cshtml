@@ -34,8 +34,6 @@
             </ul>
         </div><!-- /navbar -->
       
-        <input type="hidden" id="txtAppId" />
-
         <div data-role="header" data-theme="b">
             <h1 id="selectedTab"><span>Apps</span></h1>
         </div>
@@ -84,15 +82,13 @@
             $('#appList').hide();
             $('#serverList').hide();
             $('#variableGroupList').hide();
-
             $('#app').hide();
         }
 
         function showApp(id) {
             hideAll();
-            $('#txtAppId').val(id);  // Store the app ID so the app view can load the app
-            $('#app').show();
-            $('#selectedTab').text('App');            
+            $('#app').show();            
+            window.appInitialize(id);
         }
     </script>    
 </html>

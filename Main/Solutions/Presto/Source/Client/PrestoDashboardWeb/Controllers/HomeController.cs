@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 using PrestoDashboardWeb.Models;
@@ -37,6 +38,21 @@ namespace PrestoDashboardWeb.Controllers
             }
 
             return View(container);
+        }
+
+        [HttpPost]
+        public ActionResult GetAppById(string appId)
+        {
+            Application app = null;
+
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                app = prestoWcf.Service.GetById(appId);
+            }
+
+            JsonResult jsonResult = new JsonResult();
+            jsonResult.Data = app;
+            return jsonResult;
         }
 
         public ActionResult About()

@@ -6,26 +6,42 @@
     });
 
     function appInitialize(id) {
-        $('#selectedTab').text(id);  // Show the name of the app in the header
-        $('#text-14').val(id);  // Just show the ID for testing.
+        $.post('/Home/GetAppById',
+            { appId: id },
+            OnAppRetrieved);
+    }
+
+    function OnAppRetrieved(app) {
+        $('#selectedTab').text(app.Name);  // Show the name of the app in the header
+        $('#txtAppName').val(app.Name);
+        $('#txtAppVersion').val(app.Version);
+        $('#txtAppForce').val(app.NameForceInstallation);
+
+        // Add the tasks to the task listview.
+        var items = [];
+        $.each(app.Tasks, function (task) {
+            items.push('<li><a href="#">' + task.Description + '</a></li>');  // This renders as undefined. Because JavaScript doesn't understand ObservableCollection<>?
+        });
+        $('#appTasks').append(items).listview('refresh');  // Need to refresh to get the new items to use the jQuery Mobile formatting
     }
 </script>
 
 <form>
     <div data-role="fieldcontain">
-         <label for="text-14">Text input:</label>
-         <input type="text" data-mini="true" name="text-14" id="text-14" value="">
+         <label for="txtAppName">Name:</label>
+         <input type="text" data-mini="true" name="text-14" id="txtAppName" value="">
     </div>
     <div data-role="fieldcontain">
-         <label for="text-15">Text input: data-clear-btn="true"</label>
-         <input type="text" data-clear-btn="true" data-mini="true" name="text-15" id="text-15" value="">
+         <label for="txtAppVersion">Version</label>
+         <input type="text" data-clear-btn="true" data-mini="true" name="text-15" id="txtAppVersion" value="">
     </div>
     <div data-role="fieldcontain">
-     <label for="search-9">Search:</label>
-     <input type="search" data-mini="true" name="search-9" id="search-9" value="">
+        <label for="txtAppForce">Force:</label>
+        <input type="text" data-mini="true" name="text-14" id="txtAppForce" value="">
     </div>
-    <div data-role="fieldcontain">
-    <label for="textarea-14">Textarea:</label>
-    <textarea data-mini="true" cols="40" rows="8" name="textarea-14" id="textarea-14"></textarea>
-    </div>
+    
+    <ul id="appTasks" data-role="listview" data-inset="true">
+        <li><a href="#">Acura</a></li>
+        <li><a href="#">BMW</a></li>
+    </ul>
 </form>

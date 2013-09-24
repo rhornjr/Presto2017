@@ -18,11 +18,24 @@
         $('#txtAppForce').val(app.NameForceInstallation);
 
         // Add the tasks to the task listview.
+        // First, sort the tasks by the Sequence property.
+        var tasks = app.Tasks;
+        tasks.sort(SortBySequence);
+
+        // Now add the tasks to an array...
         var items = [];
-        $.each(app.Tasks, function (task) {
+        $.each(tasks, function (index, task) {
             items.push('<li><a href="#">' + task.Description + '</a></li>');  // This renders as undefined. Because JavaScript doesn't understand ObservableCollection<>?
         });
+        
+        // ... and apply all of the tasks to the listview at one time.
         $('#appTasks').append(items).listview('refresh');  // Need to refresh to get the new items to use the jQuery Mobile formatting
+    }
+
+    function SortBySequence(a, b) {
+        var aSequence = a.Sequence;
+        var bSequence = b.Sequence;
+        return ((aSequence < bSequence) ? -1 : ((aSequence > bSequence) ? 1 : 0));
     }
 </script>
 
@@ -41,7 +54,5 @@
     </div>
     
     <ul id="appTasks" data-role="listview" data-inset="true">
-        <li><a href="#">Acura</a></li>
-        <li><a href="#">BMW</a></li>
     </ul>
 </form>

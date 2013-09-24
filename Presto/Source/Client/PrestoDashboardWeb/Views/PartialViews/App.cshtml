@@ -1,11 +1,14 @@
-﻿@*@model PrestoCommon.Entities.Application*@
-
-<script>
+﻿<script>
     $(function() {
         // Note: This will execute as soon as the main page is loaded.
     });
 
     function appInitialize(id) {
+
+        // Clear the <ul> elements
+        $("#appTasks").empty();
+        $("#appGroups").empty();
+
         $.post('/Home/GetAppById',
             { appId: id },
             OnAppRetrieved);
@@ -17,6 +20,11 @@
         $('#txtAppVersion').val(app.Version);
         $('#txtAppForce').val(app.NameForceInstallation);
 
+        displayTasks(app);
+        displayVariableGroups(app);
+    }
+
+    function displayTasks(app) {
         // Add the tasks to the task listview.
         // First, sort the tasks by the Sequence property.
         var tasks = app.Tasks;
@@ -25,17 +33,35 @@
         // Now add the tasks to an array...
         var items = [];
         $.each(tasks, function (index, task) {
-            items.push('<li><a href="#">' + task.Description + '</a></li>');  // This renders as undefined. Because JavaScript doesn't understand ObservableCollection<>?
+            items.push('<li><a href="#">' + task.Description + '</a></li>');
         });
-        
+
         // ... and apply all of the tasks to the listview at one time.
         $('#appTasks').append(items).listview('refresh');  // Need to refresh to get the new items to use the jQuery Mobile formatting
+    }
+
+    function displayVariableGroups(app) {
+        var groups = app.CustomVariableGroups;
+        groups.sort(SortyByName);
+
+        var items = [];
+        $.each(groups, function(index, group) {
+            items.push('<li><a href="#">' + group.Name + '</a></li>');
+        });
+
+        $('#appGroups').append(items).listview('refresh');
     }
 
     function SortBySequence(a, b) {
         var aSequence = a.Sequence;
         var bSequence = b.Sequence;
         return ((aSequence < bSequence) ? -1 : ((aSequence > bSequence) ? 1 : 0));
+    }
+
+    function SortyByName(a, b) {
+        var aName = a.Name;
+        var bName = b.Name;
+        return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
     }
 </script>
 
@@ -53,6 +79,14 @@
         <input type="text" data-mini="true" name="text-14" id="txtAppForce" value="">
     </div>
     
-    <ul id="appTasks" data-role="listview" data-inset="true">
-    </ul>
+    <div data-role="collapsible-set" data-theme="c" data-content-theme="d">
+        <div data-role="collapsible">
+            <h3>Tasks</h3>
+            <ul id="appTasks" data-role="listview" data-inset="true" />
+        </div>
+        <div data-role="collapsible">
+            <h3>Variable Groups</h3>
+            <ul id="appGroups" data-role="listview" data-inset="true" />
+        </div>
+    </div>
 </form>

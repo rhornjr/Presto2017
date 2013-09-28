@@ -53,6 +53,10 @@
         <div id="app">
             @Html.Partial("~/Views/PartialViews/App.cshtml")
         </div>
+        
+        <div id="task">
+            @Html.Partial("~/Views/PartialViews/TaskDosCommand.cshtml")
+        </div>
     </body>    
     
     <script>
@@ -83,12 +87,19 @@
             $('#serverList').hide();
             $('#variableGroupList').hide();
             $('#app').hide();
+            $('#task').hide();
         }
 
         function showApp(id) {
             hideAll();
             $('#app').show();            
             window.appInitialize(id);
+        }
+
+        function showTask(id) {
+            hideAll();
+            $('#task').show();
+            window.taskInitialize(id);
         }
     </script>    
 </html>

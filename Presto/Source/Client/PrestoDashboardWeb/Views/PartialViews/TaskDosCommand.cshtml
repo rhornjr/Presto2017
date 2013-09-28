@@ -1,0 +1,31 @@
+﻿<script>
+    $(function() {
+        // Note: This will execute as soon as the main page is loaded.
+    });
+
+    function taskInitialize(id) {
+        alert(id);
+        // Clear the <ul> elements
+        //$("#appTasks").empty();
+        //$("#appGroups").empty();
+
+        //$.post('/Home/GetAppById',
+        //    { appId: id },
+        //    OnAppRetrieved);
+    }
+</script>
+
+<form>
+    <div data-role="fieldcontain">
+         <label for="txtAppName">Description:</label>
+         <input type="text" data-mini="true" name="text-14" id="txtDescription" value="">
+    </div>
+    <div data-role="fieldcontain">
+         <label for="txtAppVersion">Executable</label>
+         <input type="text" data-clear-btn="true" data-mini="true" name="text-15" id="txtExecutable" value="">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="txtAppForce">Parameters:</label>
+        <input type="text" data-mini="true" name="text-14" id="txtParameters" value="">
+    </div>
+</form>

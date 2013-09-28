@@ -274,6 +274,7 @@
     <Content Include="Views\PartialViews\ServerList.cshtml" />
     <Content Include="Views\PartialViews\VariableGroupList.cshtml" />
     <Content Include="Views\PartialViews\App.cshtml" />
+    <Content Include="Views\PartialViews\TaskDosCommand.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

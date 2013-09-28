@@ -33,7 +33,7 @@
         // Now add the tasks to an array...
         var items = [];
         $.each(tasks, function (index, task) {
-            items.push('<li><a href="#">' + task.Description + '</a></li>');
+            items.push('<li><a href="#" onclick="showTask(' + task.Id + ');">' + task.Description + '</a></li>');
         });
 
         // ... and apply all of the tasks to the listview at one time.

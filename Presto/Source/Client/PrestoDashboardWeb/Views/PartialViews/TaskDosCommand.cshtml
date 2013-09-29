@@ -3,15 +3,13 @@
         // Note: This will execute as soon as the main page is loaded.
     });
 
-    function taskInitialize(id) {
-        alert(id);
+    function taskInitialize(task) {
+        $('#txtDescription').val(task.Description);
+        $('#txtExecutable').val(task.DosExecutable);
+        $('#txtParameters').val(task.Parameters);
         // Clear the <ul> elements
         //$("#appTasks").empty();
         //$("#appGroups").empty();
-
-        //$.post('/Home/GetAppById',
-        //    { appId: id },
-        //    OnAppRetrieved);
     }
 </script>
 

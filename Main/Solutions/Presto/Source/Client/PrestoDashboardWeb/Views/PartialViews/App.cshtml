@@ -31,9 +31,18 @@
         tasks.sort(SortBySequence);
 
         // Now add the tasks to an array...
-        var items = [];
-        $.each(tasks, function (index, task) {
-            items.push('<li><a href="#" onclick="showTask(' + task.Id + ');">' + task.Description + '</a></li>');
+        // This approach from: http://stackoverflow.com/a/19083625/279516
+        var items = $.map(tasks, function (task) {
+            return $('<li>').append(
+                $('<a>', {
+                    href: '#',
+                    text: task.Description,
+                    click: function (e) {
+                        e.preventDefault();
+                        window.showTask(task);
+                    }
+                })
+            );
         });
 
         // ... and apply all of the tasks to the listview at one time.

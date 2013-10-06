@@ -84,16 +84,17 @@
         });
 
         function moveBack() {
-            hideAll();
             var divName = stack.pop();
-            $('#' + divName).show();
+            if (divName) {
+                hideAll();
+                $('#' + divName).show();
+            }
         }
 
         function showApps() {
             hideAll();
             $('#appList').show();
             $('#selectedTab').text('Apps');
-            stack.push('appList');
         }
 
         function showServers() {
@@ -123,11 +124,13 @@
             hideAll();
             $('#app').show();            
             window.appInitialize(id);
-            stack.push('app');
+            stack.push('appList');  // What goes here is the div we want to display when the user hits the back button.
         }
 
         function showTask(app, task) {
             hideAll();
+
+            stack.push('app');
 
             var taskDiv = $('#task' + task.PrestoTaskType);
             if (taskDiv[0]) {

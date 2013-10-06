@@ -35,7 +35,7 @@
         </div><!-- /navbar -->
       
         <div data-role="header" data-theme="b">
-            <a href="#" onclick="moveBack()" data-icon="back" style="display: block; float: left;">Go back</a>
+            <a href="#" onclick="moveBack()" data-icon="back" style="display: block; float: left;">Back</a>
             <h1 id="selectedTab"><span>Apps</span></h1>
         </div>
 
@@ -122,17 +122,17 @@
             stack.push('app');
         }
 
-        function showTask(task) {
+        function showTask(app, task) {
             hideAll();
-            
+
             var taskDiv = $('#task' + task.PrestoTaskType);
             if (taskDiv[0]) {
                 taskDiv.show();
-                window.taskInitialize(task);
+                window.taskInitialize(app, task);
                 return;
             }
 
-            alert('No task view available for  task type ' + task.PrestoTaskType);
+            alert('No task view available for task type ' + task.PrestoTaskType);
         }
     </script>    
 </html>

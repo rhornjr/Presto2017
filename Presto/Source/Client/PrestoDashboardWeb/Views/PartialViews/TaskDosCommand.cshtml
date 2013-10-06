@@ -1,15 +1,52 @@
 ﻿<script>
+    var appOrg;
+    var taskOrg;
+
     $(function() {
-        // Note: This will execute as soon as the main page is loaded.
+        // Note: This will execute as soon as the main page is loaded.        
     });
 
-    function taskInitialize(task) {
+    function taskInitialize(app, task) {
+
+        // ToDo: What I think needs to happen:
+        //       In this method, receive the app and task. Then update the task and send the
+        //       entire app to the save method.
+
+        appOrg = app;
+        taskOrg = task;
         $('#txtDescription').val(task.Description);
         $('#txtExecutable').val(task.DosExecutable);
         $('#txtParameters').val(task.Parameters);
         // Clear the <ul> elements
         //$("#appTasks").empty();
         //$("#appGroups").empty();
+    }
+
+    function saveTask() {
+        // Why do this instead of $.post()? See http://stackoverflow.com/a/15170437/279516
+        // and http://stackoverflow.com/a/15179139/279516
+
+        // For now, as a test, just update the description.
+        taskOrg.Description = $('#txtDescription').val();
+        
+        // When making this call, and including app as a parameter, this is the error:
+        //     "Cannot create an abstract class"
+        // I believe this happens because an app has a List<TaskBase>. Not sure how to solve this.
+
+        $.ajax({
+            url: '/Home/SaveTask',
+            type: 'POST',
+            data: JSON.stringify({
+                "app": appOrg,
+                "task": taskOrg
+            }),
+            contentType: "application/json",
+            success: saveComplete
+        });
+    }
+
+    function saveComplete(data) {
+        alert('Save complete: ' + data.Description);
     }
 </script>
 
@@ -25,5 +62,8 @@
     <div data-role="fieldcontain">
         <label for="txtAppForce">Parameters:</label>
         <input type="text" data-mini="true" name="text-14" id="txtParameters" value="">
+    </div>
+    <div>
+        <a href="#" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="b" onclick="saveTask()">Save</a>
     </div>
 </form>

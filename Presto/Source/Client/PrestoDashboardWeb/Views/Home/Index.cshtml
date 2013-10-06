@@ -54,8 +54,20 @@
             @Html.Partial("~/Views/PartialViews/App.cshtml")
         </div>
         
-        <div id="task">
+        <div id="task0">
+            @Html.Partial("~/Views/PartialViews/TaskCopyFile.cshtml")
+        </div>
+
+        <div id="task1">
             @Html.Partial("~/Views/PartialViews/TaskDosCommand.cshtml")
+        </div>
+        
+        <div id="task2">
+            @Html.Partial("~/Views/PartialViews/TaskXmlModify.cshtml")
+        </div>
+        
+        <div id="task3">
+            @Html.Partial("~/Views/PartialViews/TaskVersionChecker.cshtml")
         </div>
     </body>    
     
@@ -87,7 +99,10 @@
             $('#serverList').hide();
             $('#variableGroupList').hide();
             $('#app').hide();
-            $('#task').hide();
+            $('#task0').hide();
+            $('#task1').hide();
+            $('#task2').hide();
+            $('#task3').hide();
         }
 
         function showApp(id) {
@@ -98,12 +113,9 @@
 
         function showTask(task) {
             hideAll();
-            if (task.PrestoTaskType == 1) {
-                $('#task').show();
-                window.taskInitialize(task);
-                return;
-            }
-            alert('Task type not yet supported.');
+            alert(task.PrestoTaskType);
+            $('#task' + task.PrestoTaskType).show();
+            window.taskInitialize(task);
         }
     </script>    
 </html>

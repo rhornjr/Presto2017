@@ -113,9 +113,14 @@
 
         function showTask(task) {
             hideAll();
-            alert(task.PrestoTaskType);
-            $('#task' + task.PrestoTaskType).show();
-            window.taskInitialize(task);
+            
+            var taskDiv = $('#task' + task.PrestoTaskType);
+            if (taskDiv[0]) {
+                taskDiv.show();
+                window.taskInitialize(task);
+                return;
+            }
+            alert('No task view available for  task type ' + task.PrestoTaskType);
         }
     </script>    
 </html>

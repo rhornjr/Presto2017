@@ -35,6 +35,7 @@
         </div><!-- /navbar -->
       
         <div data-role="header" data-theme="b">
+            <a href="#" onclick="moveBack()" data-icon="back" style="display: block; float: left;">Go back</a>
             <h1 id="selectedTab"><span>Apps</span></h1>
         </div>
 
@@ -72,14 +73,23 @@
     </body>    
     
     <script>
+        var stack = [];
+
         $(function () {
             showApps();
         });
+
+        function moveBack() {
+            hideAll();
+            var divName = stack.pop();
+            $('#' + divName).show();
+        }
 
         function showApps() {
             hideAll();
             $('#appList').show();
             $('#selectedTab').text('Apps');
+            stack.push('appList');
         }
 
         function showServers() {
@@ -109,6 +119,7 @@
             hideAll();
             $('#app').show();            
             window.appInitialize(id);
+            stack.push('app');
         }
 
         function showTask(task) {
@@ -120,6 +131,7 @@
                 window.taskInitialize(task);
                 return;
             }
+
             alert('No task view available for  task type ' + task.PrestoTaskType);
         }
     </script>    

@@ -98,8 +98,12 @@
 
         function showTask(task) {
             hideAll();
-            $('#task').show();
-            window.taskInitialize(task);
+            if (task.PrestoTaskType == 1) {
+                $('#task').show();
+                window.taskInitialize(task);
+                return;
+            }
+            alert('Task type not yet supported.');
         }
     </script>    
 </html>

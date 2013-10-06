@@ -37,7 +37,8 @@
             url: '/Home/SaveTask',
             type: 'POST',
             data: JSON.stringify({
-                "app": appOrg,
+                "appId": appOrg.Id,
+                "eTag": appOrg.Etag,
                 "task": taskOrg
             }),
             contentType: "application/json",

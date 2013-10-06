@@ -58,22 +58,47 @@ namespace PrestoDashboardWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveTask(string app, TaskDosCommand task)  // Couldn't use TaskBase as parameter: jQuery error: Cannot create an abstract class
+        public ActionResult SaveTask(string appId, string eTag, TaskDosCommand task)  // Couldn't use TaskBase as parameter: jQuery error: Cannot create an abstract class
         {
-            // Note: When app is of type string, the parameter is null. I believe this is because the call to this
-            //       method uses JSON.stringify() and that can't create the abstract TaskBase List<TaskBase>.
-
-            // This is my exact issue: http://stackoverflow.com/q/5861241/279516
+            // Notes about this method's parameters:
+            //   We can't accept a parameter this is abstract (TaskBase) or a parameter that has abstract
+            //   types as properties (App has List<TaskBase>). This is because JSON.stringify can't
+            //   serialize these types. This is my exact issue: http://stackoverflow.com/q/5861241/279516
             // Two options:
             //   1. Use a concrete type as action parameter
             //   2. Write a custom model binder for this abstract class which based on some request parameters will return a specific instance.
 
-            // Another option is to NOT have an app parameter, but just take the app ID and eTag.
+            // Due to the above issue, we just take the app ID and eTag.
+
+            // Get the app
+            Application app;
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                app = prestoWcf.Service.GetById(appId);
+            }
+
+            // If the etag is different, don't even bother trying to save because we know the app has already been modified.
+            if (app.Etag.ToString() != eTag)
+            {
+                // ToDo: What? Throw exception?
+            }
+
+            // Now update it with the updated task. Since tasks don't have an ID, use sequence. Is this dangerous?
+            var taskDosCommand           = app.Tasks.First(x => x.Sequence == task.Sequence) as TaskDosCommand;
+            taskDosCommand.Description   = task.Description;
+            taskDosCommand.DosExecutable = task.DosExecutable;
+            taskDosCommand.Parameters    = task.Parameters;
+
+            // And save the app
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                app = prestoWcf.Service.SaveApplication(app);
+            }
 
             // Just return the task for now, to test that the call is working.
             // Note, we really should be saving the entire app.
             JsonResult jsonResult = new JsonResult();
-            jsonResult.Data = task;
+            jsonResult.Data = app;
             return jsonResult;
         }
 

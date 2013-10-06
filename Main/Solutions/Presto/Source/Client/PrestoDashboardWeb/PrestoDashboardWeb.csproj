@@ -275,6 +275,9 @@
     <Content Include="Views\PartialViews\VariableGroupList.cshtml" />
     <Content Include="Views\PartialViews\App.cshtml" />
     <Content Include="Views\PartialViews\TaskDosCommand.cshtml" />
+    <Content Include="Views\PartialViews\TaskXmlModify.cshtml" />
+    <Content Include="Views\PartialViews\TaskCopyFile.cshtml" />
+    <Content Include="Views\PartialViews\TaskVersionChecker.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

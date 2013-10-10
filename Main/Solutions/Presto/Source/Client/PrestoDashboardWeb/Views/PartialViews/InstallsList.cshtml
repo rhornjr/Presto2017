@@ -1,0 +1,8 @@
+﻿@model IEnumerable<PrestoCommon.EntityHelperClasses.InstallationSummaryDto>
+
+<ul data-role="listview" @*data-filter="true"*@ data-count-theme="c" data-inset="true" data-divider-theme="d">
+    @foreach (var install in Model)
+    { 
+        <li><a href="#">@install.ApplicationName + @install.ServerName + @install.InstallationStart + @install.Result</a></li>
+    }
+</ul>

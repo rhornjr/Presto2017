@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 using PrestoDashboardWeb.Models;
@@ -39,7 +42,38 @@ namespace PrestoDashboardWeb.Controllers
                 container.VariableGroups = prestoWcf.Service.GetAllGroups().OrderBy(x => x.Name);
             }
 
+            container.InstallationSummaries = GetInstallations();
+
             return View(container);
+        }
+
+        private static IEnumerable<InstallationSummaryDto> GetInstallations()
+        {
+            IEnumerable<InstallationSummary> installationSummaries;
+            using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+            {
+                installationSummaries = prestoWcf.Service.GetMostRecentByStartTime(50);
+            }
+
+            var installationSummaryDtos = new List<InstallationSummaryDto>();
+
+            // Just use this until we can give the user the flexibility to choose a different time zone.
+            var timeZoneHelper = new TimeZoneHelperThisComputer();
+
+            foreach (InstallationSummary installationSummary in installationSummaries)
+            {
+                InstallationSummaryDto dto = new InstallationSummaryDto();
+                dto.ApplicationName        = installationSummary.ApplicationWithOverrideVariableGroup.ToString();
+                dto.Id                     = installationSummary.Id;
+                dto.Result                 = installationSummary.InstallationResult.ToString();
+                dto.ServerName             = installationSummary.ApplicationServer.Name;
+
+                timeZoneHelper.SetStartAndEndTimes(installationSummary, dto);
+
+                installationSummaryDtos.Add(dto);
+            }
+
+            return installationSummaryDtos.OrderByDescending(x => x.InstallationStart);
         }
 
         [HttpPost]

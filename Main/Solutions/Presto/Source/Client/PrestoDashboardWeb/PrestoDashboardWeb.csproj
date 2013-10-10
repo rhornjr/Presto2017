@@ -278,6 +278,7 @@
     <Content Include="Views\PartialViews\TaskXmlModify.cshtml" />
     <Content Include="Views\PartialViews\TaskCopyFile.cshtml" />
     <Content Include="Views\PartialViews\TaskVersionChecker.cshtml" />
+    <Content Include="Views\PartialViews\InstallsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

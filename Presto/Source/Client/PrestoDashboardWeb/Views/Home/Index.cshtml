@@ -26,7 +26,7 @@
                 <li onclick="showServers()"><a href="#">Servers</a></li>
                 <li onclick="showVariableGroups()"><a href="#">Variables</a></li>
                 <li><a href="#">Resolve</a></li>
-                <li><a href="#">Installs</a></li>
+                <li onclick="showInstalls()"><a href="#">Installs</a></li>
                 <li><a href="#">Log</a></li>
                 <li><a href="#">Ping</a></li>
                 <li><a href="#">Global</a></li>
@@ -49,6 +49,10 @@
         
         <div id="variableGroupList">
             @Html.Partial("~/Views/PartialViews/VariableGroupList.cshtml", Model.VariableGroups)
+        </div>
+        
+        <div id="installsList">
+            @Html.Partial("~/Views/PartialViews/InstallsList.cshtml", Model.InstallationSummaries)
         </div>
         
         <div id="app">
@@ -109,6 +113,12 @@
             $('#selectedTab').text('Variable Groups');
         }
 
+        function showInstalls() {
+            hideAll();
+            $('#installsList').show();
+            $('#selectedTab').text('Installations');
+        }
+
         function hideAll() {
             $('#appList').hide();
             $('#serverList').hide();
@@ -118,6 +128,7 @@
             $('#task1').hide();
             $('#task2').hide();
             $('#task3').hide();
+            $('#installsList').hide();
         }
 
         function showApp(id) {

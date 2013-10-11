@@ -3,6 +3,11 @@
 <ul data-role="listview" @*data-filter="true"*@ data-count-theme="c" data-inset="true" data-divider-theme="d">
     @foreach (var install in Model)
     { 
-        <li><a href="#">@install.ApplicationName + @install.ServerName + @install.InstallationStart + @install.Result</a></li>
+        <li>
+            @install.ApplicationName<br />
+            @install.ServerName<br />
+            @install.InstallationStart - @install.InstallationEnd<br/>
+            @install.Result
+        </li>
     }
 </ul>

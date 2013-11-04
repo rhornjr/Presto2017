@@ -44,8 +44,10 @@ namespace PrestoViewModel.Tabs
             set
             {
                 _serversLoaded = value;
-                this.NotifyPropertyChanged(() => this.ServersLoaded);
+                // Need to notify ShowWaitCursor first. Otherwise, the entire grid is disabled and
+                // setting the wait cursor to visible has no effect.
                 this.NotifyPropertyChanged(() => this.ShowWaitCursor);
+                this.NotifyPropertyChanged(() => this.ServersLoaded);
             }
         }
 
@@ -580,7 +582,9 @@ namespace PrestoViewModel.Tabs
         }
 
         private void RefreshServers()
-        {            
+        {
+            ServersLoaded = false;
+
             this.LoadApplicationServers();
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage("Servers refreshed.");

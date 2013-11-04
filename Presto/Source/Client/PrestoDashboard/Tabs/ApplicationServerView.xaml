@@ -26,11 +26,16 @@
 
     </UserControl.Resources>    
     
-    <Grid>
+    <Grid IsEnabled="{Binding ServersLoaded}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="24" Visibility="{Binding ShowWaitCursor}" Panel.ZIndex="1"
+                   Foreground="White">Loading...
+        </TextBlock>
         
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Application Servers" HorizontalAlignment="Center" FontWeight="Bold"/>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -119,9 +120,13 @@ namespace PrestoViewModel.Tabs
         /// </summary>
         public ResolveVariableViewModel()
         {
+            Debug.WriteLine("ResolveVariableViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
+
+            Debug.WriteLine("ResolveVariableViewModel constructor end " + DateTime.Now);
         }
 
         private void Initialize()

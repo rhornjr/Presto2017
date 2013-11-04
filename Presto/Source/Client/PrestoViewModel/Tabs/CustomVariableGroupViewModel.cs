@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -15,7 +17,6 @@ using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
-using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -93,12 +94,16 @@ namespace PrestoViewModel.Tabs
 
         public CustomVariableGroupViewModel()
         {
+            Debug.WriteLine("CustomVariableGroupViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
+
+            Debug.WriteLine("CustomVariableGroupViewModel constructor end " + DateTime.Now);
         }
         
-        private void Initialize()
+        private async Task Initialize()
         {
             this.AddVariableGroupCommand     = new RelayCommand(AddVariableGroup);
             this.DeleteVariableGroupCommand  = new RelayCommand(DeleteVariableGroup, CustomVariableGroupIsSelectedMethod);
@@ -111,9 +116,11 @@ namespace PrestoViewModel.Tabs
             this.EditVariableCommand   = new RelayCommand(EditVariable, CustomVariableIsSelected);
             this.DeleteVariableCommand = new RelayCommand(DeleteVariable, CustomVariableIsSelected);
 
-            LoadCustomVariableGroups();
-
-            InitializeCustomVariableGroupsCollectionView();
+            await Task.Run(() =>
+            {
+                LoadCustomVariableGroups();
+                InitializeCustomVariableGroupsCollectionView();
+            });
         }
 
         private void InitializeCustomVariableGroupsCollectionView()

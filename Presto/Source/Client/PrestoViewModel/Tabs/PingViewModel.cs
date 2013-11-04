@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
-using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -20,10 +21,10 @@ namespace PrestoViewModel.Tabs
     /// Helper class/DTO/wrapper from view model to view.
     /// </summary>
     public class ServerPingDto : NotifyPropertyChangedBase
-    {
+    {        
         private ApplicationServer _applicationServer;
         private DateTime? _responseTime;
-        private string _comment;
+        private string _comment;      
 
         /// <summary>
         /// Gets or sets the application server.
@@ -84,12 +85,23 @@ namespace PrestoViewModel.Tabs
     {
         private const int TotalTimerRunTimeInMinutes = 1;  // Keep refreshing automatically for a minute (after a ping request).
 
+        private bool _pingsLoaded;
         private Timer _timer;
         private DateTime _timerStartTime;        
         private AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private static readonly object _locker = new object();
         private PingRequest _pingRequest;
-        private ObservableCollection<ServerPingDto> _serverPingDtoList;
+        private PrestoObservableCollection<ServerPingDto> _serverPingDtoList;
+
+        public System.Windows.Visibility ShowWaitCursor
+        {
+            get
+            {
+                if (_pingsLoaded) { return System.Windows.Visibility.Hidden; }
+                return System.Windows.Visibility.Visible;
+            }
+        }
 
         /// <summary>
         /// Gets the ping command.
@@ -129,27 +141,17 @@ namespace PrestoViewModel.Tabs
         /// <summary>
         /// Gets the server ping DTO list.
         /// </summary>
-        public ObservableCollection<ServerPingDto> ServerPingDtoList
+        public PrestoObservableCollection<ServerPingDto> ServerPingDtoList
         {
             get
             {
-                if (this._serverPingDtoList == null)
-                {
-                    this._serverPingDtoList = new ObservableCollection<ServerPingDto>();
-
-                    IEnumerable allServers;
-                    using (var prestoWcf = new PrestoWcf<IServerService>())
-                    {
-                        allServers = prestoWcf.Service.GetAllServers();
-                    }
-
-                    foreach (ApplicationServer server in allServers)
-                    {
-                        this._serverPingDtoList.Add(new ServerPingDto() { ApplicationServer = server });
-                    }
-                }
-
                 return this._serverPingDtoList;
+            }
+
+            set
+            {
+                this._serverPingDtoList = value;
+                NotifyPropertyChanged(() => this._serverPingDtoList);
             }
         }
 
@@ -158,17 +160,21 @@ namespace PrestoViewModel.Tabs
         /// </summary>
         public PingViewModel()
         {
+            Debug.WriteLine("PingViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
+
+            Debug.WriteLine("PingViewModel constructor end " + DateTime.Now);
         }
 
-        private void Initialize()
+        private async void Initialize()
         {
             this.RefreshCommand = new RelayCommand(_ => Refresh(null));
             this.PingCommand    = new RelayCommand(Ping);
 
-            Refresh(null);
+            await Task.Run(() => HydrateServerPingDtoList());
         }
 
         private void Ping()
@@ -195,6 +201,39 @@ namespace PrestoViewModel.Tabs
             }
         }
 
+        private async void HydrateServerPingDtoList()
+        {
+            if (this.ServerPingDtoList == null)
+            {                
+                IEnumerable allServers =
+                await Task.Run(() =>
+                {
+                    using (var prestoWcf = new PrestoWcf<IServerService>())
+                    {
+                        return prestoWcf.Service.GetAllServers();
+                    }
+                });
+
+                var localDtoList = new List<ServerPingDto>();
+
+                foreach (ApplicationServer server in allServers)
+                {
+                    localDtoList.Add(new ServerPingDto() { ApplicationServer = server });
+                }
+
+                this.ServerPingDtoList = new PrestoObservableCollection<ServerPingDto>();
+                this.ServerPingDtoList.ClearItemsAndNotifyChangeOnlyWhenDone();
+                this.ServerPingDtoList.AddRange(localDtoList);
+
+                NotifyPropertyChanged(() => this.ServerPingDtoList);
+
+                Refresh(null);
+
+                _pingsLoaded = true;
+                NotifyPropertyChanged(() => ShowWaitCursor);
+            }
+        }
+
         private void Refresh(object stateInfo)
         {
             if (!Monitor.TryEnter(_locker)) { return; }
@@ -202,7 +241,7 @@ namespace PrestoViewModel.Tabs
             // Don't run forever
             if (DateTime.Now.Subtract(this._timerStartTime).Minutes >= TotalTimerRunTimeInMinutes) { this._timer = null; }
 
-            PingRequest latestPingRequest;
+            PingRequest latestPingRequest = null;
             try
             {
                 using (var prestoWcf = new PrestoWcf<IPingService>())

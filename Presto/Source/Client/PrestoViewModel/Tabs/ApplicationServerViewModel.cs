@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -27,6 +28,7 @@ namespace PrestoViewModel.Tabs
     /// </summary>
     public class ApplicationServerViewModel : ViewModelBase
     {
+        private bool _serversLoaded;
         private List<ApplicationServer> _allServers;
         private InstallationEnvironment _selectedInstallationEnvironment;
         private List<InstallationEnvironment> _installationEnvironments;
@@ -34,6 +36,27 @@ namespace PrestoViewModel.Tabs
         private ApplicationServer _selectedApplicationServer;
         private ObservableCollection<ApplicationWithOverrideVariableGroup> _selectedApplicationsWithOverrideGroup = new ObservableCollection<ApplicationWithOverrideVariableGroup>();
         private static string _selfUpdatingAppName = GetSelfUpdatingAppName();
+
+        public bool ServersLoaded
+        {
+            get { return _serversLoaded; }
+
+            set
+            {
+                _serversLoaded = value;
+                this.NotifyPropertyChanged(() => this.ServersLoaded);
+                this.NotifyPropertyChanged(() => this.ShowWaitCursor);
+            }
+        }
+
+        public System.Windows.Visibility ShowWaitCursor
+        {
+            get
+            {
+                if (_serversLoaded) { return System.Windows.Visibility.Hidden; }
+                return System.Windows.Visibility.Visible;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether [app server is selected].
@@ -253,10 +276,14 @@ namespace PrestoViewModel.Tabs
         /// </summary>
         public ApplicationServerViewModel()
         {
+            Debug.WriteLine("ApplicationServerViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
             LoadApplicationServers();
+
+            Debug.WriteLine("ApplicationServerViewModel constructor end " + DateTime.Now);
         }
 
         private void Initialize()
@@ -496,7 +523,7 @@ namespace PrestoViewModel.Tabs
 
                 LogAndShowAppToBeInstalled(appWithGroup.Application.Name);
 
-                Task.Factory.StartNew(() => InstallPrestoUpdater(appWithGroup));
+                Task.Run(() => InstallPrestoUpdater(appWithGroup));
 
                 return true;
             }
@@ -770,7 +797,7 @@ namespace PrestoViewModel.Tabs
             SaveServer();
         }     
 
-        private void LoadApplicationServers(bool refreshServersFromService = true)
+        private async Task LoadApplicationServers(bool refreshServersFromService = true)
         {
             try
             {
@@ -782,11 +809,16 @@ namespace PrestoViewModel.Tabs
 
                 if (refreshServersFromService)
                 {
-                    using (var prestoWcf = new PrestoWcf<IServerService>())
+                    await Task.Run(() =>
                     {
-                        this._allServers = prestoWcf.Service.GetAllServers().ToList();
-                    }
+                        using (var prestoWcf = new PrestoWcf<IServerService>())
+                        {
+                            this._allServers = prestoWcf.Service.GetAllServers().ToList();
+                        }
+                    });
                 }
+
+                ServersLoaded = true;
 
                 // Only show the servers for the selected environment.
                 this.ApplicationServers.AddRange(

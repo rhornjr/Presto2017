@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -41,11 +42,15 @@ namespace PrestoViewModel.Tabs
         /// </summary>
         public GlobalSettingViewModel()
         {
+            Debug.WriteLine("GlobalSettingViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
 
             LoadGlobalSetting();
+
+            Debug.WriteLine("GlobalSettingViewModel constructor end " + DateTime.Now);
         }
 
         private void Initialize()

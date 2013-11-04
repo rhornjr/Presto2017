@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
@@ -125,10 +126,14 @@ namespace PrestoViewModel.Tabs
 
         public ApplicationViewModel()
         {
+            Debug.WriteLine("ApplicationViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
             LoadApplications();
+
+            Debug.WriteLine("ApplicationViewModel constructor end " + DateTime.Now);
         }
 
         private void Initialize()
@@ -587,14 +592,17 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        private void LoadApplications()
+        private async Task LoadApplications()
         {
             try
             {
-                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                await Task.Run(() =>
                 {
-                    this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications(this.ShowAllApps));
-                }
+                    using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                    {
+                        this.Applications = new ObservableCollection<Application>(prestoWcf.Service.GetAllApplications(this.ShowAllApps));
+                    }
+                });
             }
             catch (Exception ex)
             {

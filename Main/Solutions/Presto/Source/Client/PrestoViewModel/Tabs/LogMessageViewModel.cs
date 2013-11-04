@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
@@ -8,7 +9,6 @@ using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
-using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -43,11 +43,15 @@ namespace PrestoViewModel.Tabs
         /// </summary>
         public LogMessageViewModel()
         {
+            Debug.WriteLine("LogMessageViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
 
             LoadLogMessages();
+
+            Debug.WriteLine("LogMessageViewModel constructor end " + DateTime.Now);
         }
 
         private void LoadLogMessages()

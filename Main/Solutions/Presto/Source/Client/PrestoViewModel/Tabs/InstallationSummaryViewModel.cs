@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using PrestoCommon.Entities;
@@ -107,6 +109,8 @@ namespace PrestoViewModel.Tabs
 
         public InstallationSummaryViewModel()
         {
+            Debug.WriteLine("InstallationSummaryViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
@@ -114,14 +118,19 @@ namespace PrestoViewModel.Tabs
             LoadTimeZones();
             LoadInstallationSummaryList();
             InitializeSignalR();
+
+            Debug.WriteLine("InstallationSummaryViewModel constructor end " + DateTime.Now);
         }
 
-        private void InitializeSignalR()
+        private async Task InitializeSignalR()
         {
-            var hubConnection = new HubConnection(CommonUtility.SignalRAddress);
-            var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
-            prestoHubProxy.On("OnInstallationSummaryAdded", OnInstallationSummaryAdded);
-            hubConnection.Start();
+            await Task.Run(() =>
+            {
+                var hubConnection = new HubConnection(CommonUtility.SignalRAddress);
+                var prestoHubProxy = hubConnection.CreateHubProxy("PrestoHub");
+                prestoHubProxy.On("OnInstallationSummaryAdded", OnInstallationSummaryAdded);
+                hubConnection.Start();
+            });
         }
 
         private void OnInstallationSummaryAdded()
@@ -129,17 +138,20 @@ namespace PrestoViewModel.Tabs
             Refresh();
         }
 
-        private void LoadInstallationSummaryList()
+        private async Task LoadInstallationSummaryList()
         {
             try
             {
-                using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+                await Task.Run(() =>
                 {
-                    this.InstallationSummaryList = new Collection<InstallationSummary>(
-                        prestoWcf.Service.GetMostRecentByStartTime(50).ToList());
-                }
-                SetInstallationSummaryDtos();
-                this.SelectedInstallationSummary = null;
+                    using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+                    {
+                        this.InstallationSummaryList = new Collection<InstallationSummary>(
+                            prestoWcf.Service.GetMostRecentByStartTime(50).ToList());
+                    }
+                    SetInstallationSummaryDtos();
+                    this.SelectedInstallationSummary = null;
+                });
             }
             catch (Exception ex)
             {

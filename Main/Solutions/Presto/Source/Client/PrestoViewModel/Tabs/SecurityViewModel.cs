@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
@@ -83,6 +85,7 @@ namespace PrestoViewModel.Tabs
         {
             get
             {
+                if (ActiveDirectoryInfo == null) { return false; }  // may not be set yet
                 if (ActiveDirectoryInfo.SecurityEnabled == false) { return true; }
 
                 // Security is enabled. Only allow admins to modify.
@@ -97,23 +100,30 @@ namespace PrestoViewModel.Tabs
 
         public SecurityViewModel()
         {
+            Debug.WriteLine("SecurityViewModel constructor start " + DateTime.Now);
+
             if (DesignMode.IsInDesignMode) { return; }
 
             Initialize();
             LoadAdInfo();
             LoadAdGroupWithRolesList();
+
+            Debug.WriteLine("SecurityViewModel constructor end " + DateTime.Now);
         }
 
-        private void LoadAdInfo()
+        private async Task LoadAdInfo()
         {
             try
             {
-                using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                await Task.Run(() =>
                 {
-                    this.ActiveDirectoryInfo = prestoWcf.Service.GetActiveDirectoryInfo();
-                }
-                if (this.ActiveDirectoryInfo == null) { this.ActiveDirectoryInfo = new ActiveDirectoryInfo(); }
-                this.NotifyPropertyChanged(() => this.ActiveDirectoryInfo);
+                    using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                    {
+                        this.ActiveDirectoryInfo = prestoWcf.Service.GetActiveDirectoryInfo();
+                    }
+                    if (this.ActiveDirectoryInfo == null) { this.ActiveDirectoryInfo = new ActiveDirectoryInfo(); }
+                    this.NotifyPropertyChanged(() => this.ActiveDirectoryInfo);
+                });
             }
             catch (Exception ex)
             {
@@ -122,14 +132,17 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        private void LoadAdGroupWithRolesList()
+        private async Task LoadAdGroupWithRolesList()
         {
             try
             {
-                using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                await Task.Run(() =>
                 {
-                    this.AdGroupWithRolesList = prestoWcf.Service.GetAllAdGroupWithRoles().ToList();
-                }
+                    using (var prestoWcf = new PrestoWcf<ISecurityService>())
+                    {
+                        this.AdGroupWithRolesList = prestoWcf.Service.GetAllAdGroupWithRoles().ToList();
+                    }
+                });
             }
             catch (Exception ex)
             {

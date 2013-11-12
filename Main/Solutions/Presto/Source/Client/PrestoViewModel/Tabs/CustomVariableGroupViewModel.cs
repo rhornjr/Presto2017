@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
@@ -22,7 +23,7 @@ namespace PrestoViewModel.Tabs
 {
     public class CustomVariableGroupViewModel : ViewModelBase
     {
-        private ObservableCollection<CustomVariableGroup> _customVariableGroups;
+        private PrestoObservableCollection<CustomVariableGroup> _customVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
         private CustomVariableGroup _selectedCustomVariableGroup;
         private bool _showDisabled;
 
@@ -64,7 +65,7 @@ namespace PrestoViewModel.Tabs
         // The view binds to this property.
         public ICollectionView CustomVariableGroupsCollectionView { get; private set; }
 
-        public ObservableCollection<CustomVariableGroup> CustomVariableGroups
+        public PrestoObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
             get
             {
@@ -116,11 +117,12 @@ namespace PrestoViewModel.Tabs
             this.EditVariableCommand   = new RelayCommand(EditVariable, CustomVariableIsSelected);
             this.DeleteVariableCommand = new RelayCommand(DeleteVariable, CustomVariableIsSelected);
 
-            await Task.Run(() =>
-            {
-                LoadCustomVariableGroups();
-                InitializeCustomVariableGroupsCollectionView();
-            });
+            await Task.Run(() => LoadCustomVariableGroups());
+
+            // This used to be included in the above await action. But that caused errors because
+            // CustomVariableGroupsCollectionView was initialized on a background thread and subsequent
+            // updates would cause a threading error.
+            InitializeCustomVariableGroupsCollectionView();
         }
 
         private void InitializeCustomVariableGroupsCollectionView()
@@ -279,14 +281,17 @@ namespace PrestoViewModel.Tabs
         {
             int index = this._customVariableGroups.ToList().FindIndex(x => x.Id == savedGroup.Id);
 
-            if (index >= 0)
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                this._customVariableGroups[index] = savedGroup;
-            }
-            else
-            {
-                this._customVariableGroups.Add(savedGroup);
-            }
+                if (index >= 0)
+                {
+                    this._customVariableGroups[index] = savedGroup;
+                }
+                else
+                {
+                    this._customVariableGroups.Add(savedGroup);
+                }
+            });
         }
 
         private void ImportVariableGroup()
@@ -361,11 +366,10 @@ namespace PrestoViewModel.Tabs
         {            
             try
             {
+                this.CustomVariableGroups.ClearItemsAndNotifyChangeOnlyWhenDone();
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {
-                    this.CustomVariableGroups =
-                        new ObservableCollection<CustomVariableGroup>(
-                            prestoWcf.Service.GetAllGroups().ToList());
+                    this.CustomVariableGroups.AddRange(prestoWcf.Service.GetAllGroups().ToList());
                 }
             }
             catch (Exception ex)

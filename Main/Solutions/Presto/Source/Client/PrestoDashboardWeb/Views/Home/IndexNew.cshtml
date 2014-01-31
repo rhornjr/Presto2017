@@ -1,0 +1,91 @@
+﻿@model PrestoDashboardWeb.Models.EntityContainer
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Presto!</title>
+    @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
+    @*<script src="~/DataTables-1.9.3/media/js/jquery.dataTables.js"></script>*@
+</head>
+<body>
+
+    <script src="~/Scripts/Home/Index.js"></script>
+    @*<script src="~/Scripts/jquery.signalR-1.0.1.js"></script>
+    <script src="~/signalr/hubs"></script>*@
+
+    <div id="container" style="width:900px">
+        <div style="width:900px">
+            <fieldset>
+                <div style="width:900px">
+                    <div class="center" id="headerAlphabet" style="white-space:nowrap">
+                        <img src="~/Content/images/wizard1.ico" height="48" width="48" style="display: block; float: right;" />
+                        <h1 style="font-size: 32px">Presto</h1>
+                        <div style="width: 250px; margin: 0 auto;">
+                            <a href="#" id="appsLink">Apps</a>
+                            <a href="#" id="serversLink">Servers</a>
+                            <a href="#" id="variablesLink">Variables</a>
+                            <a href="#">Resolve</a>
+                            <a href="#" id="installsLink">Installs</a>
+                            <a href="#">Log</a>
+                            <a href="#">Ping</a>
+                            <a href="#">Global</a>
+                            <a href="#">Security</a>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div style="height:710px;width:225px;float:left;">
+            <fieldset style="height:700px;">
+                <h2 id="prestoTopic" class="topic">Results</h2>
+                <div id="searchResultsContainer">
+                    <img id="waitLoadList" src="~/Images/wait.gif" style="height:64px; width:64px; margin:0px auto; display:block;" />
+                    <div id="searchResults" style="margin-left:20px; overflow:scroll; height:620px; overflow-x:hidden">
+                        <div id="appList">
+                            @Html.Partial("~/Views/PartialViews/AppList.cshtml", Model.Applications)
+                        </div>
+                        <div id="serverList">
+                            @Html.Partial("~/Views/PartialViews/ServerList.cshtml", Model.Servers)
+                        </div>
+                        <div id="variableGroupList">
+                            @Html.Partial("~/Views/PartialViews/VariableGroupList.cshtml", Model.VariableGroups)
+                        </div>
+
+                        <div id="installsList">
+                            @Html.Partial("~/Views/PartialViews/InstallsList.cshtml", Model.InstallationSummaries)
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div style="height:710px;width:675px;float:right;">
+            <fieldset style="height:700px;">
+                <h2 id="prestoSelection" class="selection">Snuh</h2>
+                <div id="app">
+                    @Html.Partial("~/Views/PartialViews/App.cshtml")
+                </div>
+                <div id="server">
+                    @Html.Partial("~/Views/PartialViews/Server.cshtml")
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <link href="~/Content/themes/base/jquery.ui.accordion.css" rel="stylesheet" />
+    @*<link rel="stylesheet" type="text/css" href="~/Content/themes/base/demo_table.css" />*@
+    @*<link href="../../Content/toastr.css" rel="stylesheet" />
+    <script src="../../Scripts/toastr.js"></script>*@
+    @Styles.Render("~/Content/css")
+    @*@Scripts.Render("~/bundles/modernizr")*@
+</body>
+</html>

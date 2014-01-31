@@ -70,8 +70,21 @@ h1 {
 }
 
 h2 {
-    font-size: 1.75em;
+    background-color: #dedede;
+    border-bottom: 1px solid #d4d4d4;
+    border-top: 1px solid #d4d4d4;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px #ccc;
+    color: #fff;
+    font-size: 1.1em;
+    margin: 12px;
+    padding: 0.3em 1em;
+    text-shadow: #9FBEB9 1px 1px 1px;
+    text-transform: uppercase;
 }
+
+h2.topic { background-color: #0B5586; }
+h2.selection { background-color: #4494C9; }
 
 h3 {
     font-size: 1.2em;

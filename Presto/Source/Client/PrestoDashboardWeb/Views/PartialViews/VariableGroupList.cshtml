@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<PrestoCommon.Entities.CustomVariableGroup>
 
-<ul data-role="listview" data-autodividers="true" @*data-filter="true"*@ data-count-theme="c" data-inset="true" data-divider-theme="d">
-    @foreach (var group in Model)
-    { 
-        <li><a href="#snuh">@group.Name</a></li>
-    }
-</ul>
+@foreach (var group in Model)
+{ 
+    <a href="#snuh">@group.Name</a><br />
+}

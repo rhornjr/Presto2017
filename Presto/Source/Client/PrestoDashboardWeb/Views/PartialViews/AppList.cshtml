@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<PrestoCommon.Entities.Application>
 
-<ul data-role="listview" data-autodividers="true" @*data-filter="true"*@ data-count-theme="c" data-inset="true" data-divider-theme="d">
-    @foreach (var app in Model)
-    { 
-        <li onclick="showApp('@app.Id');"><a href="#">@app.Name</a></li>
-    }
-</ul>
+@foreach (var app in Model)
+{ 
+    <a href="#" onclick="showApp('@app.Id');">@app.Name</a><br />
+}

@@ -12,6 +12,41 @@ namespace PrestoDashboardWeb.Controllers
 {
     public class HomeController : Controller
     {
+        public ActionResult IndexNew()
+        {
+            var container = new EntityContainer();
+
+            //var app1 = new Application() { Name = "app1", Archived = false, Version = "1.0", Etag = Guid.NewGuid() };
+            //var app2 = new Application() { Name = "app2", Archived = false, Version = "2.0", Etag = Guid.NewGuid() };
+            //var app3 = new Application() { Name = "app3", Archived = false, Version = "3.0", Etag = Guid.NewGuid() };
+            //var app4 = new Application() { Name = "bapp4", Archived = false, Version = "4.0", Etag = Guid.NewGuid() };
+            //apps.Add(app1);
+            //apps.Add(app2);
+            //apps.Add(app3);
+            //apps.Add(app4);
+
+            // ToDo: These should all be done with *one call* to the service.
+
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                container.Applications = prestoWcf.Service.GetAllApplications(true).OrderBy(x => x.Name);
+            }
+
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                container.Servers = prestoWcf.Service.GetAllServersSlim().OrderBy(x => x.Name);
+            }
+
+            using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+            {
+                container.VariableGroups = prestoWcf.Service.GetAllGroups().OrderBy(x => x.Name);
+            }
+
+            container.InstallationSummaries = GetInstallations();
+
+            return View(container);
+        }
+
         public ActionResult Index()
         {
             var container = new EntityContainer();
@@ -88,6 +123,21 @@ namespace PrestoDashboardWeb.Controllers
 
             JsonResult jsonResult = new JsonResult();
             jsonResult.Data = app;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public ActionResult GetServerById(string serverId)
+        {
+            ApplicationServer server = null;
+
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                server = prestoWcf.Service.GetServerById(serverId);
+            }
+
+            JsonResult jsonResult = new JsonResult();
+            jsonResult.Data = server;
             return jsonResult;
         }
 

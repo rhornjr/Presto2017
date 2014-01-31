@@ -59,6 +59,10 @@
             @Html.Partial("~/Views/PartialViews/App.cshtml")
         </div>
         
+        <div id="server">
+            @Html.Partial("~/Views/PartialViews/Server.cshtml")
+        </div>
+        
         <div id="task0">
             @Html.Partial("~/Views/PartialViews/TaskCopyFile.cshtml")
         </div>
@@ -124,6 +128,7 @@
             $('#serverList').hide();
             $('#variableGroupList').hide();
             $('#app').hide();
+            $('#server').hide();
             $('#task0').hide();
             $('#task1').hide();
             $('#task2').hide();
@@ -136,6 +141,13 @@
             $('#app').show();            
             window.appInitialize(id);
             stack.push('appList');  // What goes here is the div we want to display when the user hits the back button.
+        }
+
+        function showServer(id) {
+            hideAll();
+            $('#server').show();
+            window.serverInitialize(id);
+            stack.push('serverList');  // What goes here is the div we want to display when the user hits the back button.
         }
 
         function showTask(app, task) {

@@ -1,0 +1,52 @@
+﻿<script>
+    $(function() {
+        // Note: This will execute as soon as the main page is loaded.
+    });
+
+    function serverInitialize(id) {
+
+        // Clear the <ul> elements
+        $("#apps").empty();
+        $("#groups").empty();
+
+        $.post('/Home/GetServerById',
+            { serverId: id },
+            OnServerRetrieved);
+    }
+
+    function OnServerRetrieved(server) {
+        $('#selectedTab').text(server.Name);  // Show the name of the app in the header
+        $('#txtServerName').val(server.Name);
+        $('#txtDescription').val(server.Description);
+        $('#txtEnvironment').val(server.Environment);
+
+        //displayTasks(app);
+        //displayVariableGroups(app);
+    }
+</script>
+
+<form>
+    <div data-role="fieldcontain">
+        <label for="txtServerName">Name:</label>
+        <input type="text" data-mini="true" name="text-14" id="txtServerName" value="">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="txtDescription">Description</label>
+        <input type="text" data-clear-btn="true" data-mini="true" name="text-15" id="txtDescription" value="">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="txtEnvironment">Environment:</label>
+        <input type="text" data-mini="true" name="text-14" id="txtEnvironment" value="">
+    </div>
+
+    <div data-role="collapsible-set" data-theme="c" data-content-theme="d">
+        <div data-role="collapsible">
+            <h3>Apps</h3>
+            <ul id="apps" data-role="listview" data-inset="true" />
+        </div>
+        <div data-role="collapsible">
+            <h3>Variable Groups</h3>
+            <ul id="groups" data-role="listview" data-inset="true" />
+        </div>
+    </div>
+</form>

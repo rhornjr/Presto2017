@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿var stack = [];
+
+$(function () {
     $('#waitLoadList').hide();
 
     $('#appsLink').click(showApps);
@@ -62,4 +64,23 @@ function hideTopic() {
 function hideDetail() {
     $('#app').hide();
     $('#server').hide();
+    $('#task0').hide();
+    $('#task1').hide();
+    $('#task2').hide();
+    $('#task3').hide();
+}
+
+function showTask(app, task) {
+    hideDetail();
+
+    stack.push('app');
+
+    var taskDiv = $('#task' + task.PrestoTaskType);
+    if (taskDiv[0]) {
+        taskDiv.show();
+        window.taskInitialize(app, task);
+        return;
+    }
+
+    alert('No task view available for task type ' + task.PrestoTaskType);
 }

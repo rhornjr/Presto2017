@@ -46,7 +46,7 @@
         });
 
         // ... and apply all of the tasks to the listview at one time.
-        $('#appTasks').append(items).listview('refresh');  // Need to refresh to get the new items to use the jQuery Mobile formatting
+        $('#appTasks').append(items); //.listview('refresh');  // Need to refresh to get the new items to use the jQuery Mobile formatting
     }
 
     function displayVariableGroups(app) {
@@ -58,7 +58,7 @@
             items.push('<li><a href="#">' + group.Name + '</a></li>');
         });
 
-        $('#appGroups').append(items).listview('refresh');
+        $('#appGroups').append(items); //.listview('refresh');  // Worked for jQuery Mobile, but not new approach (without jQuery Mobile)
     }
 
     function SortBySequence(a, b) {

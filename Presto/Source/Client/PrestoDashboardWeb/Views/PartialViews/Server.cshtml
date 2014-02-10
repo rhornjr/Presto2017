@@ -20,9 +20,59 @@
         $('#txtDescription').val(server.Description);
         $('#txtEnvironment').val(server.Environment);
 
-        //displayTasks(app);
-        //displayVariableGroups(app);
+        displayApps(server);
+        displayVariableGroups(server);
     }
+
+    function displayApps(server) {
+        // Add the apps to the task listview.
+        // First, sort the tasks by the Sequence property.
+        var apps = server.ApplicationsWithOverrideGroup;
+        apps.sort(SortAppGroupByName);
+
+        // Now add the tasks to an array...
+        // This approach from: http://stackoverflow.com/a/19083625/279516
+        var items = $.map(apps, function (app) {
+            return $('<li>').append(
+                $('<a>', {
+                    href: '#',
+                    text: app.Application.Name,
+                    click: function (e) {
+                        e.preventDefault();
+                        //window.showTask(app, task);  // What do we want to happen when the user clicks an app here?
+                    }
+                })
+            );
+        });
+
+        // ... and apply all of the tasks to the listview at one time.
+        $('#apps').append(items); //.listview('refresh');  // Need to refresh to get the new items to use the jQuery Mobile formatting
+    }
+
+    function displayVariableGroups(server) {
+        var groups = server.CustomVariableGroups;
+        groups.sort(SortVariableGroupByName);
+
+        var items = [];
+        $.each(groups, function (index, group) {
+            items.push('<li><a href="#">' + group.Name + '</a></li>');
+        });
+
+        $('#appGroups').append(items); //.listview('refresh');  // Worked for jQuery Mobile, but not new approach (without jQuery Mobile)
+    }
+
+    function SortAppGroupByName(a, b) {
+        var aName = a.Application.Name;
+        var bName = b.Application.Name;
+        return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+    }
+
+    function SortVariableGroupByName(a, b) {
+        var aName = a.Name;
+        var bName = b.Name;
+        return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+    }
+
 </script>
 
 <form>
@@ -31,7 +81,7 @@
         <input type="text" data-mini="true" name="text-14" id="txtServerName" value="">
     </div>
     <div data-role="fieldcontain">
-        <label for="txtDescription">Description</label>
+        <label for="txtDescription">Description:</label>
         <input type="text" data-clear-btn="true" data-mini="true" name="text-15" id="txtDescription" value="">
     </div>
     <div data-role="fieldcontain">

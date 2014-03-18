@@ -7,20 +7,24 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="700">
+             d:DesignHeight="600" d:DesignWidth="860">
     <UserControl.DataContext>
         <Binding Source="{StaticResource CustomVariableGroupViewModel}"/>
     </UserControl.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="275"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" HorizontalAlignment="Center" FontWeight="Bold"/>                
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="120" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Text="{Binding VariableKey}" Width="165" Height="25"/>
+                    <Button Style="{StaticResource StandardButton}" Content="Find Key" Command="{Binding FindCommand}" Height="20" />
+                </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <Separator></Separator>
                     <CheckBox Name="chkShowDisabled" Style="{StaticResource StandardCheckBox}" Content="Show disabled" IsChecked="{Binding ShowDisabled}"
@@ -30,15 +34,13 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" Height="20" />
+                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" Height="20" />
                     <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshVariableGroupCommand}" Height="20" />
                     <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />-->
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportVariableGroupCommand}" Height="20"/>
                     <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" Height="20" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" Height="20" />
                 </StackPanel>
             </StackPanel>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroupsCollectionView}"

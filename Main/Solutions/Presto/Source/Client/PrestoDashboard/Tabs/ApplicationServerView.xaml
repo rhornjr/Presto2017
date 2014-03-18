@@ -8,7 +8,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="700">
+             d:DesignHeight="600" d:DesignWidth="860">
     <UserControl.DataContext>
         <Binding Source="{StaticResource ApplicationServerViewModel}"/>
     </UserControl.DataContext>    
@@ -28,7 +28,7 @@
     
     <Grid IsEnabled="{Binding ServersLoaded}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="275"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         

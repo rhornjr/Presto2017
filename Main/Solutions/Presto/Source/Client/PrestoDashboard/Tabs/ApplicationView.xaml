@@ -9,7 +9,7 @@
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="760">
+             d:DesignHeight="600" d:DesignWidth="860">
 
     <UserControl.DataContext>
         <Binding Source="{StaticResource ApplicationViewModel}"/>
@@ -28,7 +28,8 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <!-- Auto means to only take whatever space the column needs. * means to expand to fill the available space. -->
+            <ColumnDefinition Width="275"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         

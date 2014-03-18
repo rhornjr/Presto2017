@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -49,6 +50,10 @@ namespace PrestoViewModel.Tabs
         public ICommand EditVariableCommand { get; private set; }
 
         public ICommand DeleteVariableCommand { get; private set; }
+
+        public ICommand FindCommand { get; private set; }
+
+        public string VariableKey { get; set; }
 
         public bool ShowDisabled
         {
@@ -112,6 +117,7 @@ namespace PrestoViewModel.Tabs
             this.ExportVariableGroupCommand  = new RelayCommand(ExportVariableGroup, CustomVariableGroupIsSelectedMethod);
             this.ImportVariableGroupCommand  = new RelayCommand(ImportVariableGroup);
             this.RefreshVariableGroupCommand = new RelayCommand(RefreshVariableGroups);
+            this.FindCommand                 = new RelayCommand(FindCustomVariable);
 
             this.AddVariableCommand    = new RelayCommand(AddVariable);
             this.EditVariableCommand   = new RelayCommand(EditVariable, CustomVariableIsSelected);
@@ -122,21 +128,48 @@ namespace PrestoViewModel.Tabs
             // This used to be included in the above await action. But that caused errors because
             // CustomVariableGroupsCollectionView was initialized on a background thread and subsequent
             // updates would cause a threading error.
-            InitializeCustomVariableGroupsCollectionView();
+            InitializeCustomVariableGroupsCollectionView(() => ApplyDisabledFilterToCustomVariableGroups());
         }
 
-        private void InitializeCustomVariableGroupsCollectionView()
+        private void FindCustomVariable()
+        {
+            var variableGroupIds = new List<string>();
+
+            foreach (var variableGroup in this.CustomVariableGroups)
+            {
+                foreach (var variable in variableGroup.CustomVariables)
+                {
+                    if (variable.Key == this.VariableKey)
+                    {
+                        variableGroupIds.Add(variableGroup.Id);
+                    }
+                }
+            }
+
+            InitializeCustomVariableGroupsCollectionView(() => ApplyVariableKeyFilter(variableGroupIds));
+        }
+
+        private void ApplyVariableKeyFilter(List<string> variableGroupIds)
+        {
+            this.CustomVariableGroupsCollectionView.Filter = (item) =>
+            {
+                var myitem = (CustomVariableGroup)item;
+                return variableGroupIds.Contains(myitem.Id);
+            };
+        }
+
+        private void InitializeCustomVariableGroupsCollectionView(Action applyFilterAction)
         {
             this.CustomVariableGroupsCollectionView = CollectionViewSource.GetDefaultView(this.CustomVariableGroups);
             this.CustomVariableGroupsCollectionView.SortDescriptions.Clear();
             this.CustomVariableGroupsCollectionView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
 
-            ApplyFilterToCustomVariableGroups();
+            applyFilterAction();
 
             NotifyPropertyChanged(() => this.CustomVariableGroupsCollectionView);
         }
 
-        private void ApplyFilterToCustomVariableGroups()
+        private void ApplyDisabledFilterToCustomVariableGroups()
         {
             if (_showDisabled)
             {
@@ -260,7 +293,7 @@ namespace PrestoViewModel.Tabs
                     UpdateCacheWithSavedItem(savedGroup);
                     this.SelectedCustomVariableGroup = savedGroup;
                 }
-                InitializeCustomVariableGroupsCollectionView();
+                InitializeCustomVariableGroupsCollectionView(() => ApplyDisabledFilterToCustomVariableGroups());
             }
             catch (FaultException ex)
             {
@@ -357,7 +390,7 @@ namespace PrestoViewModel.Tabs
         private void RefreshVariableGroups()
         {
             this.LoadCustomVariableGroups();
-            InitializeCustomVariableGroupsCollectionView();
+            InitializeCustomVariableGroupsCollectionView(() => ApplyDisabledFilterToCustomVariableGroups());
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage("Variables refreshed.");
         }   

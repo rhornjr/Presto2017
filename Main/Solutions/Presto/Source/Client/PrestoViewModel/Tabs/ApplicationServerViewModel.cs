@@ -273,6 +273,8 @@ namespace PrestoViewModel.Tabs
             }
         }
 
+        public bool ShowAllServers { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationServerViewModel"/> class.
         /// </summary>
@@ -817,7 +819,7 @@ namespace PrestoViewModel.Tabs
                     {
                         using (var prestoWcf = new PrestoWcf<IServerService>())
                         {
-                            this._allServers = prestoWcf.Service.GetAllServers().ToList();
+                            this._allServers = prestoWcf.Service.GetAllServers(this.ShowAllServers).ToList();
                         }
                     });
                 }

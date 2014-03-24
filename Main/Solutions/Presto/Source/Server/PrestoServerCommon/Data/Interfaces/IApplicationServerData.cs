@@ -5,7 +5,7 @@ namespace PrestoServer.Data.Interfaces
 {
     public interface IApplicationServerData
     {
-        IEnumerable<ApplicationServer> GetAll();
+        IEnumerable<ApplicationServer> GetAll(bool includeArchivedApps);
 
         IEnumerable<ApplicationServer> GetAllSlim();
 

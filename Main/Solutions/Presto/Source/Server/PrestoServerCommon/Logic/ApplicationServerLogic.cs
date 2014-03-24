@@ -18,9 +18,9 @@ namespace PrestoServer.Logic
     {
         private static object _locker = new object();
 
-        public static IEnumerable<ApplicationServer> GetAll()
+        public static IEnumerable<ApplicationServer> GetAll(bool includeArchivedApps)
         {
-            return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetAll();
+            return DataAccessFactory.GetDataInterface<IApplicationServerData>().GetAll(includeArchivedApps);
         }
 
         public static IEnumerable<ApplicationServer> GetAllSlim()

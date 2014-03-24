@@ -12,7 +12,7 @@ namespace PrestoServer.Data.RavenDb
 {
     public class ApplicationServerData : DataAccessLayerBase, IApplicationServerData
     {
-        public IEnumerable<ApplicationServer> GetAll()
+        public IEnumerable<ApplicationServer> GetAll(bool includeArchivedApps)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -31,12 +31,19 @@ namespace PrestoServer.Data.RavenDb
                         .Take(int.MaxValue)
                         ).AsEnumerable().Cast<ApplicationServer>();
 
-                    foreach (ApplicationServer appServer in appServers)
+                    if (includeArchivedApps)
                     {
-                        HydrateApplicationServer(appServer);
+                        foreach (var server in appServers) { HydrateApplicationServer(server); }
+                        return appServers;
                     }
 
-                    return appServers;
+                    // Note: We can't put this WHERE clause in the above query because the Archived
+                    //       property was added after all of the other properties. It won't exist
+                    //       for all apps, so we can't query by that property.
+                    //       http://stackoverflow.com/a/11644645/279516
+                    var serversNotArchived = appServers.Where(x => x.Archived != true);
+                    foreach (ApplicationServer appServer in serversNotArchived) { HydrateApplicationServer(appServer); }
+                    return serversNotArchived;
                 });
             }
             finally

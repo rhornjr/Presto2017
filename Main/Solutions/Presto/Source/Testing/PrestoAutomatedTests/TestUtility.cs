@@ -133,7 +133,7 @@ namespace PrestoAutomatedTests
             AllInstallationSummaries = new List<InstallationSummary>();
 
             List<Application> allApps          = new List<Application>(ApplicationLogic.GetAll(true));
-            List<ApplicationServer> allServers = new List<ApplicationServer>(ApplicationServerLogic.GetAll());
+            List<ApplicationServer> allServers = new List<ApplicationServer>(ApplicationServerLogic.GetAll(true));
 
             ApplicationWithOverrideVariableGroup appWithGroup;
             DateTime originalStartTime = DateTime.Now.AddDays(-1);

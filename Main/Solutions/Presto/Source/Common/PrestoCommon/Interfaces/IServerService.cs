@@ -11,7 +11,7 @@ namespace PrestoCommon.Interfaces
         ApplicationServer GetServerById(string id);
 
         [OperationContract]
-        IEnumerable<ApplicationServer> GetAllServers();
+        IEnumerable<ApplicationServer> GetAllServers(bool includeArchivedApps);
 
         [OperationContract]
         IEnumerable<ApplicationServer> GetAllServersSlim();

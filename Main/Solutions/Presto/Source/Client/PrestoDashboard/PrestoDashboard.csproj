@@ -70,10 +70,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F18FD79283915298B6914EBB74EF0714C7064F1F</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>8C6A7BB8DA6DC20FF95461E09DB03B0EE00E59D8</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>PrestoDashboard_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>PrestoDashboard_3_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -375,6 +375,7 @@
     <None Include="packages.config" />
     <None Include="PrestoDashboard_1_TemporaryKey.pfx" />
     <None Include="PrestoDashboard_2_TemporaryKey.pfx" />
+    <None Include="PrestoDashboard_3_TemporaryKey.pfx" />
     <None Include="PrestoDashboard_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

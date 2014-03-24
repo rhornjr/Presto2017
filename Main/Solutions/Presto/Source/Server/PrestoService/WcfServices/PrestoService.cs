@@ -97,9 +97,9 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => ApplicationServerLogic.GetById(id));
         }
 
-        public IEnumerable<ApplicationServer> GetAllServers()
+        public IEnumerable<ApplicationServer> GetAllServers(bool includeArchivedApps)
         {
-            return Invoke(() => ApplicationServerLogic.GetAll());
+            return Invoke(() => ApplicationServerLogic.GetAll(includeArchivedApps));
         }
 
         public IEnumerable<ApplicationServer> GetAllServersSlim()

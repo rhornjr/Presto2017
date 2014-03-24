@@ -78,7 +78,7 @@ namespace PrestoViewModel.Tabs
                 {
                     using (var prestoWcf = new PrestoWcf<IServerService>())
                     {
-                        var allServers = prestoWcf.Service.GetAllServers();
+                        var allServers = prestoWcf.Service.GetAllServers(false);
 
                         foreach (var server in allServers)
                         {

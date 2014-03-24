@@ -210,7 +210,7 @@ namespace PrestoViewModel.Tabs
                 {
                     using (var prestoWcf = new PrestoWcf<IServerService>())
                     {
-                        return prestoWcf.Service.GetAllServers();
+                        return prestoWcf.Service.GetAllServers(false);
                     }
                 });
 

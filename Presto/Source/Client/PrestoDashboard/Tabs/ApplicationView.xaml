@@ -35,11 +35,11 @@
         
         <DockPanel Grid.Column="0" LastChildFill="True">
             <Label Style="{StaticResource StandardLabel}" DockPanel.Dock="Top" Content="Applications" HorizontalAlignment="Center" FontWeight="Bold"/>            
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="60" HorizontalAlignment="Center">
-                <CheckBox Content="Show all" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ShowAllApps}" />
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Height="40" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshApplicationsCommand}" />
+                    <CheckBox Content="Show all" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ShowAllApps}" />
                     <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />-->                    
                 </StackPanel>
             </StackPanel>

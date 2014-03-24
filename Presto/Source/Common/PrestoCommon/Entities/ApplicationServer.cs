@@ -37,6 +37,9 @@ namespace PrestoCommon.Entities
         }
 
         [DataMember]
+        public bool Archived { get; set; }
+
+        [DataMember]
         public string Description
         {
             get { return this._description; }

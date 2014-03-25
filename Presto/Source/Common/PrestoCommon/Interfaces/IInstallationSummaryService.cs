@@ -9,5 +9,8 @@ namespace PrestoCommon.Interfaces
     {
         [OperationContract]
         IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve);
+
+        [OperationContract]
+        void SaveInstallationSummary(InstallationSummary installationSummary);
     }
 }

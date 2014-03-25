@@ -16,6 +16,7 @@ using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
+using PrestoServer.Misc;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
@@ -546,7 +547,8 @@ namespace PrestoViewModel.Tabs
             {
                 using (var prestoWcf = new PrestoWcf<IServerService>())
                 {
-                    prestoWcf.Service.InstallPrestoSelfUpdater(this.SelectedApplicationServer, appWithGroup);
+                    // So just run it locally.
+                    new AppInstaller().InstallApplication(this.SelectedApplicationServer, appWithGroup);
                 }
             }
             catch (Exception ex)

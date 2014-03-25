@@ -3,7 +3,7 @@ using System.Globalization;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
-using PrestoServer.Logic;
+using PrestoCommon.Wcf;
 using Xanico.Core;
 
 namespace PrestoServer.Misc
@@ -27,7 +27,10 @@ namespace PrestoServer.Misc
 
         private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)
         {
-            InstallationSummaryLogic.Save(installationSummary);
+            using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+            {
+                prestoWcf.Service.SaveInstallationSummary(installationSummary);
+            }
 
             Logger.LogInformation(string.Format(CultureInfo.CurrentCulture,
                 PrestoServerResources.ApplicationInstalled,

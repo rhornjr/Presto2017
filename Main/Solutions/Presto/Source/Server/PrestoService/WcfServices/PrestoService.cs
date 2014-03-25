@@ -154,6 +154,11 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTime(numberToRetrieve));
         }
 
+        public void SaveInstallationSummary(InstallationSummary installationSummary)
+        {
+            Invoke(() => InstallationSummaryLogic.Save(installationSummary));
+        }
+
         #endregion
 
         #region [CustomVariableGroup]

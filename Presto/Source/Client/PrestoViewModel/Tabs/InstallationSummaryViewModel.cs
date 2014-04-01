@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -169,10 +170,22 @@ namespace PrestoViewModel.Tabs
             foreach (InstallationSummary installationSummary in this.InstallationSummaryList)
             {
                 InstallationSummaryDto dto = new InstallationSummaryDto();
-                dto.ApplicationName        = installationSummary.ApplicationWithOverrideVariableGroup.ToString();
-                dto.Id                     = installationSummary.Id;                
-                dto.Result                 = installationSummary.InstallationResult.ToString();
-                dto.ServerName             = installationSummary.ApplicationServer.Name;
+
+                try
+                {
+                    dto.ApplicationName = installationSummary.ApplicationWithOverrideVariableGroup.ToString();
+                    dto.Id              = installationSummary.Id;
+                    dto.Result          = installationSummary.InstallationResult.ToString();
+                    dto.ServerName      = installationSummary.ApplicationServer == null ? "(unavailable)" : installationSummary.ApplicationServer.Name;
+                }
+                catch (NullReferenceException ex)
+                {
+                    // This is here because we sometimes get this exception. Let's see if we can find out why...
+                    // Log everything we can about this installation summary.
+                    SendEmailWithInstallationSummaryProperties(installationSummary);
+                    CommonUtility.ProcessException(ex);
+                    continue;  // Skip this installation summary; something is wrong with it.
+                }
 
                 this.SelectedTimeZoneHelper.SetStartAndEndTimes(installationSummary, dto);
 
@@ -180,6 +193,32 @@ namespace PrestoViewModel.Tabs
             }
 
             this.InstallationSummaryDtos = installationSummaryDtos.OrderByDescending(x => x.InstallationStart).ToList();
+        }
+
+        private static void SendEmailWithInstallationSummaryProperties(InstallationSummary installationSummary)
+        {
+            string subject = "Presto Warning - Invalid Installation Summary";
+
+            string appName = installationSummary.ApplicationWithOverrideVariableGroup == null
+                ? "app with override group is null" : installationSummary.ApplicationWithOverrideVariableGroup.ToString();
+
+            string summaryId  = installationSummary.Id;
+            string result     = installationSummary.InstallationResult.ToString();
+            string serverName = installationSummary.ApplicationServer == null ? "server is null" : installationSummary.ApplicationServer.Name;
+
+            string message = string.Format(CultureInfo.CurrentCulture,
+                "An attempt was made to display an installation summary in the UI, however the installation summary was invalid." +
+                Environment.NewLine + Environment.NewLine +
+                "App name: {0}" + Environment.NewLine +
+                "Installation summary ID: {1}"+ Environment.NewLine +
+                "Result: {2}"+ Environment.NewLine +
+                "Server name: {3}",
+                appName,
+                summaryId,
+                result,
+                serverName);
+
+            CommonUtility.SendEmail(subject, message);
         }
 
         private void LoadTimeZones()

@@ -120,28 +120,13 @@ namespace PrestoCommon.Misc
 
                 Logger.LogException(ex, source);
 
-                EmailSettings emailSettings = new EmailSettings();
+                string subject = "Presto Exception - " + Environment.MachineName + " - " + IdentityHelper.UserName;
+                string message = "Time: " + DateTime.Now + Environment.NewLine +
+                                 "Server: " + Environment.MachineName + Environment.NewLine +
+                                 "User: " + IdentityHelper.UserName + Environment.NewLine + Environment.NewLine +
+                                 ex;
 
-                emailSettings.EmailHost = ConfigurationManager.AppSettings["emailHost"];
-                emailSettings.EmailFrom = ConfigurationManager.AppSettings["emailFrom"];
-                emailSettings.EmailTo = ConfigurationManager.AppSettings["emailTo"];
-
-                if (emailSettings.EmailHost == null || emailSettings.EmailFrom == null || emailSettings.EmailTo == null)
-                {
-                    Logger.LogWarning(String.Format(CultureInfo.CurrentCulture,
-                        "An attempt was made to send an email for an exception, but one or more of the email settings " +
-                        "(emailHost, emailFrom, emailTo) were not found in the app.config file. Stack trace: {0}",
-                        Environment.StackTrace));
-                    return;
-                }
-
-                emailSettings.Subject = "Presto Exception - " + Environment.MachineName + " - " + IdentityHelper.UserName;
-                emailSettings.Message = "Time: " + DateTime.Now + Environment.NewLine +
-                                        "Server: " + Environment.MachineName + Environment.NewLine +
-                                        "User: " + IdentityHelper.UserName + Environment.NewLine + Environment.NewLine +
-                                        ex;
-
-                EmailUtility.SendEmail(emailSettings);
+                SendEmail(subject, message);
             }
             catch (Exception exception)
             {
@@ -155,6 +140,33 @@ namespace PrestoCommon.Misc
                     // We don't want to throw an exception while processing an exception.
                 }
             }
+        }
+
+        /// <summary>
+        /// Sends an email with the specified subject and message. The host config file is used for the email
+        /// host, from, and to properties.
+        /// </summary>
+        public static void SendEmail(string subject, string message)
+        {
+            EmailSettings emailSettings = new EmailSettings();
+
+            emailSettings.EmailHost = ConfigurationManager.AppSettings["emailHost"];
+            emailSettings.EmailFrom = ConfigurationManager.AppSettings["emailFrom"];
+            emailSettings.EmailTo   = ConfigurationManager.AppSettings["emailTo"];
+
+            if (emailSettings.EmailHost == null || emailSettings.EmailFrom == null || emailSettings.EmailTo == null)
+            {
+                Logger.LogWarning(String.Format(CultureInfo.CurrentCulture,
+                    "An attempt was made to send an email, but one or more of the email settings " +
+                    "(emailHost, emailFrom, emailTo) were not found in the app.config file. Stack trace: {0}",
+                    Environment.StackTrace));
+                return;
+            }
+
+            emailSettings.Subject = subject;
+            emailSettings.Message = message;
+
+            EmailUtility.SendEmail(emailSettings);
         }
     }
 }

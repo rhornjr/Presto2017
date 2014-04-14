@@ -19,10 +19,21 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Label Content="Show times as: " VerticalAlignment="Center" Width="100"/>
+        <StackPanel Height="25" Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <Label Style="{StaticResource StandardLabel}" Content="App:" Width="60" HorizontalContentAlignment="Right"/>
+            <TextBox Text="{Binding .Application.Name}" Width="120" IsEnabled="False"/>
+            <Button Content="..." Height="25" Width="25" Command="{Binding SelectApplicationCommand}" />
+            <Button Content="X" Width="25" Height="25" Command="{Binding RemoveApplicationCommand}"/>
+
+            <Label Style="{StaticResource StandardLabel}" Content="Server:" Width="60" HorizontalContentAlignment="Right"/>
+            <TextBox Text="{Binding ApplicationServer.Name}" Width="120" IsEnabled="False"/>
+            <Button Content="..." Height="25" Width="25" Command="{Binding SelectServerCommand}" />
+            <Button Content="X" Width="25" Height="25" Command="{Binding RemoveServerCommand}"/>
+
+            <Label Content="Show as: " VerticalAlignment="Center" Width="60" HorizontalContentAlignment="Right"/>
             <ComboBox ItemsSource="{Binding TimeZoneHelpers}"
-                      SelectedItem="{Binding SelectedTimeZoneHelper}" Width="200"
+                      SelectedItem="{Binding SelectedTimeZoneHelper}" Width="160"
                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </StackPanel>
         

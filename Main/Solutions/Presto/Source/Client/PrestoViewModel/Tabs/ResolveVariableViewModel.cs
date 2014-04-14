@@ -24,12 +24,6 @@ namespace PrestoViewModel.Tabs
         private ApplicationServer _applicationServer;
         private ApplicationWithOverrideVariableGroup _applicationWithOverrideVariableGroup = new ApplicationWithOverrideVariableGroup();
 
-        /// <summary>
-        /// Gets or sets the resolved custom variables.
-        /// </summary>
-        /// <value>
-        /// The resolved custom variables.
-        /// </value>
         public PrestoObservableCollection<CustomVariable> ResolvedCustomVariables
         {
             get { return this._resolvedCustomVariables; }
@@ -41,12 +35,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the application with group.
-        /// </summary>
-        /// <value>
-        /// The application with group.
-        /// </value>
         public ApplicationWithOverrideVariableGroup ApplicationWithGroup
         {
             get { return this._applicationWithOverrideVariableGroup; }
@@ -58,12 +46,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the application server.
-        /// </summary>
-        /// <value>
-        /// The application server.
-        /// </value>
         public ApplicationServer ApplicationServer
         {
             get { return this._applicationServer; }
@@ -75,44 +57,14 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the select application command.
-        /// </summary>
-        /// <value>
-        /// The select application command.
-        /// </value>
         public ICommand SelectApplicationCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the select group command.
-        /// </summary>
-        /// <value>
-        /// The select group command.
-        /// </value>
         public ICommand SelectGroupCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the remove group command.
-        /// </summary>
-        /// <value>
-        /// The remove group command.
-        /// </value>
         public ICommand RemoveGroupCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the select server command.
-        /// </summary>
-        /// <value>
-        /// The select server command.
-        /// </value>
         public ICommand SelectServerCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the resolve command.
-        /// </summary>
-        /// <value>
-        /// The resolve command.
-        /// </value>
         public ICommand ResolveCommand { get; set; }
 
         /// <summary>

@@ -15,6 +15,7 @@ using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
+using PrestoViewModel.Windows;
 
 namespace PrestoViewModel.Tabs
 {
@@ -29,8 +30,36 @@ namespace PrestoViewModel.Tabs
         private InstallationSummaryDto _selectedInstallationSummaryDto;
         private Collection<ITimeZoneHelper> _timeZoneHelpers;
         private ITimeZoneHelper _selectedTimeZoneHelper;
+        private ApplicationServer _applicationServer;
+        private Application _application;
 
         public ICommand RefreshCommand { get; private set; }
+        public ICommand SelectApplicationCommand { get; set; }
+        public ICommand SelectServerCommand { get; set; }
+        public ICommand RemoveApplicationCommand { get; set; }
+        public ICommand RemoveServerCommand { get; set; }
+
+        public Application Application
+        {
+            get { return this._application; }
+
+            set
+            {
+                this._application = value;
+                NotifyPropertyChanged(() => this.Application);
+            }
+        }
+
+        public ApplicationServer ApplicationServer
+        {
+            get { return this._applicationServer; }
+
+            set
+            {
+                this._applicationServer = value;
+                NotifyPropertyChanged(() => this.ApplicationServer);
+            }
+        }
 
         public Collection<InstallationSummary> InstallationSummaryList
         {
@@ -145,13 +174,12 @@ namespace PrestoViewModel.Tabs
             {
                 await Task.Run(() =>
                 {
-                    using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
-                    {
-                        this.InstallationSummaryList = new Collection<InstallationSummary>(
-                            prestoWcf.Service.GetMostRecentByStartTime(50).ToList());
-                    }
+                    SetInstallationSummaryListBasedOnUserInput();
+
                     SetInstallationSummaryDtos();
                     this.SelectedInstallationSummary = null;
+
+                    ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.InstallationListRefreshed);
                 });
             }
             catch (Exception ex)
@@ -161,9 +189,61 @@ namespace PrestoViewModel.Tabs
             }
         }
 
+        private void SetInstallationSummaryListBasedOnUserInput()
+        {
+            using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+            {
+                if (this.ApplicationServer != null && this.Application != null)
+                {
+                    this.InstallationSummaryList = new Collection<InstallationSummary>(
+                        prestoWcf.Service.GetMostRecentByStartTimeServerAndApplication(50, this.ApplicationServer.Id, this.Application.Id).ToList());
+                    return;
+                }
+
+                if (this.ApplicationServer != null)
+                {
+                    this.InstallationSummaryList = new Collection<InstallationSummary>(
+                        prestoWcf.Service.GetMostRecentByStartTimeAndServer(50, this.ApplicationServer.Id).ToList());
+                    return;
+                }
+
+                if (this.Application != null)
+                {
+                    this.InstallationSummaryList = new Collection<InstallationSummary>(
+                        prestoWcf.Service.GetMostRecentByStartTimeAndApplication(50, this.Application.Id).ToList());
+                    return;
+                }
+
+                // No filter; just get the most recent.
+                this.InstallationSummaryList = new Collection<InstallationSummary>(prestoWcf.Service.GetMostRecentByStartTime(50).ToList());
+            }
+        }
+
+        private void SelectApplication()
+        {
+            this.InstallationSummaryDtos = new List<InstallationSummaryDto>();
+
+            var viewModel = new ApplicationSelectorViewModel();
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+            if (viewModel.UserCanceled) { return; }
+
+            this.Application = viewModel.SelectedApplication;
+        }
+
+        private void SelectServer()
+        {
+            this.InstallationSummaryDtos = new List<InstallationSummaryDto>();
+
+            ApplicationServerSelectorViewModel viewModel = new ApplicationServerSelectorViewModel();
+            MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
+            if (viewModel.UserCanceled) { return; }
+
+            this.ApplicationServer = viewModel.SelectedServer;
+        }
+
         private void SetInstallationSummaryDtos()
         {
-            if (this.InstallationSummaryList == null || this.InstallationSummaryList.Count < 1) { return; }
+            if (this.InstallationSummaryList == null || this.InstallationSummaryList.Count < 1) { return; }            
 
             List<InstallationSummaryDto> installationSummaryDtos = new List<InstallationSummaryDto>();
 
@@ -236,14 +316,28 @@ namespace PrestoViewModel.Tabs
 
         private void Initialize()
         {
-            this.RefreshCommand = new RelayCommand(Refresh);
+            this.RefreshCommand           = new RelayCommand(Refresh);
+            this.SelectApplicationCommand = new RelayCommand(SelectApplication);
+            this.SelectServerCommand      = new RelayCommand(SelectServer);
+            this.RemoveApplicationCommand = new RelayCommand(RemoveApplication);
+            this.RemoveServerCommand      = new RelayCommand(RemoveServer);
+        }
+
+        private void RemoveApplication()
+        {
+            this.Application = null;
+            this.InstallationSummaryDtos = new List<InstallationSummaryDto>();
+        }
+
+        private void RemoveServer()
+        {
+            this.ApplicationServer = null;
+            this.InstallationSummaryDtos = new List<InstallationSummaryDto>();
         }
 
         private void Refresh()
         {
-            this.LoadInstallationSummaryList();
-
-            ViewModelUtility.MainWindowViewModel.AddUserMessage(ViewModelResources.InstallationListRefreshed);
+            this.LoadInstallationSummaryList();            
         }
     }
 }

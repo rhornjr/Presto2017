@@ -101,6 +101,10 @@
     <Compile Include="Data\RavenDb\DataAccessLayerBase.cs" />
     <Compile Include="Data\RavenDb\GenericData.cs" />
     <Compile Include="Data\RavenDb\GlobalSettingData.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryAppServerStart.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryAppServerStart2.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryAppStart.cs" />
+    <Compile Include="Data\RavenDb\Indexes\InstallationSummaryServerStart.cs" />
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStart.cs" />
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStartUtc.cs" />
     <Compile Include="Data\RavenDb\Indexes\LogMessageCreatedTime.cs" />

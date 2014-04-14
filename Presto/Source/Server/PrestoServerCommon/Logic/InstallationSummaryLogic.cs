@@ -27,6 +27,21 @@ namespace PrestoServer.Logic
             return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetMostRecentByStartTime(numberToRetrieve);
         }
 
+        public static IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId)
+        {
+            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetMostRecentByStartTimeAndServer(numberToRetrieve, serverId);
+        }
+
+        public static IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId)
+        {
+            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetMostRecentByStartTimeAndApplication(numberToRetrieve, appId);
+        }
+
+        public static IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId)
+        {
+            return DataAccessFactory.GetDataInterface<IInstallationSummaryData>().GetMostRecentByStartTimeServerAndApplication(numberToRetrieve, serverId, appId);
+        }
+
         public static void Save(InstallationSummary installationSummary)
         {
             DataAccessFactory.GetDataInterface<IInstallationSummaryData>().Save(installationSummary);

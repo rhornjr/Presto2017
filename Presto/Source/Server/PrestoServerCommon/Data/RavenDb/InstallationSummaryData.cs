@@ -59,12 +59,28 @@ namespace PrestoServer.Data.RavenDb
                             summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId;
         }
 
-        /// <summary>
-        /// Gets the most recent by start time.
-        /// </summary>
-        /// <param name="numberToRetrieve">The number to retrieve.</param>
-        /// <returns></returns>
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
+        {
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, _ => true);
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId)
+        {
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, x => x.ApplicationServerId == serverId);
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId)
+        {
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, x => x.ApplicationWithOverrideVariableGroup.ApplicationId == appId);
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId)
+        {
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve,
+                x => x.ApplicationWithOverrideVariableGroup.ApplicationId == appId && x.ApplicationServerId == serverId);
+        }
+
+        private IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndWhereClause(int numberToRetrieve, Expression<Func<InstallationSummary, bool>> whereClause)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -86,6 +102,7 @@ namespace PrestoServer.Data.RavenDb
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
                         .Customize(x => x.WaitForNonStaleResults())
+                        .Where(whereClause)
                         .OrderByDescending(summary => summary.InstallationStartUtc)
                         .Take(numberToRetrieve)
                         );

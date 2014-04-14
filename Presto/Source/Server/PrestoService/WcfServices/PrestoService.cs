@@ -154,6 +154,21 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTime(numberToRetrieve));
         }
 
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId)
+        {
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeAndServer(numberToRetrieve, serverId));
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId)
+        {
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeAndApplication(numberToRetrieve, appId));
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId)
+        {
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeServerAndApplication(numberToRetrieve, serverId, appId));
+        }
+
         public void SaveInstallationSummary(InstallationSummary installationSummary)
         {
             Invoke(() => InstallationSummaryLogic.Save(installationSummary));

@@ -5,6 +5,7 @@ using System.ServiceModel;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Entities;
 using PrestoCommon.Wcf;
+using System.Diagnostics;
 
 namespace ConsoleTestRunner
 {
@@ -34,8 +35,42 @@ namespace ConsoleTestRunner
 
         static void Main(string[] args)
         {
+            try
+            {
+                TestGetServers();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            Console.WriteLine("Press any key to stop the program.");
+            Console.ReadKey();
+        }
+
+        private static void TestGetServers()
+        {
+            var stopwatch = new Stopwatch();
+
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                stopwatch.Start();
+                prestoWcf.Service.GetAllServers(true);
+                stopwatch.Stop();
+                Console.WriteLine("GetAllServers() took {0} milliseconds.", stopwatch.ElapsedMilliseconds);
+
+                stopwatch.Reset();
+                stopwatch.Start();
+                prestoWcf.Service.GetAllServersSlim();
+                stopwatch.Stop();
+                Console.WriteLine("GetAllServersSlim() took {0} milliseconds.", stopwatch.ElapsedMilliseconds);
+            }
+        }
+
+        private static void SomeTesting()
+        {
             var channelFactory = new WcfChannelFactory<IApplicationService>(new NetTcpBinding());
-            var endpointAddress = ConfigurationManager.AppSettings["endpointAddress"];
+            var endpointAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
 
             // The call to CreateChannel() actually returns a proxy that can intercept calls to the
             // service. This is done so that the proxy can retry on communication failures.            
@@ -56,9 +91,6 @@ namespace ConsoleTestRunner
             {
                 Console.WriteLine(app.Name);
             }
-
-            Console.WriteLine("Press any key to stop the program.");
-            Console.ReadKey();
         }
     }
 }

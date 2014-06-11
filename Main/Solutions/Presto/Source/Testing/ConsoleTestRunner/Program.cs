@@ -48,6 +48,21 @@ namespace ConsoleTestRunner
             Console.ReadKey();
         }
 
+        private static void TestGetOneServer()
+        {
+            var stopwatch = new Stopwatch();
+
+            using (var prestoWcf = new PrestoWcf<IServerService>())
+            {
+                stopwatch.Start();
+                var server = prestoWcf.Service.GetServerById("ApplicationServers/481");
+                stopwatch.Stop();
+                Console.WriteLine("GetServerById() took {0} milliseconds.", stopwatch.ElapsedMilliseconds);
+
+                Debug.WriteLine(server.Name);
+            }
+        }
+
         private static void TestGetServers()
         {
             var stopwatch = new Stopwatch();

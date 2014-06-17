@@ -97,9 +97,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xanico", "Xanico", "{3BA65A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoDashboardWeb", "Source\Client\PrestoDashboardWeb\PrestoDashboardWeb.csproj", "{AD7120E0-CB2E-4B6B-BB0E-2BEAFDCF2D6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrestoWeb", "Source\Client\PrestoWeb\PrestoWeb.csproj", "{B54C9FAE-366A-47D8-A106-24FE8EA031E2}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 16
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
 		SccLocalPath0 = .
@@ -157,6 +159,10 @@ Global
 		SccProjectTopLevelParentUniqueName14 = Presto.sln
 		SccProjectName14 = Source/Client/PrestoDashboardWeb
 		SccLocalPath14 = Source\\Client\\PrestoDashboardWeb
+		SccProjectUniqueName15 = Source\\Client\\PrestoWeb\\PrestoWeb.csproj
+		SccProjectTopLevelParentUniqueName15 = Presto.sln
+		SccProjectName15 = Source/Client/PrestoWeb
+		SccLocalPath15 = Source\\Client\\PrestoWeb
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -310,6 +316,16 @@ Global
 		{AD7120E0-CB2E-4B6B-BB0E-2BEAFDCF2D6D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AD7120E0-CB2E-4B6B-BB0E-2BEAFDCF2D6D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD7120E0-CB2E-4B6B-BB0E-2BEAFDCF2D6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -325,6 +341,7 @@ Global
 		{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
 		{1F949BE4-C782-4A7D-8FD0-91B76D4D6F07} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
 		{AD7120E0-CB2E-4B6B-BB0E-2BEAFDCF2D6D} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
+		{B54C9FAE-366A-47D8-A106-24FE8EA031E2} = {047B7E85-DA60-4E12-9BA4-BD5CE04711FF}
 		{038990D2-3F29-4D89-97A3-A11BC53D937E} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
 		{CFF4C0B5-1260-48B4-B17B-1DB6B75F52F9} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}
 		{2F01965F-4A1E-455C-9975-A17BF129EBD0} = {D82E3A5C-3204-4B84-9F02-5ED567D09D33}

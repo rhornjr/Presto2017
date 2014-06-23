@@ -25,10 +25,11 @@ namespace PrestoCommon.Entities
             set
             {
                 _appWithGroup = value;
-                if (_appWithGroup ==  null) { return; }
+                if (_appWithGroup ==  null || _appWithGroup.Application == null) { return; }
 
-                this.Description = _appWithGroup.Application.Name +
-                    _appWithGroup.CustomVariableGroup == null ? "" : " - " + _appWithGroup.CustomVariableGroup.Name;
+                this.Description = _appWithGroup.Application.Name;
+
+                if (_appWithGroup.CustomVariableGroup != null) { this.Description += " - " + _appWithGroup.CustomVariableGroup.Name;}
             }
         }
 

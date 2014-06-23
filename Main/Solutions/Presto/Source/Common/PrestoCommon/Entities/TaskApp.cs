@@ -45,7 +45,7 @@ namespace PrestoCommon.Entities
 
             try
             {
-                this.AppWithGroup.Install(applicationServer, DateTime.Now);
+                this.AppWithGroup.Install(applicationServer, DateTime.Now, false);
                 this.TaskSucceeded = true;
             }
             catch (Exception ex)

@@ -22,7 +22,7 @@ namespace PrestoServer.Misc
 
             HydrateTaskApps(appWithGroup);
 
-            InstallationResultContainer resultContainer = appWithGroup.Install(server, installationStartTime);
+            InstallationResultContainer resultContainer = appWithGroup.Install(server, installationStartTime, true);
 
             installationSummary.SetResults(resultContainer, DateTime.Now);
 

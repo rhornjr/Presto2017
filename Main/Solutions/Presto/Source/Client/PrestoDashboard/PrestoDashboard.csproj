@@ -192,8 +192,8 @@
     <Compile Include="Windows\ApplicationServerSelectorView.xaml.cs">
       <DependentUpon>ApplicationServerSelectorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ApplicationWithGroupView.xaml.cs">
-      <DependentUpon>ApplicationWithGroupView.xaml</DependentUpon>
+    <Compile Include="Windows\TaskAppView.xaml.cs">
+      <DependentUpon>TaskAppView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\CustomVariableGroupSelectorView.xaml.cs">
       <DependentUpon>CustomVariableGroupSelectorView.xaml</DependentUpon>
@@ -306,7 +306,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ApplicationWithGroupView.xaml">
+    <Page Include="Windows\TaskAppView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

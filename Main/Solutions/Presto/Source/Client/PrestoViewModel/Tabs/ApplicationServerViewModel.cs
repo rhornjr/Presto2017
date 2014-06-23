@@ -650,7 +650,7 @@ namespace PrestoViewModel.Tabs
 
         private void AddApplication()
         {
-            ApplicationWithGroupViewModel viewModel = new ApplicationWithGroupViewModel();
+            TaskAppViewModel viewModel = new TaskAppViewModel();
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 
@@ -689,7 +689,7 @@ namespace PrestoViewModel.Tabs
             // If the user changes the enabled property, we need to log that.
             bool originalEnabledValue = selectedAppWithGroup.Enabled;
 
-            ApplicationWithGroupViewModel viewModel = new ApplicationWithGroupViewModel(selectedAppWithGroup);
+            TaskAppViewModel viewModel = new TaskAppViewModel(selectedAppWithGroup);
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 

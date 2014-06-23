@@ -7,7 +7,7 @@ namespace PrestoDashboard.Windows
     /// <summary>
     /// Interaction logic for ApplicationWithGroupView.xaml
     /// </summary>
-    [ViewModel(typeof(ApplicationWithGroupViewModel))]
+    [ViewModel(typeof(TaskAppViewModel))]
     public partial class ApplicationWithGroupView : Window
     {
         /// <summary>

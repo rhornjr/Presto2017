@@ -548,7 +548,7 @@ namespace PrestoViewModel.Tabs
                 using (var prestoWcf = new PrestoWcf<IServerService>())
                 {
                     // So just run it locally.
-                    new AppInstaller().InstallApplication(this.SelectedApplicationServer, appWithGroup);
+                    new AppInstaller(). InstallApplication(this.SelectedApplicationServer, appWithGroup);
                 }
             }
             catch (Exception ex)

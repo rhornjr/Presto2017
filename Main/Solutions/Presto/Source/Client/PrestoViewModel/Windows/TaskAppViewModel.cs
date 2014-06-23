@@ -1,6 +1,9 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.Enums;
+using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
@@ -77,7 +80,19 @@ namespace PrestoViewModel.Windows
 
             this._originalAppWithGroup = new ApplicationWithOverrideVariableGroup();
 
-            Initialize();
+            InitializeCommands();
+        }
+
+        public TaskAppViewModel(TaskApp taskApp)
+        {
+            if (DesignMode.IsInDesignMode) { return; }
+
+            if (taskApp == null) { throw new ArgumentNullException("taskApp"); }
+
+            this.TaskBase = taskApp;
+
+            InitializeCommands();
+            InitializeData(taskApp.AppWithGroup);
         }
 
         /// <summary>
@@ -88,10 +103,29 @@ namespace PrestoViewModel.Windows
         {
             if (DesignMode.IsInDesignMode) { return; }
 
-            InitializeWorkingCopy(originalAppWithGroup);
-            this._originalAppWithGroup = originalAppWithGroup;
+            InitializeCommands();
+            InitializeData(originalAppWithGroup);
+        }
 
-            Initialize();
+        private static void PossiblyHydrateOriginalAppWithGroup(ApplicationWithOverrideVariableGroup originalAppWithGroup)
+        {
+            if (originalAppWithGroup.Application == null)
+            {
+                using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                {
+                    originalAppWithGroup.Application = prestoWcf.Service.GetById(originalAppWithGroup.ApplicationId);
+                }
+            }
+
+            if (originalAppWithGroup.CustomVariableGroup == null &&
+                !string.IsNullOrWhiteSpace(originalAppWithGroup.CustomVariableGroupId))
+            {
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    originalAppWithGroup.CustomVariableGroup =
+                        prestoWcf.Service.GetById(originalAppWithGroup.CustomVariableGroupId);
+                }
+            }
         }
 
         private void InitializeWorkingCopy(ApplicationWithOverrideVariableGroup appWithGroup)
@@ -101,7 +135,7 @@ namespace PrestoViewModel.Windows
             this.ApplicationWithGroup.Enabled             = appWithGroup.Enabled;
         }
 
-        private void Initialize()
+        private void InitializeCommands()
         {
             this.OkCommand                = new RelayCommand(Save);
             this.CancelCommand            = new RelayCommand(Cancel);
@@ -110,7 +144,15 @@ namespace PrestoViewModel.Windows
             this.RemoveGroupCommand       = new RelayCommand(RemoveGroup);
 
             this.UserCanceled = true;  // default
-        }            
+        }
+
+        private void InitializeData(ApplicationWithOverrideVariableGroup originalAppWithGroup)
+        {
+            PossiblyHydrateOriginalAppWithGroup(originalAppWithGroup);
+
+            InitializeWorkingCopy(originalAppWithGroup);
+            this._originalAppWithGroup = originalAppWithGroup;
+        }
 
         private void Save()
         {

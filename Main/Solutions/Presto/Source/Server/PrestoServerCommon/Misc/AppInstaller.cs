@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 using Xanico.Core;
@@ -18,11 +20,42 @@ namespace PrestoServer.Misc
 
             var installationSummary = new InstallationSummary(appWithGroup, server, installationStartTime);
 
+            HydrateTaskApps(appWithGroup);
+
             InstallationResultContainer resultContainer = appWithGroup.Install(server, installationStartTime);
 
             installationSummary.SetResults(resultContainer, DateTime.Now);
 
             LogAndSaveInstallationSummary(installationSummary);
+        }
+
+        private static void HydrateTaskApps(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            // TaskApp tasks are stored with only the IDs for the Application and CustomVariableGroup properties.
+            // Hydrate those before installing.
+
+            foreach (var task in appWithGroup.Application.Tasks.Where(x => x.PrestoTaskType == TaskType.App))
+            {
+                var taskApp = task as TaskApp;
+
+                if (taskApp.AppWithGroup.Application == null)
+                {
+                    using (var prestoWcf = new PrestoWcf<IApplicationService>())
+                    {
+                        taskApp.AppWithGroup.Application = prestoWcf.Service.GetById(taskApp.AppWithGroup.ApplicationId);
+                    }
+                }
+
+                if (taskApp.AppWithGroup.CustomVariableGroup == null &&
+                    !string.IsNullOrWhiteSpace(taskApp.AppWithGroup.CustomVariableGroupId))
+                {
+                    using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                    {
+                        taskApp.AppWithGroup.CustomVariableGroup =
+                            prestoWcf.Service.GetById(taskApp.AppWithGroup.CustomVariableGroupId);
+                    }
+                }
+            }
         }
 
         private static void LogAndSaveInstallationSummary(InstallationSummary installationSummary)

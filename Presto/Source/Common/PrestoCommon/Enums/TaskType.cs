@@ -10,7 +10,8 @@ namespace PrestoCommon.Enums
         [EnumMember] CopyFile,
         [EnumMember] DosCommand,        
         [EnumMember] XmlModify,
-        [EnumMember] VersionChecker
+        [EnumMember] VersionChecker,
+        [EnumMember] App
         //Installer  // Will enable this if we ever need it again.
     }
     #pragma warning restore 1591

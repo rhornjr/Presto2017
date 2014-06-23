@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
+using PrestoCommon.Enums;
 using Xanico.Core;
 
 namespace PrestoCommon.Entities
@@ -14,8 +15,28 @@ namespace PrestoCommon.Entities
     [DataContract]
     public class TaskApp : TaskBase
     {
+        private ApplicationWithOverrideVariableGroup _appWithGroup;
+
         [DataMember]
-        public ApplicationWithOverrideVariableGroup AppWithGroup { get; set; }
+        public ApplicationWithOverrideVariableGroup AppWithGroup
+        {
+            get { return _appWithGroup; }
+            
+            set
+            {
+                _appWithGroup = value;
+                if (_appWithGroup ==  null) { return; }
+
+                this.Description = _appWithGroup.Application.Name +
+                    _appWithGroup.CustomVariableGroup == null ? "" : " - " + _appWithGroup.CustomVariableGroup.Name;
+            }
+        }
+
+        public TaskApp(ApplicationWithOverrideVariableGroup appWithGroup)
+        {
+            this.AppWithGroup = appWithGroup;
+            this.PrestoTaskType = TaskType.App;
+        }
 
         public override void Execute(ApplicationServer applicationServer, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {

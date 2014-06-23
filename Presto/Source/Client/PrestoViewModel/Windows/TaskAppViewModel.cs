@@ -1,13 +1,12 @@
 ﻿using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.Enums;
 using PrestoViewModel.Mvvm;
 
 namespace PrestoViewModel.Windows
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ApplicationWithGroupViewModel : ViewModelBase
+    [TaskTypeAttribute(TaskType.App)]
+    public class TaskAppViewModel : TaskViewModel
     {
         private ApplicationWithOverrideVariableGroup _originalAppWithGroup;
         private ApplicationWithOverrideVariableGroup _applicationWithOverrideVariableGroup = new ApplicationWithOverrideVariableGroup();
@@ -27,14 +26,6 @@ namespace PrestoViewModel.Windows
         /// The cancel command.
         /// </value>
         public ICommand CancelCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [user canceled].
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if [user canceled]; otherwise, <c>false</c>.
-        /// </value>
-        public bool UserCanceled { get; private set; }
 
         /// <summary>
         /// Gets or sets the application with group.
@@ -78,9 +69,9 @@ namespace PrestoViewModel.Windows
         public ICommand RemoveGroupCommand { get; set; }        
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationWithGroupViewModel"/> class.
+        /// Initializes a new instance of the <see cref="TaskAppViewModel"/> class.
         /// </summary>
-        public ApplicationWithGroupViewModel()
+        public TaskAppViewModel()
         {
             if (DesignMode.IsInDesignMode) { return; }
 
@@ -90,10 +81,10 @@ namespace PrestoViewModel.Windows
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationWithGroupViewModel"/> class.
+        /// Initializes a new instance of the <see cref="TaskAppViewModel"/> class.
         /// </summary>
         /// <param name="originalAppWithGroup">The app with group.</param>
-        public ApplicationWithGroupViewModel(ApplicationWithOverrideVariableGroup originalAppWithGroup)
+        public TaskAppViewModel(ApplicationWithOverrideVariableGroup originalAppWithGroup)
         {
             if (DesignMode.IsInDesignMode) { return; }
 
@@ -125,6 +116,7 @@ namespace PrestoViewModel.Windows
         {
             this.UserCanceled = false;
             UpdateOriginalFromWorkingCopy();
+            this.TaskBase = new TaskApp(this._originalAppWithGroup);
             this.Close();
         }
 

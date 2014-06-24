@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Enums;
 using PrestoViewModel.Mvvm;
@@ -49,7 +50,7 @@ namespace PrestoViewModel.Windows
         {
             get
             {
-                return new List<string>(Enum.GetNames(typeof(TaskType)));
+                return Enum.GetNames(typeof (TaskType)).OrderBy(x => x).ToList();
             }
         }
 

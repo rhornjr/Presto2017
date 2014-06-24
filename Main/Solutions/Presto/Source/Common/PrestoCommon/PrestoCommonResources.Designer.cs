@@ -61,7 +61,7 @@ namespace PrestoCommon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Task Description: {0}.
+        ///   Looks up a localized string similar to Task Description: {0} - Complete.
         /// </summary>
         internal static string TaskAppLogMessage {
             get {

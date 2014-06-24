@@ -111,6 +111,8 @@ namespace PrestoCommon.Entities
                 {
                     DateTime taskStartTime = DateTime.Now;
 
+                    PossiblyAddTaskAppStartToInstallationResults(taskBase, taskStartTime);
+
                     taskBase.Execute(applicationServer, this);
 
                     _installationResultContainer.TaskDetails.Add(new TaskDetail(taskStartTime, DateTime.Now, taskBase.TaskDetails));
@@ -124,32 +126,45 @@ namespace PrestoCommon.Entities
                     }
                 }
 
-                if (numberOfSuccessfulTasks < 1)
-                {
-                    return FinalInstallationResultContainer(_installationResultContainer, InstallationResult.Failure);
-                }
-
-                if (atLeastOneTaskFailed)
-                {
-                    return FinalInstallationResultContainer(_installationResultContainer, InstallationResult.PartialSuccess);
-                }
-
-                return FinalInstallationResultContainer(_installationResultContainer, InstallationResult.Success);
+                return FinalInstallationResultContainer(_installationResultContainer, InstallationResult.Success, numberOfSuccessfulTasks, atLeastOneTaskFailed);
             }
             catch (Exception ex)
             {
                 Logger.LogException(ex);
-                return FinalInstallationResultContainer(_installationResultContainer, InstallationResult.Failure);
+                return FinalInstallationResultContainer(_installationResultContainer, InstallationResult.Failure, numberOfSuccessfulTasks, atLeastOneTaskFailed);
             }
             finally
             {
                 // Clear this so we don't keep things hanging around in memory unnecessarily.
-                if (calledFromAppInstaller) { _installationResultContainer = new InstallationResultContainer(); }
+                if (calledFromAppInstaller) { _installationResultContainer = null; }
             }
         }
 
-        private static InstallationResultContainer FinalInstallationResultContainer(InstallationResultContainer container, InstallationResult result)
+        private static void PossiblyAddTaskAppStartToInstallationResults(TaskBase taskBase, DateTime taskStartTime)
         {
+            // If we're about to run a TaskApp, include that in our installation results.
+            if (taskBase as TaskApp != null)
+            {
+                _installationResultContainer.TaskDetails.Add(new TaskDetail(taskStartTime, DateTime.Now,
+                    "Starting a TaskApp: " + taskBase.Description));
+            }
+        }
+
+        private static InstallationResultContainer FinalInstallationResultContainer(
+            InstallationResultContainer container, InstallationResult result, int numberOfSuccessfulTasks, bool atLeastOneTaskFailed)
+        {
+            if (numberOfSuccessfulTasks < 1)
+            {
+                container.InstallationResult = InstallationResult.Failure;
+                return container;
+            }
+
+            if (atLeastOneTaskFailed)
+            {
+                container.InstallationResult = InstallationResult.PartialSuccess;
+                return container;
+            }
+
             container.InstallationResult = result;
             return container;
         }

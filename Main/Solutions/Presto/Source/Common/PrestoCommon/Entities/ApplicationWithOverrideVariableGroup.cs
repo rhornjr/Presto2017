@@ -83,6 +83,7 @@ namespace PrestoCommon.Entities
         }
 
         private static InstallationResultContainer _installationResultContainer;
+        private static bool _atLeastOneTaskFailedWhereFailureCausesAllStop = false;
 
         /// <summary>
         /// Installs this instance.
@@ -119,10 +120,17 @@ namespace PrestoCommon.Entities
 
                     if (taskBase.TaskSucceeded == true) { numberOfSuccessfulTasks++; }
 
+                    // The reason this is here is because we're trying to detect when failures occur within the TaskApp types.
+                    if (_atLeastOneTaskFailedWhereFailureCausesAllStop) { break; }
+
                     if (taskBase.TaskSucceeded == false)
                     {
                         atLeastOneTaskFailed = true;
-                        if (taskBase.FailureCausesAllStop == 1) { break; } // No more processing.
+                        if (taskBase.FailureCausesAllStop == 1)
+                        {
+                            _atLeastOneTaskFailedWhereFailureCausesAllStop = true;
+                            break;  // No more processing.
+                        } 
                     }
                 }
 
@@ -137,6 +145,7 @@ namespace PrestoCommon.Entities
             {
                 // Clear this so we don't keep things hanging around in memory unnecessarily.
                 if (calledFromAppInstaller) { _installationResultContainer = null; }
+                if (calledFromAppInstaller) { _atLeastOneTaskFailedWhereFailureCausesAllStop = false; } // Reset for the next call
             }
         }
 
@@ -153,7 +162,7 @@ namespace PrestoCommon.Entities
         private static InstallationResultContainer FinalInstallationResultContainer(
             InstallationResultContainer container, InstallationResult result, int numberOfSuccessfulTasks, bool atLeastOneTaskFailed)
         {
-            if (numberOfSuccessfulTasks < 1)
+            if (_atLeastOneTaskFailedWhereFailureCausesAllStop || numberOfSuccessfulTasks < 1)
             {
                 container.InstallationResult = InstallationResult.Failure;
                 return container;

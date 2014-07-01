@@ -294,13 +294,18 @@ namespace PrestoViewModel.Tabs
 
         private void DeleteTask()
         {
-            if (!UserConfirmsDelete(this.SelectedTasks[0].Description)) { return; }
+            string descriptionOfTasks = "multiple tasks";
+            if (this.SelectedTasks.Count == 1) { descriptionOfTasks = this.SelectedTasks[0].Description; }
+            if (!UserConfirmsDelete(descriptionOfTasks)) { return; }
 
             try
             {
                 // Note: We don't actually delete the task; we just save the application in its new state (without the task).
-
-                this.SelectedApplication.Tasks.Remove(this.SelectedTasks[0]);
+                
+                foreach (var task in this.SelectedTasks)
+                {
+                    this.SelectedApplication.Tasks.Remove(task);
+                }
 
                 CorrectTaskSequence();
 

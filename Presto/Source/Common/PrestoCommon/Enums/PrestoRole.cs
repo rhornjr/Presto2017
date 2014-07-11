@@ -7,6 +7,7 @@ namespace PrestoCommon.Enums
         ModifyQa,
         ModifyStaging,
         ModifyProduction,
-        Admin
+        Admin,
+        Variables
     }
 }

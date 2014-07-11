@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -19,6 +18,7 @@ using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
 using PrestoViewModel.Windows;
+using Xanico.Core;
 
 namespace PrestoViewModel.Tabs
 {
@@ -129,6 +129,29 @@ namespace PrestoViewModel.Tabs
             // CustomVariableGroupsCollectionView was initialized on a background thread and subsequent
             // updates would cause a threading error.
             InitializeCustomVariableGroupsCollectionView(() => ApplyDisabledFilterToCustomVariableGroups());
+        }
+
+        public static bool UserCanAlter
+        {
+            get { return UserCanAlterMethod(); }
+        }
+
+        public static bool UserCanAlterMethod()
+        {
+            try
+            {
+                return UserHasRole("Variables");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                return false;
+            }
+        }
+
+        private static bool UserHasRole(string role)
+        {
+            return ViewModelUtility.AllowedRoles.Contains(role);
         }
 
         private void FindCustomVariable()

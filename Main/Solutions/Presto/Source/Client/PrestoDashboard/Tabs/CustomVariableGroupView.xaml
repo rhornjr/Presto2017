@@ -32,13 +32,13 @@
                               Command="{Binding RefreshVariableGroupCommand}"/>
                     <Separator></Separator>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding UserCanAlter}">
                     <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableGroupCommand}" Height="20" />
                     <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" Height="20" />
                     <Button Style="{StaticResource StandardButton}" Content="Refresh" Command="{Binding RefreshVariableGroupCommand}" Height="20" />
                     <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableGroupCommand}" />-->
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding UserCanAlter}">
                     <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportVariableGroupCommand}" Height="20"/>
                     <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportVariableGroupCommand}" Height="20" />
                 </StackPanel>
@@ -73,12 +73,12 @@
                     <CheckBox Grid.Column="1" Grid.Row="2" Style="{StaticResource StandardCheckBox}" Content="Disabled" IsChecked="{Binding SelectedCustomVariableGroup.Disabled}"
                               FlowDirection="LeftToRight" VerticalAlignment="Center" Width="140" HorizontalAlignment="Right"/>
 
-                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" />
+                    <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Style="{StaticResource StandardButton}" Content="Save" Command="{Binding SaveVariableGroupCommand}" IsEnabled="{Binding UserCanAlter}"/>
                 </Grid>
                 
             </StackPanel>
 
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" IsEnabled="{Binding UserCanAlter}">
                 <Button Style="{StaticResource StandardButton}" Content="Add..." Command="{Binding AddVariableCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Edit..." Command="{Binding EditVariableCommand}" />
                 <Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteVariableCommand}" />                

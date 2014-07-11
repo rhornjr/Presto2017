@@ -77,13 +77,17 @@ namespace PrestoViewModel.Misc
             }
         }
 
-        private static List<InstallationEnvironment> _allEnvironments = InitializeAllEnvironments();
+        private static readonly List<InstallationEnvironment> _allEnvironments = InitializeAllEnvironments();
 
-        public static List<InstallationEnvironment> _allowedEnvironments = InitializeAllowedEnvironments();
+        public static List<string> AllowedRoles { get; set; }
 
-        public static List<InstallationEnvironment> AllowedEnvironments
+        public static List<InstallationEnvironment> AllowedEnvironments { get; private set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
+        static ViewModelUtility()
         {
-            get { return _allowedEnvironments; }
+            InitializeAllowedRoles();
+            InitializeAllowedEnvironments();
         }
 
         public static bool UserIsPrestoAdmin { get; private set; }
@@ -100,50 +104,61 @@ namespace PrestoViewModel.Misc
             return allEnvironments;
         }
 
-        private static List<InstallationEnvironment> InitializeAllowedEnvironments()
+        private static void InitializeAllowedRoles()
         {
-            // Cache the environment and access (true/false) so we don't constantly make an active directory call during view/view model binding.
+            AllowedRoles = new List<string>();
 
-            var allowedEnvironments = new List<InstallationEnvironment>();
-
-            // It's possible that security hasn't been set up yet, so no AdInfo will exist. Let all environments be accessed.
-            if (AdInfo == null || AdInfo.SecurityEnabled == false) { return _allEnvironments; }
+            // It's possible that security hasn't been set up yet, so no AdInfo will exist. Set all roles to allowed.
+            if (AdInfo == null || AdInfo.SecurityEnabled == false)
+            {
+                foreach (var groupWithRoles in AdGroupRolesList)
+                {
+                    groupWithRoles.PrestoRoles.ForEach(x => AllowedRoles.Add(x.ToString()));
+                    UserIsPrestoAdmin = true;
+                }
+                return;
+            }
 
             string domainConnection = string.Format(CultureInfo.InvariantCulture, "{0}.{1}:{2}", AdInfo.Domain, AdInfo.DomainSuffix, AdInfo.DomainPort);
-            string container        = string.Format(CultureInfo.InvariantCulture, "dc={0},dc={1}", AdInfo.Domain, AdInfo.DomainSuffix);
-            string adQueryUser      = AdInfo.ActiveDirectoryAccountUser;
-            string adQueryPassword  = AesCrypto.Decrypt(AdInfo.ActiveDirectoryAccountPassword);
+            string container = string.Format(CultureInfo.InvariantCulture, "dc={0},dc={1}", AdInfo.Domain, AdInfo.DomainSuffix);
+            string adQueryUser = AdInfo.ActiveDirectoryAccountUser;
+            string adQueryPassword = AesCrypto.Decrypt(AdInfo.ActiveDirectoryAccountPassword);
 
             using (var principalContext = new PrincipalContext(ContextType.Domain, domainConnection, container, adQueryUser, adQueryPassword))
             using (var userPrincipal = UserPrincipal.FindByIdentity(principalContext, IdentityType.SamAccountName, PrestoUser.Identity.Name))
             {
-                foreach (var environment in _allEnvironments)
+                foreach (var groupWithRoles in AdGroupRolesList)
                 {
-                    foreach (var groupWithRoles in AdGroupRolesList)
+                    if (!userPrincipal.IsMemberOf(principalContext, IdentityType.SamAccountName, groupWithRoles.AdGroupName)) { continue; }
+
+                    // If we reach here, the user is in the group passed into this method.
+
+                    groupWithRoles.PrestoRoles.ForEach(x => AllowedRoles.Add(x.ToString()));
+
+                    if (groupWithRoles.PrestoRoles.Exists(r => r == PrestoRole.Admin)) { UserIsPrestoAdmin = true; }
+                }
+            }
+        }
+
+        private static void InitializeAllowedEnvironments()
+        {
+            // Cache the environment and access (true/false) so we don't constantly make an active directory call during view/view model binding.
+
+            AllowedEnvironments = new List<InstallationEnvironment>();
+
+            foreach (var environment in _allEnvironments)
+            {
+                bool environmentExistsInRoles = AllowedRoles.Exists(
+                    r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant());
+
+                if (environmentExistsInRoles || UserIsPrestoAdmin)
+                {
+                    if (!AllowedEnvironments.Exists(x => x.Name == environment.Name))
                     {
-                        if (!userPrincipal.IsMemberOf(principalContext, IdentityType.SamAccountName, groupWithRoles.AdGroupName)) { continue; }
-
-                        // If we reach here, the user is in the group passed into this method.
-
-                        bool environmentExistsInRoles = groupWithRoles.PrestoRoles.Exists(
-                            r => r.ToString().ToUpperInvariant() == ("Modify" + environment).ToUpperInvariant());
-
-                        bool adminExistsInRoles = groupWithRoles.PrestoRoles.Exists(r => r.ToString().ToUpperInvariant() == "ADMIN");
-
-                        if (adminExistsInRoles && !UserIsPrestoAdmin) { UserIsPrestoAdmin = true; }
-
-                        if (environmentExistsInRoles || adminExistsInRoles)
-                        {
-                            if (!allowedEnvironments.Exists(x => x.Name == environment.Name))
-                            {
-                                allowedEnvironments.Add(environment);
-                            }
-                        }
+                        AllowedEnvironments.Add(environment);
                     }
                 }
             }
-
-            return allowedEnvironments;
         }
 
         public static bool UserCanAccessEnvironment(InstallationEnvironment environment)

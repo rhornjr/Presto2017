@@ -122,6 +122,7 @@ namespace PrestoViewModel.Tabs
                         this.ActiveDirectoryInfo = prestoWcf.Service.GetActiveDirectoryInfo();
                     }
                     if (this.ActiveDirectoryInfo == null) { this.ActiveDirectoryInfo = new ActiveDirectoryInfo(); }
+                    this.NotifyPropertyChanged(() => this.ActiveDirectoryInfo);
                     this.NotifyPropertyChanged(() => this.UserCanModifySecurity);
                 });
             }

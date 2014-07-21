@@ -43,7 +43,7 @@
                     <!--<Button Style="{StaticResource StandardButton}" Content="Delete..." Command="{Binding DeleteApplicationCommand}" />-->                    
                 </StackPanel>
             </StackPanel>
-            <ListBox ItemsSource="{Binding Source={StaticResource SortedApplications}}" DisplayMemberPath="Name"
+            <ListBox ItemsSource="{Binding Source={StaticResource SortedApplications}}" DisplayMemberPath="NameAndVersion"
                      SelectedItem="{Binding SelectedApplication}"/>
         </DockPanel>
 

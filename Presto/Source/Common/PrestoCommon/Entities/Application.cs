@@ -37,6 +37,15 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string Version { get; set; }
 
+        [JsonIgnore]  // We do not want RavenDB to serialize this. (We also don't need this to go over WCF.)
+        public string NameAndVersion
+        {
+            get
+            {
+                return this.Name + " " + this.Version;
+            }
+        }
+
         [DataMember]
         public TaskVersionChecker TaskVersionChecker
         {

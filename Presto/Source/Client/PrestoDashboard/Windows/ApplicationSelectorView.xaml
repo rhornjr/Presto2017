@@ -15,7 +15,7 @@
 
         <DockPanel Grid.Row="0">
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Applications" HorizontalAlignment="Center"/>
-            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Applications}" DisplayMemberPath="Name"
+            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Applications}" DisplayMemberPath="NameAndVersion"
                      SelectedItem="{Binding SelectedApplication}" Height="auto">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">

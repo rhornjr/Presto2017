@@ -27,7 +27,7 @@ namespace PrestoCommon.Entities
                 _appWithGroup = value;
                 if (_appWithGroup ==  null || _appWithGroup.Application == null) { return; }
 
-                this.Description = _appWithGroup.Application.Name;
+                this.Description = _appWithGroup.Application.NameAndVersion;
 
                 if (_appWithGroup.CustomVariableGroup != null) { this.Description += " - " + _appWithGroup.CustomVariableGroup.Name;}
             }

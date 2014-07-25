@@ -93,6 +93,18 @@ namespace PrestoViewModel.Tabs
                 this._selectedCustomVariableGroup = value;
                 NotifyPropertyChanged(() => this.SelectedCustomVariableGroup);
                 NotifyPropertyChanged(() => this.CustomVariableGroupIsSelected);
+                NotifyPropertyChanged(() => this.SelectedCustomVariableGroupVariables);
+            }
+        }
+
+        public IOrderedEnumerable<CustomVariable> SelectedCustomVariableGroupVariables
+        {
+            // Note: This property was created because sorting wasn't working on the grid that showed the tasks.
+            //       We have this property so we can return the correctly sorted order.
+            get
+            {
+                if (this.SelectedCustomVariableGroup == null || this.SelectedCustomVariableGroup.CustomVariables == null) { return null; }
+                return this.SelectedCustomVariableGroup.CustomVariables.OrderBy(x => x.Key);
             }
         }
 

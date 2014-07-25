@@ -91,7 +91,7 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Style="{StaticResource StandardLabel}" Content="Custom Variables" FontWeight="Bold"/>            
                 <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedCustomVariableGroup.CustomVariables}"
+                      ItemsSource="{Binding SelectedCustomVariableGroupVariables}"
                       SelectedItem="{Binding SelectedCustomVariable}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">

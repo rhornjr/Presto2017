@@ -3,15 +3,17 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-  controller('appsController', ['$scope', '$http', function ($scope, $http) {
-      $http.get('http://fs-6103/PrestoWebApi/api/apps/')
-        .then(function (result) {
-            $scope.apps = result.data;
-        });
-  }])
+    controller('appsController', function ($scope, appsRepository) {
+        // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
+        appsRepository.getApps(function (dataResponse) {
+            $scope.apps = dataResponse;
+            $scope.lastRefreshTime = new Date();
+        });        
+  })
   .controller('serversController', ['$scope', '$http', function ($scope, $http) {
-      $http.get('http://fs-6103/PrestoWebApi/api/servers/')
-        .then(function (result) {
-            $scope.servers = result.data;
-        });
+      // Commented just for testing so we don't have to wait for the servers to load.
+      //$http.get('http://localhost/PrestoWebApi/api/servers/')
+      //  .then(function (result) {
+      //      $scope.servers = result.data;
+      //  });
   }]);

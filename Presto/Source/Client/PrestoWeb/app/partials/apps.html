@@ -1,6 +1,7 @@
 <p>Apps</p>
 <br />
-Search: <input type="text" ng-model="searchText" />
+Search: <input type="text" ng-model="searchText" /><br/>
+Loading: <label>{{loading}}</label><br/>
 Last refresh time: <label>{{lastRefreshTime}}</label>
 <div ng-repeat="app in apps | filter:{Name: searchText}" class="slide">
     {{app.Name}} {{app.Version}}

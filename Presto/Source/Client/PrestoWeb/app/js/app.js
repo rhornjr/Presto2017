@@ -15,10 +15,13 @@ factory('appsRepository', ['$http', function ($http) {
 
     var data;
 
-    if (data != null) { return data; }
-
     return {
         getApps: function (callbackFunction) {
+            if (data) {
+                callbackFunction(data);
+                return;
+            }
+
             // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
             $http.get('http://localhost/PrestoWebApi/api/apps/')
                 .then(function (result) {

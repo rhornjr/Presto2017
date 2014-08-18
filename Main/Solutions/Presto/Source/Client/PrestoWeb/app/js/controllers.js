@@ -36,4 +36,8 @@ angular.module('myApp.controllers', []).
       // ----------------------------------------------------------------------------------------
 
       $scope.refresh(false);
-  });
+  })
+  .controller('appController', function ($scope, $routeParams) {
+
+      $scope.appId = $routeParams.appId;
+});

@@ -40,6 +40,28 @@ app.factory('appsRepository', ['$http', function ($http) {
     }
 }]);
 
+app.factory('serversRepository', ['$http', function ($http) {
+
+    var data;
+    var lastRefreshTime;
+
+    return {
+        getServers: function (forceRefresh, callbackFunction) {
+            if (data && forceRefresh == false) {
+                callbackFunction(data, lastRefreshTime);
+                return;
+            }
+
+            $http.get('http://localhost/PrestoWebApi/api/servers/')
+                .then(function (result) {
+                    data = result.data;
+                    lastRefreshTime = new Date();
+                    callbackFunction(data, lastRefreshTime);
+                });
+        }
+    }
+}]);
+
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/apps', { templateUrl: 'partials/apps.html', controller: 'appsController' });
     $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });

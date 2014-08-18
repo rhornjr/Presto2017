@@ -1,6 +1,9 @@
 <p>Servers</p>
 <br />
-Search: <input type="text" ng-model="searchText" />
-<div ng-repeat="server in servers | filter: searchText" class="slide">
+Search: <input type="text" ng-model="searchText" /><br/>
+Loading: <label>{{loading}}</label><br />
+Last refresh time: <label>{{lastRefreshTime}}</label><br />
+<button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+<div ng-repeat="server in servers | filter:{Name: searchText}" class="slide">
     {{server.Name}}
 </div>

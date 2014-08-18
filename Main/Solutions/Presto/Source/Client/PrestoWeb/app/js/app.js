@@ -1,15 +1,16 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', [
+var app = angular.module('myApp', [
   'ngAnimate',
   'ngRoute',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
   'myApp.controllers'
-]).
-factory('appsRepository', ['$http', function ($http) {
+]);
+
+app.factory('appsRepository', ['$http', function ($http) {
     // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.
     // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
@@ -23,7 +24,7 @@ factory('appsRepository', ['$http', function ($http) {
                 callbackFunction(data, lastRefreshTime);
                 return;
             }
-            
+
             $http.get('http://localhost/PrestoWebApi/api/apps/')
                 .then(function (result) {
                     data = result.data;
@@ -31,10 +32,10 @@ factory('appsRepository', ['$http', function ($http) {
                     callbackFunction(data, lastRefreshTime);
                 });
         }
-    }    
-}])
-.
-config(['$routeProvider', function($routeProvider) {
+    }
+}]);
+
+app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/apps', { templateUrl: 'partials/apps.html', controller: 'appsController' });
     $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });
     $routeProvider.otherwise({ redirectTo: '/apps' });

@@ -6,9 +6,9 @@ angular.module('myApp.controllers', []).
     controller('appsController', function ($scope, appsRepository) {
         // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
         $scope.loading = 1;
-        appsRepository.getApps(function (dataResponse) {
+        appsRepository.getApps(function (dataResponse, lastRefreshTime) {
             $scope.apps = dataResponse;
-            $scope.lastRefreshTime = new Date();
+            $scope.lastRefreshTime = lastRefreshTime;
             $scope.loading = 0;
         });        
   })

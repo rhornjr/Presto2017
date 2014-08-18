@@ -10,23 +10,25 @@ angular.module('myApp', [
   'myApp.controllers'
 ]).
 factory('appsRepository', ['$http', function ($http) {
-    // The factory exists so we only load this data once. If it was in the controller, the service would be called every time
+    // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.
+    // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
 
     var data;
+    var lastRefreshTime;
 
     return {
         getApps: function (callbackFunction) {
             if (data) {
-                callbackFunction(data);
+                callbackFunction(data, lastRefreshTime);
                 return;
             }
-
-            // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
+            
             $http.get('http://localhost/PrestoWebApi/api/apps/')
                 .then(function (result) {
                     data = result.data;
-                    callbackFunction(result.data);
+                    lastRefreshTime = new Date();
+                    callbackFunction(data, lastRefreshTime);
                 });
         }
     }    

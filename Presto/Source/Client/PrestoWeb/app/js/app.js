@@ -62,8 +62,19 @@ app.factory('serversRepository', ['$http', function ($http) {
     }
 }]);
 
+// apps.html calls this function because it's trying to pass a Raven ID (with a slash in it). Since we still
+// can't bring up the app page, perhaps use a replace function instead of this escape function? Replace the
+// *last* slash with something like ^^. Then, on the receiving  page's controller, replace the ^^ with a slash
+// to get back to the real ID.
+app.filter('escape', function () {
+    return function (input) {
+        return encodeURIComponent(input);
+    }
+});
+
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/apps', { templateUrl: 'partials/apps.html', controller: 'appsController' });
     $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });
+    $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
     $routeProvider.otherwise({ redirectTo: '/apps' });
 }]);

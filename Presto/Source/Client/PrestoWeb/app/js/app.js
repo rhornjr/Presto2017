@@ -76,5 +76,11 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/apps', { templateUrl: 'partials/apps.html', controller: 'appsController' });
     $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });
     $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
+    $routeProvider.when('/app/applications/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });  // *Read note below.
     $routeProvider.otherwise({ redirectTo: '/apps' });
 }]);
+
+// This route ('/app/applications/:appId?') was added because Raven's IDs have slashes in them (applications/1193). Since
+// angular thinks we're going to /app/applications/ because of the slash, just add that as the route. The numerical part
+// of the ID gets passed. Then, on the receiving controller, just prefix the ID with the literal 'applications/'.
+// See http://stackoverflow.com/q/25372095/279516.

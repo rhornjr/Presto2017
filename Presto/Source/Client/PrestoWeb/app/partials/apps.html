@@ -5,5 +5,5 @@ Loading: <label>{{loading}}</label><br/>
 Last refresh time: <label>{{lastRefreshTime}}</label><br/>
 <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
 <div ng-repeat="app in apps | filter:{Name: searchText}" class="slide">
-    <a ng-href="#/app/{{app.Id}}">{{app.Name}} {{app.Version}}</a>
+    <a ng-click="gotoApp(app.Id)" href="">{{app.Name}} {{app.Version}}</a>
 </div>

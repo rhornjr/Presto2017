@@ -37,6 +37,11 @@ angular.module('myApp.controllers', []).
 
       $scope.refresh(false);
   })
-  .controller('appController', function ($scope, $routeParams) {
+  .controller('appController', function ($scope, $http, $routeParams) {
       $scope.appId = $routeParams.appId;
+      var modifiedAppId = $scope.appId.replace("/", "^^");  // Because we shouldn't send slashes in a web API call.
+      $http.get('http://localhost/PrestoWebApi/api/app/' + modifiedAppId)
+                .then(function (result) {
+                    $scope.app = result.data;
+                });
 });

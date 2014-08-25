@@ -18,6 +18,9 @@ h2 {
 h2.info { background-color: #0B5586; }
 h2.score { background-color: #4494C9; }
 
+h2.mainHeader { background-color: #0B5586; }
+h2.subHeader { background-color: #4494C9; }
+
 .red {
     color: red; 
 }

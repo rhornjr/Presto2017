@@ -48,8 +48,26 @@ angular.module('myApp.controllers', []).
   .controller('installsController', function ($scope, $http) {
       $scope.loading = 1;
       $scope.installs = null;
+      $scope.selectedSummaries = [];
 
-      $scope.gridOptions = { data: 'installs' };
+      $scope.gridOptions = {
+          data: 'installs',
+          multiSelect: false,
+          selectedItems: $scope.selectedSummaries,
+          columnDefs: [{ field: 'ApplicationName', displayName: 'App', width: "28%", resizable: true },
+                       { field: 'ServerName', displayName: 'Server', width: "20%" },
+                       { field: 'InstallationStart', displayName: 'Start', width: "20%" },
+                       { field: 'InstallationEnd', displayName: 'End', width: "20%" },
+                       { field: 'Result', displayName: 'Result', width: "10%" }]
+      };
+
+      $scope.gridOptions2 = {
+          data: 'selectedSummaries[0].TaskDetails',
+          multiSelect: false,
+          columnDefs: [{ field: 'StartTime', displayName: 'Start', width: "20%", resizable: true },
+                       { field: 'EndTime', displayName: 'End', width: "20%" },
+                       { field: 'Details', displayName: 'Details', width: "58%" }]
+      };
 
       $http.get('http://localhost/PrestoWebApi/api/installs/')
             .then(function (result) {

@@ -34,6 +34,7 @@ namespace PrestoWeb.Controllers
                 dto.Id                     = installationSummary.Id;
                 dto.Result                 = installationSummary.InstallationResult.ToString();
                 dto.ServerName             = installationSummary.ApplicationServer.Name;
+                dto.TaskDetails            = installationSummary.TaskDetails;
 
                 timeZoneHelper.SetStartAndEndTimes(installationSummary, dto);
 

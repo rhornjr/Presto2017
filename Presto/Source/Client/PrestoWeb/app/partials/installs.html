@@ -1,12 +1,15 @@
 ﻿<div id="container" class="PageContainer">
     <h2 class="mainHeader">Installations</h2>
-    <div class="OneOfTwo">
-        <div class="gridStyle" ng-grid="gridOptions"></div>
-        <!--Search: <input type="text" ng-model="searchText" /><br /><br />
-        <div ng-repeat="install in installs | filter:{Name: searchText}" class="slide">
-            {{install.ApplicationName}} | {{install.ServerName}} | {{install.InstallationStart}} | {{install.InstallationEnd}} | {{install.Result}}
-        </div>-->
-    </div>
+    <div class="gridStyle" ng-grid="gridOptions" style="width:900px"></div>
+    <div class="gridStyle" ng-grid="gridOptions2" style="width:900px"></div>
+    <!--<div class="TwoOfTwo">
+        {{mySelections}}
+        <div ng-repeat="selection in mySelections" class="slide">
+            <div ng-repeat="task in selection.TaskDetails" class="slide">
+                {{task.StartTime}} | {{task.EndTime}} | {{task.Details}}
+            </div>
+        </div>
+    </div>-->
     <h2 class="footer">
         <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>

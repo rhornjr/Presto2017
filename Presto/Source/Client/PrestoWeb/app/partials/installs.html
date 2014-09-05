@@ -1,0 +1,12 @@
+﻿<div id="container" class="PageContainer">
+    <h2 class="mainHeader">Installations</h2>
+    <div class="OneOfTwo">
+        Search: <input type="text" ng-model="searchText" /><br /><br />
+        <div ng-repeat="install in installs | filter:{Name: searchText}" class="slide">
+            {{install.ApplicationServer.Name}}
+        </div>
+    </div>
+    <h2 class="footer">
+        <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+    </h2>
+</div>

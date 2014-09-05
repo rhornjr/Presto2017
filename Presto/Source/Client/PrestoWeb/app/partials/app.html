@@ -1,13 +1,19 @@
-﻿<h2 class="mainHeader">Application</h2>
-<label>Name: </label><input type="text" value="{{app.Name}}" style="width:450px" />
-<label>Version: </label><input type="text" value="{{app.Version}}" />
+﻿<div id="container" class="PageContainer">
+    <h2 class="mainHeader">Application</h2>
+    <label>Name: </label><input type="text" value="{{app.Name}}" style="width:450px" />
+    <label>Version: </label><input type="text" value="{{app.Version}}" />
 
-<h2 class="subHeader">Tasks</h2>
-<div ng-repeat="task in app.Tasks" class="slide">
-    <a ng-click="gotoApp(app.Id)" href="">{{task.Sequence}} {{task.Description}}</a>
-</div>
+    <h2 class="subHeader">Tasks</h2>
+    <div class="OneOfTwo">
+        <div ng-repeat="task in app.Tasks" class="slide">
+            <a ng-click="gotoApp(app.Id)" href="">{{task.Sequence}} {{task.Description}}</a>
+        </div>
+    </div>
 
-<h2 class="subHeader">Custom Variable Groups</h2>
-<div ng-repeat="variableGroup in app.CustomVariableGroups" class="slide">
-    <a ng-click="gotoApp(app.Id)" href="">{{variableGroup.Name}}</a>
+    <h2 class="subHeader">Custom Variable Groups</h2>
+    <div class="TwoOfTwo">
+        <div ng-repeat="variableGroup in app.CustomVariableGroups" class="slide">
+            <a ng-click="gotoApp(app.Id)" href="">{{variableGroup.Name}}</a>
+        </div>
+    </div>
 </div>

@@ -27,6 +27,12 @@ div.OneOfTwo { height:300px; overflow:auto }
 div.TwoOfTwo { height:250px; overflow:auto }
 div.PageContainer { width:900px }
 
+.gridStyle {
+    border: 1px solid rgb(212,212,212);
+    width: 400px; 
+    height: 300px
+}
+
 .red {
     color: red; 
 }

@@ -48,6 +48,9 @@ angular.module('myApp.controllers', []).
   .controller('installsController', function ($scope, $http) {
       $scope.loading = 1;
       $scope.installs = null;
+
+      $scope.gridOptions = { data: 'installs' };
+
       $http.get('http://localhost/PrestoWebApi/api/installs/')
             .then(function (result) {
                 $scope.installs = result.data;

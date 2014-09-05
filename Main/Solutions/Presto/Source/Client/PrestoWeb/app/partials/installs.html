@@ -3,7 +3,7 @@
     <div class="OneOfTwo">
         Search: <input type="text" ng-model="searchText" /><br /><br />
         <div ng-repeat="install in installs | filter:{Name: searchText}" class="slide">
-            {{install.ApplicationServer.Name}}
+            {{install.ApplicationName}} | {{install.ServerName}} | {{install.InstallationStart}} | {{install.InstallationEnd}} | {{install.Result}}
         </div>
     </div>
     <h2 class="footer">

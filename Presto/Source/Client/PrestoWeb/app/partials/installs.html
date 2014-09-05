@@ -1,10 +1,11 @@
 ﻿<div id="container" class="PageContainer">
     <h2 class="mainHeader">Installations</h2>
     <div class="OneOfTwo">
-        Search: <input type="text" ng-model="searchText" /><br /><br />
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+        <!--Search: <input type="text" ng-model="searchText" /><br /><br />
         <div ng-repeat="install in installs | filter:{Name: searchText}" class="slide">
             {{install.ApplicationName}} | {{install.ServerName}} | {{install.InstallationStart}} | {{install.InstallationEnd}} | {{install.Result}}
-        </div>
+        </div>-->
     </div>
     <h2 class="footer">
         <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>

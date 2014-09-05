@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using PrestoCommon.Entities;
 
 namespace PrestoCommon.EntityHelperClasses
 {
@@ -10,5 +12,6 @@ namespace PrestoCommon.EntityHelperClasses
         public DateTime InstallationStart { get; set; }
         public DateTime InstallationEnd { get; set; }
         public string Result { get; set; }
+        public List<TaskDetail> TaskDetails { get; set; }
     }
 }

@@ -1,9 +1,13 @@
-<p>Apps</p>
-<br />
-Search: <input type="text" ng-model="searchText" /><br/>
-Loading: <label>{{loading}}</label><br/>
-Last refresh time: <label>{{lastRefreshTime}}</label><br/>
-<button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
-<div ng-repeat="app in apps | filter:{Name: searchText}" class="slide">
-    <a ng-click="gotoApp(app.Id)" href="">{{app.Name}} {{app.Version}}</a>
+<div id="container" class="PageContainer">
+    <h2 class="mainHeader">Applications</h2>
+    <div class="OneOfOne">
+        Search: <input type="text" ng-model="searchText" style="width:250px"/><br /><br/>
+        <div ng-repeat="app in apps | filter:{Name: searchText}" class="slide">
+            <a ng-click="gotoApp(app.Id)" href="">{{app.Name}} {{app.Version}}</a>
+        </div>
+    </div>
+    <h2 class="footer">
+        <button ng-click="addApp();" ng-disabled="loading">Add</button>
+        <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+    </h2>
 </div>

@@ -20,6 +20,12 @@ h2.score { background-color: #4494C9; }
 
 h2.mainHeader { background-color: #0B5586; }
 h2.subHeader { background-color: #4494C9; }
+h2.footer { background-color: #afb5b8; }
+
+div.OneOfOne { height:550px; overflow:auto }
+div.OneOfTwo { height:300px; overflow:auto }
+div.TwoOfTwo { height:250px; overflow:auto }
+div.PageContainer { width:900px }
 
 .red {
     color: red; 

@@ -149,6 +149,7 @@
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\AppsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InstallsController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -430,6 +431,7 @@
     <Content Include="app\lib\angular\version.txt" />
     <Content Include="app\partials\app.html" />
     <Content Include="app\partials\apps.html" />
+    <Content Include="app\partials\installs.html" />
     <Content Include="app\partials\servers.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />

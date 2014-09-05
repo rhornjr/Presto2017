@@ -44,4 +44,13 @@ angular.module('myApp.controllers', []).
                 .then(function (result) {
                     $scope.app = result.data;
                 });
-});
+  })
+  .controller('installsController', function ($scope, $http) {
+      $scope.loading = 1;
+      $scope.installs = null;
+      $http.get('http://localhost/PrestoWebApi/api/installs/')
+            .then(function (result) {
+                $scope.installs = result.data;
+                $scope.loading = 0;
+            });      
+  });

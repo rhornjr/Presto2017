@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 
@@ -12,12 +14,33 @@ namespace PrestoWeb.Controllers
     [EnableCors(origins: "http://localhost:8048", headers: "*", methods: "*")]
     public class InstallsController : ApiController
     {
-        public IEnumerable<InstallationSummary> Get()
+        public IEnumerable<InstallationSummaryDto> Get()
         {
+            IEnumerable<InstallationSummary> installationSummaries;
             using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
             {
-                return prestoWcf.Service.GetMostRecentByStartTime(50).OrderBy(x => x.InstallationStart).AsEnumerable();
+                installationSummaries = prestoWcf.Service.GetMostRecentByStartTime(50);
             }
+
+            var installationSummaryDtos = new List<InstallationSummaryDto>();
+
+            // Just use this until we can give the user the flexibility to choose a different time zone.
+            var timeZoneHelper = new TimeZoneHelperThisComputer();
+
+            foreach (InstallationSummary installationSummary in installationSummaries)
+            {
+                InstallationSummaryDto dto = new InstallationSummaryDto();
+                dto.ApplicationName        = installationSummary.ApplicationWithOverrideVariableGroup.ToString();
+                dto.Id                     = installationSummary.Id;
+                dto.Result                 = installationSummary.InstallationResult.ToString();
+                dto.ServerName             = installationSummary.ApplicationServer.Name;
+
+                timeZoneHelper.SetStartAndEndTimes(installationSummary, dto);
+
+                installationSummaryDtos.Add(dto);
+            }
+
+            return installationSummaryDtos.OrderByDescending(x => x.InstallationStart);
         }
     }
 }

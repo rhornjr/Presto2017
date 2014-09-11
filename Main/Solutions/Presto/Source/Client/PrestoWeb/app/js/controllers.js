@@ -49,6 +49,7 @@ angular.module('myApp.controllers', []).
       $scope.loading = 1;
       $scope.installs = null;
       $scope.selectedSummaries = [];
+      $scope.selectedDetails = [];
 
       $scope.gridOptions = {
           data: 'installs',
@@ -64,6 +65,7 @@ angular.module('myApp.controllers', []).
       $scope.gridOptions2 = {
           data: 'selectedSummaries[0].TaskDetails',
           multiSelect: false,
+          selectedItems: $scope.selectedDetails,
           columnDefs: [{ field: 'StartTime', displayName: 'Start', width: "20%", resizable: true },
                        { field: 'EndTime', displayName: 'End', width: "20%" },
                        { field: 'Details', displayName: 'Details', width: "58%" }]

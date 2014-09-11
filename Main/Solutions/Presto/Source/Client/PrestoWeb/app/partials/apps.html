@@ -2,6 +2,8 @@
     <h2 class="mainHeader">Applications</h2>
     <div class="OneOfOne">
         Search: <input type="text" ng-model="searchText" style="width:250px"/><br /><br/>
+        <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
+        <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
         <div ng-repeat="app in apps | filter:{Name: searchText}" class="slide">
             <a ng-click="gotoApp(app.Id)" href="">{{app.Name}} {{app.Version}}</a>
         </div>

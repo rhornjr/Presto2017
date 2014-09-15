@@ -149,6 +149,10 @@
                     <Button Style="{StaticResource StandardButton}" Content="Remove..." Command="{Binding RemoveApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Import..." Command="{Binding ImportApplicationCommand}" />
                     <Button Style="{StaticResource StandardButton}" Content="Export..." Command="{Binding ExportApplicationCommand}" />
+                </StackPanel>
+
+                <!-- This is separate because we always want it enabled. -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{StaticResource StandardButton}" Content="Install..." Command="{Binding ForceApplicationCommand}" />
                 </StackPanel>
             </Grid>

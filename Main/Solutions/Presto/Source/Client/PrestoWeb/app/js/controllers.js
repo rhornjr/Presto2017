@@ -4,11 +4,19 @@
 
 angular.module('myApp.controllers', []).
     controller('appsController', function ($scope, appsRepository) {
+        $scope.loading = 1;
+        $scope.apps = null;
+
+        $scope.gridOptions = {
+            data: 'apps',
+            multiSelect: false,
+            selectedItems: $scope.selectedApps,
+            columnDefs: [{ field: 'Name', displayName: 'Server', width: "78%", resizable: true },
+                         { field: 'Version', displayName: 'Version', width: "20%" }]
+        };
 
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            $scope.loading = 1;
-            $scope.apps = null;
             appsRepository.getApps(forceRefresh, function (dataResponse, lastRefreshTime) {
                 $scope.apps = dataResponse;
                 $scope.lastRefreshTime = lastRefreshTime;
@@ -21,11 +29,18 @@ angular.module('myApp.controllers', []).
         $scope.refresh(false);
   })
   .controller('serversController', function ($scope, serversRepository) {
+      $scope.loading = 1;
+      $scope.servers = null;
+
+      $scope.gridOptions = {
+          data: 'servers',
+          multiSelect: false,
+          selectedItems: $scope.selectedServers,
+          columnDefs: [{ field: 'Name', displayName: 'Server', width: "98%", resizable: true }]
+      };
 
       $scope.refresh = function (forceRefresh) {
-          // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-          $scope.loading = 1;
-          $scope.servers = null;
+          // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.          
           serversRepository.getServers(forceRefresh, function (dataResponse, lastRefreshTime) {
               $scope.servers = dataResponse;
               $scope.lastRefreshTime = lastRefreshTime;

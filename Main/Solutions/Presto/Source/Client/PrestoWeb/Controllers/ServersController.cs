@@ -9,7 +9,7 @@ using PrestoCommon.Wcf;
 namespace PrestoWeb.Controllers
 {
     // The origin is the web server.
-    [EnableCors(origins: "http://localhost:8048", headers: "*", methods: "*")]
+    [EnableCors(origins: "http://fs-12220", headers: "*", methods: "*")]
     public class ServersController : ApiController
     {
         public IEnumerable<ApplicationServer> Get()

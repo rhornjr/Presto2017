@@ -40,7 +40,7 @@ angular.module('myApp.controllers', []).
   .controller('appController', function ($scope, $http, $routeParams) {
       $scope.appId = $routeParams.appId;
       var modifiedAppId = $scope.appId.replace("/", "^^");  // Because we shouldn't send slashes in a web API call.
-      $http.get('http://localhost/PrestoWebApi/api/app/' + modifiedAppId)
+      $http.get('http://fs-12220.fs.local/PrestoWebApi/api/app/' + modifiedAppId)
                 .then(function (result) {
                     $scope.app = result.data;
                 });
@@ -71,7 +71,7 @@ angular.module('myApp.controllers', []).
                        { field: 'Details', displayName: 'Details', width: "58%" }]
       };
 
-      $http.get('http://localhost/PrestoWebApi/api/installs/')
+      $http.get('http://fs-12220.fs.local/PrestoWebApi/api/installs/')
             .then(function (result) {
                 $scope.installs = result.data;
                 $scope.loading = 0;

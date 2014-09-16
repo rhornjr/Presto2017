@@ -31,7 +31,7 @@ app.factory('appsRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://localhost/PrestoWebApi/api/apps/')
+            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/apps/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();
@@ -53,7 +53,7 @@ app.factory('serversRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://localhost/PrestoWebApi/api/servers/')
+            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/servers/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();

@@ -139,6 +139,9 @@ namespace PrestoViewModel.Tabs
         {
             this.ApplicationWithGroup.CustomVariableGroup = null;
             this.ResolvedCustomVariables.Clear();
+
+            _selectedCustomVariableGroupIds.Clear();
+            _selectedCustomVariableGroups.Clear();
         }    
 
         private void SelectServer()
@@ -232,6 +235,13 @@ namespace PrestoViewModel.Tabs
                     foreach (string groupId in _selectedCustomVariableGroupIds)
                     {
                         var hydratedGroup = prestoWcf.Service.GetById(groupId);
+
+                        if (this.ApplicationWithGroup.CustomVariableGroup == null)
+                        {
+                            this.ApplicationWithGroup.CustomVariableGroup = new CustomVariableGroup();
+                            this.ApplicationWithGroup.CustomVariableGroup.CustomVariables = new PrestoObservableCollection<CustomVariable>();
+                        }
+
                         hydratedGroup.CustomVariables.ForEach(x => this.ApplicationWithGroup.CustomVariableGroup.CustomVariables.Add(x));
                     }
                 }

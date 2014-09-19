@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using PrestoCommon.Entities;
@@ -6,6 +7,7 @@ using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
+using Raven.Abstractions.Extensions;
 using Xanico.Core;
 
 namespace PrestoServer.Misc
@@ -29,12 +31,12 @@ namespace PrestoServer.Misc
             LogAndSaveInstallationSummary(installationSummary);
         }
 
-        private static void HydrateTaskApps(ApplicationWithOverrideVariableGroup appWithGroup)
+        private static void HydrateTaskApps(ApplicationWithOverrideVariableGroup appWithGroupBundle)
         {
             // TaskApp tasks are stored with only the IDs for the Application and CustomVariableGroup properties.
             // Hydrate those before installing.
 
-            foreach (var task in appWithGroup.Application.Tasks.Where(x => x.PrestoTaskType == TaskType.App))
+            foreach (var task in appWithGroupBundle.Application.Tasks.Where(x => x.PrestoTaskType == TaskType.App))
             {
                 var taskApp = task as TaskApp;
 
@@ -55,6 +57,16 @@ namespace PrestoServer.Misc
                             prestoWcf.Service.GetById(taskApp.AppWithGroup.CustomVariableGroupId);
                     }
                 }
+
+                if (taskApp.AppWithGroup.CustomVariableGroup == null)
+                {
+                    taskApp.AppWithGroup.CustomVariableGroup = new CustomVariableGroup();
+                    taskApp.AppWithGroup.CustomVariableGroup.CustomVariables = new ObservableCollection<CustomVariable>();
+                }
+
+                // Add the custom variables of each of the bundle's groups to the group of the taskApp.
+                appWithGroupBundle.Application.CustomVariableGroups.ForEach(x =>
+                    taskApp.AppWithGroup.CustomVariableGroup.CustomVariables.AddRange(x.CustomVariables));
             }
         }
 

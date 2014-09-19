@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Microsoft.Practices.ObjectBuilder2;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Exceptions;
@@ -35,6 +37,10 @@ namespace PrestoViewModel.Tabs
             }
         }
 
+        // 19-Sep-2014: Allow multiple variable groups to be selected.
+        private List<string> _selectedCustomVariableGroupIds;
+        private List<CustomVariableGroup> _selectedCustomVariableGroups;
+        
         public ApplicationWithOverrideVariableGroup ApplicationWithGroup
         {
             get { return this._applicationWithOverrideVariableGroup; }
@@ -110,12 +116,22 @@ namespace PrestoViewModel.Tabs
 
         private void SelectGroup()
         {
-            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(false);
+            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(true);
             MainWindowViewModel.ViewLoader.ShowDialog(groupViewModel);
 
             if (groupViewModel.UserCanceled) { return; }
             
-            this.ApplicationWithGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroups[0];
+            this.ApplicationWithGroup.CustomVariableGroup = new CustomVariableGroup();
+            this.ApplicationWithGroup.CustomVariableGroup.CustomVariables = new PrestoObservableCollection<CustomVariable>();
+
+            // Store the (possibly) multiple selected groups.
+            _selectedCustomVariableGroups = groupViewModel.SelectedCustomVariableGroups;
+            _selectedCustomVariableGroupIds = new List<string>();
+            _selectedCustomVariableGroups.ForEach(x => _selectedCustomVariableGroupIds.Add(x.Id));
+            
+            // Since we can now select multiple groups, show the names of all of the groups.
+            _selectedCustomVariableGroups.ForEach(x => this.ApplicationWithGroup.CustomVariableGroup.Name += x.Name + " :: ");
+
             this.ResolvedCustomVariables.Clear();
         }
 
@@ -208,12 +224,16 @@ namespace PrestoViewModel.Tabs
                     prestoWcf.Service.GetById(this.ApplicationWithGroup.Application.Id);
             }
 
-            if (this.ApplicationWithGroup.CustomVariableGroup != null)
+            if (_selectedCustomVariableGroupIds != null)
             {
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {
-                    this.ApplicationWithGroup.CustomVariableGroup =
-                        prestoWcf.Service.GetById(this.ApplicationWithGroup.CustomVariableGroup.Id);
+                    // Throw all of the selected variables into one group.
+                    foreach (string groupId in _selectedCustomVariableGroupIds)
+                    {
+                        var hydratedGroup = prestoWcf.Service.GetById(groupId);
+                        hydratedGroup.CustomVariables.ForEach(x => this.ApplicationWithGroup.CustomVariableGroup.CustomVariables.Add(x));
+                    }
                 }
             }
 

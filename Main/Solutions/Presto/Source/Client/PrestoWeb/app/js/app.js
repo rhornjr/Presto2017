@@ -13,7 +13,8 @@ var app = angular.module('myApp', [
   'myApp.services',
   'myApp.directives',
   'myApp.controllers',
-  'ngGrid'
+  'ui.grid',  // http://ui-grid.info/
+  'ui.grid.selection'
 ]);
 
 app.factory('appsRepository', ['$http', function ($http) {

@@ -69,7 +69,6 @@ angular.module('myApp.controllers', []).
       $scope.gridOptions = {
           data: 'installs',
           multiSelect: false,
-          selectedItems: $scope.selectedSummaries,
           columnDefs: [{ field: 'ApplicationName', displayName: 'App', width: "28%", resizable: true },
                        { field: 'ServerName', displayName: 'Server', width: "20%" },
                        { field: 'InstallationStart', displayName: 'Start', width: "20%" },
@@ -77,13 +76,30 @@ angular.module('myApp.controllers', []).
                        { field: 'Result', displayName: 'Result', width: "10%" }]
       };
 
+      $scope.gridOptions.onRegisterApi = function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+              console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
+              $scope.selectedSummaries.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+              $scope.selectedSummaries.push(row.entity);
+          });
+      };
+
       $scope.gridOptions2 = {
           data: 'selectedSummaries[0].TaskDetails',
           multiSelect: false,
-          selectedItems: $scope.selectedDetails,
           columnDefs: [{ field: 'StartTime', displayName: 'Start', width: "20%", resizable: true },
                        { field: 'EndTime', displayName: 'End', width: "20%" },
                        { field: 'Details', displayName: 'Details', width: "58%" }]
+      };
+
+      $scope.gridOptions2.onRegisterApi = function (gridApi) {
+          $scope.gridApi2 = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+              console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
+              $scope.selectedDetails.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+              $scope.selectedDetails.push(row.entity);
+          });
       };
 
       $http.get('http://fs-12220.fs.local/PrestoWebApi/api/installs/')

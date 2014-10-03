@@ -1,0 +1,9 @@
+﻿<div id="container" class="PageContainer">
+    <h2 class="mainHeader">Log Messages</h2>
+    <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
+    <div class="gridStyle" ui-grid="gridOptions" ng-hide="loading" style="width:900px"></div>
+    <h2 class="footer">
+        <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+    </h2>
+</div>

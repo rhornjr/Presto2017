@@ -64,6 +64,28 @@ app.factory('serversRepository', ['$http', function ($http) {
     }
 }]);
 
+app.factory('logRepository', ['$http', function ($http) {
+
+    var data;
+    var lastRefreshTime;
+
+    return {
+        getLogs: function (forceRefresh, callbackFunction) {
+            if (data && forceRefresh == false) {
+                callbackFunction(data, lastRefreshTime);  // If we already have the data, just return it.
+                return;
+            }
+
+            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/logs/')
+                .then(function (result) {
+                    data = result.data;
+                    lastRefreshTime = new Date();
+                    callbackFunction(data, lastRefreshTime);
+                });
+        }
+    }
+}]);
+
 app.filter('escape', function () {
     return function (input) {
         return encodeURIComponent(input);
@@ -84,5 +106,6 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });
     $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
     $routeProvider.when('/installs', { templateUrl: 'partials/installs.html', controller: 'installsController' });
+    $routeProvider.when('/log', { templateUrl: 'partials/log.html', controller: 'logController' });
     $routeProvider.otherwise({ redirectTo: '/apps' });
 }]);

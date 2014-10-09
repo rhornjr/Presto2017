@@ -730,7 +730,7 @@ namespace PrestoViewModel.Tabs
 
         private void RemoveApplication()
         {                       
-            if (!UserConfirmsDelete("Delete selected app(s)?")) { return; }
+            if (!UserConfirmsDelete("the selected app(s)")) { return; }
 
             foreach (var app in SelectedApplicationsWithOverrideGroup)
             {

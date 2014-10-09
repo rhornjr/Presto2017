@@ -300,7 +300,7 @@ namespace PrestoViewModel.Tabs
 
             this.AddApplicationCommand    = new RelayCommand(AddApplication);
             this.EditApplicationCommand   = new RelayCommand(EditApplication, ExactlyOneApplicationIsSelected);
-            this.RemoveApplicationCommand = new RelayCommand(RemoveApplication, ExactlyOneApplicationIsSelected);
+            this.RemoveApplicationCommand = new RelayCommand(RemoveApplication, AtLeastOneApplicationIsSelected);
             this.ImportApplicationCommand = new RelayCommand(ImportApplication, AppServerIsSelectedMethod);
             this.ExportApplicationCommand = new RelayCommand(ExportApplication, AtLeastOneApplicationIsSelected);
             this.ForceApplicationCommand  = new RelayCommand(ForceApplication, AtLeastOneApplicationIsSelectedAndAllAreEnabled);
@@ -730,30 +730,31 @@ namespace PrestoViewModel.Tabs
 
         private void RemoveApplication()
         {                       
-            ApplicationWithOverrideVariableGroup selectedAppWithGroup = GetSelectedAppWithGroupWhereOnlyOneIsSelected();
+            if (!UserConfirmsDelete("Delete selected app(s)?")) { return; }
 
-            if (!UserConfirmsDelete(selectedAppWithGroup.ToString())) { return; }
-
-            this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(selectedAppWithGroup);
-
-            // If this app group was selected to be force installed, remove it from that list as well.
-            ServerForceInstallation forceInstallGroup = this.SelectedApplicationServer.GetFromForceInstallList(selectedAppWithGroup);
-
-            if (forceInstallGroup != null)
+            foreach (var app in SelectedApplicationsWithOverrideGroup)
             {
-                using (var prestoWcf = new PrestoWcf<IServerService>())
+                this.SelectedApplicationServer.ApplicationsWithOverrideGroup.Remove(app);
+
+                // If this app group was selected to be force installed, remove it from that list as well.
+                ServerForceInstallation forceInstallGroup = this.SelectedApplicationServer.GetFromForceInstallList(app);
+
+                if (forceInstallGroup != null)
                 {
-                    prestoWcf.Service.RemoveForceInstallation(forceInstallGroup);
+                    using (var prestoWcf = new PrestoWcf<IServerService>())
+                    {
+                        prestoWcf.Service.RemoveForceInstallation(forceInstallGroup);
+                    }
                 }
-            }
 
-            string message = string.Format(CultureInfo.CurrentCulture,
-                "{0} was just removed from {1}.",
-                selectedAppWithGroup.ToString(), this.SelectedApplicationServer.Name);
+                string message = string.Format(CultureInfo.CurrentCulture,
+                    "{0} was just removed from {1}.",
+                    app.ToString(), this.SelectedApplicationServer.Name);
 
-            using (var prestoWcf = new PrestoWcf<IBaseService>())
-            {
-                prestoWcf.Service.SaveLogMessage(message);
+                using (var prestoWcf = new PrestoWcf<IBaseService>())
+                {
+                    prestoWcf.Service.SaveLogMessage(message);
+                }
             }
 
             SaveServer();

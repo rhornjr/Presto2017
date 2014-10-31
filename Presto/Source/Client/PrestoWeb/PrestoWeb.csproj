@@ -573,7 +573,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>33716</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://fs-12220/PrestoWebApi</IISUrl>
+          <IISUrl>http://fs-6103/PrestoWebApi</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

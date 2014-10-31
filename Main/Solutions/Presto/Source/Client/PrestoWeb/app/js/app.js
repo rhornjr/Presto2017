@@ -76,7 +76,7 @@ app.factory('logRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/logs/')
+            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/log/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();

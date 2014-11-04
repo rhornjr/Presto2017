@@ -6,6 +6,7 @@ using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoServer.Logic;
+using Xanico.Core.Security;
 using Xanico.Core.Wcf;
 
 namespace PrestoWcfService.WcfServices
@@ -198,10 +199,23 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() =>
             {
                 CustomVariableGroupLogic.Save(customVariableGroup);
-                string emailSubject = "Presto Custom Variable Group Saved - " + customVariableGroup.Name;
-                CommonUtility.SendEmail(emailSubject, customVariableGroup.ObjectDump(), "emailToForCustomVariableGroupChanges");
+                PossiblySendCustomVariableGroupChangedEmail(customVariableGroup);
                 return customVariableGroup;
             });
+        }
+
+        private static void PossiblySendCustomVariableGroupChangedEmail(CustomVariableGroup customVariableGroup)
+        {
+            if (ConfigurationManager.AppSettings["emailCustomVariableGroupChanges"].ToUpperInvariant() != "TRUE") { return; }
+
+            string emailSubject = "Presto Custom Variable Group Saved: " + customVariableGroup.Name;
+
+            string emailBody =
+                "Machine: " + Environment.MachineName + Environment.NewLine +
+                "User: " + IdentityHelper.UserName + Environment.NewLine + Environment.NewLine +
+                customVariableGroup.ObjectDump();
+
+            CommonUtility.SendEmail(emailSubject, emailBody, "emailToForCustomVariableGroupChanges");
         }
 
         public void DeleteGroup(CustomVariableGroup customVariableGroup)

@@ -146,13 +146,14 @@ namespace PrestoCommon.Misc
         /// Sends an email with the specified subject and message. The host config file is used for the email
         /// host, from, and to properties.
         /// </summary>
-        public static void SendEmail(string subject, string message)
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public static void SendEmail(string subject, string message, string emailToConfigKey = "emailTo")
         {
             EmailSettings emailSettings = new EmailSettings();
 
             emailSettings.EmailHost = ConfigurationManager.AppSettings["emailHost"];
             emailSettings.EmailFrom = ConfigurationManager.AppSettings["emailFrom"];
-            emailSettings.EmailTo   = ConfigurationManager.AppSettings["emailTo"];
+            emailSettings.EmailTo   = ConfigurationManager.AppSettings[emailToConfigKey];
 
             if (emailSettings.EmailHost == null || emailSettings.EmailFrom == null || emailSettings.EmailTo == null)
             {

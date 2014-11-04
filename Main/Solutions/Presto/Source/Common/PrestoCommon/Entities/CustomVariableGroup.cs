@@ -61,6 +61,24 @@ namespace PrestoCommon.Entities
             return this.Name;
         }
 
+        public string ObjectDump()
+        {
+            var dump = new StringBuilder();
+
+            dump.AppendLine(this.Name);
+
+            dump.AppendLine();
+            dump.AppendLine("Custom Variables:");
+            dump.AppendLine();
+
+            foreach (var customVariable in this.CustomVariables)
+            {
+                dump.AppendLine(customVariable.Key + ": " + customVariable.Value);
+            }
+
+            return dump.ToString();
+        }
+
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public static string ResolveCustomVariable(string rawString, ApplicationServer applicationServer,
             ApplicationWithOverrideVariableGroup appWithGroup, bool leaveValueEncrypted = false)

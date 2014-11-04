@@ -198,6 +198,8 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() =>
             {
                 CustomVariableGroupLogic.Save(customVariableGroup);
+                string emailSubject = "Presto Custom Variable Group Saved - " + customVariableGroup.Name;
+                CommonUtility.SendEmail(emailSubject, customVariableGroup.ObjectDump(), "emailToForCustomVariableGroupChanges");
                 return customVariableGroup;
             });
         }

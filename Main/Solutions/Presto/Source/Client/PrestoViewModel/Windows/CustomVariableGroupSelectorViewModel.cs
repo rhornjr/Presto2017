@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
-using Xanico.Core;
 
 namespace PrestoViewModel.Windows
 {
@@ -21,7 +20,7 @@ namespace PrestoViewModel.Windows
     {
         private bool _allowMultipleSelections;
         private Collection<CustomVariableGroup> _customVariableGroups;
-        private List<CustomVariableGroup> _selectedCustomVariableGroups = new List<CustomVariableGroup>();
+        private PrestoObservableCollection<CustomVariableGroup> _selectedCustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
 
         /// <summary>
         /// Gets the add command.
@@ -61,7 +60,7 @@ namespace PrestoViewModel.Windows
         /// <value>
         /// The selected custom variable group.
         /// </value>
-        public List<CustomVariableGroup> SelectedCustomVariableGroups
+        public PrestoObservableCollection<CustomVariableGroup> SelectedCustomVariableGroups
         {
             get { return this._selectedCustomVariableGroups; }
 

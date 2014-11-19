@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoServer.Data.Interfaces;
 using Raven.Client;
 using Raven.Client.Linq;
@@ -31,7 +32,7 @@ namespace PrestoServer.Data.RavenDb
                     QuerySingleResultAndSetEtag(session => session.Query<InstallationSummary>()
                     .Include(x => x.ApplicationServerId)
                     .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
-                    .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
+                    .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds)
                     .Customize(x => x.WaitForNonStaleResults())
                     .Where(whereClause)
                     .OrderByDescending(x => x.InstallationStart)
@@ -45,18 +46,24 @@ namespace PrestoServer.Data.RavenDb
 
         private static Expression<Func<InstallationSummary, bool>> GetWhereClause(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            if (appWithGroup.CustomVariableGroup == null)
+            // Both where clauses had to be modified to account for multiple variable groups. If this doesn't work with the DB,
+            // then we might just have to bring back all possible matches and filter them after getting them.
+
+            if (appWithGroup.CustomVariableGroups == null || appWithGroup.CustomVariableGroups.Count < 1)
             {
                 return summary => summary.ApplicationServerId == appServer.Id &&
                             summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
-                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null;
+                            (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds == null
+                                || summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count < 1);
             }
 
+            // If we're getting matches that include CustomVariableGroups (CVGs), then the number of CVGs and the IDs must match.
             return summary => summary.ApplicationServerId == appServer.Id &&
                             summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
                             summary.ApplicationWithOverrideVariableGroup != null &&
-                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId != null &&
-                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == appWithGroup.CustomVariableGroupId;
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds != null &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count == appWithGroup.CustomVariableGroupIds.Count &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.All(appWithGroup.CustomVariableGroupIds.Contains);
         }
 
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
@@ -100,7 +107,7 @@ namespace PrestoServer.Data.RavenDb
                         QueryAndSetEtags(session => session.Query<InstallationSummary>()
                         .Include(x => x.ApplicationServerId)
                         .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
-                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupId)
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds)
                         .Customize(x => x.WaitForNonStaleResults())
                         .Where(whereClause)
                         .OrderByDescending(summary => summary.InstallationStartUtc)
@@ -140,19 +147,28 @@ namespace PrestoServer.Data.RavenDb
                 QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))
                 as Application;
 
-            if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null) { return; }
+            if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds == null
+                || summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count < 1) { return; }
 
-            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroup =
-                QuerySingleResultAndSetEtag(session =>
-                {
-                    if (session.Advanced.IsLoaded(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId))
+            if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroups == null)
+            {
+                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+            }
+
+            foreach (string groupId in summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds)
+            {
+                summary.ApplicationWithOverrideVariableGroup.CustomVariableGroups.Add(
+                    QuerySingleResultAndSetEtag(session =>
                     {
-                        return session.Load<CustomVariableGroup>(summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId);
-                    }
-                    return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
-                    ;
-                })
-                as CustomVariableGroup;
+                        if (session.Advanced.IsLoaded(groupId))
+                        {
+                            return session.Load<CustomVariableGroup>(groupId);
+                        }
+                        return null;  // Note: We can be missing a custom variable in the session because someone deleted it.
+                        ;
+                    })
+                    as CustomVariableGroup);
+            }
         }
 
         /// <summary>

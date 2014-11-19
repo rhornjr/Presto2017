@@ -11,6 +11,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using Microsoft.Practices.ObjectBuilder2;
 using PrestoCommon.Entities;
 using PrestoCommon.Entities.LegacyPresto;
 using PrestoCommon.Interfaces;

@@ -29,7 +29,7 @@ namespace PrestoCommon.Entities
 
                 this.Description = _appWithGroup.Application.NameAndVersion;
 
-                if (_appWithGroup.CustomVariableGroup != null) { this.Description += " - " + _appWithGroup.CustomVariableGroup.Name;}
+                if (_appWithGroup.CustomVariableGroups != null) { this.Description += " - " + _appWithGroup.CustomVariableGroupNames;}
             }
         }
 

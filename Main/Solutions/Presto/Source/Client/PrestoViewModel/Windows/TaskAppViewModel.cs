@@ -30,12 +30,6 @@ namespace PrestoViewModel.Windows
         /// </value>
         public ICommand CancelCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the application with group.
-        /// </summary>
-        /// <value>
-        /// The application with group.
-        /// </value>
         public ApplicationWithOverrideVariableGroup ApplicationWithGroup
         {
             get { return this._applicationWithOverrideVariableGroup; }
@@ -117,22 +111,25 @@ namespace PrestoViewModel.Windows
                 }
             }
 
-            if (originalAppWithGroup.CustomVariableGroup == null &&
-                !string.IsNullOrWhiteSpace(originalAppWithGroup.CustomVariableGroupId))
+            // If we don't have any custom variable groups, but we have IDs, then get the CVGs by their IDs.
+            if ((originalAppWithGroup.CustomVariableGroups == null || originalAppWithGroup.CustomVariableGroups.Count < 1)
+                && originalAppWithGroup.CustomVariableGroupIds.Count > 0)
             {
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {
-                    originalAppWithGroup.CustomVariableGroup =
-                        prestoWcf.Service.GetById(originalAppWithGroup.CustomVariableGroupId);
+                    foreach (var groupId in originalAppWithGroup.CustomVariableGroupIds)
+                    {
+                        originalAppWithGroup.CustomVariableGroups.Add(prestoWcf.Service.GetById(groupId));
+                    }
                 }
             }
         }
 
         private void InitializeWorkingCopy(ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            this.ApplicationWithGroup.Application         = appWithGroup.Application;
-            this.ApplicationWithGroup.CustomVariableGroup = appWithGroup.CustomVariableGroup;
-            this.ApplicationWithGroup.Enabled             = appWithGroup.Enabled;
+            this.ApplicationWithGroup.Application          = appWithGroup.Application;
+            this.ApplicationWithGroup.CustomVariableGroups = appWithGroup.CustomVariableGroups;
+            this.ApplicationWithGroup.Enabled              = appWithGroup.Enabled;
         }
 
         private void InitializeCommands()
@@ -164,9 +161,9 @@ namespace PrestoViewModel.Windows
 
         private void UpdateOriginalFromWorkingCopy()
         {
-            this._originalAppWithGroup.Application         = this.ApplicationWithGroup.Application;
-            this._originalAppWithGroup.CustomVariableGroup = this.ApplicationWithGroup.CustomVariableGroup;
-            this._originalAppWithGroup.Enabled             = this.ApplicationWithGroup.Enabled;
+            this._originalAppWithGroup.Application          = this.ApplicationWithGroup.Application;
+            this._originalAppWithGroup.CustomVariableGroups = this.ApplicationWithGroup.CustomVariableGroups;
+            this._originalAppWithGroup.Enabled              = this.ApplicationWithGroup.Enabled;
         }
 
         private void Cancel()
@@ -186,17 +183,17 @@ namespace PrestoViewModel.Windows
 
         private void SelectGroup()
         {
-            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(false);
+            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(true);
             MainWindowViewModel.ViewLoader.ShowDialog(groupViewModel);
 
             if (groupViewModel.UserCanceled) { return; }
             
-            this.ApplicationWithGroup.CustomVariableGroup = groupViewModel.SelectedCustomVariableGroups[0];
+            this.ApplicationWithGroup.CustomVariableGroups = groupViewModel.SelectedCustomVariableGroups;
         }
 
         private void RemoveGroup()
         {
-            this.ApplicationWithGroup.CustomVariableGroup = null;
+            this.ApplicationWithGroup.CustomVariableGroups = null;
         }    
     }
 }

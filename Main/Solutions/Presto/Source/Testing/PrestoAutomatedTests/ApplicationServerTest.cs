@@ -133,7 +133,7 @@ namespace PrestoAutomatedTests
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
+            appWithValidGroup.CustomVariableGroups[0] = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
 
             ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithValidGroup));
 
@@ -155,7 +155,7 @@ namespace PrestoAutomatedTests
 
             // Use this app
             ApplicationWithOverrideVariableGroup appWithValidGroup = appServer.ApplicationsWithOverrideGroup[0];
-            appWithValidGroup.CustomVariableGroup = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
+            appWithValidGroup.CustomVariableGroups[0] = CustomVariableGroupLogic.GetById("CustomVariableGroups/4");
 
             SetGlobalFreeze(false);
 
@@ -187,7 +187,7 @@ namespace PrestoAutomatedTests
             ApplicationWithOverrideVariableGroup appWithDifferentGroup = new ApplicationWithOverrideVariableGroup();
             appWithDifferentGroup.Application = appServer.ApplicationsWithOverrideGroup[0].Application;
             // Set the group to something that doesn't already exist within the server...
-            appWithDifferentGroup.CustomVariableGroup = TestHelper.CreateCustomVariableGroup(rootName + " " + Guid.NewGuid().ToString());
+            appWithDifferentGroup.CustomVariableGroups[0] = TestHelper.CreateCustomVariableGroup(rootName + " " + Guid.NewGuid().ToString());
 
             ApplicationServerLogic.SaveForceInstallation(new ServerForceInstallation(appServer, appWithDifferentGroup));
 
@@ -212,13 +212,13 @@ namespace PrestoAutomatedTests
 
             ApplicationServer appServer = ApplicationServerLogic.GetByName(TestHelper.GetServerName(rootName));
 
-            appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroup = TestHelper.CreateCustomVariableGroup(rootName);
+            appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroups[0] = TestHelper.CreateCustomVariableGroup(rootName);
             ApplicationServerLogic.Save(appServer);  // To save with a valid group.
 
             // Create a new app group with a new app, but an existing group
             var appWithValidGroup = new ApplicationWithOverrideVariableGroup();
             appWithValidGroup.Application = TestHelper.CreateApp(rootName + " " + Guid.NewGuid().ToString());
-            appWithValidGroup.CustomVariableGroup = appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroup;
+            appWithValidGroup.CustomVariableGroups[0] = appServer.ApplicationsWithOverrideGroup[0].CustomVariableGroups[0];
 
             // Set the app to something that doesn't already exist within the server...
             // Leave the group alone because it already exists.

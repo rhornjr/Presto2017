@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.ServiceModel;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -208,7 +209,10 @@ namespace PrestoWcfService.WcfServices
         {
             if (ConfigurationManager.AppSettings["emailCustomVariableGroupChanges"].ToUpperInvariant() != "TRUE") { return; }
 
-            string emailSubject = "Presto Custom Variable Group Saved: " + customVariableGroup.Name;
+            string emailSubject = string.Format(CultureInfo.CurrentCulture,
+                "{0} saved a Presto Custom Variable Group: {1}",
+                IdentityHelper.UserName,
+                customVariableGroup.Name);
 
             string emailBody =
                 "Machine: " + Environment.MachineName + Environment.NewLine +

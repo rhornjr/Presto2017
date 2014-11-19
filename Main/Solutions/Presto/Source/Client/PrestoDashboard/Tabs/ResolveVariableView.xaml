@@ -22,7 +22,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="45"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
@@ -40,10 +40,11 @@
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectApplicationCommand}" />
         </StackPanel>
 
-        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource StandardLabel}" Content="Override Group:"/>
+        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource StandardLabel}" Content="Override Groups:"/>
 
-        <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1" Grid.Column="1">
-            <TextBox Text="{Binding ApplicationWithGroup.CustomVariableGroup.Name}" Width="360" IsEnabled="False"/>
+        <StackPanel Orientation="Horizontal" Height="40" Grid.Row="1" Grid.Column="1">
+            <TextBox Text="{Binding ApplicationWithGroup.CustomVariableGroupNames, Mode=OneWay}" Width="360" Height="40"
+                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectGroupCommand}"/>
             <Button Content="X" Width="25" Height="25" Command="{Binding RemoveGroupCommand}"/>
         </StackPanel>

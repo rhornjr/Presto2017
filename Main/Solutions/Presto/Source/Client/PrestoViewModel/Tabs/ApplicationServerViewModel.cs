@@ -11,6 +11,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using Microsoft.Practices.ObjectBuilder2;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
@@ -200,7 +201,7 @@ namespace PrestoViewModel.Tabs
 
                 return this.SelectedApplicationServer.ApplicationsWithOverrideGroup
                     .OrderBy(x => x.Application.Name)
-                    .ThenBy(x => x.CustomVariableGroup == null ? string.Empty : x.CustomVariableGroup.Name);
+                    .ThenBy(x => x.CustomVariableGroups == null ? string.Empty : x.CustomVariableGroupNames);
             }
         }
 
@@ -369,9 +370,10 @@ namespace PrestoViewModel.Tabs
             if (this.SelectedApplicationsWithOverrideGroup.Count == 1)
             {
                 fileName = this.SelectedApplicationsWithOverrideGroup[0].Application.Name;
-                if (this.SelectedApplicationsWithOverrideGroup[0].CustomVariableGroup != null)
+                if (this.SelectedApplicationsWithOverrideGroup[0].CustomVariableGroups != null)
                 {
-                    fileName += " and " + this.SelectedApplicationsWithOverrideGroup[0].CustomVariableGroup.Name;
+                    fileName += " with " + this.SelectedApplicationsWithOverrideGroup[0].CustomVariableGroupNames;
+                    fileName = fileName.Replace("|", "and");  // The custom variables groups are separated by pipes, but we can't save that way.
                 }
                 return fileName += fileNameSuffix;
             }
@@ -433,12 +435,19 @@ namespace PrestoViewModel.Tabs
 
                     importedGroup.Application = appFromDb;
 
-                    if (importedGroup.CustomVariableGroup != null)
+                    if (importedGroup.CustomVariableGroups != null && importedGroup.CustomVariableGroups.Count > 0)
                     {
+                        var importedGroupCustomVariableGroupNames = new List<string>();
+                        importedGroup.CustomVariableGroups.ForEach(x => importedGroupCustomVariableGroupNames.Add(x.Name));
+                        importedGroup.CustomVariableGroups.ClearItemsAndNotifyChangeOnlyWhenDone();
+
                         using (var prestoWcf2 = new PrestoWcf<ICustomVariableGroupService>())
                         {
-                            CustomVariableGroup groupFromDb = prestoWcf2.Service.GetCustomVariableGroupByName(importedGroup.CustomVariableGroup.Name);
-                            importedGroup.CustomVariableGroup = groupFromDb;
+                            foreach (string groupName in importedGroupCustomVariableGroupNames)
+                            {
+                                CustomVariableGroup groupFromDb = prestoWcf2.Service.GetCustomVariableGroupByName(groupName);
+                                importedGroup.CustomVariableGroups.Add(groupFromDb);
+                            }
                         }
                     }
 

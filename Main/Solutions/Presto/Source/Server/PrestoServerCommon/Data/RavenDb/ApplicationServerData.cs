@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoServer.Data.Interfaces;
 using Raven.Client;
 using Raven.Client.Linq;
@@ -12,6 +14,8 @@ namespace PrestoServer.Data.RavenDb
 {
     public class ApplicationServerData : DataAccessLayerBase, IApplicationServerData
     {
+        private static readonly object _locker = new object();
+
         public IEnumerable<ApplicationServer> GetAll(bool includeArchivedApps)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -118,27 +122,61 @@ namespace PrestoServer.Data.RavenDb
 
         private static void HydrateApplicationServer(ApplicationServer appServer)
         {
-            // Not using this, at least for now, because it increased the NumberOfRequests on the session...
-            //appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
-            //    QueryAndCacheEtags(session => session.Load<CustomVariableGroup>(appServer.CustomVariableGroupIds)).Cast<CustomVariableGroup>());
-
-            // ... however, this kept the NumberOfRequests to just one. Not sure why the difference.
-            appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>();
-            foreach (string groupId in appServer.CustomVariableGroupIds)
+            lock (_locker)  // prevent any thread silliness
             {
-                appServer.CustomVariableGroups.Add(QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
+                // Not using this, at least for now, because it increased the NumberOfRequests on the session...
+                //appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>(
+                //    QueryAndCacheEtags(session => session.Load<CustomVariableGroup>(appServer.CustomVariableGroupIds)).Cast<CustomVariableGroup>());
+
+                // ... however, this kept the NumberOfRequests to just one. Not sure why the difference.
+                appServer.CustomVariableGroups = new ObservableCollection<CustomVariableGroup>();
+                foreach (string groupId in appServer.CustomVariableGroupIds)
+                {
+                    appServer.CustomVariableGroups.Add(QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
+                }
+
+                foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
+                {
+                    appGroup.Application = QuerySingleResultAndSetEtag(session => session.Load<Application>(appGroup.ApplicationId)) as Application;
+                    ApplicationData.HydrateApplication(appGroup.Application);
+                    LoadAppGroupCustomVariableGroups(appGroup);
+                }
+
+                appServer.InstallationEnvironment = QuerySingleResultAndSetEtag(session =>
+                    session.Load<InstallationEnvironment>(appServer.InstallationEnvironmentId)) as InstallationEnvironment;
+            }
+        }
+
+        private static void LoadAppGroupCustomVariableGroups(ApplicationWithOverrideVariableGroup appGroup)
+        {
+            if (appGroup.CustomVariableGroupId == null && (appGroup.CustomVariableGroupIds == null || appGroup.CustomVariableGroupIds.Count < 1))
+            {
+                return;
             }
 
-            foreach (ApplicationWithOverrideVariableGroup appGroup in appServer.ApplicationsWithOverrideGroup)
+            // Since both properties, CustomVariableGroupId (singular) and CustomVariableGroupIds (plural) can have data,
+            // we'll put everything in CustomVariableGroupIds first.
+            if (appGroup.CustomVariableGroupIds == null) { appGroup.CustomVariableGroupIds = new List<string>(); }
+
+            if (appGroup.CustomVariableGroupId != null && !appGroup.CustomVariableGroupIds.Contains(appGroup.CustomVariableGroupId))
             {
-                appGroup.Application = QuerySingleResultAndSetEtag(session => session.Load<Application>(appGroup.ApplicationId)) as Application;
-                ApplicationData.HydrateApplication(appGroup.Application);
-                if (appGroup.CustomVariableGroupId == null) { continue; }
-                appGroup.CustomVariableGroup = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(appGroup.CustomVariableGroupId)) as CustomVariableGroup;
+                appGroup.CustomVariableGroupIds.Add(appGroup.CustomVariableGroupId);
             }
 
-            appServer.InstallationEnvironment = QuerySingleResultAndSetEtag(session =>
-                session.Load<InstallationEnvironment>(appServer.InstallationEnvironmentId)) as InstallationEnvironment;
+            // Store the CVG Ids in a different variable since the ones within the app group get reset.
+            var copyOfCvgIds = new List<string>(appGroup.CustomVariableGroupIds);
+
+            appGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+
+            // Now that we have the IDs in one property, loop through the IDs and load the groups.
+            foreach (var groupId in copyOfCvgIds)
+            {
+                var groupLoadedFromSession = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup;
+                appGroup.CustomVariableGroups.Add(groupLoadedFromSession);
+                appGroup.CustomVariableGroupIds.Add(groupLoadedFromSession.Id);
+            }
+
+            appGroup.CustomVariableGroupId = null;  // No longer need this property now that we have CustomVariableGroupIds (plural)
         }
 
         public void Save(ApplicationServer applicationServer)
@@ -160,11 +198,14 @@ namespace PrestoServer.Data.RavenDb
                 applicationServer.ApplicationIdsForAllAppWithGroups.Add(appGroup.Application.Id);
                 appGroup.ApplicationId = appGroup.Application.Id;
 
-                appGroup.CustomVariableGroupId = null;  // It's possible that the group was deleted, so clear it.
-                if (appGroup.CustomVariableGroup != null)
+                appGroup.CustomVariableGroupIds = new List<string>();  // Clear and add the IDs from the groups.
+                if (appGroup.CustomVariableGroups != null)
                 {
-                    applicationServer.CustomVariableGroupIdsForAllAppWithGroups.Add(appGroup.CustomVariableGroup.Id);
-                    appGroup.CustomVariableGroupId = appGroup.CustomVariableGroup.Id;
+                    foreach (var group in appGroup.CustomVariableGroups)
+                    {
+                        applicationServer.CustomVariableGroupIdsForAllAppWithGroups.Add(group.Id);
+                        appGroup.CustomVariableGroupIds.Add(group.Id);
+                    }
                 }
 
                 foreach (CustomVariableGroup customGroup in appGroup.Application.CustomVariableGroups)
@@ -184,6 +225,7 @@ namespace PrestoServer.Data.RavenDb
 
         #region [ServerForceInstallation]
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public IEnumerable<ServerForceInstallation> GetForceInstallationsByServerId(string serverId)
         {
             return ExecuteQuery<IEnumerable<ServerForceInstallation>>(() =>
@@ -192,7 +234,7 @@ namespace PrestoServer.Data.RavenDb
                     session.Query<ServerForceInstallation>()
                     .Include(x => x.ApplicationId)
                     .Include(x => x.ApplicationServerId)
-                    .Include(x => x.OverrideGroupId)
+                    .Include(x => x.OverrideGroupIds)
                     .Customize(x => x.WaitForNonStaleResults())
                     .Where(x => x.ApplicationServerId == serverId)
                     .Take(int.MaxValue)                    
@@ -208,10 +250,16 @@ namespace PrestoServer.Data.RavenDb
                     serverForceInstallation.ApplicationWithOverrideGroup.Application =
                         QuerySingleResultAndSetEtag(session => session.Load<Application>(serverForceInstallation.ApplicationId)) as Application;
 
-                    if (serverForceInstallation.OverrideGroupId == null) { continue; }
+                    if (serverForceInstallation.OverrideGroupIds == null || serverForceInstallation.OverrideGroupIds.Count < 1) { continue; }
 
-                    serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroup =
-                        QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(serverForceInstallation.OverrideGroupId)) as CustomVariableGroup;
+                    serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+
+                    foreach (var groupId in serverForceInstallation.OverrideGroupIds)
+                    {
+                        serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups.Add(
+                            QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId))
+                            as CustomVariableGroup);
+                    }
                 }
 
                 return forceInstallations;
@@ -229,9 +277,15 @@ namespace PrestoServer.Data.RavenDb
                 serverForceInstallation.ApplicationServerId = serverForceInstallation.ApplicationServer.Id;
                 serverForceInstallation.ApplicationId       = serverForceInstallation.ApplicationWithOverrideGroup.Application.Id;
 
-                if (serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroup != null)
+                if (serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups != null
+                 && serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups.Count > 0)
                 {
-                    serverForceInstallation.OverrideGroupId = serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroup.Id;
+                    if (serverForceInstallation.OverrideGroupIds == null) { serverForceInstallation.OverrideGroupIds = new List<string>(); }
+
+                    foreach (var cvg in serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups)
+                    {
+                        serverForceInstallation.OverrideGroupIds.Add(cvg.Id);
+                    }
                 }
 
                 data.Save(serverForceInstallation);

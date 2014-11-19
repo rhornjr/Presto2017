@@ -150,14 +150,20 @@ namespace PrestoCommon.Entities
 
         private static void AddRangeOverride(List<CustomVariable> allCustomVariables, ApplicationWithOverrideVariableGroup applicationWithOverrideVariableGroup)
         {
-            if (applicationWithOverrideVariableGroup.CustomVariableGroup == null || applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables == null)
+            if (applicationWithOverrideVariableGroup.CustomVariableGroups == null
+                || applicationWithOverrideVariableGroup.CustomVariableGroups.Count < 1)
             {
                 return;  // No custom variable group to add to main list.
             }
 
             // Add the new custom variables to the list, overwriting any duplicates.
 
-            List<CustomVariable> newCustomVariables = applicationWithOverrideVariableGroup.CustomVariableGroup.CustomVariables.ToList();
+            var newCustomVariables = new List<CustomVariable>();
+            
+            foreach (var cvg in applicationWithOverrideVariableGroup.CustomVariableGroups)
+            {
+                newCustomVariables.AddRange(cvg.CustomVariables.ToList());
+            }
 
             // First, remove variables that are the same as the new/override variables.
             foreach (CustomVariable newCustomVariable in newCustomVariables)

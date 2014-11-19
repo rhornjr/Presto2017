@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using Raven.Imports.Newtonsoft.Json;
@@ -18,9 +20,9 @@ namespace PrestoCommon.Entities
     {
         private bool _enabled;
         private Application _application;
-        private CustomVariableGroup _customVariableGroup;
+        private PrestoObservableCollection<CustomVariableGroup> _customVariableGroups;
 
-        /// <summary>
+            /// <summary>
         /// For each installation, this is set to the installation start time. It is used as a unique
         /// indentifer for each installation so that it can be used in custom variables. The original
         /// need for this was to create backups during a deployment. That way one task can create a
@@ -63,17 +65,71 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string CustomVariableGroupId { get; set; }  // For RavenDB, grrrr...
 
+        ////[JsonIgnore]  // We do not want RavenDB to serialize this...
+        ////[DataMember]  // ... but we still want it to go over WCF
+        ////public CustomVariableGroup CustomVariableGroup
+        ////{
+        ////    get { return this._customVariableGroup; }
+
+        ////    set
+        ////    {
+        ////        this._customVariableGroup = value;
+        ////        if (this._customVariableGroup != null) { this.CustomVariableGroupId = this._customVariableGroup.Id; }
+        ////        NotifyPropertyChanged(() => this.CustomVariableGroup);
+        ////    }
+        ////}
+
+        /**************************************************************************************************
+         * 
+         * Note: The reason we have CustomVariableGroupId (singular) and CustomVariableGroupIds (plural)
+         *       properties is because we only allowed for one CustomVariableGroup until November 2014.
+         *       Now that we can have multiple CustomVariableGroups, we need both properties (at least
+         *       until every instance in the DB has been updated to only use the plural version).
+         * 
+         **************************************************************************************************/
+
+        [DataMember]
+        public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB, grrrr...
+
         [JsonIgnore]  // We do not want RavenDB to serialize this...
         [DataMember]  // ... but we still want it to go over WCF
-        public CustomVariableGroup CustomVariableGroup
+        public PrestoObservableCollection<CustomVariableGroup> CustomVariableGroups
         {
-            get { return this._customVariableGroup; }
+            get { return this._customVariableGroups; }
 
             set
             {
-                this._customVariableGroup = value;
-                if (this._customVariableGroup != null) { this.CustomVariableGroupId = this._customVariableGroup.Id; }
-                NotifyPropertyChanged(() => this.CustomVariableGroup);
+                this._customVariableGroups = value;
+                if (this._customVariableGroups != null)
+                {
+                    this.CustomVariableGroupIds = new List<string>();
+                    foreach (var group in this._customVariableGroups)
+                    {
+                        this.CustomVariableGroupIds.Add(group.Id);
+                    }
+                }
+                NotifyPropertyChanged(() => this.CustomVariableGroups);
+                NotifyPropertyChanged(() => this.CustomVariableGroupNames);
+            }
+        }
+
+        [JsonIgnore]  // We do not want RavenDB to serialize this.
+        public string CustomVariableGroupNames
+        {
+            get
+            {
+                if (CustomVariableGroups == null || CustomVariableGroups.Count < 1) { return string.Empty; }
+
+                var stringBuilder = new StringBuilder();
+                foreach (var cvg in CustomVariableGroups)
+                {
+                    stringBuilder.Append(cvg.Name + " | ");
+                }
+
+                // Change the length so we don't recognize the last three characters (" | ");
+                stringBuilder.Length -= 3;
+
+                return stringBuilder.ToString();
             }
         }
 
@@ -192,7 +248,10 @@ namespace PrestoCommon.Entities
 
             string groupNameSuffix = string.Empty;
 
-            if (this.CustomVariableGroup != null) { groupNameSuffix = " with " + this.CustomVariableGroup.Name; }
+            if (this.CustomVariableGroups != null && this.CustomVariableGroups.Count > 0)
+            {
+                groupNameSuffix = " with " + this.CustomVariableGroupNames;
+            }
 
             return appAndVersion + groupNameSuffix;
         }

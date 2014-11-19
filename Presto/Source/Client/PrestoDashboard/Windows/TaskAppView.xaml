@@ -9,20 +9,21 @@
     <Grid Margin="5" HorizontalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="45"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0">
             <Label Style="{StaticResource StandardLabel}" Content="Application:" Width="130" />
-            <TextBox Text="{Binding ApplicationWithGroup.Application.NameAndVersion, Mode=OneWay}" Width="180" IsEnabled="False"/>
+            <TextBox Text="{Binding ApplicationWithGroup.Application.NameAndVersion, Mode=OneWay}" Width="380" IsReadOnly="True"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectApplicationCommand}" />
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="25" Grid.Row="1">
-            <Label Style="{StaticResource StandardLabel}" Content="Override Group:" Width="130" />
-            <TextBox Text="{Binding ApplicationWithGroup.CustomVariableGroup.Name}" Width="180" IsEnabled="False"/>
+        <StackPanel Orientation="Horizontal" Height="45" Grid.Row="1">
+            <Label Style="{StaticResource StandardLabel}" Content="Override Groups:" Width="130" />
+            <TextBox Text="{Binding ApplicationWithGroup.CustomVariableGroupNames, Mode=OneWay}" TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto" Width="380" Height="40" IsReadOnly="True"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectGroupCommand}" />
             <Button Content="X" Width="25" Height="25" Command="{Binding RemoveGroupCommand}"/>
         </StackPanel>

@@ -48,25 +48,31 @@ namespace PrestoServer.Misc
                     }
                 }
 
-                if (taskApp.AppWithGroup.CustomVariableGroup == null &&
-                    !string.IsNullOrWhiteSpace(taskApp.AppWithGroup.CustomVariableGroupId))
+                if ((taskApp.AppWithGroup.CustomVariableGroups == null || taskApp.AppWithGroup.CustomVariableGroups.Count < 1)
+                    && taskApp.AppWithGroup.CustomVariableGroupIds.Count > 0)
                 {
+                    if (taskApp.AppWithGroup.CustomVariableGroups == null)
+                        { taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>(); }
+
                     using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                     {
-                        taskApp.AppWithGroup.CustomVariableGroup =
-                            prestoWcf.Service.GetById(taskApp.AppWithGroup.CustomVariableGroupId);
+                        foreach (string groupId in taskApp.AppWithGroup.CustomVariableGroupIds)
+                        {
+                            taskApp.AppWithGroup.CustomVariableGroups.Add(prestoWcf.Service.GetById(groupId));
+                        }
                     }
                 }
 
-                if (taskApp.AppWithGroup.CustomVariableGroup == null)
+                if (taskApp.AppWithGroup.CustomVariableGroups == null)
                 {
-                    taskApp.AppWithGroup.CustomVariableGroup = new CustomVariableGroup();
-                    taskApp.AppWithGroup.CustomVariableGroup.CustomVariables = new ObservableCollection<CustomVariable>();
+                    taskApp.AppWithGroup.CustomVariableGroups                    = new PrestoObservableCollection<CustomVariableGroup>();
+                    taskApp.AppWithGroup.CustomVariableGroups[0]                 = new CustomVariableGroup();
+                    taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables = new ObservableCollection<CustomVariable>();
                 }
 
                 // Add the custom variables of each of the bundle's groups to the group of the taskApp.
                 appWithGroupBundle.Application.CustomVariableGroups.ForEach(x =>
-                    taskApp.AppWithGroup.CustomVariableGroup.CustomVariables.AddRange(x.CustomVariables));
+                    taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.AddRange(x.CustomVariables));
             }
         }
 

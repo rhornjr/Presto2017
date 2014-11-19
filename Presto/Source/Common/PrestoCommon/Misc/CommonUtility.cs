@@ -49,24 +49,27 @@ namespace PrestoCommon.Misc
             // 1. Both custom variable groups are null, or
             // 2. Both custom variable groups are the same.
 
-            if (appWithGroupToFind.CustomVariableGroup == null)
+            if (appWithGroupToFind.CustomVariableGroups == null || appWithGroupToFind.CustomVariableGroups.Count < 1)
             {
                 return appWithGroupList.FirstOrDefault(groupFromList =>
                     groupFromList.Application.Id == appWithGroupToFind.Application.Id &&
-                    groupFromList.CustomVariableGroup == null);
+                    (groupFromList.CustomVariableGroups == null || groupFromList.CustomVariableGroups.Count < 1));
             }
 
             return appWithGroupList.FirstOrDefault(groupFromList =>
                 groupFromList.Application.Id == appWithGroupToFind.Application.Id &&                
-                groupFromList.CustomVariableGroup != null &&
-                groupFromList.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroup.Id);
+                groupFromList.CustomVariableGroups != null &&
+                groupFromList.CustomVariableGroups.Count == appWithGroupToFind.CustomVariableGroups.Count &&
+                groupFromList.CustomVariableGroupIds.All(appWithGroupToFind.CustomVariableGroupIds.Contains));
         }
 
-        public static ServerForceInstallation GetAppWithGroup(
+        public static ServerForceInstallation GetForceInstallationContainingAppWithGroup(
             IEnumerable<ServerForceInstallation> forceInstallationsToDo, ApplicationWithOverrideVariableGroup appWithGroupToFind)
         {
             if (forceInstallationsToDo == null) { throw new ArgumentNullException("forceInstallationsToDo"); }
             if (appWithGroupToFind == null) { throw new ArgumentNullException("appWithGroupToFind"); }
+
+            if (forceInstallationsToDo.Count() < 1) { return null; }
 
             // To find the matching appWithGroup, the app IDs need to match AND one of these two things must be true:
             // 1. Both custom variable groups are null, or
@@ -74,17 +77,25 @@ namespace PrestoCommon.Misc
 
             try
             {
-                if (appWithGroupToFind.CustomVariableGroup == null)
+                if (appWithGroupToFind.CustomVariableGroups == null || appWithGroupToFind.CustomVariableGroups.Count < 1)
                 {
                     return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
                         forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
-                        forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup == null);
+                        (forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups == null
+                        || forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups.Count < 1));
                 }
 
                 return forceInstallationsToDo.FirstOrDefault(forceInstallationToDo =>
                     forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
-                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup != null &&
-                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroup.Id == appWithGroupToFind.CustomVariableGroupId);
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups != null &&
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups.Count == appWithGroupToFind.CustomVariableGroups.Count &&
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroupIds.All(appWithGroupToFind.CustomVariableGroupIds.Contains));
+
+                // Note: The LINQ extension All() (above): Determines whether all elements of a sequence satisfy a condition. And we're
+                //       passing the Contains() method from the other list as a delegate.
+                //       Since we're making sure the counts are the same, the order of those lists (which one calls All()) doesn't
+                //       matter.)
+                //       Also, the order of the elements within each list doesn't matter.
             }
             catch
             {

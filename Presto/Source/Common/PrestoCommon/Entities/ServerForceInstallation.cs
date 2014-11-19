@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Raven.Imports.Newtonsoft.Json;
 
 namespace PrestoCommon.Entities
@@ -17,7 +18,7 @@ namespace PrestoCommon.Entities
         public string ApplicationId { get; set; }
 
         [DataMember]
-        public string OverrideGroupId { get; set; }
+        public List<string> OverrideGroupIds { get; set; }
 
         [JsonIgnore]  // We do not want RavenDB to serialize this...
         [DataMember]  // ... but we still want it to go over WCF

@@ -220,7 +220,11 @@ namespace PrestoServer.Logic
 
             string groupName = string.Empty;
 
-            if (forceInstall.ApplicationWithOverrideGroup.CustomVariableGroup != null) { groupName = forceInstall.ApplicationWithOverrideGroup.CustomVariableGroup.Name; }
+            if (forceInstall.ApplicationWithOverrideGroup.CustomVariableGroups != null
+                && forceInstall.ApplicationWithOverrideGroup.CustomVariableGroups.Count > 0)
+            {
+                groupName = forceInstall.ApplicationWithOverrideGroup.CustomVariableGroupNames;
+            }
 
             return string.Format(CultureInfo.CurrentCulture,
                 "App name={0}, app version={1}, custom group name={2}",
@@ -235,7 +239,11 @@ namespace PrestoServer.Logic
 
             string groupName = string.Empty;
 
-            if (appWithGroup.CustomVariableGroup != null) { groupName = appWithGroup.CustomVariableGroup.Name; }
+            if (appWithGroup.CustomVariableGroups != null
+                && appWithGroup.CustomVariableGroups.Count > 0)
+            {
+                groupName = appWithGroup.CustomVariableGroupNames;
+            }
 
             return string.Format(CultureInfo.CurrentCulture,
                 "App name={0}, app version={1}, custom group name={2}",
@@ -354,7 +362,7 @@ namespace PrestoServer.Logic
                 {
                     // User wants the default self-updater installed (with no override group).
                     appWithGroup = appServer.ApplicationsWithOverrideGroup.FirstOrDefault(
-                        x => x.Application.Name == selfUpdatingAppName && x.CustomVariableGroup == null);
+                        x => x.Application.Name == selfUpdatingAppName && (x.CustomVariableGroups == null || x.CustomVariableGroups.Count < 1));
                 }
 
                 if (appWithGroup == null || appWithGroup.Application == null)

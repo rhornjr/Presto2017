@@ -117,7 +117,7 @@ namespace PrestoCommon.Entities
         /// </returns>
         public ServerForceInstallation GetFromForceInstallList(ApplicationWithOverrideVariableGroup appWithGroup)
         {
-            return CommonUtility.GetAppWithGroup(this.ForceInstallationsToDo, appWithGroup);
+            return CommonUtility.GetForceInstallationContainingAppWithGroup(this.ForceInstallationsToDo, appWithGroup);
         }
     }
 }

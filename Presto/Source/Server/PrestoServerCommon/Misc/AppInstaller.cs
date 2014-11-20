@@ -49,7 +49,7 @@ namespace PrestoServer.Misc
                 }
 
                 if ((taskApp.AppWithGroup.CustomVariableGroups == null || taskApp.AppWithGroup.CustomVariableGroups.Count < 1)
-                    && taskApp.AppWithGroup.CustomVariableGroupIds.Count > 0)
+                    && (taskApp.AppWithGroup.CustomVariableGroupIds != null && taskApp.AppWithGroup.CustomVariableGroupIds.Count > 0))
                 {
                     if (taskApp.AppWithGroup.CustomVariableGroups == null)
                         { taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>(); }
@@ -65,14 +65,26 @@ namespace PrestoServer.Misc
 
                 if (taskApp.AppWithGroup.CustomVariableGroups == null)
                 {
-                    taskApp.AppWithGroup.CustomVariableGroups                    = new PrestoObservableCollection<CustomVariableGroup>();
-                    taskApp.AppWithGroup.CustomVariableGroups[0]                 = new CustomVariableGroup();
+                    taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+                    taskApp.AppWithGroup.CustomVariableGroups.Add(new CustomVariableGroup());
                     taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables = new ObservableCollection<CustomVariable>();
                 }
 
-                // Add the custom variables of each of the bundle's groups to the group of the taskApp.
+                // Add the bundle's CVGs to the taskApp
                 appWithGroupBundle.Application.CustomVariableGroups.ForEach(x =>
                     taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.AddRange(x.CustomVariables));
+
+                // Need to add the override CVGs to the taskApp (I know, I know, this is a fucking mess.)
+                foreach (var cvg in appWithGroupBundle.CustomVariableGroups)
+                {
+                    // If the CVG already exists, remove it and replace it with the override.
+                    foreach (var cv in cvg.CustomVariables)
+                    {
+                        var existing = taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.FirstOrDefault(x => x.Key == cv.Key);
+                        if (existing != null) { taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.Remove(existing); }
+                    }
+                    taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.AddRange(cvg.CustomVariables);
+                }
             }
         }
 

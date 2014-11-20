@@ -33,6 +33,9 @@ namespace PrestoServer.Misc
 
         private static void HydrateTaskApps(ApplicationWithOverrideVariableGroup appWithGroupBundle)
         {
+            // Ok, so this method is nasty. It needs to be refactored. See the comments at the bottom of this file
+            // for an explanation of how this all comes together.
+
             // TaskApp tasks are stored with only the IDs for the Application and CustomVariableGroup properties.
             // Hydrate those before installing.
 
@@ -105,3 +108,19 @@ namespace PrestoServer.Misc
         }
     }
 }
+
+/********************************************************************************************************************
+ * 
+ * HydrateTaskApps() overview of objects with a test bundle, test app, and test overrides:
+ * 
+ * - appWithGroupBundle
+ *   - app: zTestBundle
+ *     - Tasks: zTest1 (taskApp)
+ *               - appWithGroup
+ *                 - app: zTest1
+ *                   - CVGs: zTest1
+ *                 - CVGs: null*
+ *     - CVGs*: zTestBundle (gets copied to the null CVGs above)
+ *   - CVGs*: UnitPBG12 and zTest2 (The overrides. These also get copied to the null CVGs above.)
+ * 
+ ********************************************************************************************************************/

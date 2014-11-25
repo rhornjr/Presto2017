@@ -219,6 +219,9 @@ namespace PrestoViewModel.Tabs
                     prestoWcf.Service.GetById(this.ApplicationWithGroup.Application.Id);
             }
 
+            // I think this is unnecessary now that we have the ability to store multiple CVGs
+
+            /***********************************************************************************************
             if (_selectedCustomVariableGroupIds != null)
             {
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
@@ -239,6 +242,7 @@ namespace PrestoViewModel.Tabs
                     }
                 }
             }
+             ***********************************************************************************************/
 
             using (var prestoWcf = new PrestoWcf<IServerService>())
             {

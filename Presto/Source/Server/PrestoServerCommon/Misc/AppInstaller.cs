@@ -104,8 +104,8 @@ namespace PrestoServer.Misc
  *                 - app: zTest1
  *                   - CVGs: zTest1
  *                 - CVGs: null*
- *     - CVGs*: zTestBundle (gets copied to the null CVGs above)
- *   - CVGs*: UnitPBG12 and zTest2 (The overrides. These also get copied to the null CVGs above.)
+ *     - CVGs*: zTestBundle (gets copied to appWithGroup.app.CVGs above)
+ *   - CVGs*: UnitPBG12 and zTest2 (The overrides. These get copied to the null CVGs above.)
  *   
  * Note: A server also has CVGs. The server is sent as a separate parameter to resolve CVGs.
  * 

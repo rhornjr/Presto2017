@@ -158,6 +158,20 @@ namespace PrestoCommon.Entities
 
             // Add the new custom variables to the list, overwriting any duplicates.
 
+            // ... but before we add the overrides, need to make sure the overrides don't
+            // have any duplicates within themselves.
+            var hashset = new HashSet<string>();
+            foreach (var cvg in applicationWithOverrideVariableGroup.CustomVariableGroups)
+            {
+                foreach (var cv in cvg.CustomVariables)
+                {
+                    if (!hashset.Add(cv.Key))
+                    {
+                        LogDuplicateVariableAndThrow(cv.Key);
+                    }
+                }
+            }
+
             var newCustomVariables = new List<CustomVariable>();
             
             foreach (var cvg in applicationWithOverrideVariableGroup.CustomVariableGroups)

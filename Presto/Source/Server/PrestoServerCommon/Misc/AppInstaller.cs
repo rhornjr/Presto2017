@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using PrestoCommon.Entities;
@@ -33,8 +32,12 @@ namespace PrestoServer.Misc
 
         private static void HydrateTaskApps(ApplicationWithOverrideVariableGroup appWithGroupBundle)
         {
-            // Ok, so this method is nasty. It needs to be refactored. See the comments at the bottom of this file
-            // for an explanation of how this all comes together.
+            // When this method is complete, the innermost appWithGroup should have all of the CVGs in it,
+            // because that is what gets passed to the tasks that execute. When a taskApp runs, it calls
+            // this.AppWithGroup.Install(...). That means the tasks don't have access to the bundle; just
+            // the appWithGroup within it.
+            // The override CVGs will go here: innermostAppWithGroup.CVGs
+            // All other CVGs will go here: innermostAppWithGroup.App.CVGs
 
             // TaskApp tasks are stored with only the IDs for the Application and CustomVariableGroup properties.
             // Hydrate those before installing.
@@ -51,42 +54,21 @@ namespace PrestoServer.Misc
                     }
                 }
 
-                if ((taskApp.AppWithGroup.CustomVariableGroups == null || taskApp.AppWithGroup.CustomVariableGroups.Count < 1)
-                    && (taskApp.AppWithGroup.CustomVariableGroupIds != null && taskApp.AppWithGroup.CustomVariableGroupIds.Count > 0))
+                // Add the bundle's app's CVGs to the taskApp
+                appWithGroupBundle.Application.CustomVariableGroups.ForEach(x => taskApp.AppWithGroup.Application.CustomVariableGroups.Add(x));
+
+                /***********************************************************************************************************
+                 *                                                OVERRIDES                                                *
+                 ***********************************************************************************************************/
+
+                // It's not possible to have overrides on taskApp.AppWithGroup.CustomVariableGroups because the overrides
+                // are set with the bundle. So let's initialize the CVGs so we can store the bundle's overrides here.
+                taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+
+                // These are the overrides.
+                if (appWithGroupBundle.CustomVariableGroups != null)
                 {
-                    if (taskApp.AppWithGroup.CustomVariableGroups == null)
-                        { taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>(); }
-
-                    using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
-                    {
-                        foreach (string groupId in taskApp.AppWithGroup.CustomVariableGroupIds)
-                        {
-                            taskApp.AppWithGroup.CustomVariableGroups.Add(prestoWcf.Service.GetById(groupId));
-                        }
-                    }
-                }
-
-                if (taskApp.AppWithGroup.CustomVariableGroups == null)
-                {
-                    taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
-                    taskApp.AppWithGroup.CustomVariableGroups.Add(new CustomVariableGroup());
-                    taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables = new ObservableCollection<CustomVariable>();
-                }
-
-                // Add the bundle's CVGs to the taskApp
-                appWithGroupBundle.Application.CustomVariableGroups.ForEach(x =>
-                    taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.AddRange(x.CustomVariables));
-
-                // Need to add the override CVGs to the taskApp (I know, I know, this is a fucking mess.)
-                foreach (var cvg in appWithGroupBundle.CustomVariableGroups)
-                {
-                    // If the CVG already exists, remove it and replace it with the override.
-                    foreach (var cv in cvg.CustomVariables)
-                    {
-                        var existing = taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.FirstOrDefault(x => x.Key == cv.Key);
-                        if (existing != null) { taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.Remove(existing); }
-                    }
-                    taskApp.AppWithGroup.CustomVariableGroups[0].CustomVariables.AddRange(cvg.CustomVariables);
+                    taskApp.AppWithGroup.CustomVariableGroups.AddRange(appWithGroupBundle.CustomVariableGroups);
                 }
             }
         }
@@ -104,7 +86,7 @@ namespace PrestoServer.Misc
                 installationSummary.ApplicationServer.Name,
                 installationSummary.InstallationStart.ToString(CultureInfo.CurrentCulture),
                 installationSummary.InstallationEnd.ToString(CultureInfo.CurrentCulture),
-                installationSummary.InstallationResult.ToString()));
+                installationSummary.InstallationResult));
         }
     }
 }
@@ -122,5 +104,7 @@ namespace PrestoServer.Misc
  *                 - CVGs: null*
  *     - CVGs*: zTestBundle (gets copied to the null CVGs above)
  *   - CVGs*: UnitPBG12 and zTest2 (The overrides. These also get copied to the null CVGs above.)
+ *   
+ * Note: A server also has CVGs. The server is sent as a separate parameter to resolve CVGs.
  * 
  ********************************************************************************************************************/

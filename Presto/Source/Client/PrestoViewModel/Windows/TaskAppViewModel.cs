@@ -113,7 +113,7 @@ namespace PrestoViewModel.Windows
 
             // If we don't have any custom variable groups, but we have IDs, then get the CVGs by their IDs.
             if ((originalAppWithGroup.CustomVariableGroups == null || originalAppWithGroup.CustomVariableGroups.Count < 1)
-                && originalAppWithGroup.CustomVariableGroupIds.Count > 0)
+                && (originalAppWithGroup.CustomVariableGroupIds != null && originalAppWithGroup.CustomVariableGroupIds.Count > 0))
             {
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {

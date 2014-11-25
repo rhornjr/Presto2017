@@ -32,6 +32,8 @@ namespace PrestoServer.Misc
 
         private static void HydrateTaskApps(ApplicationWithOverrideVariableGroup appWithGroupBundle)
         {
+            // See ReadMe_AppWithGroupMapping.docx, in the same folder as this class, for a diagram overview.
+
             // When this method is complete, the innermost appWithGroup should have all of the CVGs in it,
             // because that is what gets passed to the tasks that execute. When a taskApp runs, it calls
             // this.AppWithGroup.Install(...). That means the tasks don't have access to the bundle; just

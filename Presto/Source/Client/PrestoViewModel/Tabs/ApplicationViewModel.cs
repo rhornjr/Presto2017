@@ -510,7 +510,7 @@ namespace PrestoViewModel.Tabs
 
         private void AddVariableGroup()
         {
-            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel(true);
+            CustomVariableGroupSelectorViewModel viewModel = new CustomVariableGroupSelectorViewModel(null);
 
             MainWindowViewModel.ViewLoader.ShowDialog(viewModel);
 

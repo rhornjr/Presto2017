@@ -100,17 +100,34 @@ namespace PrestoCommon.Entities
             set
             {
                 this._customVariableGroups = value;
-                if (this._customVariableGroups != null)
+                
+                if (this._customVariableGroups != null && this._customVariableGroups.Count > 0)
                 {
-                    this.CustomVariableGroupIds = new List<string>();
+                    this.CustomVariableGroupIds = new List<string>();  // reset the IDs
                     foreach (var group in this._customVariableGroups)
                     {
-                        this.CustomVariableGroupIds.Add(group.Id);
+                        this.CustomVariableGroupIds.Add(group.Id);  // add the new IDs
                     }
                 }
                 NotifyPropertyChanged(() => this.CustomVariableGroups);
                 NotifyPropertyChanged(() => this.CustomVariableGroupNames);
             }
+        }
+
+        /// <summary>
+        /// Resets the CustomVariableGroups and CustomVariableGroupIds.
+        /// </summary>
+        public void RemoveAllCustomVariableGroups()
+        {            
+            // This method exists because of the complexity of managing the IDs and entities separately.
+            // When deserializing this class from the DB, the CustomVariableGroups property gets set to
+            // null, which then wipes out the CustomVariableGroupIds. We don't want that.
+            // So, for now, provide this method for the code within Presto. Both properties will get
+            // reset/cleared.
+
+            this.CustomVariableGroups   = new PrestoObservableCollection<CustomVariableGroup>();
+            this.CustomVariableGroupIds = new List<string>();
+            this.CustomVariableGroupId  = null;
         }
 
         [JsonIgnore]  // We do not want RavenDB to serialize this.

@@ -254,8 +254,20 @@ namespace PrestoServer.Data.RavenDb
 
                     serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
 
+                    if (serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroupIds == null)
+                    {
+                        serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroupIds = new List<string>();
+                    }
+
                     foreach (var groupId in serverForceInstallation.OverrideGroupIds)
                     {
+                        // ToDo: This is bad. We're breaking the concept of only using CustomVariableGroupIds in
+                        //       the data layer. But we've already done so elsewhere. Adding the IDs here to see
+                        //       if this will just cause things to start working.
+                        if (!serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroupIds.Contains(groupId))
+                        {
+                            serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroupIds.Add(groupId);
+                        }
                         serverForceInstallation.ApplicationWithOverrideGroup.CustomVariableGroups.Add(
                             QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId))
                             as CustomVariableGroup);

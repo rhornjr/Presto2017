@@ -56,8 +56,23 @@ namespace PrestoServer.Misc
                     }
                 }
 
+                /***********************************************************************************************************
+                 *                                               Normal CVGs                                               *
+                 ***********************************************************************************************************/
+
                 // Add the bundle's app's CVGs to the taskApp
                 appWithGroupBundle.Application.CustomVariableGroups.ForEach(x => taskApp.AppWithGroup.Application.CustomVariableGroups.Add(x));
+
+                // For each task app in the bundle, add its CVGs to the taskApp.
+                // These need to be hydrated first.
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    foreach (var cvgId in taskApp.AppWithGroup.CustomVariableGroupIds)
+                    {
+                        var cvg = prestoWcf.Service.GetById(cvgId);
+                        taskApp.AppWithGroup.Application.CustomVariableGroups.Add(cvg);
+                    }
+                }
 
                 /***********************************************************************************************************
                  *                                                OVERRIDES                                                *

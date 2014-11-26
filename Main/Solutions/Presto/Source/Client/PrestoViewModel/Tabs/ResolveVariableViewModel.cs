@@ -113,7 +113,7 @@ namespace PrestoViewModel.Tabs
 
         private void SelectGroup()
         {
-            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(true);
+            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(_selectedCustomVariableGroups);
             MainWindowViewModel.ViewLoader.ShowDialog(groupViewModel);
 
             if (groupViewModel.UserCanceled) { return; }
@@ -129,7 +129,7 @@ namespace PrestoViewModel.Tabs
 
         private void RemoveGroup()
         {
-            this.ApplicationWithGroup.CustomVariableGroups = null;
+            this.ApplicationWithGroup.RemoveAllCustomVariableGroups();
             this.ResolvedCustomVariables.Clear();
 
             _selectedCustomVariableGroupIds.Clear();

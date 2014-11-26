@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Enums;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
@@ -113,11 +116,32 @@ namespace PrestoViewModel.Windows
 
             // If we don't have any custom variable groups, but we have IDs, then get the CVGs by their IDs.
             if ((originalAppWithGroup.CustomVariableGroups == null || originalAppWithGroup.CustomVariableGroups.Count < 1)
-                && (originalAppWithGroup.CustomVariableGroupIds != null && originalAppWithGroup.CustomVariableGroupIds.Count > 0))
+                && ((originalAppWithGroup.CustomVariableGroupIds != null && originalAppWithGroup.CustomVariableGroupIds.Count > 0)
+                    || originalAppWithGroup.CustomVariableGroupId != null))
             {
+                var originalCustomVariableGroupIds = new List<string>();
+
+                // New way, where we can have multiple CVG IDs.
+                if (originalAppWithGroup.CustomVariableGroupIds != null && originalAppWithGroup.CustomVariableGroupIds.Count > 0)
+                {
+                    originalCustomVariableGroupIds.AddRange(originalAppWithGroup.CustomVariableGroupIds.ToList());
+                }
+
+                // Old way, where we only had one CVG ID. Only add it if the same ID wasn't added above.
+                if (originalAppWithGroup.CustomVariableGroupId != null
+                    && !originalCustomVariableGroupIds.Contains(originalAppWithGroup.CustomVariableGroupId))
+                {
+                    originalCustomVariableGroupIds.Add(originalAppWithGroup.CustomVariableGroupId);
+                }
+
+                if (originalAppWithGroup.CustomVariableGroups == null)
+                {
+                    originalAppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+                }
+
                 using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
                 {
-                    foreach (var groupId in originalAppWithGroup.CustomVariableGroupIds)
+                    foreach (var groupId in originalCustomVariableGroupIds)
                     {
                         originalAppWithGroup.CustomVariableGroups.Add(prestoWcf.Service.GetById(groupId));
                     }
@@ -162,8 +186,16 @@ namespace PrestoViewModel.Windows
         private void UpdateOriginalFromWorkingCopy()
         {
             this._originalAppWithGroup.Application          = this.ApplicationWithGroup.Application;
-            this._originalAppWithGroup.CustomVariableGroups = this.ApplicationWithGroup.CustomVariableGroups;
             this._originalAppWithGroup.Enabled              = this.ApplicationWithGroup.Enabled;
+
+            if (this.ApplicationWithGroup.CustomVariableGroups == null || this.ApplicationWithGroup.CustomVariableGroups.Count < 1)
+            {
+                this._originalAppWithGroup.RemoveAllCustomVariableGroups();
+            }
+            else
+            {
+                this._originalAppWithGroup.CustomVariableGroups = this.ApplicationWithGroup.CustomVariableGroups;
+            }            
         }
 
         private void Cancel()
@@ -183,7 +215,7 @@ namespace PrestoViewModel.Windows
 
         private void SelectGroup()
         {
-            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(true);
+            CustomVariableGroupSelectorViewModel groupViewModel = new CustomVariableGroupSelectorViewModel(this.ApplicationWithGroup.CustomVariableGroups);
             MainWindowViewModel.ViewLoader.ShowDialog(groupViewModel);
 
             if (groupViewModel.UserCanceled) { return; }
@@ -193,7 +225,7 @@ namespace PrestoViewModel.Windows
 
         private void RemoveGroup()
         {
-            this.ApplicationWithGroup.CustomVariableGroups = null;
+            this.ApplicationWithGroup.RemoveAllCustomVariableGroups();
         }    
     }
 }

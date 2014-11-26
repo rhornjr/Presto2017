@@ -7,7 +7,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#FF595959"
         ResizeMode="NoResize"
-        Title="CustomVariableGroupSelectorView" Height="400" Width="300">
+        FocusManager.FocusedElement="{Binding ElementName=CustomVariableGroupsList}"
+        Title="CustomVariableGroupSelectorView" Height="400" Width="300">        
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -18,7 +19,7 @@
             <Label DockPanel.Dock="Top" Style="{StaticResource StandardLabel}" Content="Custom Variable Groups" HorizontalAlignment="Center"/>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding CustomVariableGroups}" DisplayMemberPath="Name"                     
                      ff:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedCustomVariableGroups}"
-                     SelectionMode="Extended" Height="auto">
+                     SelectionMode="Extended" Height="auto" Name="CustomVariableGroupsList">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
                         <galaSoft:EventToCommand Command="{Binding AddCommand, Mode=OneWay}"/>
@@ -30,6 +31,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Style="{StaticResource StandardButton}" Content="Add" Command="{Binding AddCommand}" />
             <Button Style="{StaticResource StandardButton}" Content="Cancel" Command="{Binding CancelCommand}" />
+            <Button Style="{StaticResource StandardButton}" Content="Set" Command="{Binding SetCommand}" ToolTip="Select existing groups" />
         </StackPanel>
 
     </Grid>

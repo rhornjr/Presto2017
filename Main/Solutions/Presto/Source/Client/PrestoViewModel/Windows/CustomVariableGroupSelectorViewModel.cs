@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
@@ -18,31 +19,15 @@ namespace PrestoViewModel.Windows
     /// </summary>
     public class CustomVariableGroupSelectorViewModel : ViewModelBase
     {
-        private bool _allowMultipleSelections;
         private Collection<CustomVariableGroup> _customVariableGroups;
         private PrestoObservableCollection<CustomVariableGroup> _selectedCustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+        private readonly List<CustomVariableGroup> _alreadySelectedCvgs;
 
-        /// <summary>
-        /// Gets the add command.
-        /// </summary>
         public ICommand AddCommand { get; private set; }
-
-        /// <summary>
-        /// Gets the cancel command.
-        /// </summary>
         public ICommand CancelCommand { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether [user canceled].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [user canceled]; otherwise, <c>false</c>.
-        /// </value>
+        public ICommand SetCommand { get; private set; }
         public bool UserCanceled { get; private set; }
 
-        /// <summary>
-        /// Gets the custom variable groups.
-        /// </summary>
         public Collection<CustomVariableGroup> CustomVariableGroups
         {
             get { return this._customVariableGroups; }
@@ -54,12 +39,6 @@ namespace PrestoViewModel.Windows
             }
         }
 
-        /// <summary>
-        /// Gets or sets the selected custom variable group.
-        /// </summary>
-        /// <value>
-        /// The selected custom variable group.
-        /// </value>
         public PrestoObservableCollection<CustomVariableGroup> SelectedCustomVariableGroups
         {
             get { return this._selectedCustomVariableGroups; }
@@ -71,21 +50,21 @@ namespace PrestoViewModel.Windows
             }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomVariableGroupSelectorViewModel"/> class.
-        /// </summary>
-        public CustomVariableGroupSelectorViewModel(bool allowMultipleSelections)
+        public CustomVariableGroupSelectorViewModel(PrestoObservableCollection<CustomVariableGroup> alreadySelectedCvgs)
         {
-            // ToDo: This constructor should take a list of existing custom variable groups that are already associated
-            //       with a server so we don't display them.
-            this._allowMultipleSelections = allowMultipleSelections;
             Initialize();
+
+            if (alreadySelectedCvgs != null && alreadySelectedCvgs.Count > 0)
+            {
+                this._alreadySelectedCvgs = new List<CustomVariableGroup>(alreadySelectedCvgs.ToList());
+            }
         }
 
         private void Initialize()
         {
             this.AddCommand    = new RelayCommand(Add, CanAdd);
             this.CancelCommand = new RelayCommand(Cancel);
+            this.SetCommand    = new RelayCommand(Set, CanSet);
 
             this.UserCanceled = true;  // default (do this in case the user closes the window without hitting the cancel button)
 
@@ -96,19 +75,32 @@ namespace PrestoViewModel.Windows
         {
             if (this.SelectedCustomVariableGroups == null) { return false; }
 
-            if (this._allowMultipleSelections)
-            {
-                return this.SelectedCustomVariableGroups.Count >= 1;
-            }
-
-            // Only allow one selected item.
-            return this.SelectedCustomVariableGroups.Count == 1;
+            return this.SelectedCustomVariableGroups.Count >= 1;
         }
 
         private void Add()
         {
             this.UserCanceled = false;
             this.Close();
+        }
+
+        private bool CanSet()
+        {
+            return this._alreadySelectedCvgs != null && this._alreadySelectedCvgs.Count > 0;
+        }
+
+        private void Set()
+        {
+            this.SelectedCustomVariableGroups.ClearItemsAndNotifyChangeOnlyWhenDone();
+
+            foreach (var alreadySelectedCvg in this._alreadySelectedCvgs)
+            {
+                var selectedCvg = this.CustomVariableGroups.FirstOrDefault(x => x.Id == alreadySelectedCvg.Id);
+                if (selectedCvg != null)
+                {
+                    this.SelectedCustomVariableGroups.Add(selectedCvg);
+                }
+            }
         }
 
         private void Cancel()

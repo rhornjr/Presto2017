@@ -177,7 +177,11 @@ namespace PrestoServer.Data.RavenDb
                 foreach (var cvg in taskApp.AppWithGroup.CustomVariableGroups)
                 {
                     taskApp.AppWithGroup.CustomVariableGroupIds.Add(cvg.Id);
-                    application.CustomVariableGroupIdsForTaskApps.Add(cvg.Id);
+
+                    if (!application.CustomVariableGroupIdsForTaskApps.Contains(cvg.Id))
+                    {
+                        application.CustomVariableGroupIdsForTaskApps.Add(cvg.Id);
+                    }
                 }
             }
         }

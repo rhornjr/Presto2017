@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using PrestoCommon.Entities;
@@ -82,8 +83,30 @@ namespace PrestoServer.Data.RavenDb
             finally
             {
                 Debug.WriteLine("Number of requests just before closing session: " + _session.Advanced.NumberOfRequests);
+                SendEmailWarningIfTooManySessionRequests(_session.Advanced.NumberOfRequests);
                 PossiblyCloseSession();
             }
+        }
+
+        private static void SendEmailWarningIfTooManySessionRequests(int numberOfSessionRequests)
+        {
+            if (_session.Advanced.NumberOfRequests <= 10) { return; }
+
+            const string subject = "Presto DB Activity Warning - High Number of Session Requests";
+
+            string emailBody = string.Format(CultureInfo.CurrentCulture,
+                "The number of session requests for RavenDB should ideally be 1. Acvitity just occurred where " +
+                "the number of session requests was {0}. A change was made on 28-Nov-2014 that causes some session " +
+                "requests to be around 5. This happened because we're hydrating the tasks within an application. " +
+                "Those tasks could be of type TaskApp, which would have custom variable groups. It's not possible " +
+                "to include those in the DB query, so we're making extra requests to hydrate those. If you get this " +
+                "email and want a relatively quick fix, alter the DB so that every application.task.AppWithGroup" +
+                ".CustomVariableGroupId is removed, but first added to application.CustomVariableGroupIdsForTaskApps." +
+                "Stack trace: {1}",
+                numberOfSessionRequests,
+                Environment.StackTrace);
+
+            CommonUtility.SendEmail(subject, emailBody);
         }
 
         /// <summary>

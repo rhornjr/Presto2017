@@ -64,12 +64,10 @@ namespace PrestoServer.Misc
                 appWithGroupBundle.Application.CustomVariableGroups.ForEach(x => taskApp.AppWithGroup.Application.CustomVariableGroups.Add(x));
 
                 // For each task app in the bundle, add its CVGs to the taskApp.
-                // These need to be hydrated first.
-                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                if (taskApp.AppWithGroup.CustomVariableGroups != null)
                 {
-                    foreach (var cvgId in taskApp.AppWithGroup.CustomVariableGroupIds)
+                    foreach (var cvg in taskApp.AppWithGroup.CustomVariableGroups)
                     {
-                        var cvg = prestoWcf.Service.GetById(cvgId);
                         taskApp.AppWithGroup.Application.CustomVariableGroups.Add(cvg);
                     }
                 }

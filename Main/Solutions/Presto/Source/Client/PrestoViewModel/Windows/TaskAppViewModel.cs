@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
@@ -114,38 +112,17 @@ namespace PrestoViewModel.Windows
                 }
             }
 
-            // If we don't have any custom variable groups, but we have IDs, then get the CVGs by their IDs.
+            // If we don't have any custom variable groups, but we have IDs, then get the CVGs by their IDs.            
             if ((originalAppWithGroup.CustomVariableGroups == null || originalAppWithGroup.CustomVariableGroups.Count < 1)
                 && ((originalAppWithGroup.CustomVariableGroupIds != null && originalAppWithGroup.CustomVariableGroupIds.Count > 0)
                     || originalAppWithGroup.CustomVariableGroupId != null))
             {
-                var originalCustomVariableGroupIds = new List<string>();
-
-                // New way, where we can have multiple CVG IDs.
-                if (originalAppWithGroup.CustomVariableGroupIds != null && originalAppWithGroup.CustomVariableGroupIds.Count > 0)
-                {
-                    originalCustomVariableGroupIds.AddRange(originalAppWithGroup.CustomVariableGroupIds.ToList());
-                }
-
-                // Old way, where we only had one CVG ID. Only add it if the same ID wasn't added above.
-                if (originalAppWithGroup.CustomVariableGroupId != null
-                    && !originalCustomVariableGroupIds.Contains(originalAppWithGroup.CustomVariableGroupId))
-                {
-                    originalCustomVariableGroupIds.Add(originalAppWithGroup.CustomVariableGroupId);
-                }
-
-                if (originalAppWithGroup.CustomVariableGroups == null)
-                {
-                    originalAppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
-                }
-
-                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
-                {
-                    foreach (var groupId in originalCustomVariableGroupIds)
-                    {
-                        originalAppWithGroup.CustomVariableGroups.Add(prestoWcf.Service.GetById(groupId));
-                    }
-                }
+                // 28-Nov-2014: We *used* to do this here. But a change was made so that we only use CustomVariableGroupId
+                // or CustomVariableGroupIds in the data classes. Business logic, like this, should never have to worry
+                // about hydrating an app. We should never hit this code. If we do, something is wrong. 
+                throw new InvalidOperationException("When hydrating an appWithGroup, there were no CustomVariableGroups " +
+                    "but there was a CustomVariableGroupId or CustomVariableGroupIds. This should *not* happen because " +
+                    "the CustomVariableGroups should be hydrated at the data layer.");
             }
         }
 
@@ -190,7 +167,7 @@ namespace PrestoViewModel.Windows
 
             if (this.ApplicationWithGroup.CustomVariableGroups == null || this.ApplicationWithGroup.CustomVariableGroups.Count < 1)
             {
-                this._originalAppWithGroup.RemoveAllCustomVariableGroups();
+                this._originalAppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
             }
             else
             {
@@ -225,7 +202,7 @@ namespace PrestoViewModel.Windows
 
         private void RemoveGroup()
         {
-            this.ApplicationWithGroup.RemoveAllCustomVariableGroups();
+            this.ApplicationWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
         }    
     }
 }

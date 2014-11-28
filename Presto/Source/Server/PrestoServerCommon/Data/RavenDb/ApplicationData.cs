@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoServer.Data.Interfaces;
 using Raven.Client;
 using Raven.Client.Linq;
@@ -25,6 +26,7 @@ namespace PrestoServer.Data.RavenDb
                 IEnumerable<Application> apps = QueryAndSetEtags(session =>
                     session.Query<Application>()
                     .Include(x => x.CustomVariableGroupIds)
+                    .Include(x => x.CustomVariableGroupIdsForTaskApps)
                     .Take(int.MaxValue))
                     .AsEnumerable().Cast<Application>();
 
@@ -56,6 +58,7 @@ namespace PrestoServer.Data.RavenDb
                 Application application = QuerySingleResultAndSetEtag(session =>
                     session.Query<Application>()
                     .Include(x => x.CustomVariableGroupIds)
+                    .Include(x => x.CustomVariableGroupIdsForTaskApps)
                     .Where(app => app.Name == name).FirstOrDefault())
                     as Application;
 
@@ -75,7 +78,8 @@ namespace PrestoServer.Data.RavenDb
             return ExecuteQuery<Application>(() =>
             {
                 Application application = QuerySingleResultAndSetEtag(session =>
-                    session.Include<Application>(x => x.CustomVariableGroupIds)
+                    session.Include<Application>(
+                        x => x.CustomVariableGroupIds).Include(x => x.CustomVariableGroupIdsForTaskApps)
                     .Load<Application>(id))
                     as Application;
 
@@ -100,6 +104,37 @@ namespace PrestoServer.Data.RavenDb
             {                
                 app.CustomVariableGroups.Add(QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup);
             }
+
+            foreach (var task in app.Tasks)
+            {
+                var taskApp = task as TaskApp;
+
+                if (taskApp == null) { continue; }
+
+                taskApp.AppWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+
+                if (taskApp.AppWithGroup.CustomVariableGroupIds != null)
+                {
+                    foreach (string cvgId in taskApp.AppWithGroup.CustomVariableGroupIds)
+                    {
+                        taskApp.AppWithGroup.CustomVariableGroups.Add
+                            (QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(cvgId)) as CustomVariableGroup);
+                    }
+                }
+
+                // CustomVariableGroupId can still exist for older tasks, as long as they haven't been loaded and saved again.
+                string oldCvgId = taskApp.AppWithGroup.CustomVariableGroupId;
+                if (oldCvgId != null)
+                {
+                    // Add the CVG if it doesn't already exist.
+                    if (!taskApp.AppWithGroup.CustomVariableGroups.Select(x => x.Id).Contains(oldCvgId))
+                    {
+                        taskApp.AppWithGroup.CustomVariableGroups.Add
+                            (QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(oldCvgId)) as CustomVariableGroup);
+                    }
+                    taskApp.AppWithGroup.CustomVariableGroupId = null;  // Set the old property to null. Eventually they'll all be this way.
+                }
+            }
         }
 
         /// <summary>
@@ -119,11 +154,31 @@ namespace PrestoServer.Data.RavenDb
         {
             application.CustomVariableGroupIds = new List<string>();
 
-            if (application.CustomVariableGroups == null || application.CustomVariableGroups.Count < 1) { return; }
-
-            foreach (CustomVariableGroup group in application.CustomVariableGroups)
+            if (application.CustomVariableGroups != null && application.CustomVariableGroups.Count > 0)
             {
-                application.CustomVariableGroupIds.Add(group.Id);
+                foreach (CustomVariableGroup group in application.CustomVariableGroups)
+                {
+                    application.CustomVariableGroupIds.Add(group.Id);
+                }
+            }
+
+            // For each task in an application, that is of type TaskApp, set its CVG IDs.
+            application.CustomVariableGroupIdsForTaskApps = new List<string>();
+            foreach (var task in application.Tasks)
+            {
+                var taskApp = task as TaskApp;
+
+                if (taskApp == null) { continue; }
+
+                taskApp.AppWithGroup.CustomVariableGroupIds = new List<string>();
+
+                if (taskApp.AppWithGroup.CustomVariableGroups == null) { continue; }
+
+                foreach (var cvg in taskApp.AppWithGroup.CustomVariableGroups)
+                {
+                    taskApp.AppWithGroup.CustomVariableGroupIds.Add(cvg.Id);
+                    application.CustomVariableGroupIdsForTaskApps.Add(cvg.Id);
+                }
             }
         }
     }

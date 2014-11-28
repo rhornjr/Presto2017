@@ -163,17 +163,13 @@ namespace PrestoServer.Data.RavenDb
                 appGroup.CustomVariableGroupIds.Add(appGroup.CustomVariableGroupId);
             }
 
-            // Store the CVG Ids in a different variable since the ones within the app group get reset.
-            var copyOfCvgIds = new List<string>(appGroup.CustomVariableGroupIds);
-
             appGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
 
             // Now that we have the IDs in one property, loop through the IDs and load the groups.
-            foreach (var groupId in copyOfCvgIds)
+            foreach (var groupId in appGroup.CustomVariableGroupIds)
             {
                 var groupLoadedFromSession = QuerySingleResultAndSetEtag(session => session.Load<CustomVariableGroup>(groupId)) as CustomVariableGroup;
                 appGroup.CustomVariableGroups.Add(groupLoadedFromSession);
-                appGroup.CustomVariableGroupIds.Add(groupLoadedFromSession.Id);
             }
 
             appGroup.CustomVariableGroupId = null;  // No longer need this property now that we have CustomVariableGroupIds (plural)

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.ServiceModel;
-using PrestoCommon.Interfaces;
-using PrestoCommon.Entities;
-using PrestoCommon.Wcf;
 using System.Diagnostics;
+using System.Linq;
+using System.ServiceModel;
+using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
+using PrestoCommon.Interfaces;
+using PrestoCommon.Wcf;
 
 namespace ConsoleTestRunner
 {
@@ -37,7 +39,7 @@ namespace ConsoleTestRunner
         {
             try
             {
-                TestGetServers();
+                TestFindingOneAppWithGroupOutOfMany();
             }
             catch (Exception ex)
             {
@@ -46,6 +48,79 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();
+        }
+
+        private static void TestFindingOneAppWithGroupOutOfMany()
+        {
+            var singleCvg = new CustomVariableGroup() { Id = "884" };
+            var extraCvg1 = new CustomVariableGroup() { Id = "1" };
+            var extraCvg2 = new CustomVariableGroup() { Id = "2" };
+            var extraCvg3 = new CustomVariableGroup() { Id = "3" };
+            var extraCvg4 = new CustomVariableGroup() { Id = "4" };
+
+            var app1 = new Application() { Id = "atp" };
+            var app2 = new Application() { Id = "fdp" };
+            var app3 = new Application() { Id = "mrp" };
+
+            var appWithGroup1 = new ApplicationWithOverrideVariableGroup() { Application = app1 };
+            var appWithGroup2 = new ApplicationWithOverrideVariableGroup() { Application = app2 };
+            var appWithGroup3 = new ApplicationWithOverrideVariableGroup() { Application = app3 };
+
+            var appWithGroup4 = new ApplicationWithOverrideVariableGroup() { Application = app1 };
+            appWithGroup4.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+            appWithGroup4.CustomVariableGroups.Add(extraCvg1);
+
+            var appWithGroup5 = new ApplicationWithOverrideVariableGroup() { Application = app2 };
+            appWithGroup5.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+            appWithGroup5.CustomVariableGroups.Add(extraCvg1);
+            appWithGroup5.CustomVariableGroups.Add(extraCvg2);
+
+            var appWithGroup6 = new ApplicationWithOverrideVariableGroup() { Application = app1 };
+            appWithGroup6.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+            appWithGroup6.CustomVariableGroups.Add(extraCvg3);
+            appWithGroup6.CustomVariableGroups.Add(extraCvg4);
+
+            var appWithGroup7 = new ApplicationWithOverrideVariableGroup() { Application = app3 };
+            appWithGroup7.CustomVariableGroups = null;
+
+            var appWithGroup8 = new ApplicationWithOverrideVariableGroup() { Application = app1 };
+            appWithGroup8.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+            appWithGroup8.CustomVariableGroups.Add(singleCvg);
+            appWithGroup8.CustomVariableGroups.Add(extraCvg4);
+
+            var appWithGroupList = new List<ApplicationWithOverrideVariableGroup>();
+            var appWithGroupToFind = appWithGroup8;
+
+            appWithGroupList.Add(appWithGroup1);
+            appWithGroupList.Add(appWithGroup2);
+            appWithGroupList.Add(appWithGroup3);
+            appWithGroupList.Add(appWithGroup4);
+            appWithGroupList.Add(appWithGroup5);
+            appWithGroupList.Add(appWithGroup6);
+            appWithGroupList.Add(appWithGroup7);
+            appWithGroupList.Add(appWithGroup8);
+
+            var appWithGroupMatch = appWithGroupList.FirstOrDefault(groupFromList =>
+                    groupFromList.Application.Id == appWithGroupToFind.Application.Id &&
+                    groupFromList.CustomVariableGroups != null &&
+                    groupFromList.CustomVariableGroups.Count == appWithGroupToFind.CustomVariableGroups.Count &&
+                    groupFromList.CustomVariableGroups.Select(x => x.Id).All(appWithGroupToFind.CustomVariableGroups.Select(x => x.Id).Contains));
+
+            // In the final line of the query above, we're selecting all of the IDs of each CVG and making sure the same IDs
+            // exist in the appWithGroupToFind.
+
+            if (appWithGroupMatch == null)
+            {
+                Console.WriteLine("No match found.");
+                return;
+            }
+
+            Console.WriteLine(appWithGroupMatch.Application.Id);
+
+            if (appWithGroupMatch.CustomVariableGroups != null)
+            {
+                appWithGroupMatch.CustomVariableGroups.ToList().ForEach(x => Console.WriteLine(x.Id));
+            }
         }
 
         private static void TestGetOneServer()

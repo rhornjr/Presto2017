@@ -60,7 +60,7 @@ namespace PrestoCommon.Misc
                 groupFromList.Application.Id == appWithGroupToFind.Application.Id &&                
                 groupFromList.CustomVariableGroups != null &&
                 groupFromList.CustomVariableGroups.Count == appWithGroupToFind.CustomVariableGroups.Count &&
-                groupFromList.CustomVariableGroupIds.All(appWithGroupToFind.CustomVariableGroupIds.Contains));
+                groupFromList.CustomVariableGroups.Select(x => x.Id).All(appWithGroupToFind.CustomVariableGroups.Select(x => x.Id).Contains));
         }
 
         public static ServerForceInstallation GetForceInstallationContainingAppWithGroup(
@@ -89,7 +89,7 @@ namespace PrestoCommon.Misc
                     forceInstallationToDo.ApplicationWithOverrideGroup.Application.Id == appWithGroupToFind.ApplicationId &&
                     forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups != null &&
                     forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups.Count == appWithGroupToFind.CustomVariableGroups.Count &&
-                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroupIds.All(appWithGroupToFind.CustomVariableGroupIds.Contains));
+                    forceInstallationToDo.ApplicationWithOverrideGroup.CustomVariableGroups.Select(x => x.Id).All(appWithGroupToFind.CustomVariableGroups.Select(x => x.Id).Contains));
 
                 // Note: The LINQ extension All() (above): Determines whether all elements of a sequence satisfy a condition. And we're
                 //       passing the Contains() method from the other list as a delegate.

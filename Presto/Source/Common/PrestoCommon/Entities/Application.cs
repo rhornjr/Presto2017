@@ -117,6 +117,11 @@ namespace PrestoCommon.Entities
         [DataMember]
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB
 
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [DataMember]
+        public List<string> CustomVariableGroupIdsForTaskApps { get; set; }  // For RavenDB
+
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         [JsonIgnore]  // We do not want RavenDB to serialize this...
         [DataMember]  // ... but we still want it to go over WCF

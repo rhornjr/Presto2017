@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Microsoft.Practices.ObjectBuilder2;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Exceptions;
@@ -34,8 +32,6 @@ namespace PrestoViewModel.Tabs
             }
         }
 
-        // 19-Sep-2014: Allow multiple variable groups to be selected.
-        private List<string> _selectedCustomVariableGroupIds;
         private PrestoObservableCollection<CustomVariableGroup> _selectedCustomVariableGroups;
         
         public ApplicationWithOverrideVariableGroup ApplicationWithGroup
@@ -121,18 +117,18 @@ namespace PrestoViewModel.Tabs
             // Store the (possibly) multiple selected groups.
             _selectedCustomVariableGroups = groupViewModel.SelectedCustomVariableGroups;
             this.ApplicationWithGroup.CustomVariableGroups = groupViewModel.SelectedCustomVariableGroups;
-            _selectedCustomVariableGroupIds = new List<string>();
-            _selectedCustomVariableGroups.ForEach(x => _selectedCustomVariableGroupIds.Add(x.Id));
             
             this.ResolvedCustomVariables.Clear();
         }
 
         private void RemoveGroup()
         {
-            this.ApplicationWithGroup.RemoveAllCustomVariableGroups();
+            // The reason we create a new PrestoObservableCollection here is because the setter will also
+            // notify that the CustomVariableGroupNames property also changed.
+            this.ApplicationWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
             this.ResolvedCustomVariables.Clear();
 
-            _selectedCustomVariableGroupIds.Clear();
+            //_selectedCustomVariableGroupIds.Clear();
             _selectedCustomVariableGroups.Clear();
         }    
 
@@ -217,6 +213,19 @@ namespace PrestoViewModel.Tabs
             {
                 this.ApplicationWithGroup.Application =
                     prestoWcf.Service.GetById(this.ApplicationWithGroup.Application.Id);
+            }
+
+            if (this.ApplicationWithGroup.CustomVariableGroups != null)
+            {
+                var cvgIds = this.ApplicationWithGroup.CustomVariableGroups.Select(x => x.Id).ToList();
+                this.ApplicationWithGroup.CustomVariableGroups.ClearItemsAndNotifyChangeOnlyWhenDone();
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    foreach (var cvgId in cvgIds)
+                    {
+                        this.ApplicationWithGroup.CustomVariableGroups.Add(prestoWcf.Service.GetById(cvgId));
+                    }
+                }
             }
 
             using (var prestoWcf = new PrestoWcf<IServerService>())

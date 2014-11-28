@@ -65,20 +65,6 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string CustomVariableGroupId { get; set; }  // For RavenDB, grrrr...
 
-        ////[JsonIgnore]  // We do not want RavenDB to serialize this...
-        ////[DataMember]  // ... but we still want it to go over WCF
-        ////public CustomVariableGroup CustomVariableGroup
-        ////{
-        ////    get { return this._customVariableGroup; }
-
-        ////    set
-        ////    {
-        ////        this._customVariableGroup = value;
-        ////        if (this._customVariableGroup != null) { this.CustomVariableGroupId = this._customVariableGroup.Id; }
-        ////        NotifyPropertyChanged(() => this.CustomVariableGroup);
-        ////    }
-        ////}
-
         /**************************************************************************************************
          * 
          * Note: The reason we have CustomVariableGroupId (singular) and CustomVariableGroupIds (plural)
@@ -88,6 +74,12 @@ namespace PrestoCommon.Entities
          * 
          **************************************************************************************************/
 
+        /// <summary>
+        /// The IDs to persist within RavenDB. These IDs should NOT be used in business logic; only in the
+        /// data layer when getting and saving to RavenDB. Business logic will manipulate the
+        /// CustomVariableGroups property, and that property and the IDs can get out of sync until
+        /// the data layer handles it.
+        /// </summary>
         [DataMember]
         public List<string> CustomVariableGroupIds { get; set; }  // For RavenDB, grrrr...
 
@@ -99,35 +91,10 @@ namespace PrestoCommon.Entities
 
             set
             {
-                this._customVariableGroups = value;
-                
-                if (this._customVariableGroups != null && this._customVariableGroups.Count > 0)
-                {
-                    this.CustomVariableGroupIds = new List<string>();  // reset the IDs
-                    foreach (var group in this._customVariableGroups)
-                    {
-                        this.CustomVariableGroupIds.Add(group.Id);  // add the new IDs
-                    }
-                }
+                this._customVariableGroups = value;                
                 NotifyPropertyChanged(() => this.CustomVariableGroups);
                 NotifyPropertyChanged(() => this.CustomVariableGroupNames);
             }
-        }
-
-        /// <summary>
-        /// Resets the CustomVariableGroups and CustomVariableGroupIds.
-        /// </summary>
-        public void RemoveAllCustomVariableGroups()
-        {            
-            // This method exists because of the complexity of managing the IDs and entities separately.
-            // When deserializing this class from the DB, the CustomVariableGroups property gets set to
-            // null, which then wipes out the CustomVariableGroupIds. We don't want that.
-            // So, for now, provide this method for the code within Presto. Both properties will get
-            // reset/cleared.
-
-            this.CustomVariableGroups   = new PrestoObservableCollection<CustomVariableGroup>();
-            this.CustomVariableGroupIds = new List<string>();
-            this.CustomVariableGroupId  = null;
         }
 
         [JsonIgnore]  // We do not want RavenDB to serialize this.

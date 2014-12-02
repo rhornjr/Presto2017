@@ -34,7 +34,7 @@
     <InstallUrl>http://pbgappmest02/PrestoDashboard_20140716/</InstallUrl>
     <ProductName>Presto Dashboard</ProductName>
     <PublisherName>Bob Horn</PublisherName>
-    <MinimumRequiredVersion>1.0.0.118</MinimumRequiredVersion>
+    <MinimumRequiredVersion>1.0.0.119</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.htm</WebPage>
     <ApplicationRevision>119</ApplicationRevision>

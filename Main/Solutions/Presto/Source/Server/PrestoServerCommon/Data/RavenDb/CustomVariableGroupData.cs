@@ -77,8 +77,9 @@ namespace PrestoServer.Data.RavenDb
 
         private static void VerifyGroupNotUsedByInstallationSummary(CustomVariableGroup customVariableGroup)
         {
+            // Note: Tried to use Contains() here, but Raven doesn't accept that, so Any() was used.
             EntityBase installationSummary = QuerySingleResultAndSetEtag(session => session.Query<InstallationSummary>()
-                .FirstOrDefault(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Contains(customVariableGroup.Id)));
+                .FirstOrDefault(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Any(y => y == customVariableGroup.Id)));
 
             if (installationSummary != null)
             {

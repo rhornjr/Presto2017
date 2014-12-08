@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
+using ConsoleTestRunner.RavenTestDataClasses;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
@@ -39,7 +40,7 @@ namespace ConsoleTestRunner
         {
             try
             {
-                TestFindingOneAppWithGroupOutOfMany();
+                TestDataCall();
             }
             catch (Exception ex)
             {
@@ -48,6 +49,16 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();
+        }
+
+        private static void TestDataCall()
+        {
+            var cvg = new CustomVariableGroup();
+            cvg.Id = "CustomVariableGroups/197";
+
+            var data = new SandboxData();
+            data.SetAsInitialDalInstanceAndCreateSession();
+            SandboxData.VerifyGroupNotUsedByInstallationSummary(cvg);
         }
 
         private static void TestFindingOneAppWithGroupOutOfMany()

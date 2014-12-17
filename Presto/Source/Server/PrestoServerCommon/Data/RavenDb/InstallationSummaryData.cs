@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using PrestoCommon.Entities;
@@ -11,9 +12,6 @@ using Raven.Client.Linq;
 
 namespace PrestoServer.Data.RavenDb
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class InstallationSummaryData : DataAccessLayerBase, IInstallationSummaryData
     {
         /// <summary>
@@ -22,48 +20,75 @@ namespace PrestoServer.Data.RavenDb
         /// <param name="appServer"></param>
         /// <param name="appWithGroup">The app with group.</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public InstallationSummary GetMostRecentByServerAppAndGroup(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
         {
+            if (appWithGroup == null) { throw new ArgumentNullException("appWithGroup"); }
+
+            Expression<Func<InstallationSummary, bool>> whereClause;
+
+            if (appWithGroup.CustomVariableGroups == null || appWithGroup.CustomVariableGroups.Count < 1)
+            {
+                whereClause = summary => summary.ApplicationServerId == appServer.Id &&
+                    summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
+                    summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupId == null &&
+                    (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds == null
+                      || summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count < 1);
+
+                return ExecuteQuery<InstallationSummary>(() =>
+                {
+                    InstallationSummary installationSummary =
+                        QuerySingleResultAndSetEtag(session => session.Query<InstallationSummary>()
+                        .Include(x => x.ApplicationServerId)
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
+                        .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds)
+                        .Customize(x => x.WaitForNonStaleResults())
+                        .Where(whereClause)
+                        .OrderByDescending(x => x.InstallationStart)
+                        .FirstOrDefault()) as InstallationSummary;
+
+                    HydrateInstallationSummary(installationSummary);
+
+                    return installationSummary;
+                });
+            }
+
+            // The where clause used to be generated in a private method, but RavenDB can't handle this last line:
+            // summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.All(appWithGroup.CustomVariableGroupIds.Contains);
+            // So now just get more installation summaries from RavenDB than we need, and implement that last line in memory.
+            whereClause = summary => summary.ApplicationServerId == appServer.Id &&
+                            summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
+                            summary.ApplicationWithOverrideVariableGroup != null &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds != null &&
+                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count == appWithGroup.CustomVariableGroupIds.Count;
+
             return ExecuteQuery<InstallationSummary>(() =>
             {
-                Expression<Func<InstallationSummary, bool>> whereClause = GetWhereClause(appServer, appWithGroup);
-
-                InstallationSummary installationSummary =
-                    QuerySingleResultAndSetEtag(session => session.Query<InstallationSummary>()
+                var installationSummaries =
+                    QueryAndSetEtags(session => session.Query<InstallationSummary>()
                     .Include(x => x.ApplicationServerId)
                     .Include(x => x.ApplicationWithOverrideVariableGroup.ApplicationId)
                     .Include(x => x.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds)
                     .Customize(x => x.WaitForNonStaleResults())
                     .Where(whereClause)
                     .OrderByDescending(x => x.InstallationStart)
-                    .FirstOrDefault()) as InstallationSummary;
+                    as IQueryable<EntityBase>);
 
-                HydrateInstallationSummary(installationSummary);
+                // Loop through the installation summaries to find the one that has the exact same CVG IDs
+                // as appWithGroup.CustomVariableGroupIds.
+                InstallationSummary theInstallationSummary = null;
+                foreach (var summary in installationSummaries.ToList().Cast<InstallationSummary>())
+                {
+                    if (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.All(appWithGroup.CustomVariableGroupIds.Contains))
+                    {
+                        theInstallationSummary = summary;
+                    }
+                }
 
-                return installationSummary;
+                HydrateInstallationSummary(theInstallationSummary);
+
+                return theInstallationSummary;
             });
-        }
-
-        private static Expression<Func<InstallationSummary, bool>> GetWhereClause(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)
-        {
-            // Both where clauses had to be modified to account for multiple variable groups. If this doesn't work with the DB,
-            // then we might just have to bring back all possible matches and filter them after getting them.
-
-            if (appWithGroup.CustomVariableGroups == null || appWithGroup.CustomVariableGroups.Count < 1)
-            {
-                return summary => summary.ApplicationServerId == appServer.Id &&
-                            summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
-                            (summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds == null
-                                || summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count < 1);
-            }
-
-            // If we're getting matches that include CustomVariableGroups (CVGs), then the number of CVGs and the IDs must match.
-            return summary => summary.ApplicationServerId == appServer.Id &&
-                            summary.ApplicationWithOverrideVariableGroup.ApplicationId == appWithGroup.Application.Id &&
-                            summary.ApplicationWithOverrideVariableGroup != null &&
-                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds != null &&
-                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.Count == appWithGroup.CustomVariableGroupIds.Count &&
-                            summary.ApplicationWithOverrideVariableGroup.CustomVariableGroupIds.All(appWithGroup.CustomVariableGroupIds.Contains);
         }
 
         public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)

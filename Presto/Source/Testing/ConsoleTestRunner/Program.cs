@@ -9,6 +9,7 @@ using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
+using PrestoServer.Data.RavenDb;
 
 namespace ConsoleTestRunner
 {
@@ -40,7 +41,7 @@ namespace ConsoleTestRunner
         {
             try
             {
-                TestDataCall();
+                TestInstallationSummaryData();
             }
             catch (Exception ex)
             {
@@ -49,6 +50,30 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();
+        }
+
+        private static void TestInstallationSummaryData()
+        {
+            var server = new ApplicationServer();
+            server.Id = "ApplicationServers/10";
+
+            var appWithGroup = new ApplicationWithOverrideVariableGroup();
+            appWithGroup.Application = new Application();
+            appWithGroup.Application.Id = "applications/5";
+
+            appWithGroup.CustomVariableGroups = new PrestoObservableCollection<CustomVariableGroup>();
+            appWithGroup.CustomVariableGroups.Add(new CustomVariableGroup());
+            appWithGroup.CustomVariableGroupIds = new List<string>();
+            appWithGroup.CustomVariableGroupIds.Add("CustomVariableGroups/296");
+            appWithGroup.CustomVariableGroupIds.Add("CustomVariableGroups/302");
+            appWithGroup.CustomVariableGroupIds.Add("CustomVariableGroups/268");
+
+            var data = new InstallationSummaryData();
+            data.SetAsInitialDalInstanceAndCreateSession();
+
+            var installationSummary = data.GetMostRecentByServerAppAndGroup(server, appWithGroup);
+
+            Debug.WriteLine(installationSummary == null);
         }
 
         private static void TestDataCall()

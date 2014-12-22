@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace PrestoCommon.EntityHelperClasses
 {
@@ -14,6 +15,7 @@ namespace PrestoCommon.EntityHelperClasses
     /// </summary>
     /// <remarks>Originally coded by Randy Minder. Thanks, Randy!</remarks>
     /// <typeparam name="T"></typeparam>
+    [CollectionDataContract]
     public class PrestoObservableCollection<T> : ObservableCollection<T>
     {
         private bool _delayOnCollectionChangedNotification { get; set; }

@@ -199,25 +199,26 @@ namespace PrestoWcfService.WcfServices
         {
             return Invoke(() =>
             {
+                var existingGroup = CustomVariableGroupLogic.GetById(customVariableGroup.Id);
                 CustomVariableGroupLogic.Save(customVariableGroup);
-                PossiblySendCustomVariableGroupChangedEmail(customVariableGroup);
+                PossiblySendCustomVariableGroupChangedEmail(existingGroup, customVariableGroup);
                 return customVariableGroup;
             });
         }
 
-        private static void PossiblySendCustomVariableGroupChangedEmail(CustomVariableGroup customVariableGroup)
+        private static void PossiblySendCustomVariableGroupChangedEmail(CustomVariableGroup existingGroup, CustomVariableGroup newGroup)
         {
             if (ConfigurationManager.AppSettings["emailCustomVariableGroupChanges"].ToUpperInvariant() != "TRUE") { return; }
 
             string emailSubject = string.Format(CultureInfo.CurrentCulture,
                 "{0} saved a Presto Custom Variable Group: {1}",
                 IdentityHelper.UserName,
-                customVariableGroup.Name);
+                newGroup.Name);
 
             string emailBody =
                 "Machine: " + Environment.MachineName + Environment.NewLine +
                 "User: " + IdentityHelper.UserName + Environment.NewLine + Environment.NewLine +
-                customVariableGroup.ObjectDump();
+                CustomVariableGroup.DifferencesBetweenTwoCustomVariableGroups(existingGroup, newGroup);
 
             CommonUtility.SendEmail(emailSubject, emailBody, "emailToForCustomVariableGroupChanges");
         }

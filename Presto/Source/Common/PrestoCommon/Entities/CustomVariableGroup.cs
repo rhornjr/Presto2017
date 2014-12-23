@@ -61,7 +61,7 @@ namespace PrestoCommon.Entities
             return this.Name;
         }
 
-        public string ObjectDump()
+        private static string ObjectDump(CustomVariableGroup customVariableGroup)
         {
             var dump = new StringBuilder();
 
@@ -71,12 +71,21 @@ namespace PrestoCommon.Entities
             dump.AppendLine("Custom Variables:");
             dump.AppendLine();
 
-            foreach (var customVariable in this.CustomVariables)
+            foreach (var customVariable in customVariableGroup.CustomVariables)
             {
                 dump.AppendLine(customVariable.Key + ": " + customVariable.Value);
             }
 
             return dump.ToString();
+        }
+
+        public static string DifferencesBetweenTwoCustomVariableGroups(CustomVariableGroup existingGroup, CustomVariableGroup newGroup)
+        {
+            if (newGroup == null) { throw new ArgumentNullException("newGroup"); }
+
+            if (existingGroup == null) { return "New group created" + Environment.NewLine + Environment.NewLine  + ObjectDump(newGroup); }
+
+            foreach (var variable in existingGroup.
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]

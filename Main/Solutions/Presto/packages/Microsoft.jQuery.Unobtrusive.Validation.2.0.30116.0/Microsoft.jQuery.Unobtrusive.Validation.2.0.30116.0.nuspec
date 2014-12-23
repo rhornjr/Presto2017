@@ -10,6 +10,9 @@
     <projectUrl>http://www.asp.net/mvc</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>jQuery plugin that unobtrusively sets up jQuery.Validation.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
     <tags>Microsoft AspNet jQuery</tags>
     <dependencies>
       <dependency id="jQuery.Validation" version="[1.8, 2.0)" />

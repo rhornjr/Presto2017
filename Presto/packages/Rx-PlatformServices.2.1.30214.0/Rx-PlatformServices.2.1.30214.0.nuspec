@@ -11,6 +11,7 @@
     <iconUrl>http://go.microsoft.com/fwlink/?LinkId=261274</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Reactive Extensions Platform Services Library used to access platform-specific functionality and enlightenment services.</description>
+    <releaseNotes />
     <copyright>Microsoft Corporation © 2012</copyright>
     <language>en-us</language>
     <tags>Rx Reactive Extensions Observable LINQ Events</tags>
@@ -22,9 +23,5 @@
       <frameworkAssembly assemblyName="System.Observable" targetFramework="Silverlight4.0-WindowsPhone71" />
       <frameworkAssembly assemblyName="Microsoft.Phone" targetFramework="Silverlight4.0-WindowsPhone71" />
     </frameworkAssemblies>
-    <references>
-      <reference file="System.Reactive.PlatformServices.dll" />
-      <reference file="_._" />
-    </references>
   </metadata>
 </package>

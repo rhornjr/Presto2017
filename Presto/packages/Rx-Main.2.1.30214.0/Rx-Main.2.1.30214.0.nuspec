@@ -11,6 +11,7 @@
     <iconUrl>http://go.microsoft.com/fwlink/?LinkId=261274</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Reactive Extensions Main Library combining the interfaces, core, LINQ, and platform services libraries.</description>
+    <releaseNotes />
     <copyright>Microsoft Corporation © 2012</copyright>
     <language>en-us</language>
     <tags>Rx Reactive Extensions Observable LINQ Events</tags>
@@ -20,6 +21,5 @@
       <dependency id="Rx-Linq" version="2.1.30214.0" />
       <dependency id="Rx-PlatformServices" version="2.1.30214.0" />
     </dependencies>
-    <references />
   </metadata>
 </package>

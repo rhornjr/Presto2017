@@ -65,7 +65,7 @@ namespace PrestoCommon.Entities
         {
             var dump = new StringBuilder();
 
-            dump.AppendLine(this.Name);
+            dump.AppendLine(customVariableGroup.Name);
 
             dump.AppendLine();
             dump.AppendLine("Custom Variables:");
@@ -79,13 +79,53 @@ namespace PrestoCommon.Entities
             return dump.ToString();
         }
 
-        public static string DifferencesBetweenTwoCustomVariableGroups(CustomVariableGroup existingGroup, CustomVariableGroup newGroup)
+        public static string DifferencesBetweenTwoCustomVariableGroups(CustomVariableGroup oldGroup, CustomVariableGroup newGroup)
         {
             if (newGroup == null) { throw new ArgumentNullException("newGroup"); }
 
-            if (existingGroup == null) { return "New group created" + Environment.NewLine + Environment.NewLine  + ObjectDump(newGroup); }
+            if (oldGroup == null) { return "New group created" + Environment.NewLine + Environment.NewLine  + ObjectDump(newGroup); }
 
-            foreach (var variable in existingGroup.
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("DELETED");
+            stringBuilder.AppendLine("Variables in the old group, but not in the new group:");
+            foreach (var oldVariable in oldGroup.CustomVariables)
+            {
+                var newVariable = newGroup.CustomVariables.FirstOrDefault(x => x.Key == oldVariable.Key);
+                if (newVariable == null)
+                {
+                    stringBuilder.AppendLine(oldVariable.Key + ": " + oldVariable.Value);
+                }
+            }
+
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine("ADDED");
+            stringBuilder.AppendLine("Variables in the new group, but not in the old group:");
+            foreach (var newVariable in newGroup.CustomVariables)
+            {
+                var oldVariable = oldGroup.CustomVariables.FirstOrDefault(x => x.Key == newVariable.Key);
+                if (oldVariable == null)
+                {
+                    stringBuilder.AppendLine(newVariable.Key + ": " + newVariable.Value);
+                }
+            }
+
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine("CHANGED");
+            stringBuilder.AppendLine("Variables that exist in the old and new groups, but are different:");
+            foreach (var oldVariable in oldGroup.CustomVariables)
+            {
+                var newVariable = newGroup.CustomVariables.FirstOrDefault(x => x.Key == oldVariable.Key);
+                if (newVariable == null) { continue; }
+                if (oldVariable.Value == newVariable.Value) { continue; }
+
+                stringBuilder.AppendLine("Key: " + oldVariable.Key);
+                stringBuilder.AppendLine("Old value: " + oldVariable.Value);
+                stringBuilder.AppendLine("New value: " + newVariable.Value);
+                stringBuilder.AppendLine();
+            }
+
+            return stringBuilder.ToString();
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]

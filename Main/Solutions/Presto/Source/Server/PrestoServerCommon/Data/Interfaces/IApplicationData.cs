@@ -7,6 +7,8 @@ namespace PrestoServer.Data.Interfaces
     {
         IEnumerable<Application> GetAll(bool includeArchivedApps);
 
+        IEnumerable<Application> GetAllSlim();
+
         Application GetByName(string name);
 
         Application GetById(string id);

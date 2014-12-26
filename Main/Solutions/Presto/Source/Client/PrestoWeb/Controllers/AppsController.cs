@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using PrestoCommon.Entities;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
 
@@ -12,11 +12,11 @@ namespace PrestoWeb.Controllers
     [EnableCors(origins: "http://fs-12220", headers: "*", methods: "*")]  // * See notes, below, for why this is necessary.
     public class AppsController : ApiController
     {
-        public IEnumerable<Application> Get()
+        public IEnumerable<ApplicationDtoSlim> Get()
         {
             using (var prestoWcf = new PrestoWcf<IApplicationService>())
             {
-                return prestoWcf.Service.GetAllApplications(true).OrderBy(x => x.Name);
+                return prestoWcf.Service.GetAllApplicationsSlim().OrderBy(x => x.Name);
             }
         }
     }

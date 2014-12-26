@@ -97,6 +97,7 @@
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="DataTransferObjects\ApplicationDtoSlim.cs" />
     <Compile Include="DataTransferObjects\ApplicationServerDtoSlim.cs" />
     <Compile Include="Entities\ActiveDirectoryInfo.cs" />
     <Compile Include="Entities\AdGroupWithRoles.cs" />

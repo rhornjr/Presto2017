@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Interfaces
@@ -12,6 +13,10 @@ namespace PrestoCommon.Interfaces
 
         [OperationContract]
         IEnumerable<Application> GetAllApplications(bool includeArchivedApps);
+
+        [OperationContract]
+        IEnumerable<ApplicationDtoSlim> GetAllApplicationsSlim();
+
 
         [OperationContract]
         Application GetByName(string name);

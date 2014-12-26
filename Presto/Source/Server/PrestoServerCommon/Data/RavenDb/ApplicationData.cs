@@ -15,10 +15,6 @@ namespace PrestoServer.Data.RavenDb
     /// </summary>
     public class ApplicationData : DataAccessLayerBase, IApplicationData
     {
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
         public IEnumerable<Application> GetAll(bool includeArchivedApps)
         {
             return ExecuteQuery<IEnumerable<Application>>(() =>
@@ -44,13 +40,18 @@ namespace PrestoServer.Data.RavenDb
                 foreach (Application app in appsNotArchived) { HydrateApplication(app); }
                 return appsNotArchived;
             });
-        }        
+        }
 
-        /// <summary>
-        /// Gets the name of the by.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
+        public IEnumerable<Application> GetAllSlim()
+        {
+            IEnumerable<Application> apps = QueryAndSetEtags(session =>
+                    session.Query<Application>()
+                    .Take(int.MaxValue))
+                    .AsEnumerable().Cast<Application>();
+
+            return apps;
+        }
+
         public Application GetByName(string name)
         {
             return ExecuteQuery<Application>(() =>
@@ -68,11 +69,6 @@ namespace PrestoServer.Data.RavenDb
             });
         }
 
-        /// <summary>
-        /// Gets the by id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
         public Application GetById(string id)
         {
             return ExecuteQuery<Application>(() =>
@@ -89,10 +85,6 @@ namespace PrestoServer.Data.RavenDb
             });
         }
 
-        /// <summary>
-        /// Hydrates the application.
-        /// </summary>
-        /// <param name="app">The app.</param>
         public static void HydrateApplication(Application app)
         {
             if (app == null) { throw new ArgumentNullException("app"); }
@@ -137,10 +129,6 @@ namespace PrestoServer.Data.RavenDb
             }
         }
 
-        /// <summary>
-        /// Saves the specified application.
-        /// </summary>
-        /// <param name="application">The application.</param>
         public void Save(Application application)
         {
             if (application == null) { throw new ArgumentNullException("application"); }

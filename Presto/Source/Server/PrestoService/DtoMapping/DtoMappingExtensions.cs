@@ -6,6 +6,27 @@ namespace PrestoWcfService.DtoMapping
 {
     internal static class DtoMappingExtensions
     {
+        #region [Applications]
+
+        internal static IEnumerable<ApplicationDtoSlim> ToDtoSlim(this IEnumerable<Application> apps)
+        {
+            var slimApps = new List<ApplicationDtoSlim>();
+
+            foreach (var app in apps)
+            {
+                var slimApp     = new ApplicationDtoSlim();
+                slimApp.Id      = app.Id;
+                slimApp.Name    = app.Name;
+                slimApp.Version = app.Version;
+
+                slimApps.Add(slimApp);
+            }
+
+            return slimApps;
+        }
+
+        #endregion
+
         #region [Servers]
 
         internal static IEnumerable<ApplicationServerDtoSlim> ToDtoSlim(this IEnumerable<ApplicationServer> servers)

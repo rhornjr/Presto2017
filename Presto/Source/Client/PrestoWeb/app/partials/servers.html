@@ -1,9 +1,14 @@
 <div id="container" class="PageContainer">
     <h2 class="mainHeader">Servers</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
-    <div class="gridStyle" ui-grid="gridOptions" ng-hide="loading" style="width:900px"></div>
+    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ng-hide="loading" style="width:900px"></div>
+    <div ng-repeat="server in selectedServers" class="slide">
+        <!-- Use the pre tag so newline characters are honored. -->
+        <pre>ID: {{server.Id}}</pre>
+    </div>
     <h2 class="footer">
         <button ng-click="addServer();" ng-disabled="loading">Add</button>
+        <button ng-click="editServer();" ng-disabled="loading">Edit</button>
         <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
 </div>

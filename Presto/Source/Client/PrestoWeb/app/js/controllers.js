@@ -7,6 +7,7 @@ angular.module('myApp.controllers', [])
   .controller('serversController', serversController)
   .controller('logController', logController)
   .controller('appController', appController)
+  .controller('serverController', serverController)
   .controller('installsController', installsController);
 
 function appsController($scope, appsRepository) {
@@ -34,14 +35,16 @@ function appsController($scope, appsRepository) {
     $scope.refresh(false);
 }
 
-function serversController($scope, serversRepository) {
+function serversController($scope, serversRepository, $window) {
     $scope.loading = 1;
     $scope.servers = null;
+    $scope.selectedServers = [];
 
     $scope.gridOptions = {
         data: 'servers',
         multiSelect: false,
         enableFiltering: true,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         selectedItems: $scope.selectedServers,
         columnDefs: [{ field: 'Name', displayName: 'Server', width: "78%", resizable: true },
                      { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
@@ -54,6 +57,21 @@ function serversController($scope, serversRepository) {
             $scope.lastRefreshTime = lastRefreshTime;
             $scope.loading = 0;
         });
+    };
+
+    // Act on the row selection changing.
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
+            $scope.selectedServers.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+            $scope.selectedServers.push(row.entity);
+        });
+    };
+
+    $scope.editServer = function () {
+        var modifiedServerId = $scope.selectedServers[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
+        $window.location.href = 'http://fs-12220/PrestoWebApi/app/#/server/' + modifiedServerId;
     };
 
     $scope.refresh(false);
@@ -89,6 +107,16 @@ function appController ($scope, $http, $routeParams) {
     $http.get('http://fs-12220.fs.local/PrestoWebApi/api/app/' + modifiedAppId)
               .then(function (result) {
                   $scope.app = result.data;
+              });
+}
+
+function serverController($scope, $http, $routeParams) {
+    $scope.loading = 1;
+    $scope.serverId = $routeParams.serverId;
+    $http.get('http://fs-12220.fs.local/PrestoWebApi/api/server/' + $scope.serverId)
+              .then(function (result) {
+                  $scope.server = result.data;
+                  $scope.loading = 0;
               });
 }
 

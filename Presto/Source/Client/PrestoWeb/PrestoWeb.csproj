@@ -151,6 +151,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstallsController.cs" />
     <Compile Include="Controllers\LogController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -435,6 +436,7 @@
     <Content Include="app\partials\apps.html" />
     <Content Include="app\partials\installs.html" />
     <Content Include="app\partials\log.html" />
+    <Content Include="app\partials\server.html" />
     <Content Include="app\partials\servers.html" />
     <Content Include="app\uigrid\release\3.0.0-rc.10\ui-grid.css" />
     <Content Include="app\uigrid\release\3.0.0-rc.10\ui-grid.js" />

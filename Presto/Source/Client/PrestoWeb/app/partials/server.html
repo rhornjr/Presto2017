@@ -1,0 +1,19 @@
+﻿<div id="container" class="PageContainer">
+    <h2 class="mainHeader">Server</h2>
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
+    <label>Name: </label><input type="text" value="{{server.Name}}" style="width:450px" />
+
+    <h2 class="subHeader">Apps and Overrides</h2>
+    <div class="OneOfTwo">
+        <div ng-repeat="appWithGroup in server.ApplicationsWithOverrideGroup" class="slide">
+            <a ng-click="gotoApp(appWithGroup.Id)" href="">{{server.Application.Name}} {{server.CustomVariableGroupNames}}</a>
+        </div>
+    </div>
+
+    <h2 class="subHeader">Custom Variable Groups</h2>
+    <div class="TwoOfTwo">
+        <div ng-repeat="variableGroup in server.CustomVariableGroups" class="slide">
+            <a ng-click="variableGroup(app.Id)" href="">{{variableGroup.Name}}</a>
+        </div>
+    </div>
+</div>

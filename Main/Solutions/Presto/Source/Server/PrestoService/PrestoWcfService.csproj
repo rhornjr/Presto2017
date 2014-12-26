@@ -99,6 +99,7 @@
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="DtoMapping\DtoMappingExtensions.cs" />
     <Compile Include="PrestoServiceHost.cs">
       <SubType>Component</SubType>
     </Compile>

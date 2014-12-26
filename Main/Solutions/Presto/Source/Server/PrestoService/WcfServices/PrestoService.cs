@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.ServiceModel;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoServer.Logic;
+using PrestoWcfService.DtoMapping;
 using Xanico.Core.Security;
 using Xanico.Core.Wcf;
 
@@ -107,6 +109,11 @@ namespace PrestoWcfService.WcfServices
         public IEnumerable<ApplicationServer> GetAllServersSlim()
         {
             return Invoke(() => ApplicationServerLogic.GetAllSlim());
+        }
+
+        public IEnumerable<ApplicationServerDtoSlim> GetAllServersDtoSlim()
+        {
+            return Invoke(() => ApplicationServerLogic.GetAllSlim().ToDtoSlim());
         }
 
         public void InstallPrestoSelfUpdater(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup)

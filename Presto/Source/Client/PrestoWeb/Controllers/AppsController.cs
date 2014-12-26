@@ -9,7 +9,7 @@ using PrestoCommon.Wcf;
 namespace PrestoWeb.Controllers
 {
     // The origin is the web server.
-    [EnableCors(origins: "http://fs-6103", headers: "*", methods: "*")]  // * See notes, below, for why this is necessary.
+    [EnableCors(origins: "http://fs-12220", headers: "*", methods: "*")]  // * See notes, below, for why this is necessary.
     public class AppsController : ApiController
     {
         public IEnumerable<Application> Get()
@@ -30,8 +30,8 @@ namespace PrestoWeb.Controllers
  *   header is present on the requested resource. Origin 'http://webServerName' is therefore not allowed access.
  *   
  * The GET request header shows this:
- *   Host: fs-6103.fs.local
- *   Origin: http://fs-6103
+ *   Host: fs-12220.fs.local
+ *   Origin: http://fs-12220
  *   
  * Since those are different (not sure why, DNS issue maybe), that could be causing the need for the
  * EnableCors attribute 

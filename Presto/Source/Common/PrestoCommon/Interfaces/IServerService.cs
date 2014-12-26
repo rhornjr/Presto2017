@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
 
 namespace PrestoCommon.Interfaces
@@ -15,6 +16,9 @@ namespace PrestoCommon.Interfaces
 
         [OperationContract]
         IEnumerable<ApplicationServer> GetAllServersSlim();
+
+        [OperationContract]
+        IEnumerable<ApplicationServerDtoSlim> GetAllServersDtoSlim();
 
         [OperationContract]
         void InstallPrestoSelfUpdater(ApplicationServer appServer, ApplicationWithOverrideVariableGroup appWithGroup);

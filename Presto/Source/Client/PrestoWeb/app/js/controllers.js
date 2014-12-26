@@ -44,7 +44,7 @@ function serversController($scope, serversRepository) {
         enableFiltering: true,
         selectedItems: $scope.selectedServers,
         columnDefs: [{ field: 'Name', displayName: 'Server', width: "78%", resizable: true },
-                     { field: 'InstallationEnvironment.Name', displayName: 'Environment', width: "20%", resizable: true }]
+                     { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
     };
 
     $scope.refresh = function (forceRefresh) {
@@ -86,7 +86,7 @@ function logController($scope, logRepository) {
 function appController ($scope, $http, $routeParams) {
     $scope.appId = $routeParams.appId;
     var modifiedAppId = $scope.appId.replace("/", "^^");  // Because we shouldn't send slashes in a web API call.
-    $http.get('http://fs-6103.fs.local/PrestoWebApi/api/app/' + modifiedAppId)
+    $http.get('http://fs-12220.fs.local/PrestoWebApi/api/app/' + modifiedAppId)
               .then(function (result) {
                   $scope.app = result.data;
               });
@@ -139,7 +139,7 @@ function installsController ($scope, $http) {
         });
     };
 
-    $http.get('http://fs-6103.fs.local/PrestoWebApi/api/installs/')
+    $http.get('http://fs-12220.fs.local/PrestoWebApi/api/installs/')
           .then(function (result) {
               $scope.installs = result.data;
               $scope.loading = 0;

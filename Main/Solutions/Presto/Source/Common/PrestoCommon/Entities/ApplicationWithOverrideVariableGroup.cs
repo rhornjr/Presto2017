@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -97,7 +98,9 @@ namespace PrestoCommon.Entities
             }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value", Justification="WCF serialization")]
         [JsonIgnore]  // We do not want RavenDB to serialize this.
+        [DataMember]  // ... but we still want it to go over WCF
         public string CustomVariableGroupNames
         {
             get
@@ -114,6 +117,11 @@ namespace PrestoCommon.Entities
                 stringBuilder.Length -= 3;
 
                 return stringBuilder.ToString();
+            }
+
+            private set
+            {
+                // Do nothing. This is only here so the WCF serializer can properly construct this object.
             }
         }
 

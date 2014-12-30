@@ -1,7 +1,7 @@
 'use strict';
 
 // To debug this web app, make sure PrestoWeb is the startup project, then hit the Start (Internet Explorer, etc.) button.
-// This will start the Web API and the web app. Then navigate to http://localhost/PrestoWebApi/app. This allows us to even
+// This will start the Web API and the web app. Then navigate to http://localhost/PrestoWeb/app. This allows us to even
 // step through the JavaScript code.
 // Note: Since this is all deployed to IIS, Visual Studio does not have to be used to run the app. Just browse to the link above.
 
@@ -32,7 +32,7 @@ app.factory('appsRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/apps/')
+            $http.get('http://apps.firstsolar.com/PrestoWeb/api/apps/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();
@@ -54,7 +54,7 @@ app.factory('serversRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/servers/')
+            $http.get('http://apps.firstsolar.com/PrestoWeb/api/servers/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();
@@ -76,7 +76,7 @@ app.factory('logRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://fs-12220.fs.local/PrestoWebApi/api/log/')
+            $http.get('http://apps.firstsolar.com/PrestoWeb/api/log/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();

@@ -71,7 +71,7 @@ function serversController($scope, serversRepository, $window) {
 
     $scope.editServer = function () {
         var modifiedServerId = $scope.selectedServers[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
-        $window.location.href = 'http://fs-12220/PrestoWebApi/app/#/server/' + modifiedServerId;
+        $window.location.href = 'http://apps.firstsolar.com/PrestoWeb/app/#/server/' + modifiedServerId;
     };
 
     $scope.refresh(false);
@@ -104,7 +104,7 @@ function logController($scope, logRepository) {
 function appController ($scope, $http, $routeParams) {
     $scope.appId = $routeParams.appId;
     var modifiedAppId = $scope.appId.replace("/", "^^");  // Because we shouldn't send slashes in a web API call.
-    $http.get('http://fs-12220.fs.local/PrestoWebApi/api/app/' + modifiedAppId)
+    $http.get('http://apps.firstsolar.com/PrestoWeb/api/app/' + modifiedAppId)
               .then(function (result) {
                   $scope.app = result.data;
               });
@@ -120,9 +120,9 @@ function serverController($scope, $http, $routeParams) {
         data: 'server.ApplicationsWithOverrideGroup',
         multiSelect: false,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-        columnDefs: [{ field: 'Application.Name', displayName: 'App', width: "30%", resizable: true },
-                     { field: 'CustomVariableGroupNames', displayName: 'Overrides', width: "58%" },
-                     { field: 'Enabled', displayName: 'Enabled', width: "10%" }]
+        columnDefs: [{ field: 'Application.Name', displayName: 'App', width: "26%", resizable: true },
+                     { field: 'CustomVariableGroupNames', displayName: 'Overrides', width: "60%" },
+                     { field: 'Enabled', displayName: 'Enabled', width: "12%" }]
     };
 
     $scope.gridOptions2 = {
@@ -132,7 +132,7 @@ function serverController($scope, $http, $routeParams) {
         columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
     };
     
-    $http.get('http://fs-12220.fs.local/PrestoWebApi/api/server/' + $scope.serverId)
+    $http.get('http://apps.firstsolar.com/PrestoWeb/api/server/' + $scope.serverId)
               .then(function (result) {
                   $scope.server = result.data;
                   $scope.loading = 0;
@@ -159,7 +159,7 @@ function serverController($scope, $http, $routeParams) {
         }
 
         $.ajax({
-            url: '/PrestoWebApi/api/server/installapp',
+            url: '/PrestoWeb/api/server/installapp',
             type: 'POST',
             data: JSON.stringify(entityContainer),
             contentType: "application/json",
@@ -218,7 +218,7 @@ function installsController ($scope, $http) {
         });
     };
 
-    $http.get('http://fs-12220.fs.local/PrestoWebApi/api/installs/')
+    $http.get('http://apps.firstsolar.com/PrestoWeb/api/installs/')
           .then(function (result) {
               $scope.installs = result.data;
               $scope.loading = 0;

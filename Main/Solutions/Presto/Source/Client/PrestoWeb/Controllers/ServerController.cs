@@ -9,7 +9,7 @@ using PrestoWeb.EntityContainers;
 namespace PrestoWeb.Controllers
 {
     // The origin is the web server.
-    [EnableCors(origins: "http://fs-12220", headers: "*", methods: "*")]
+    [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]
     public class ServerController : ApiController
     {
         public ApplicationServer Get(string id)

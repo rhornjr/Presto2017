@@ -522,6 +522,7 @@
     <Content Include="app\uigrid\release\ui-grid.eot" />
     <Content Include="app\uigrid\release\ui-grid.ttf" />
     <Content Include="app\uigrid\release\ui-grid.woff" />
+    <None Include="Properties\PublishProfiles\PrestoWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -576,7 +577,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>33716</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://fs-12220/PrestoWebApi</IISUrl>
+          <IISUrl>http://localhost/PrestoWeb</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

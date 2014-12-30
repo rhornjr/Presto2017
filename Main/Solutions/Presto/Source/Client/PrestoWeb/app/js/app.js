@@ -32,7 +32,7 @@ app.factory('appsRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://apps.firstsolar.com/PrestoWeb/api/apps/')
+            $http.get('/PrestoWeb/api/apps/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();
@@ -54,7 +54,7 @@ app.factory('serversRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://apps.firstsolar.com/PrestoWeb/api/servers/')
+            $http.get('/PrestoWeb/api/servers/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();
@@ -76,7 +76,7 @@ app.factory('logRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('http://apps.firstsolar.com/PrestoWeb/api/log/')
+            $http.get('/PrestoWeb/api/log/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();

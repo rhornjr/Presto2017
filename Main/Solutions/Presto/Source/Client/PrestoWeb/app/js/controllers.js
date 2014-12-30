@@ -163,12 +163,16 @@ function serverController($scope, $http, $routeParams) {
             type: 'POST',
             data: JSON.stringify(entityContainer),
             contentType: "application/json",
-            success: InstallRequested
+            success: installRequestSucceeded($scope.loading),
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Install request failed: " + textStatus);
+            }
         });
     };
 }
 
-function InstallRequested(entityOrErrorMessage) {
+function installRequestSucceeded(loading) {
+    alert('Install request sent successfully.');
 }
 
 function installsController ($scope, $http) {

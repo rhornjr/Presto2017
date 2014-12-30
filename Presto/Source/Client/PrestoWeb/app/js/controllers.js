@@ -71,7 +71,7 @@ function serversController($scope, serversRepository, $window) {
 
     $scope.editServer = function () {
         var modifiedServerId = $scope.selectedServers[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
-        $window.location.href = 'http://apps.firstsolar.com/PrestoWeb/app/#/server/' + modifiedServerId;
+        $window.location.href = '/PrestoWeb/app/#/server/' + modifiedServerId;
     };
 
     $scope.refresh(false);
@@ -104,7 +104,7 @@ function logController($scope, logRepository) {
 function appController ($scope, $http, $routeParams) {
     $scope.appId = $routeParams.appId;
     var modifiedAppId = $scope.appId.replace("/", "^^");  // Because we shouldn't send slashes in a web API call.
-    $http.get('http://apps.firstsolar.com/PrestoWeb/api/app/' + modifiedAppId)
+    $http.get('/PrestoWeb/api/app/' + modifiedAppId)
               .then(function (result) {
                   $scope.app = result.data;
               });
@@ -132,7 +132,7 @@ function serverController($scope, $http, $routeParams) {
         columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
     };
     
-    $http.get('http://apps.firstsolar.com/PrestoWeb/api/server/' + $scope.serverId)
+    $http.get('/PrestoWeb/api/server/' + $scope.serverId)
               .then(function (result) {
                   $scope.server = result.data;
                   $scope.loading = 0;
@@ -218,7 +218,7 @@ function installsController ($scope, $http) {
         });
     };
 
-    $http.get('http://apps.firstsolar.com/PrestoWeb/api/installs/')
+    $http.get('/PrestoWeb/api/installs/')
           .then(function (result) {
               $scope.installs = result.data;
               $scope.loading = 0;

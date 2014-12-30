@@ -110,17 +110,18 @@ function appController ($scope, $http, $routeParams) {
               });
 }
 
-function serverController($scope, $http, $routeParams) {
+function serverController($scope, $http, $routeParams, uiGridConstants) {
     $scope.loading = 1;
     $scope.server = null;
     $scope.serverId = $routeParams.serverId;
     $scope.selectedAppsWithGroup = [];
 
     $scope.gridOptions = {
-        data: 'server.ApplicationsWithOverrideGroup',
-        multiSelect: false,
+        data: 'server.ApplicationsWithOverrideGroup',        
+        multiSelect: false,        
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-        columnDefs: [{ field: 'Application.Name', displayName: 'App', width: "26%", resizable: true },
+        enableFiltering: false,
+        columnDefs: [{ field: 'Application.Name', displayName: 'App', width: "26%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                      { field: 'CustomVariableGroupNames', displayName: 'Overrides', width: "60%" },
                      { field: 'Enabled', displayName: 'Enabled', width: "12%" }]
     };

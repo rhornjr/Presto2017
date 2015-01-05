@@ -211,7 +211,11 @@ namespace PrestoWcfService.WcfServices
         {
             return Invoke(() =>
             {
-                var existingGroup = CustomVariableGroupLogic.GetById(customVariableGroup.Id);
+                CustomVariableGroup existingGroup = null;
+                if (!string.IsNullOrWhiteSpace(customVariableGroup.Id))
+                {
+                    existingGroup = CustomVariableGroupLogic.GetById(customVariableGroup.Id);
+                }
                 CustomVariableGroupLogic.Save(customVariableGroup);
                 PossiblySendCustomVariableGroupChangedEmail(existingGroup, customVariableGroup);
                 return customVariableGroup;

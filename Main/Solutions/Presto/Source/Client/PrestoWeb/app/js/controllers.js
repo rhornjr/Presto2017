@@ -122,7 +122,8 @@ function serverController($scope, $http, $routeParams, uiGridConstants) {
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         enableFiltering: false,
         columnDefs: [{ field: 'Application.Name', displayName: 'App', width: "26%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
-                     { field: 'CustomVariableGroupNames', displayName: 'Overrides', width: "60%" },
+                     { field: 'Application.Version', displayName: 'Version', width: "12%" },
+                     { field: 'CustomVariableGroupNames', displayName: 'Overrides', width: "48%" },
                      { field: 'Enabled', displayName: 'Enabled', width: "12%" }]
     };
 

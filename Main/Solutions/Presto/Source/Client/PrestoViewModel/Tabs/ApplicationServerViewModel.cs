@@ -491,21 +491,11 @@ namespace PrestoViewModel.Tabs
                 prestoWcf.Service.SaveForceInstallations(serverForceInstallations);
             }
 
-            LogAndShowAppToBeInstalled(allAppWithGroupNames);
+            ShowAppToBeInstalled(allAppWithGroupNames);
         }
 
-        private void LogAndShowAppToBeInstalled(string allAppWithGroupNames)
+        private void ShowAppToBeInstalled(string allAppWithGroupNames)
         {
-            string message = string.Format(CultureInfo.CurrentCulture,
-                                           "{0} selected to be installed on {1}.",
-                                           allAppWithGroupNames,
-                                           this.SelectedApplicationServer);
-
-            using (var prestoWcf = new PrestoWcf<IBaseService>())
-            {
-                prestoWcf.Service.SaveLogMessage(message);
-            }
-
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.AppWillBeInstalledOnAppServer, allAppWithGroupNames, this.SelectedApplicationServer));
         }
@@ -535,7 +525,7 @@ namespace PrestoViewModel.Tabs
             {
                 var appWithGroup = this.SelectedApplicationsWithOverrideGroup[0];
 
-                LogAndShowAppToBeInstalled(appWithGroup.Application.Name);
+                ShowAppToBeInstalled(appWithGroup.Application.Name);
 
                 Task.Run(() => InstallPrestoUpdater(appWithGroup));
 

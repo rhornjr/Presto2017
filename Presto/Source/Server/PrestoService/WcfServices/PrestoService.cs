@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
@@ -11,6 +12,7 @@ using PrestoServer.Logic;
 using PrestoWcfService.DtoMapping;
 using Xanico.Core.Security;
 using Xanico.Core.Wcf;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PrestoWcfService.WcfServices
 {
@@ -19,7 +21,7 @@ namespace PrestoWcfService.WcfServices
     /// calls can specify specific service interfaces (IApplicationService, IServerService, etc...)
     /// and deal only with the methods for the entity they care about.
     /// </summary>
-    [ServiceBehavior(MaxItemsInObjectGraph = int.MaxValue)]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), ServiceBehavior(MaxItemsInObjectGraph = int.MaxValue)]
     public class PrestoService : IBaseService, IApplicationService, ICustomVariableGroupService, IServerService,
         IInstallationEnvironmentService, IInstallationSummaryService, IPingService, ISecurityService
     {
@@ -137,7 +139,28 @@ namespace PrestoWcfService.WcfServices
 
         public void SaveForceInstallations(List<ServerForceInstallation> serverForceInstallations)
         {
-            Invoke(() => ApplicationServerLogic.SaveForceInstallations(serverForceInstallations));
+            Invoke(() =>
+                {
+                    ApplicationServerLogic.SaveForceInstallations(serverForceInstallations);
+                    LogAppsToBeInstalled(serverForceInstallations);
+                }
+            );
+        }
+
+        private static void LogAppsToBeInstalled(List<ServerForceInstallation> serverForceInstallations)
+        {
+            // Get the ApplicationWithOverrideGroup for each ServerForceInstallation
+            var appWithGroups = serverForceInstallations.Select(x => x.ApplicationWithOverrideGroup);
+
+            // Combine all of the appWithGroup names into one string
+            string allAppWithGroupNames = string.Join(",", appWithGroups);
+
+            string message = string.Format(CultureInfo.CurrentCulture,
+                "{0} selected to be installed on {1}.",
+                allAppWithGroupNames,
+                serverForceInstallations[0].ApplicationServer);
+
+            LogMessageLogic.SaveLogMessage(message);
         }
 
         public void RemoveForceInstallation(ServerForceInstallation forceInstallation)

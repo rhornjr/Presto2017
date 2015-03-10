@@ -10,14 +10,16 @@ angular.module('myApp.controllers', [])
   .controller('serverController', serverController)
   .controller('installsController', installsController);
 
-function appsController($scope, appsRepository) {
+function appsController($scope, appsRepository, $window) {
     $scope.loading = 1;
     $scope.apps = null;
+    $scope.selectedApps = [];
 
     $scope.gridOptions = {
         data: 'apps',
         multiSelect: false,
         enableFiltering: true,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         selectedItems: $scope.selectedApps,
         columnDefs: [{ field: 'Name', displayName: 'Application', width: "78%", resizable: true },
                      { field: 'Version', displayName: 'Version', width: "20%" }]
@@ -30,6 +32,21 @@ function appsController($scope, appsRepository) {
             $scope.lastRefreshTime = lastRefreshTime;
             $scope.loading = 0;
         });
+    };
+
+    // Act on the row selection changing.
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
+            $scope.selectedApps.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+            $scope.selectedApps.push(row.entity);
+        });
+    };
+
+    $scope.editApp = function () {
+        var modifiedAppId = $scope.selectedApps[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
+        $window.location.href = '/PrestoWeb/app/#/app/' + modifiedAppId;
     };
 
     $scope.refresh(false);
@@ -63,7 +80,7 @@ function serversController($scope, serversRepository, $window) {
     $scope.gridOptions.onRegisterApi = function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-            console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
+            console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
             $scope.selectedServers.length = 0; // Truncate/clear the array. Yes, this is how it's done.
             $scope.selectedServers.push(row.entity);
         });
@@ -101,12 +118,37 @@ function logController($scope, logRepository) {
     $scope.refresh(false);
 }
 
-function appController ($scope, $http, $routeParams) {
+function appController($scope, $http, $routeParams, uiGridConstants) {
+    $scope.loading = 1;
+    $scope.app = null;
     $scope.appId = $routeParams.appId;
-    var modifiedAppId = $scope.appId.replace("/", "^^");  // Because we shouldn't send slashes in a web API call.
-    $http.get('/PrestoWeb/api/app/' + modifiedAppId)
+
+    $scope.gridOptions = {
+        data: 'app.Tasks',
+        multiSelect: false,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        enableFiltering: false,
+        columnDefs: [{ field: 'Sequence', displayName: 'Order', width: "12%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
+                     { field: 'Description', displayName: 'Description', width: "62%" },
+                     { field: 'PrestoTaskType', displayName: 'Type', width: "12%" },
+                     { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]
+    };
+
+    $scope.gridOptions2 = {
+        data: 'app.CustomVariableGroups',
+        multiSelect: false,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
+    };
+
+    $http.get('/PrestoWeb/api/app/' + $scope.appId)
               .then(function (result) {
                   $scope.app = result.data;
+                  $scope.loading = 0;
+              },
+              function (result) {
+                  $scope.loading = 0;
+                  alert("An error occurred and the app could not be loaded.");
               });
 }
 

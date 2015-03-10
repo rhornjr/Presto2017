@@ -5,15 +5,15 @@
 
     <h2 class="subHeader">Tasks</h2>
     <div class="OneOfTwo">
-        <div ng-repeat="task in app.Tasks" class="slide">
-            <a ng-click="gotoApp(app.Id)" href="">{{task.Sequence}} {{task.Description}}</a>
-        </div>
+        <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ng-hide="loading"></div>
     </div>
+
+    <h2 class="footer">
+        <button ng-click="editTask();" ng-disabled="loading">Edit</button>
+    </h2>
 
     <h2 class="subHeader">Custom Variable Groups</h2>
     <div class="TwoOfTwo">
-        <div ng-repeat="variableGroup in app.CustomVariableGroups" class="slide">
-            <a ng-click="gotoApp(app.Id)" href="">{{variableGroup.Name}}</a>
-        </div>
+        <div class="gridLessThanHalf" ui-grid="gridOptions2" ui-grid-selection ng-hide="loading"></div>
     </div>
 </div>

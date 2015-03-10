@@ -127,10 +127,9 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
         data: 'app.Tasks',
         multiSelect: false,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-        enableFiltering: false,
-        columnDefs: [{ field: 'Sequence', displayName: 'Order', width: "12%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
+        columnDefs: [{ field: 'Sequence', displayName: 'Order', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                      { field: 'Description', displayName: 'Description', width: "62%" },
-                     { field: 'PrestoTaskType', displayName: 'Type', width: "12%" },
+                     { field: 'PrestoTaskType', displayName: 'Type', width: "16%" },
                      { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]
     };
 
@@ -145,8 +144,9 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
               .then(function (result) {
                   $scope.app = result.data;
                   $scope.loading = 0;
+                  console.log(result.data);
               },
-              function (result) {
+              function () {
                   $scope.loading = 0;
                   alert("An error occurred and the app could not be loaded.");
               });

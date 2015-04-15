@@ -44,6 +44,9 @@ namespace PrestoCommon.Entities
         [DataMember]
         public string AttributeToChangeValue { get; set; }
 
+        [DataMember]
+        public bool AddNode { get; set; }
+
         public TaskXmlModify()
             : base(string.Empty, TaskType.XmlModify, 1, 1, false)
         {}
@@ -85,48 +88,13 @@ namespace PrestoCommon.Entities
                     namespaceManager.AddNamespace(prefix, taskResolved.NodeNamespace);
                 }
 
-                // Get the node that the user wants to modify
-                XmlNodeList xmlNodes;                
-                if (string.IsNullOrWhiteSpace(taskResolved.AttributeKey))
+                if (this.AddNode)
                 {
-                    // No attributes necessary to differentiate this node from any others. Get the matching nodes.
-                    xmlNodes = rootElement.SelectNodes(prefix + prefixSuffix + taskResolved.NodeToChange, namespaceManager);
+                    AddNewNode(xmlDocument, taskResolved, rootElement);
                 }
                 else
                 {
-                    // Get the nodes with the specified attributes
-                    xmlNodes = rootElement.SelectNodes(string.Format(CultureInfo.InvariantCulture,
-                                                                       "descendant::{0}[@{1}='{2}']",
-                                                                       taskResolved.NodeToChange,
-                                                                       taskResolved.AttributeKey,
-                                                                       taskResolved.AttributeKeyValue));
-                }
-
-                if (xmlNodes == null || xmlNodes.Count == 0)
-                {
-                    // If this is happening, see the comments section below for a possible reason:
-                    // -- xmlnode not found because of namespace attribute --
-                    throw new Exception("XML node not found.\r\n" /* + taskDetails */ );
-                }
-
-                // Make the change
-                foreach (XmlNode xmlNode in xmlNodes)
-                {
-                    if (string.IsNullOrEmpty(taskResolved.AttributeToChange))
-                    {
-                        // We're not changing an attribute of the node; we're changing the value (InnerText) of the node itself.
-                        xmlNode.InnerText = taskResolved.AttributeToChangeValue;
-                    }
-                    else
-                    {
-                        if (xmlNode.Attributes[taskResolved.AttributeToChange] == null)
-                        {
-                            throw new Exception("Can't update Attribute to Change because it does not exist in the file.");
-                        }
-
-                        // The node has an attribute, so change the attribute's value.
-                        xmlNode.Attributes[taskResolved.AttributeToChange].Value = taskResolved.AttributeToChangeValue;
-                    }
+                    ModifyExistingNode(taskResolved, rootElement, prefix, prefixSuffix, namespaceManager);
                 }
 
                 xmlDocument.Save(taskResolved.XmlPathAndFileName);
@@ -145,6 +113,102 @@ namespace PrestoCommon.Entities
             }
         }
 
+        private static void AddNewNode(XmlDocument xmlDocument, TaskXmlModify taskResolved, XmlElement rootElement)
+        {
+            int indexOfLastSlash = taskResolved.NodeToChange.LastIndexOf("/", StringComparison.Ordinal);
+
+            DemandSlash(taskResolved, indexOfLastSlash);
+
+            string parentElementXPath = taskResolved.NodeToChange.Substring(0, indexOfLastSlash);
+            string newElementName = taskResolved.NodeToChange.Substring(indexOfLastSlash + 1);
+
+            var parentElement = rootElement.SelectSingleNode(parentElementXPath);
+            var element = xmlDocument.CreateElement(newElementName);
+
+            DemandParentElement(taskResolved, parentElement, parentElementXPath);
+
+            element.SetAttribute(taskResolved.AttributeKey, taskResolved.AttributeKeyValue);
+            element.SetAttribute(taskResolved.AttributeToChange, taskResolved.AttributeToChangeValue);
+            
+            parentElement.AppendChild(element);
+        }
+
+        private static void DemandParentElement(TaskXmlModify taskResolved, XmlNode parentElement, string parentElementXPath)
+        {
+            if (parentElement == null)
+            {
+                string noParentWarning = string.Format(CultureInfo.CurrentCulture,
+                    "When trying to add a new XML node, the parent node was not found. parentElementXPath: [{0}]. " +
+                    "NodeToChange: [{1}]",
+                    parentElementXPath,
+                    taskResolved.NodeToChange);
+
+                throw new InvalidOperationException(noParentWarning);
+            }
+        }
+
+        private static void DemandSlash(TaskXmlModify taskResolved, int indexOfLastSlash)
+        {
+            if (indexOfLastSlash < 1)
+            {
+                string noSlashWarning = string.Format(CultureInfo.CurrentCulture,
+                    "When trying to add a new XML node, no slash was found in NodeToChange. A slash is " +
+                    "necessary because the part before the last slash is the parent node. The part after " +
+                    "the last slash in the new node. NodeToChange: [{0}]",
+                    taskResolved.NodeToChange);
+
+                throw new InvalidOperationException(noSlashWarning);
+            }
+        }
+
+        private static void ModifyExistingNode(TaskXmlModify taskResolved, XmlElement rootElement, string prefix,
+            string prefixSuffix, XmlNamespaceManager namespaceManager)
+        {
+            // Get the node that the user wants to modify
+            XmlNodeList xmlNodes;
+            if (string.IsNullOrWhiteSpace(taskResolved.AttributeKey))
+            {
+                // No attributes necessary to differentiate this node from any others. Get the matching nodes.
+                xmlNodes = rootElement.SelectNodes(prefix + prefixSuffix + taskResolved.NodeToChange, namespaceManager);
+            }
+            else
+            {
+                // Get the nodes with the specified attributes
+                xmlNodes = rootElement.SelectNodes(string.Format(CultureInfo.InvariantCulture,
+                    "descendant::{0}[@{1}='{2}']",
+                    taskResolved.NodeToChange,
+                    taskResolved.AttributeKey,
+                    taskResolved.AttributeKeyValue));
+            }
+
+            if (xmlNodes == null || xmlNodes.Count == 0)
+            {
+                // If this is happening, see the comments section below for a possible reason:
+                // -- xmlnode not found because of namespace attribute --
+                throw new Exception("XML node not found.\r\n" /* + taskDetails */);
+            }
+
+            // Make the change
+            foreach (XmlNode xmlNode in xmlNodes)
+            {
+                if (string.IsNullOrEmpty(taskResolved.AttributeToChange))
+                {
+                    // We're not changing an attribute of the node; we're changing the value (InnerText) of the node itself.
+                    xmlNode.InnerText = taskResolved.AttributeToChangeValue;
+                }
+                else
+                {
+                    if (xmlNode.Attributes[taskResolved.AttributeToChange] == null)
+                    {
+                        throw new Exception("Can't update Attribute to Change because it does not exist in the file.");
+                    }
+
+                    // The node has an attribute, so change the attribute's value.
+                    xmlNode.Attributes[taskResolved.AttributeToChange].Value = taskResolved.AttributeToChangeValue;
+                }
+            }
+        }
+
         private static string ConvertTaskDetailsToString(TaskXmlModify taskXmlModify)
         {
             // Store this error to use when throwing exceptions.                
@@ -156,7 +220,8 @@ namespace PrestoCommon.Entities
                                                 "Attribute Key            : {4}\r\n" +
                                                 "Attribute Key Value      : {5}\r\n" +
                                                 "Attribute to Change      : {6}\r\n" +
-                                                "Attribute to Change Value: {7}\r\n",
+                                                "Attribute to Change Value: {7}\r\n" +
+                                                "Add node                 : {8}\r\n",
                                                 taskXmlModify.Description,
                                                 taskXmlModify.XmlPathAndFileName,
                                                 taskXmlModify.NodeNamespace,
@@ -164,7 +229,8 @@ namespace PrestoCommon.Entities
                                                 taskXmlModify.AttributeKey,
                                                 taskXmlModify.AttributeKeyValue,
                                                 taskXmlModify.AttributeToChange,
-                                                taskXmlModify.AttributeToChangeValue);
+                                                taskXmlModify.AttributeToChangeValue,
+                                                taskXmlModify.AddNode);
             return taskDetails;
         }
 
@@ -185,6 +251,7 @@ namespace PrestoCommon.Entities
             taskXmlModifyResolved.NodeNamespace          = CustomVariableGroup.ResolveCustomVariable(this.NodeNamespace, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.NodeToChange           = CustomVariableGroup.ResolveCustomVariable(this.NodeToChange, applicationServer, applicationWithOverrideVariableGroup);
             taskXmlModifyResolved.XmlPathAndFileName     = CustomVariableGroup.ResolveCustomVariable(this.XmlPathAndFileName, applicationServer, applicationWithOverrideVariableGroup);
+            taskXmlModifyResolved.AddNode                = this.AddNode;
 
             return taskXmlModifyResolved;
         }
@@ -227,6 +294,7 @@ namespace PrestoCommon.Entities
             destination.NodeNamespace          = source.NodeNamespace;
             destination.NodeToChange           = source.NodeToChange;
             destination.XmlPathAndFileName     = source.XmlPathAndFileName;
+            destination.AddNode                = source.AddNode;
 
             return destination;
         }
@@ -253,6 +321,7 @@ namespace PrestoCommon.Entities
             newTask.AttributeToChangeValue = legacyTask.AttributeToChangeValue;
             newTask.NodeToChange           = legacyTask.NodeToChange;
             newTask.XmlPathAndFileName     = legacyTask.XmlPathAndFileName;
+            newTask.AddNode                = false;  // there is no legacy option for this
 
             return newTask;
         }
@@ -273,6 +342,7 @@ namespace PrestoCommon.Entities
             taskProperties.Add(this.AttributeToChangeValue);
             taskProperties.Add(this.NodeToChange);
             taskProperties.Add(this.XmlPathAndFileName);
+            taskProperties.Add(this.AddNode.ToString());
 
             return taskProperties;
         }

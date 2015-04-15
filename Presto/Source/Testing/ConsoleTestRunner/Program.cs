@@ -41,7 +41,7 @@ namespace ConsoleTestRunner
         {
             try
             {
-                TestInstallationSummaryData();
+                TestAddingXmlNode();
             }
             catch (Exception ex)
             {
@@ -50,6 +50,15 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();
+        }
+
+        private static void TestAddingXmlNode()
+        {
+            var xmlModify = new TaskXmlModify("test", 1, 1, false, @"C:\Temp\processor.config",
+                "DependencyContainerConfiguration/ContainerMapping/add", "Interface", "ISnuh", "ConcreteType", "Snuh");
+            xmlModify.AddNode = true;
+
+            xmlModify.Execute(null, null); // Just need to skip the first couple lines of the method because we don't care about resolving variables with this test.
         }
 
         private static void TestInstallationSummaryData()

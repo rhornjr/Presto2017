@@ -63,6 +63,9 @@
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="8">
             <Label Style="{StaticResource StandardLabel}" Content="Failure causes all-stop:" Width="130" />
             <CheckBox x:Name="chkFailureCausesAllStop" IsChecked="{Binding TaskXmlModifyCopy.FailureCausesAllStop}" VerticalAlignment="Center"/>
+            <Label Style="{StaticResource StandardLabel}" Content="" Width="30" /> <!-- spacer -->
+            <Label Style="{StaticResource StandardLabel}" Content="Add node:" Width="60" />
+            <CheckBox x:Name="chkAddNode" IsChecked="{Binding TaskXmlModifyCopy.AddNode}" VerticalAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="9" HorizontalAlignment="Center" Height="35">

@@ -54,7 +54,7 @@
         <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="Black"/>
         
         <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                      ItemsSource="{Binding SelectedInstallationSummary.TaskDetails}">
+                      ItemsSource="{Binding SelectedInstallationSummary.TaskDetails}" ScrollViewer.CanContentScroll="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=StartTime}" Header="Start" Width="150" SortMemberPath="StartTime"/>
                 <DataGridTextColumn Binding="{Binding Path=EndTime}" Header="End" Width="150"/>

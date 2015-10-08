@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ServiceProcess;
-using PrestoCommon.Misc;
 using PrestoTaskRunner;
 using PrestoTaskRunner.Logic;
 
@@ -46,7 +45,7 @@ namespace PrestoTaskProcessor
             }
             catch (Exception ex)
             {
-                CommonUtility.ProcessException(ex, PrestoTaskRunnerController.PrestoTaskRunnerName);
+                Utility.ProcessException(ex, PrestoTaskRunnerController.PrestoTaskRunnerName);
 
                 if (Environment.UserInteractive)
                 {

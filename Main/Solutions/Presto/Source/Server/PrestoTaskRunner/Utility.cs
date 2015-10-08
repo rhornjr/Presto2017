@@ -1,4 +1,7 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
+using System.Globalization;
+using PrestoCommon.Misc;
 using Xanico.Core;
 
 namespace PrestoTaskRunner
@@ -8,12 +11,31 @@ namespace PrestoTaskRunner
     /// </summary>
     public static class Utility
     {
+        private static DateTime _lastEmailSent;
+
         /// <summary>
         /// Sets the Logger.Source property to the processName value from the app.config.
         /// </summary>
         public static void SetLoggerSource()
         {
             Logger.Source = ConfigurationManager.AppSettings["processName"];
+        }
+
+        internal static void ProcessException(Exception ex, string source = "")
+        {
+            int maxExceptionEmailFrequencyInSeconds =
+                Convert.ToInt32(ConfigurationManager.AppSettings["maxExceptionEmailFrequencyInSeconds"], CultureInfo.InvariantCulture);
+
+            bool shouldSendEmail = true;
+
+            if (DateTime.Now.Subtract(_lastEmailSent).TotalSeconds < maxExceptionEmailFrequencyInSeconds) { shouldSendEmail = false; }
+
+            if (shouldSendEmail) { _lastEmailSent = DateTime.Now; }
+
+            // We always want to process the exception so it gets logged. We don't always want to
+            // send an email so poor Bob doesn't get flooded with 800,000 of them when the servers
+            // in Malaysia start timing out.
+            CommonUtility.ProcessException(ex, source, shouldSendEmail);
         }
     }
 }

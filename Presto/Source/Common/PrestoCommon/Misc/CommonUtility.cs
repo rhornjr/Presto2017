@@ -117,7 +117,7 @@ namespace PrestoCommon.Misc
         /// </summary>
         /// <param name="ex"></param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public static void ProcessException(Exception ex, string source = "")
+        public static void ProcessException(Exception ex, string source = "", bool sendEmail = true)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace PrestoCommon.Misc
                                  "User: " + IdentityHelper.UserName + Environment.NewLine + Environment.NewLine +
                                  ex;
 
-                SendEmail(subject, message);
+                if (sendEmail) { SendEmail(subject, message); }
             }
             catch (Exception exception)
             {

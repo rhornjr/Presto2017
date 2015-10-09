@@ -388,10 +388,6 @@
       <Project>{66225FC6-E280-4B1B-B229-BCFCBAEEBEE0}</Project>
       <Name>PrestoCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\MvvmFramework\MultiSelectBehavior\MultiSelectBehavior.csproj">
-      <Project>{9E41ADBA-A55C-4F71-BF0A-463C82334B13}</Project>
-      <Name>MultiSelectBehavior</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PrestoViewModel\PrestoViewModel.csproj">
       <Project>{FE9DD2DC-C553-49C6-9F0D-BDF351FC7773}</Project>
       <Name>PrestoViewModel</Name>

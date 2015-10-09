@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
+             xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=PrestoCommon"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
              mc:Ignorable="d" 

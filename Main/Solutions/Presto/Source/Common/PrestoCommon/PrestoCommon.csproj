@@ -60,6 +60,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Raven.Abstractions">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\RavenDb\Raven.Abstractions.dll</HintPath>
     </Reference>
@@ -88,11 +90,13 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="Xanico.Core">
       <HintPath>..\..\..\Solution Items\ThirdPartyAssemblies\Xanico\Xanico.Core.dll</HintPath>
     </Reference>
@@ -163,6 +167,9 @@
     <Compile Include="Misc\AesCrypto.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\EventArgsGeneric.cs" />
+    <Compile Include="MvvmMultiSelectBehavior\IListItemConverter.cs" />
+    <Compile Include="MvvmMultiSelectBehavior\MultiSelectorBehaviours.cs" />
+    <Compile Include="MvvmMultiSelectBehavior\TwoListSynchronizer.cs" />
     <Compile Include="PrestoCommonResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -197,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MvvmMultiSelectBehavior\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

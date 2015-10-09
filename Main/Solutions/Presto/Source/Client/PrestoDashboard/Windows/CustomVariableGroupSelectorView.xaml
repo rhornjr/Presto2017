@@ -1,7 +1,7 @@
 ﻿<Window x:Class="PrestoDashboard.Windows.CustomVariableGroupSelectorView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=MultiSelectBehavior"
+        xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours;assembly=PrestoCommon"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:galaSoft="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"
         WindowStartupLocation="CenterScreen"

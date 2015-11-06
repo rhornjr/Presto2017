@@ -10,7 +10,7 @@ angular.module('myApp.controllers', [])
   .controller('serverController', serverController)
   .controller('installsController', installsController);
 
-function appsController($scope, appsRepository, $window) {
+function appsController($scope, appsRepository, $window, uiGridConstants) {
     $scope.loading = 1;
     $scope.apps = null;
     $scope.selectedApps = [];
@@ -21,7 +21,7 @@ function appsController($scope, appsRepository, $window) {
         enableFiltering: true,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         selectedItems: $scope.selectedApps,
-        columnDefs: [{ field: 'Name', displayName: 'Application', width: "78%", resizable: true },
+        columnDefs: [{ field: 'Name', displayName: 'Application', width: "78%", resizable: true, filter: {condition: uiGridConstants.filter.CONTAINS} },
                      { field: 'Version', displayName: 'Version', width: "20%" }]
     };
 
@@ -52,7 +52,7 @@ function appsController($scope, appsRepository, $window) {
     $scope.refresh(false);
 }
 
-function serversController($scope, serversRepository, $window) {
+function serversController($scope, serversRepository, $window, uiGridConstants) {
     $scope.loading = 1;
     $scope.servers = null;
     $scope.selectedServers = [];
@@ -63,7 +63,7 @@ function serversController($scope, serversRepository, $window) {
         enableFiltering: true,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         selectedItems: $scope.selectedServers,
-        columnDefs: [{ field: 'Name', displayName: 'Server', width: "78%", resizable: true },
+        columnDefs: [{ field: 'Name', displayName: 'Server', width: "78%", resizable: true, filter: { condition: uiGridConstants.filter.CONTAINS } },
                      { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
     };
 

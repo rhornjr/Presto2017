@@ -24,6 +24,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -438,6 +439,7 @@
     <Content Include="app\lib\angular\i18n\angular-locale_zu-za.js" />
     <Content Include="app\lib\angular\i18n\angular-locale_zu.js" />
     <Content Include="app\lib\angular\version.txt" />
+    <Content Include="app\lib\ui-grid-draggable-rows\draggable-rows.js" />
     <Content Include="app\partials\app.html" />
     <Content Include="app\partials\apps.html" />
     <Content Include="app\partials\installs.html" />

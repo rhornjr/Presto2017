@@ -10,6 +10,26 @@ angular.module('myApp.controllers', [])
   .controller('serverController', serverController)
   .controller('installsController', installsController);
 
+
+
+
+
+
+
+
+
+
+angular.module('ui.grid.draggable-rows', ['ui.grid']);
+
+
+
+
+
+
+
+
+
+
 function appsController($scope, appsRepository, $window, uiGridConstants) {
     $scope.loading = 1;
     $scope.apps = null;
@@ -123,14 +143,27 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
     $scope.app = null;
     $scope.appId = $routeParams.appId;
 
+    var myData = [{ "Sequence": "1", "Description": "Desc1", "PrestoTaskType": "task1",  "FailureCausesAllStop": "true" },
+                  { "Sequence": "2", "Description": "Desc2", "PrestoTaskType": "task2", "FailureCausesAllStop": "false" },
+                  { "Sequence": "3", "Description": "Desc3", "PrestoTaskType": "task3", "FailureCausesAllStop": "false" }];
+
     $scope.gridOptions = {
-        data: 'app.Tasks',
+        //data: 'app.Tasks',
+        //data: myData,
         multiSelect: false,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
+        rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
         columnDefs: [{ field: 'Sequence', displayName: 'Order', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                      { field: 'Description', displayName: 'Description', width: "62%" },
                      { field: 'PrestoTaskType', displayName: 'Type', width: "16%" },
                      { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]
+    };
+
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+            console.log("Dropped", info);
+        });
     };
 
     $scope.gridOptions2 = {
@@ -144,7 +177,9 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
               .then(function (result) {
                   $scope.app = result.data;
                   $scope.loading = 0;
-                  console.log(result.data);
+                  console.log(result.data.Tasks);
+                  //myData = result.data.Tasks;
+                  $scope.gridOptions.data = result.data.Tasks;
               },
               function () {
                   $scope.loading = 0;

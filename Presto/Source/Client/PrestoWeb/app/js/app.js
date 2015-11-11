@@ -14,7 +14,8 @@ var app = angular.module('myApp', [
   'myApp.directives',
   'myApp.controllers',
   'ui.grid',  // http://ui-grid.info/
-  'ui.grid.selection'
+  'ui.grid.selection',
+  'ui.grid.draggable-rows'  // https://github.com/cdwv/ui-grid-draggable-rows
 ]);
 
 app.factory('appsRepository', ['$http', function ($http) {

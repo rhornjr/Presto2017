@@ -446,6 +446,7 @@
     <Content Include="app\partials\log.html" />
     <Content Include="app\partials\server.html" />
     <Content Include="app\partials\servers.html" />
+    <Content Include="app\partials\variableGroups.html" />
     <Content Include="app\uigrid\release\3.0.0-rc.10\ui-grid.css" />
     <Content Include="app\uigrid\release\3.0.0-rc.10\ui-grid.js" />
     <Content Include="app\uigrid\release\3.0.0-rc.10\ui-grid.min.css" />

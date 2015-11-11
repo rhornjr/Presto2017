@@ -8,6 +8,7 @@ angular.module('myApp.controllers', [])
   .controller('logController', logController)
   .controller('appController', appController)
   .controller('serverController', serverController)
+  .controller('variableGroupsController', variableGroupsController)
   .controller('installsController', installsController);
 
 
@@ -138,18 +139,40 @@ function logController($scope, logRepository) {
     $scope.refresh(false);
 }
 
+function variableGroupsController($scope, $http, $routeParams, uiGridConstants) {
+    $scope.loading = 1;
+    $scope.someArray = null;
+
+    var myData = [{ 'Name': 'Name1', 'Snuh': 'Snuh1' },
+                  { 'Name': 'Name2', 'Snuh': 'Snuh2' },
+                  { 'Name': 'Name3', 'Snuh': 'Snuh3' }];
+
+    $scope.gridVariableGroups = {
+        multiSelect: false,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
+        rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
+        columnDefs: [{ field: 'Name', displayName: 'Name', width: "90%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
+                     { field: 'Snuh', displayName: 'Snuh', width: "8%" }]
+    };
+
+    $scope.gridVariableGroups.data = myData;
+
+    $scope.loading = 0;
+
+    $scope.gridVariableGroups.onRegisterApi = function (gridApi) {
+        gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+            console.log("Dropped", info);
+        });
+    };
+}
+
 function appController($scope, $http, $routeParams, uiGridConstants) {
     $scope.loading = 1;
     $scope.app = null;
     $scope.appId = $routeParams.appId;
 
-    var myData = [{ "Sequence": "1", "Description": "Desc1", "PrestoTaskType": "task1",  "FailureCausesAllStop": "true" },
-                  { "Sequence": "2", "Description": "Desc2", "PrestoTaskType": "task2", "FailureCausesAllStop": "false" },
-                  { "Sequence": "3", "Description": "Desc3", "PrestoTaskType": "task3", "FailureCausesAllStop": "false" }];
-
     $scope.gridOptions = {
-        //data: 'app.Tasks',
-        //data: myData,
         multiSelect: false,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
@@ -178,7 +201,6 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
                   $scope.app = result.data;
                   $scope.loading = 0;
                   console.log(result.data.Tasks);
-                  //myData = result.data.Tasks;
                   $scope.gridOptions.data = result.data.Tasks;
               },
               function () {

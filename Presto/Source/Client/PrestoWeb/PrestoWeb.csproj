@@ -169,6 +169,13 @@
     <Content Include="app\bower_components\angular-animate\angular-animate.js" />
     <Content Include="app\bower_components\angular-animate\angular-animate.min.js" />
     <Content Include="app\bower_components\angular-animate\index.js" />
+    <Content Include="app\bower_components\angular-bootstrap\.gitignore" />
+    <Content Include="app\bower_components\angular-bootstrap\index.js" />
+    <Content Include="app\bower_components\angular-bootstrap\ui-bootstrap-csp.css" />
+    <Content Include="app\bower_components\angular-bootstrap\ui-bootstrap-tpls.js" />
+    <Content Include="app\bower_components\angular-bootstrap\ui-bootstrap-tpls.min.js" />
+    <Content Include="app\bower_components\angular-bootstrap\ui-bootstrap.js" />
+    <Content Include="app\bower_components\angular-bootstrap\ui-bootstrap.min.js" />
     <Content Include="app\bower_components\angular-route\angular-route.js" />
     <Content Include="app\bower_components\angular-route\angular-route.min.js" />
     <Content Include="app\bower_components\angular-route\index.js" />
@@ -457,6 +464,7 @@
     <Content Include="app\lib\angular\version.txt" />
     <Content Include="app\lib\ui-grid-draggable-rows\draggable-rows.js" />
     <Content Include="app\partials\app.html" />
+    <Content Include="app\partials\appAdd.html" />
     <Content Include="app\partials\apps.html" />
     <Content Include="app\partials\installs.html" />
     <Content Include="app\partials\log.html" />
@@ -556,6 +564,11 @@
     <Content Include="app\bower_components\ui-grid-draggable-rows\README.md" />
     <Content Include="app\bower_components\ui-grid-draggable-rows\scss\draggable-rows.scss" />
     <Content Include="app\bower.json" />
+    <Content Include="app\bower_components\angular-bootstrap\.bower.json" />
+    <Content Include="app\bower_components\angular-bootstrap\.npmignore" />
+    <Content Include="app\bower_components\angular-bootstrap\bower.json" />
+    <Content Include="app\bower_components\angular-bootstrap\package.json" />
+    <Content Include="app\bower_components\angular-bootstrap\README.md" />
     <None Include="Properties\PublishProfiles\PrestoWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

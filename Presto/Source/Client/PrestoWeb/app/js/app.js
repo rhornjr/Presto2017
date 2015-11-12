@@ -13,6 +13,7 @@ var app = angular.module('myApp', [
   'myApp.services',
   'myApp.directives',
   'myApp.controllers',
+  'ui.bootstrap',
   'ui.grid',  // http://ui-grid.info/
   'ui.grid.selection',
   'ui.grid.draggable-rows'  // https://github.com/cdwv/ui-grid-draggable-rows

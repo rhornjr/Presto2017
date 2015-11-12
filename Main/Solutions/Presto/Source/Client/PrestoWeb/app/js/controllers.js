@@ -13,7 +13,25 @@ angular.module('myApp.controllers', [])
 
 angular.module('ui.grid.draggable-rows', ['ui.grid']);
 
-function appsController($scope, appsRepository, $window, uiGridConstants) {
+// ------------------------------- Modal Controllers -------------------------------
+
+angular.module('myApp.controllers').controller('appAddModalController', function ($scope, $modalInstance) {
+    console.log('In appAddModalController');
+    $scope.name = '';
+    $scope.version = '';
+
+    $scope.ok = function () {
+        $modalInstance.close({ Name: $scope.name, Version: $scope.version });
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss();
+    };
+});
+
+// ------------------------------- Apps Controller -------------------------------
+
+function appsController($scope, $modal, appsRepository, $window, uiGridConstants) {
     $scope.loading = 1;
     $scope.apps = null;
     $scope.selectedApps = [];
@@ -52,8 +70,27 @@ function appsController($scope, appsRepository, $window, uiGridConstants) {
         $window.location.href = '/PrestoWeb/app/#/app/' + modifiedAppId;
     };
 
+    $scope.addApp = function () {
+        console.log("addApp() called.");
+            var modalInstance = $modal.open({
+                templateUrl: 'partials/appAdd.html',
+                controller: 'appAddModalController',
+                size: 'sm',
+                windowClass: 'modalConfirmationPosition'
+            });
+
+            modalInstance.result.then(function (app) {
+                console.log("App", app);
+                // Save the app here
+            }, function () {
+                // modal dismissed
+            });
+        }
+
     $scope.refresh(false);
 }
+
+// ------------------------------- Servers Controller -------------------------------
 
 function serversController($scope, serversRepository, $window, uiGridConstants) {
     $scope.loading = 1;
@@ -97,6 +134,8 @@ function serversController($scope, serversRepository, $window, uiGridConstants) 
     $scope.refresh(false);
 }
 
+// ------------------------------- Log Controller -------------------------------
+
 function logController($scope, logRepository) {
     $scope.loading = 1;
     $scope.logMessages = null;
@@ -120,6 +159,8 @@ function logController($scope, logRepository) {
 
     $scope.refresh(false);
 }
+
+// ------------------------------- Variable Groups Controller -------------------------------
 
 function variableGroupsController($scope, $http, $routeParams, uiGridConstants) {
     $scope.loading = 1;
@@ -147,6 +188,8 @@ function variableGroupsController($scope, $http, $routeParams, uiGridConstants) 
         });
     };
 }
+
+// ------------------------------- App Controller -------------------------------
 
 function appController($scope, $http, $routeParams, uiGridConstants) {
     $scope.loading = 1;
@@ -189,6 +232,8 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
                   alert("An error occurred and the app could not be loaded.");
               });
 }
+
+// ------------------------------- Server Controller -------------------------------
 
 function serverController($scope, $http, $routeParams, uiGridConstants) {
     $scope.loading = 1;
@@ -252,6 +297,8 @@ function serverController($scope, $http, $routeParams, uiGridConstants) {
         });
     };
 }
+
+// ------------------------------- Installs Controller -------------------------------
 
 function installRequestSucceeded(loading) {
     alert('Install request sent successfully.');

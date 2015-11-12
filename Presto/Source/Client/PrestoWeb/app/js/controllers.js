@@ -11,25 +11,7 @@ angular.module('myApp.controllers', [])
   .controller('variableGroupsController', variableGroupsController)
   .controller('installsController', installsController);
 
-
-
-
-
-
-
-
-
-
 angular.module('ui.grid.draggable-rows', ['ui.grid']);
-
-
-
-
-
-
-
-
-
 
 function appsController($scope, appsRepository, $window, uiGridConstants) {
     $scope.loading = 1;
@@ -42,8 +24,8 @@ function appsController($scope, appsRepository, $window, uiGridConstants) {
         enableFiltering: true,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         selectedItems: $scope.selectedApps,
-        columnDefs: [{ field: 'Name', displayName: 'Application', width: "78%", resizable: true, filter: {condition: uiGridConstants.filter.CONTAINS} },
-                     { field: 'Version', displayName: 'Version', width: "20%" }]
+        columnDefs: [{ field: 'Name', displayName: 'Application', width: "78%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: {condition: uiGridConstants.filter.CONTAINS} },
+                     { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
     };
 
     $scope.refresh = function (forceRefresh) {
@@ -176,7 +158,7 @@ function appController($scope, $http, $routeParams, uiGridConstants) {
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
         rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
-        columnDefs: [{ field: 'Sequence', displayName: 'Order', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
+        columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                      { field: 'Description', displayName: 'Description', width: "62%" },
                      { field: 'PrestoTaskType', displayName: 'Type', width: "16%" },
                      { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]

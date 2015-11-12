@@ -141,9 +141,8 @@ function logController($scope, logRepository) {
 
 function variableGroupsController($scope, $http, $routeParams, uiGridConstants) {
     $scope.loading = 1;
-    $scope.someArray = null;
 
-    var myData = [{ 'Name': 'Name1', 'Snuh': 'Snuh1' },
+    $scope.myData = [{ 'Name': 'Name1', 'Snuh': 'Snuh1' },
                   { 'Name': 'Name2', 'Snuh': 'Snuh2' },
                   { 'Name': 'Name3', 'Snuh': 'Snuh3' }];
 
@@ -156,7 +155,7 @@ function variableGroupsController($scope, $http, $routeParams, uiGridConstants) 
                      { field: 'Snuh', displayName: 'Snuh', width: "8%" }]
     };
 
-    $scope.gridVariableGroups.data = myData;
+    $scope.gridVariableGroups.data = $scope.myData;
 
     $scope.loading = 0;
 

@@ -20,5 +20,13 @@ namespace PrestoWeb.Controllers
                 return prestoWcf.Service.GetById(id);
             }
         }
+
+        public Application SaveApplication(Application application)
+        {
+            using (var prestoWcf = new PrestoWcf<IApplicationService>())
+            {
+                return prestoWcf.Service.SaveApplication(application);
+            }
+        }
     }
 }

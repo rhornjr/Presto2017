@@ -32,7 +32,7 @@ angular.module('myApp.controllers').controller('appAddModalController', function
 
 // ------------------------------- Apps Controller -------------------------------
 
-function appsController($scope, $modal, appsRepository, $window, uiGridConstants) {
+function appsController($scope, $modal, $http, appsRepository, $window, uiGridConstants) {
     $scope.loading = 1;
     $scope.apps = null;
     $scope.selectedApps = [];
@@ -82,23 +82,31 @@ function appsController($scope, $modal, appsRepository, $window, uiGridConstants
 
             modalInstance.result.then(function (app) {
                 console.log("App", app);
-                // Save the app here
+                saveApp(app);
             }, function () {
                 // modal dismissed
             });
-        }
+    }
+
+    var saveApp = function(app) {
+        $.ajax({
+            url: '/PrestoWeb/api/app/saveApplication',
+            type: 'POST',
+            data: JSON.stringify(app),
+            contentType: "application/json",
+            success: onAppSaved(app),
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("App save failed.");
+            }
+        });
+    }
+
+    var onAppSaved = function(app) {
+        alert('app saved');
+    }
 
     $scope.refresh(false);
 }
-
-function globalController($scope, $http) {
-    // Get the service address so the user can see where he's connected.
-    $http.get('/PrestoWeb/api/utility/GetServiceAddress')
-        .then(function (result) {
-            $scope.serviceAddress = result.data;
-        });
-}
-
 // ------------------------------- Servers Controller -------------------------------
 
 function serversController($scope, serversRepository, $window, uiGridConstants) {
@@ -365,4 +373,14 @@ function installsController ($scope, $http) {
               $scope.installs = result.data;
               $scope.loading = 0;
           });      
+}
+
+// ------------------------------- Global Controller -------------------------------
+
+function globalController($scope, $http) {
+    // Get the service address so the user can see where he's connected.
+    $http.get('/PrestoWeb/api/utility/GetServiceAddress')
+        .then(function (result) {
+            $scope.serviceAddress = result.data;
+        });
 }

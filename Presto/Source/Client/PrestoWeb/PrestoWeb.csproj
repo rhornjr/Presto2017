@@ -159,6 +159,7 @@
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
+    <Compile Include="Controllers\UtilityController.cs" />
     <Compile Include="EntityContainers\AppServerAndAppWithGroup.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -466,6 +467,7 @@
     <Content Include="app\partials\app.html" />
     <Content Include="app\partials\appAdd.html" />
     <Content Include="app\partials\apps.html" />
+    <Content Include="app\partials\global.html" />
     <Content Include="app\partials\installs.html" />
     <Content Include="app\partials\log.html" />
     <Content Include="app\partials\server.html" />

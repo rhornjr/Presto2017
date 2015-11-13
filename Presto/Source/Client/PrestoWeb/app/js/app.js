@@ -111,5 +111,6 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/variableGroups', { templateUrl: 'partials/variableGroups.html', controller: 'variableGroupsController' });
     $routeProvider.when('/installs', { templateUrl: 'partials/installs.html', controller: 'installsController' });
     $routeProvider.when('/log', { templateUrl: 'partials/log.html', controller: 'logController' });
-    $routeProvider.otherwise({ redirectTo: '/apps' });
+    $routeProvider.when('/global', { templateUrl: 'partials/global.html', controller: 'globalController' });
+    $routeProvider.otherwise({ redirectTo: '/global' });
 }]);

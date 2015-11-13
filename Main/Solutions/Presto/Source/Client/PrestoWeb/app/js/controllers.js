@@ -9,7 +9,8 @@ angular.module('myApp.controllers', [])
   .controller('appController', appController)
   .controller('serverController', serverController)
   .controller('variableGroupsController', variableGroupsController)
-  .controller('installsController', installsController);
+  .controller('installsController', installsController)
+  .controller('globalController', globalController);
 
 angular.module('ui.grid.draggable-rows', ['ui.grid']);
 
@@ -88,6 +89,14 @@ function appsController($scope, $modal, appsRepository, $window, uiGridConstants
         }
 
     $scope.refresh(false);
+}
+
+function globalController($scope, $http) {
+    // Get the service address so the user can see where he's connected.
+    $http.get('/PrestoWeb/api/utility/GetServiceAddress')
+        .then(function (result) {
+            $scope.serviceAddress = result.data;
+        });
 }
 
 // ------------------------------- Servers Controller -------------------------------

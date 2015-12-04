@@ -1,8 +1,8 @@
 <div id="container" class="PageContainer">
-    <h2 class="mainHeader">Servers</h2>
+    <h2 class="myHeader mainHeader">Servers</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
     <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ng-hide="loading"></div>
-    <h2 class="footer">
+    <h2 class="myHeader footer">
         <button ng-click="addServer();" ng-disabled="loading">Add</button>
         <button ng-click="editServer();" ng-disabled="loading">Edit</button>
         <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>

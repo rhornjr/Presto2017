@@ -1,14 +1,14 @@
 ﻿<div id="container" class="PageContainer">
-    <h2 class="mainHeader">Installations</h2>
+    <h2 class="myHeader mainHeader">Installations</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
     <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ng-hide="loading"></div>
-    <h2 class="mainHeader" ng-hide="loading">Installation Details</h2>
+    <h2 class="myHeader mainHeader" ng-hide="loading">Installation Details</h2>
     <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection ng-hide="loading"></div>
     <div ng-repeat="detail in selectedDetails" class="slide">
         <!-- Use the pre tag so newline characters are honored. -->
         <pre>Details: {{detail.Details}}</pre>
     </div>
-    <h2 class="footer" ng-hide="loading">
+    <h2 class="myHeader footer" ng-hide="loading">
         <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
 </div>

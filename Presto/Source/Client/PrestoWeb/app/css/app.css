@@ -1,25 +1,21 @@
 /* app css stylesheet */
 
-h2 {
-    background-color: #dedede;
+h2.myHeader {
     border-bottom: 1px solid #d4d4d4;
     border-top: 1px solid #d4d4d4;
     border-radius: 5px;
     box-shadow: 3px 3px 3px #ccc;
     color: #fff;
-    font-size: 1.1em;
+    font-size: 1.3em;
     margin: 12px;
     padding: 0.3em 1em;
     text-shadow: #9FBEB9 1px 1px 1px;    
     text-align: center;
 }
 
-h2.info { background-color: #0B5586; }
-h2.score { background-color: #4494C9; }
-
-h2.mainHeader { background-color: #0B5586; }
-h2.subHeader { background-color: #4494C9; }
-h2.footer { background-color: #afb5b8; }
+.mainHeader { background-color: #0B5586; }
+.subHeader { background-color: #4494C9; }
+.footer { background-color: #afb5b8; }
 
 div.OneOfOne { height:550px; overflow:auto }
 div.OneOfTwo { height:300px; overflow:auto }

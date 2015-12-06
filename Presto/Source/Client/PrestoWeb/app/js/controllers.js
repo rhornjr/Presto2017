@@ -183,19 +183,14 @@ function variableGroupsController($scope, $http, $routeParams, variableGroupsRep
     $scope.loading = 1;
     $scope.variableGroups = null;
 
-    //$scope.myData = [{ 'Name': 'Name1', 'Snuh': 'Snuh1' },
-    //              { 'Name': 'Name2', 'Snuh': 'Snuh2' },
-    //              { 'Name': 'Name3', 'Snuh': 'Snuh3' }];
-
     $scope.gridVariableGroups = {
+        data: 'variableGroups',
         multiSelect: false,
         enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
         // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
         rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
         columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } }]
     };
-
-    $scope.gridVariableGroups.data = $scope.variableGroups;
 
     $scope.refresh = function (forceRefresh) {
         // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.

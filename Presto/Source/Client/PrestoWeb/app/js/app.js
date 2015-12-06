@@ -88,6 +88,31 @@ app.factory('logRepository', ['$http', function ($http) {
     }
 }]);
 
+app.factory('variableGroupsRepository', ['$http', function ($http) {
+    // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
+    // we went to the app web page.
+    // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
+
+    var data;
+    var lastRefreshTime;
+
+    return {
+        getVariableGroups: function (forceRefresh, callbackFunction) {
+            if (data && forceRefresh == false) {
+                callbackFunction(data, lastRefreshTime);
+                return;
+            }
+
+            $http.get('/PrestoWeb/api/variableGroups/')
+                .then(function (result) {
+                    data = result.data;
+                    lastRefreshTime = new Date();
+                    callbackFunction(data, lastRefreshTime);
+                });
+        }
+    }
+}]);
+
 app.filter('escape', function () {
     return function (input) {
         return encodeURIComponent(input);

@@ -160,6 +160,7 @@
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Controllers\UtilityController.cs" />
+    <Compile Include="Controllers\VariableGroupsController.cs" />
     <Compile Include="EntityContainers\AppServerAndAppWithGroup.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

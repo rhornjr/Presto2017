@@ -19,6 +19,8 @@ var app = angular.module('myApp', [
   'ui.grid.draggable-rows'  // https://github.com/cdwv/ui-grid-draggable-rows
 ]);
 
+angular.module('myApp.controllers', []);
+
 app.factory('appsRepository', ['$http', function ($http) {
     // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.

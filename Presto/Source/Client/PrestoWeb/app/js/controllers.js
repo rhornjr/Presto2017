@@ -77,7 +77,8 @@ function appsController($scope, $modal, $http, appsRepository, $window, uiGridCo
                 templateUrl: 'partials/appAdd.html',
                 controller: 'appAddModalController',
                 size: 'sm',
-                windowClass: 'modalConfirmationPosition'
+                //windowClass: 'modalConfirmationPosition'
+                windowClass: 'app-modal-window'
             });
 
             modalInstance.result.then(function (app) {

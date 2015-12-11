@@ -21,6 +21,17 @@ var app = angular.module('myApp', [
 
 angular.module('myApp.controllers', []);
 
+app.run(function ($rootScope) {
+        $rootScope.$on('$routeChangeSuccess', function (ev, data) {
+
+            // When the route changes, set activeController variable to the actual active controller.
+            // This allows the NavBar stylings to be correct on index.html.
+            if (data.$$route && data.$$route.controller) {
+                $rootScope.activeController = data.$$route.controller;
+            }
+        });
+    });
+
 app.factory('appsRepository', ['$http', function ($http) {
     // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.

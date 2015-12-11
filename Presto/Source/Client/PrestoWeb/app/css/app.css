@@ -130,3 +130,32 @@ div.PageContainer { width:910px }
 .app-modal-window .modal-dialog {
   width: 500px;
 }
+
+.navBar li {
+    display: inline;
+}
+
+.navBar li  a {
+    list-style: none;    
+    width: 115px;
+    height: 25px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+    border-color: black;
+    border-style: groove;
+    border-width: thin; 
+    background: #d4d4d4;
+    text-decoration: none;  /* We don't want the underlines in the navbar link buttons */
+    font-size: 0.9em;
+}  
+
+.navBar a:hover {
+        background: #F0F5F5;
+    }
+
+.navBar a.active {
+        background: white;
+    }

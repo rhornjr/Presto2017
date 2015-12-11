@@ -9,13 +9,20 @@ h2.myHeader {
     font-size: 1.3em;
     margin: 12px;
     padding: 0.3em 1em;
-    text-shadow: #9FBEB9 1px 1px 1px;    
+    text-shadow: #9FBEB9 1px 1px 1px;
     text-align: center;
 }
 
 .mainHeader { background-color: #0B5586; }
 .subHeader { background-color: #4494C9; }
 .footer { background-color: #afb5b8; }
+
+.userMessage {
+    background-color: #7a5a5a;
+    font-size: 1.0em !important;
+    text-align: left !important;
+    text-shadow: none !important;
+}
 
 div.OneOfOne { height:550px; overflow:auto }
 div.OneOfTwo { height:300px; overflow:auto }

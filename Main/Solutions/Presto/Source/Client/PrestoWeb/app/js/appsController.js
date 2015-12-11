@@ -28,6 +28,7 @@
         $scope.loading = 1;
         $scope.apps = null;
         $scope.selectedApps = [];
+        $scope.userMessage = '';
 
         $scope.gridOptions = {
             data: 'apps',
@@ -44,6 +45,7 @@
             appsRepository.getApps(forceRefresh, function (dataResponse, lastRefreshTime) {
                 $scope.apps = dataResponse;
                 $scope.lastRefreshTime = lastRefreshTime;
+                $scope.userMessage = 'Application list refreshed.'
                 $scope.loading = 0;
             });
         };
@@ -81,7 +83,9 @@
                 });
         }
 
-        var saveApp = function(app) {
+        var saveApp = function (app) {
+            $scope.loading = 1;
+
             $.ajax({
                 url: '/PrestoWeb/api/app/saveApplication',
                 type: 'POST',
@@ -89,13 +93,16 @@
                 contentType: "application/json",
                 success: onAppSaved(app),
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("App save failed.");
+                    $scope.loading = 0;
+                    $scope.userMessage = app.Name + ' save failed.';
                 }
             });
         }
 
-        var onAppSaved = function(app) {
-            alert('app saved');
+        var onAppSaved = function (app) {
+            $scope.refresh(true);
+            $scope.loading = 0;
+            $scope.userMessage = app.Name + ' saved.';
         }
 
         $scope.refresh(false);

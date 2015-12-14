@@ -9,7 +9,7 @@
     function pingController($scope, $http, $routeParams, pingRepository, uiGridConstants) {
         $scope.loading = 1;
         $scope.pings = null;
-        alert('baa');
+        
         $scope.gridPing= {
             data: 'pings',
             multiSelect: false,
@@ -23,7 +23,7 @@
 
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            PingRepository.getPings(forceRefresh, function (dataResponse, lastRefreshTime) {
+            pingRepository.getPings(forceRefresh, function (dataResponse, lastRefreshTime) {
                 $scope.pings = dataResponse;
                 $scope.lastRefreshTime = lastRefreshTime;
                 $scope.loading = 0;

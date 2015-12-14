@@ -126,7 +126,7 @@ app.factory('variableGroupsRepository', ['$http', function ($http) {
     }
 }]);
 
-app.factory('PingRepository', ['$http', function ($http) {
+app.factory('pingRepository', ['$http', function ($http) {
     // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.
     // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
@@ -141,11 +141,14 @@ app.factory('PingRepository', ['$http', function ($http) {
                 return;
             }
 
-            $http.get('/PrestoWeb/api/pings/')
+            $http.get('/PrestoWeb/api/ping/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();
                     callbackFunction(data, lastRefreshTime);
+                },
+                function (result) {
+                    alert(result);
                 });
         }
     }

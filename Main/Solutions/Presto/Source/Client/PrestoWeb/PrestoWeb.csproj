@@ -157,6 +157,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstallsController.cs" />
     <Compile Include="Controllers\LogController.cs" />
+    <Compile Include="Controllers\PingController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Controllers\UtilityController.cs" />
@@ -203,6 +204,7 @@
     <Content Include="app\js\globalController.js" />
     <Content Include="app\js\installsController.js" />
     <Content Include="app\js\logController.js" />
+    <Content Include="app\js\pingController.js" />
     <Content Include="app\js\serverController.js" />
     <Content Include="app\js\serversController.js" />
     <Content Include="app\js\services.js" />
@@ -478,6 +480,7 @@
     <Content Include="app\partials\global.html" />
     <Content Include="app\partials\installs.html" />
     <Content Include="app\partials\log.html" />
+    <Content Include="app\partials\ping.html" />
     <Content Include="app\partials\server.html" />
     <Content Include="app\partials\servers.html" />
     <Content Include="app\partials\variableGroups.html" />

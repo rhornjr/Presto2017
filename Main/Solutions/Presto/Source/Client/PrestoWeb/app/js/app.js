@@ -126,6 +126,31 @@ app.factory('variableGroupsRepository', ['$http', function ($http) {
     }
 }]);
 
+app.factory('PingRepository', ['$http', function ($http) {
+    // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
+    // we went to the app web page.
+    // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
+
+    var data;
+    var lastRefreshTime;
+
+    return {
+        getPings: function (forceRefresh, callbackFunction) {
+            if (data && forceRefresh == false) {
+                callbackFunction(data, lastRefreshTime);
+                return;
+            }
+
+            $http.get('/PrestoWeb/api/pings/')
+                .then(function (result) {
+                    data = result.data;
+                    lastRefreshTime = new Date();
+                    callbackFunction(data, lastRefreshTime);
+                });
+        }
+    }
+}]);
+
 app.filter('escape', function () {
     return function (input) {
         return encodeURIComponent(input);
@@ -149,6 +174,7 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/variableGroups', { templateUrl: 'partials/variableGroups.html', controller: 'variableGroupsController' });
     $routeProvider.when('/installs', { templateUrl: 'partials/installs.html', controller: 'installsController' });
     $routeProvider.when('/log', { templateUrl: 'partials/log.html', controller: 'logController' });
+    $routeProvider.when('/ping', { templateUrl: 'partials/ping.html', controller: 'pingController' });
     $routeProvider.when('/global', { templateUrl: 'partials/global.html', controller: 'globalController' });
     $routeProvider.otherwise({ redirectTo: '/global' });
 }]);

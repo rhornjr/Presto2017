@@ -28,8 +28,6 @@
             });
         };
 
-        $scope.loading = 0;
-
         $scope.gridVariableGroups.onRegisterApi = function (gridApi) {
             gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
                 console.log("Dropped", info);

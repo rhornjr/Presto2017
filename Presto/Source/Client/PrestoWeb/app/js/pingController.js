@@ -30,8 +30,6 @@
             });
         };
 
-        $scope.loading = 0;
-
         $scope.refresh();
     }
 

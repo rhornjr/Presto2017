@@ -133,21 +133,19 @@ app.factory('pingResponseRepository', ['$http', function ($http, latestPingReque
                 return;
             }
 
-            // ToDo: See if there is an $http.get equivalent. That way the callback doesn't have
-            //       to be wrapped in $scope.apply().
-            $.ajax({
+            var config = {
                 url: '/PrestoWeb/api/ping/responses/',
-                type: 'POST',
-                data: JSON.stringify(latestPingRequest),
-                contentType: "application/json",
-                success: function (responses) {
-                    data = responses;
+                method: 'POST',
+                data: latestPingRequest
+            };
+
+            $http(config)
+                .then(function (response) {
+                    data = response.data;
                     lastRefreshTime = new Date();
                     callbackFunction(data, lastRefreshTime);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(errorThrown);
-                }
+                }, function (response) {
+                    alert(response);
             });
         }
     }

@@ -29,20 +29,9 @@
                 $scope.latestPingRequest = dataResponse;
 
                 pingResponseRepository.getResponses(forceRefresh, $scope.latestPingRequest, function (pingResponses, lastRefreshTime) {
-                    // We need to wrap our code in $scope.$apply() here. Good explanation: http://jimhoskins.com/2012/12/17/angularjs-and-apply.html.
-                    // Excerpt from above link:
-                    // So, when do you need to call $apply()? Very rarely, actually. AngularJS actually calls almost all of your
-                    // code within an $apply call. Events like ng-click, controller initialization, $http callbacks are all wrapped
-                    // in $scope.$apply(). So you don’t need to call it yourself, in fact you can’t. Calling $apply inside $apply
-                    // will throw an error.
-                    // You do need to use it if you are going to run code in a new turn. And only if that turn isn’t being created
-                    // from a method in the AngularJS library.
-                    // The reason we need it here is our factory made an ajax (not $http) call.
-                    $scope.$apply(function () {
-                        $scope.pings = pingResponses;
-                        $scope.lastRefreshTime = lastRefreshTime;
-                        $scope.loading = 0;
-                    });
+                    $scope.pings = pingResponses;
+                    $scope.lastRefreshTime = lastRefreshTime;
+                    $scope.loading = 0;
                 });
             });
         };

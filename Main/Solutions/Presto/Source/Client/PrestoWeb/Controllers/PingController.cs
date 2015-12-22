@@ -11,12 +11,23 @@ namespace PrestoWeb.Controllers
     [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]  // * See notes, below, for why
     public class PingController : ApiController
     {
-        public IEnumerable<PingResponse> Get()
+        [Route("api/ping/latestRequest")]
+        public PingRequest GetLatestRequest()
         {
             using (var prestoWcf = new PrestoWcf<IPingService>())
             {
                 var latestPing = prestoWcf.Service.GetMostRecentPingRequest();
-                var groups = prestoWcf.Service.GetAllForPingRequest(latestPing);
+                return latestPing;
+            }
+        }
+
+        [HttpPost]
+        [Route("api/ping/responses")]
+        public IEnumerable<PingResponse> GetResponses(PingRequest pingRequest)
+        {
+            using (var prestoWcf = new PrestoWcf<IPingService>())
+            {
+                var groups = prestoWcf.Service.GetAllForPingRequest(pingRequest);
                 return groups;
             }
         }

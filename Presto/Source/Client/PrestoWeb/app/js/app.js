@@ -102,10 +102,6 @@ app.factory('logRepository', ['$http', function ($http) {
 }]);
 
 app.factory('variableGroupsRepository', ['$http', function ($http) {
-    // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
-    // we went to the app web page.
-    // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
-
     var data;
     var lastRefreshTime;
 
@@ -126,22 +122,49 @@ app.factory('variableGroupsRepository', ['$http', function ($http) {
     }
 }]);
 
-app.factory('pingRepository', ['$http', function ($http) {
-    // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
-    // we went to the app web page.
-    // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
-
+app.factory('pingResponseRepository', ['$http', function ($http, latestPingRequest) {
     var data;
     var lastRefreshTime;
 
     return {
-        getPings: function (forceRefresh, callbackFunction) {
+        getResponses: function (forceRefresh, latestPingRequest, callbackFunction) {
             if (data && forceRefresh == false) {
                 callbackFunction(data, lastRefreshTime);
                 return;
             }
 
-            $http.get('/PrestoWeb/api/ping/')
+            // ToDo: See if there is an $http.get equivalent. That way the callback doesn't have
+            //       to be wrapped in $scope.apply().
+            $.ajax({
+                url: '/PrestoWeb/api/ping/responses/',
+                type: 'POST',
+                data: JSON.stringify(latestPingRequest),
+                contentType: "application/json",
+                success: function (responses) {
+                    data = responses;
+                    lastRefreshTime = new Date();
+                    callbackFunction(data, lastRefreshTime);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+}]);
+
+app.factory('pingRequestRepository', ['$http', function ($http) {
+    var data;
+    var lastRefreshTime;
+
+    return {
+        getLatestPingRequest: function (forceRefresh, callbackFunction) {
+            if (data && forceRefresh == false) {
+                callbackFunction(data, lastRefreshTime);
+                return;
+            }
+
+            $http.get('/PrestoWeb/api/ping/latestRequest/')
                 .then(function (result) {
                     data = result.data;
                     lastRefreshTime = new Date();

@@ -206,6 +206,8 @@ app.run(function ($rootScope, $location) {
     $rootScope.setUserMessage = function (userMessage) {
         $rootScope.userMessage = userMessage + " - " + moment().format('DD-MMM HH:mm:ss');
     }
+
+    $rootScope.setUserMessage('Presto started');
 });
 
 app.config(['$routeProvider', function($routeProvider) {

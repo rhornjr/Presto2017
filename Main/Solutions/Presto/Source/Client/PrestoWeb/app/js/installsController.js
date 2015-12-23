@@ -54,6 +54,7 @@
         };
 
         $scope.refresh = function (forceRefresh) {
+            $scope.loading = 1;
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
             installsRepository.getInstalls(forceRefresh, function (dataResponse) {
                 $scope.installs = dataResponse;

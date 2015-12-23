@@ -20,6 +20,7 @@
         };
 
         $scope.refresh = function (forceRefresh) {
+            $scope.loading = 1;
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
             variableGroupsRepository.getVariableGroups(forceRefresh, function (dataResponse) {
                 $scope.variableGroups = dataResponse;

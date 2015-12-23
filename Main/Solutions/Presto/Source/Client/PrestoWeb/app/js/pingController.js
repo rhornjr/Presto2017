@@ -10,7 +10,8 @@
         $scope.loading = 1;
         $scope.pings = null;
         $scope.latestPingRequest;
-        
+        $scope.latestPingRequestTime;
+
         $scope.gridPing= {
             data: 'pings',
             multiSelect: false,
@@ -23,10 +24,12 @@
         };
 
         $scope.refresh = function (forceRefresh) {
+            $scope.loading = 1;
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
 
             pingRequestRepository.getLatestPingRequest(forceRefresh, function (dataResponse) {
                 $scope.latestPingRequest = dataResponse;
+                $scope.latestPingRequestTime = moment($scope.latestPingRequest.RequestTime).format('DD-MMM-YYYY HH:mm:ss');
 
                 pingResponseRepository.getResponses(forceRefresh, $scope.latestPingRequest, function (pingResponses) {
                     $scope.pings = pingResponses;

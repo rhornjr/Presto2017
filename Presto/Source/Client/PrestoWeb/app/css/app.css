@@ -32,19 +32,29 @@ div.PageContainer { width:910px }
 .gridLessThanHalf {
     border: 1px solid rgb(212,212,212);
     width: 890px; 
-    height: 240px
+    height: 240px;
 }
 
 .gridHalf {
     border: 1px solid rgb(212,212,212);
     width: 890px; 
-    height: 290px
+    height: 290px;
 }
 
 .gridFull {
     border: 1px solid rgb(212,212,212);
     width: 890px; 
-    height: 500px
+    height: 500px;
+}
+
+.waitImage {
+    height:64px;
+    width:64px;
+    margin:0px auto;
+    display:block;
+    position: absolute;
+    left: 400px;
+    top: 150px;
 }
 
 .red {

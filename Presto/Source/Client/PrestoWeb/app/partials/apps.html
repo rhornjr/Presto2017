@@ -1,12 +1,11 @@
 <div id="container" class="PageContainer">
     <h2 class="myHeader mainHeader">Applications</h2>
     <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
-    <img id="waitImage" src="images/wait.gif" ng-show="loading" style="height:64px; width:64px; margin:0px auto; display:block;" />
-    <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ng-hide="loading"></div>
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage"/>
+    <div class="gridFull" ui-grid="gridOptions" ui-grid-selection></div>
     <h2 class="myHeader footer">
-        <button ng-click="addApp();" ng-disabled="loading">Add</button>
-        <button ng-click="editApp();" ng-disabled="loading">Edit</button>
-        <button ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+        <button class="btn btn-default" ng-click="addApp();" ng-disabled="loading">Add</button>
+        <button class="btn btn-default" ng-click="editApp();" ng-disabled="loading">Edit</button>
+        <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
-    <!--<h2 class="myHeader userMessage">{{userMessage}}</h2>-->
 </div>

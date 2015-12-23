@@ -6,7 +6,7 @@
 
     // ------------------------------- Servers Controller -------------------------------
 
-    function serversController($scope, serversRepository, $window, uiGridConstants) {
+    function serversController($scope, $rootScope, serversRepository, $window, uiGridConstants) {
         $scope.loading = 1;
         $scope.servers = null;
         $scope.selectedServers = [];
@@ -23,9 +23,8 @@
 
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.          
-            serversRepository.getServers(forceRefresh, function (dataResponse, lastRefreshTime) {
+            serversRepository.getServers(forceRefresh, function (dataResponse) {
                 $scope.servers = dataResponse;
-                $scope.lastRefreshTime = lastRefreshTime;
                 $scope.loading = 0;
             });
         };

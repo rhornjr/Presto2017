@@ -24,11 +24,10 @@
 
     // ------------------------------- Apps Controller -------------------------------
 
-    function appsController($scope, $modal, $http, appsRepository, $window, uiGridConstants) {
+    function appsController($scope, $rootScope, $modal, $http, appsRepository, $window, uiGridConstants) {
         $scope.loading = 1;
         $scope.apps = null;
         $scope.selectedApps = [];
-        $scope.userMessage = '';
 
         $scope.gridOptions = {
             data: 'apps',
@@ -42,10 +41,8 @@
 
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            appsRepository.getApps(forceRefresh, function (dataResponse, lastRefreshTime) {
+            appsRepository.getApps(forceRefresh, function (dataResponse) {
                 $scope.apps = dataResponse;
-                $scope.lastRefreshTime = lastRefreshTime;
-                $scope.userMessage = 'Application list refreshed.'
                 $scope.loading = 0;
             });
         };
@@ -94,7 +91,7 @@
                 success: onAppSaved(app),
                 error: function (jqXHR, textStatus, errorThrown) {
                     $scope.loading = 0;
-                    $scope.userMessage = app.Name + ' save failed.';
+                    $rootScope.userMessage = app.Name + ' save failed.';
                 }
             });
         }
@@ -102,7 +99,7 @@
         var onAppSaved = function (app) {
             $scope.refresh(true);
             $scope.loading = 0;
-            $scope.userMessage = app.Name + ' saved.';
+            $rootScope.userMessage = app.Name + ' saved.';
         }
 
         $scope.refresh(false);

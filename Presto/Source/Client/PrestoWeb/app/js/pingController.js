@@ -25,12 +25,11 @@
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
 
-            pingRequestRepository.getLatestPingRequest(forceRefresh, function (dataResponse, lastRefreshTime) {
+            pingRequestRepository.getLatestPingRequest(forceRefresh, function (dataResponse) {
                 $scope.latestPingRequest = dataResponse;
 
-                pingResponseRepository.getResponses(forceRefresh, $scope.latestPingRequest, function (pingResponses, lastRefreshTime) {
+                pingResponseRepository.getResponses(forceRefresh, $scope.latestPingRequest, function (pingResponses) {
                     $scope.pings = pingResponses;
-                    $scope.lastRefreshTime = lastRefreshTime;
                     $scope.loading = 0;
                 });
             });

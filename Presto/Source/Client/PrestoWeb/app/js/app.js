@@ -32,104 +32,119 @@ app.run(function ($rootScope) {
         });
     });
 
-app.factory('appsRepository', ['$http', function ($http) {
+app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
     // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.
     // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
 
     var data;
-    var lastRefreshTime;
 
     return {
         getApps: function (forceRefresh, callbackFunction) {
-            if (data && forceRefresh == false) {
-                callbackFunction(data, lastRefreshTime);
+            if (data && !forceRefresh) {
+                callbackFunction(data);
                 return;
             }
 
             $http.get('/PrestoWeb/api/apps/')
                 .then(function (result) {
                     data = result.data;
-                    lastRefreshTime = new Date();
-                    callbackFunction(data, lastRefreshTime);
+                    $rootScope.setUserMessage("Application list refreshed");
+                    callbackFunction(data);
                 });
         }
     }
 }]);
 
-app.factory('serversRepository', ['$http', function ($http) {
+app.factory('serversRepository', ['$http', '$rootScope', function ($http, $rootScope) {
 
     var data;
-    var lastRefreshTime;
 
     return {
         getServers: function (forceRefresh, callbackFunction) {
-            if (data && forceRefresh == false) {
-                callbackFunction(data, lastRefreshTime);
+            if (data && !forceRefresh) {
+                callbackFunction(data);
                 return;
             }
 
             $http.get('/PrestoWeb/api/servers/')
                 .then(function (result) {
                     data = result.data;
-                    lastRefreshTime = new Date();
-                    callbackFunction(data, lastRefreshTime);
+                    $rootScope.setUserMessage("Server list refreshed");
+                    callbackFunction(data);
                 });
         }
     }
 }]);
 
-app.factory('logRepository', ['$http', function ($http) {
+app.factory('logRepository', ['$http', '$rootScope', function ($http, $rootScope) {
 
     var data;
-    var lastRefreshTime;
 
     return {
         getLogs: function (forceRefresh, callbackFunction) {
-            if (data && forceRefresh == false) {
-                callbackFunction(data, lastRefreshTime);  // If we already have the data, just return it.
+            if (data && !forceRefresh) {
+                callbackFunction(data);  // If we already have the data, just return it.
                 return;
             }
 
             $http.get('/PrestoWeb/api/log/')
                 .then(function (result) {
                     data = result.data;
-                    lastRefreshTime = new Date();
-                    callbackFunction(data, lastRefreshTime);
+                    $rootScope.setUserMessage("Log list refreshed");
+                    callbackFunction(data);
                 });
         }
     }
 }]);
 
-app.factory('variableGroupsRepository', ['$http', function ($http) {
+app.factory('variableGroupsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
     var data;
-    var lastRefreshTime;
 
     return {
         getVariableGroups: function (forceRefresh, callbackFunction) {
-            if (data && forceRefresh == false) {
-                callbackFunction(data, lastRefreshTime);
+            if (data && !forceRefresh) {
+                callbackFunction(data);
                 return;
             }
 
             $http.get('/PrestoWeb/api/variableGroups/')
                 .then(function (result) {
                     data = result.data;
-                    lastRefreshTime = new Date();
-                    callbackFunction(data, lastRefreshTime);
+                    $rootScope.setUserMessage("Variable group list refreshed");
+                    callbackFunction(data);
                 });
         }
     }
 }]);
 
-app.factory('pingResponseRepository', ['$http', function ($http, latestPingRequest) {
+app.factory('installsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
     var data;
-    var lastRefreshTime;
+
+    return {
+        getInstalls: function (forceRefresh, callbackFunction) {
+            if (data && !forceRefresh) {
+                callbackFunction(data);
+                return;
+            }
+
+            $http.get('/PrestoWeb/api/installs/')
+                .then(function (result) {
+                    data = result.data;
+                    $rootScope.setUserMessage("Installs list refreshed");
+                    callbackFunction(data);
+                });
+        }
+    }
+}]);
+
+app.factory('pingResponseRepository', ['$http', '$rootScope', function ($http, $rootScope, latestPingRequest) {
+    var data;
 
     return {
         getResponses: function (forceRefresh, latestPingRequest, callbackFunction) {
-            if (data && forceRefresh == false) {
-                callbackFunction(data, lastRefreshTime);
+            if (data && !forceRefresh) {
+                callbackFunction(data);
                 return;
             }
 
@@ -142,8 +157,8 @@ app.factory('pingResponseRepository', ['$http', function ($http, latestPingReque
             $http(config)
                 .then(function (response) {
                     data = response.data;
-                    lastRefreshTime = new Date();
-                    callbackFunction(data, lastRefreshTime);
+                    $rootScope.setUserMessage("Ping list refreshed");
+                    callbackFunction(data);
                 }, function (response) {
                     alert(response);
             });
@@ -151,22 +166,21 @@ app.factory('pingResponseRepository', ['$http', function ($http, latestPingReque
     }
 }]);
 
-app.factory('pingRequestRepository', ['$http', function ($http) {
+app.factory('pingRequestRepository', ['$http', '$rootScope', function ($http, $rootScope) {
     var data;
-    var lastRefreshTime;
 
     return {
         getLatestPingRequest: function (forceRefresh, callbackFunction) {
-            if (data && forceRefresh == false) {
-                callbackFunction(data, lastRefreshTime);
+            if (data && !forceRefresh) {
+                callbackFunction(data);
                 return;
             }
 
             $http.get('/PrestoWeb/api/ping/latestRequest/')
                 .then(function (result) {
                     data = result.data;
-                    lastRefreshTime = new Date();
-                    callbackFunction(data, lastRefreshTime);
+                    $rootScope.setUserMessage("Retrieved latest ping request");
+                    callbackFunction(data);
                 },
                 function (result) {
                     alert(result);
@@ -188,6 +202,10 @@ app.run(function ($rootScope, $location) {
     $rootScope.gotoApp = function (appId) {
         $rootScope.go('/app/' + encodeURIComponent(appId));
     };
+
+    $rootScope.setUserMessage = function (userMessage) {
+        $rootScope.userMessage = userMessage + " - " + moment().format('DD-MMM HH:mm:ss');
+    }
 });
 
 app.config(['$routeProvider', function($routeProvider) {

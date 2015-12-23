@@ -6,7 +6,7 @@
 
     // ------------------------------- Variable Groups Controller -------------------------------
 
-    function variableGroupsController($scope, $http, $routeParams, variableGroupsRepository, uiGridConstants) {
+    function variableGroupsController($scope, $rootScope, $http, $routeParams, variableGroupsRepository, uiGridConstants) {
         $scope.loading = 1;
         $scope.variableGroups = null;
 
@@ -21,9 +21,8 @@
 
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            variableGroupsRepository.getVariableGroups(forceRefresh, function (dataResponse, lastRefreshTime) {
+            variableGroupsRepository.getVariableGroups(forceRefresh, function (dataResponse) {
                 $scope.variableGroups = dataResponse;
-                $scope.lastRefreshTime = lastRefreshTime;
                 $scope.loading = 0;
             });
         };

@@ -56,21 +56,20 @@
                 appWithGroup: $scope.selectedAppsWithGroup[0]
             }
 
-            $.ajax({
+            var config = {
                 url: '/PrestoWeb/api/server/installapp',
-                type: 'POST',
-                data: JSON.stringify(entityContainer),
-                contentType: "application/json",
-                success: installRequestSucceeded($rootScope),
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("Install request failed: " + textStatus);
-                }
-            });
-        };
-    }
+                method: 'POST',
+                data: entityContainer
+            };
 
-    function installRequestSucceeded(rootScope) {
-        rootScope.setUserMessage("Install request sent successfully");
+            $http(config)
+                .then(function (response) {
+                    $rootScope.setUserMessage("Install request sent successfully");
+                }, function (response) {
+                    $rootScope.setUserMessage("Install request failed");
+                    console.log(response);
+                });
+        };
     }
 
 })();

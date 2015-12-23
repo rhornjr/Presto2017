@@ -84,17 +84,20 @@
         var saveApp = function (app) {
             $scope.loading = 1;
 
-            $.ajax({
+            var config = {
                 url: '/PrestoWeb/api/app/saveApplication',
-                type: 'POST',
-                data: JSON.stringify(app),
-                contentType: "application/json",
-                success: onAppSaved(app),
-                error: function (jqXHR, textStatus, errorThrown) {
+                method: 'POST',
+                data: app
+            };
+
+            $http(config)
+                .then(function (response) {
+                    onAppSaved(app)
+                }, function (response) {
                     $scope.loading = 0;
-                    $rootScope.userMessage = app.Name + ' save failed.';
-                }
-            });
+                    $rootScope.setUserMessage(app.Name + ' save failed.');
+                    console.log(response);
+                });
         }
 
         var onAppSaved = function (app) {

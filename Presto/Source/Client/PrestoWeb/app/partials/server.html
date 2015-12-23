@@ -1,7 +1,7 @@
 ﻿<div id="container" class="PageContainer">
     <h2 class="myHeader mainHeader">Server</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage"/>
-    <label>Name: </label><input type="text" value="{{server.Name}}" style="width:450px" />
+    <input type="text" value="{{server.Name}}" placeholder="Name" class="form-control" style="width:30em" />
 
     <h2 class="myHeader subHeader">Apps and Overrides</h2>
     <div class="OneOfTwo">
@@ -9,7 +9,7 @@
     </div>
     
     <h2 class="myHeader footer">
-        <button ng-click="install();" ng-disabled="loading">Install</button>
+        <button class="btn btn-default" ng-click="install();" ng-disabled="loading">Install</button>
     </h2>
 
     <h2 class="myHeader subHeader">Custom Variable Groups</h2>

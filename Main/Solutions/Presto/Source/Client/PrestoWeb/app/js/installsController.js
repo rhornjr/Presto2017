@@ -4,13 +4,9 @@
 
     angular.module('myApp.controllers').controller('installsController', installsController);
 
-    // ------------------------------- Installs Controller -------------------------------
+    // ------------------------------- Installs Controller -------------------------------    
 
-    function installRequestSucceeded(loading) {
-        alert('Install request sent successfully.');
-    }
-
-    function installsController($scope, $http) {
+    function installsController($scope, $http, installsRepository) {
         $scope.loading = 1;
         $scope.installs = null;
         $scope.selectedSummaries = [];
@@ -51,17 +47,21 @@
         $scope.gridOptions2.onRegisterApi = function (gridApi) {
             $scope.gridApi2 = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
+                console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
                 $scope.selectedDetails.length = 0; // Truncate/clear the array. Yes, this is how it's done.
                 $scope.selectedDetails.push(row.entity);
             });
         };
 
-        $http.get('/PrestoWeb/api/installs/')
-              .then(function (result) {
-                  $scope.installs = result.data;
-                  $scope.loading = 0;
-              });
+        $scope.refresh = function (forceRefresh) {
+            // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
+            installsRepository.getInstalls(forceRefresh, function (dataResponse) {
+                $scope.installs = dataResponse;
+                $scope.loading = 0;
+            });
+        };
+
+        $scope.refresh();
     }
 
 })();

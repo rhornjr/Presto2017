@@ -6,7 +6,7 @@
 
     // ------------------------------- Server Controller -------------------------------
 
-    function serverController($scope, $http, $routeParams, uiGridConstants) {
+    function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants) {
         $scope.loading = 1;
         $scope.server = null;
         $scope.serverId = $routeParams.serverId;
@@ -61,12 +61,16 @@
                 type: 'POST',
                 data: JSON.stringify(entityContainer),
                 contentType: "application/json",
-                success: installRequestSucceeded($scope.loading),
+                success: installRequestSucceeded($rootScope),
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log("Install request failed: " + textStatus);
                 }
             });
         };
+    }
+
+    function installRequestSucceeded(rootScope) {
+        rootScope.setUserMessage("Install request sent successfully");
     }
 
 })();

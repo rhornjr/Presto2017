@@ -20,9 +20,8 @@
 
         $scope.refresh = function (forceRefresh) {
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.          
-            logRepository.getLogs(forceRefresh, function (dataResponse, lastRefreshTime) {
+            logRepository.getLogs(forceRefresh, function (dataResponse) {
                 $scope.logMessages = dataResponse;
-                $scope.lastRefreshTime = lastRefreshTime;
                 $scope.loading = 0;
             });
         };

@@ -205,6 +205,7 @@
     <Content Include="app\js\installsController.js" />
     <Content Include="app\js\logController.js" />
     <Content Include="app\js\pingController.js" />
+    <Content Include="app\js\resolve.js" />
     <Content Include="app\js\serverController.js" />
     <Content Include="app\js\serversController.js" />
     <Content Include="app\js\services.js" />
@@ -481,6 +482,7 @@
     <Content Include="app\partials\installs.html" />
     <Content Include="app\partials\log.html" />
     <Content Include="app\partials\ping.html" />
+    <Content Include="app\partials\resolve.html" />
     <Content Include="app\partials\server.html" />
     <Content Include="app\partials\servers.html" />
     <Content Include="app\partials\variableGroups.html" />

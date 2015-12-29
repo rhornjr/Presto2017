@@ -216,6 +216,7 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
     $routeProvider.when('/server/:serverId?', { templateUrl: 'partials/server.html', controller: 'serverController' });
     $routeProvider.when('/variableGroups', { templateUrl: 'partials/variableGroups.html', controller: 'variableGroupsController' });
+    $routeProvider.when('/resolve', { templateUrl: 'partials/resolve.html', controller: 'resolveController' });
     $routeProvider.when('/installs', { templateUrl: 'partials/installs.html', controller: 'installsController' });
     $routeProvider.when('/log', { templateUrl: 'partials/log.html', controller: 'logController' });
     $routeProvider.when('/ping', { templateUrl: 'partials/ping.html', controller: 'pingController' });

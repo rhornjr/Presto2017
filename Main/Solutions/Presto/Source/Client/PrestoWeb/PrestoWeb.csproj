@@ -477,6 +477,7 @@
     <Content Include="app\lib\ui-grid-draggable-rows\draggable-rows.js" />
     <Content Include="app\partials\app.html" />
     <Content Include="app\partials\appAdd.html" />
+    <Content Include="app\partials\appPicker.html" />
     <Content Include="app\partials\apps.html" />
     <Content Include="app\partials\global.html" />
     <Content Include="app\partials\installs.html" />

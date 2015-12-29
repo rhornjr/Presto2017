@@ -47,6 +47,12 @@ div.PageContainer { width:910px }
     height: 500px;
 }
 
+.gridFullThin {
+    border: 1px solid rgb(212,212,212);
+    width: 440px; 
+    height: 500px;
+}
+
 .waitImage {
     height:64px;
     width:64px;

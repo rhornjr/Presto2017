@@ -158,6 +158,7 @@
     <Compile Include="Controllers\InstallsController.cs" />
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\PingController.cs" />
+    <Compile Include="Controllers\ResolveController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Controllers\UtilityController.cs" />

@@ -102,17 +102,19 @@
 
     // ------------------------------- Resolve Controller -------------------------------
 
-    function resolveController($scope, $http, $uibModal, uiGridConstants) {
+    function resolveController($scope, $rootScope, $http, $uibModal, uiGridConstants) {
         $scope.selectedApp;
+        $scope.selectedServer;
+        $scope.resolvedVariables;
 
         $scope.gridResolve = {
-            data: 'variableValues',
+            data: 'resolvedVariables',
             multiSelect: false,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedApps,
-            columnDefs: [{ field: 'Name', displayName: 'Variable', width: "20%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } },
-                         { field: 'Version', displayName: 'Value', width: "78%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
+            columnDefs: [{ field: 'Key', displayName: 'Variable', width: "30%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } },
+                         { field: 'Value', displayName: 'Value', width: "68%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
         };
 
         $scope.pickApp = function () {
@@ -149,8 +151,26 @@
             });
         }
 
-        $scope.resolve = function() {
+        $scope.resolve = function () {
+            // Create *one* object because we can't pass two parameters to a web API method.
+            var appAndServer = {
+                application: $scope.selectedApp,
+                server: $scope.selectedServer
+            }
 
+            var config = {
+                url: '/PrestoWeb/api/resolve/resolveVariables',
+                method: 'POST',
+                data: appAndServer
+            };
+
+            $http(config)
+                .then(function (response) {
+                    $scope.resolvedVariables = response.data;
+                    $rootScope.setUserMessage("Variables resolved");
+                }, function (response) {
+                    alert(response);
+                });
         }
     }
 

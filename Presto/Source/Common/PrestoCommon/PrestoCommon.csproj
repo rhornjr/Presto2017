@@ -105,6 +105,7 @@
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="DataTransferObjects\AppAndServer.cs" />
     <Compile Include="DataTransferObjects\ApplicationDtoSlim.cs" />
     <Compile Include="DataTransferObjects\ApplicationServerDtoSlim.cs" />
     <Compile Include="Entities\ActiveDirectoryInfo.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Misc\AesCrypto.cs" />
     <Compile Include="Misc\CommonUtility.cs" />
     <Compile Include="Misc\EventArgsGeneric.cs" />
+    <Compile Include="Misc\VariableGroupResolver.cs" />
     <Compile Include="MvvmMultiSelectBehavior\IListItemConverter.cs" />
     <Compile Include="MvvmMultiSelectBehavior\MultiSelectorBehaviours.cs" />
     <Compile Include="MvvmMultiSelectBehavior\TwoListSynchronizer.cs" />

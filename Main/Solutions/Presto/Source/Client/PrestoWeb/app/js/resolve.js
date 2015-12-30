@@ -102,7 +102,8 @@
 
     // ------------------------------- Resolve Controller -------------------------------
 
-    function resolveController($scope, $rootScope, $http, $uibModal, uiGridConstants) {
+    function resolveController($scope, $rootScope, $http, resolveRepository, $uibModal, uiGridConstants) {
+        $scope.loading = 0;
         $scope.selectedApp;
         $scope.selectedServer;
         $scope.resolvedVariables = [];
@@ -139,6 +140,7 @@
 
             modalInstance.result.then(function (app) {
                 console.log("App picked", app);
+                $scope.resolvedVariables.length = 0;
                 $scope.selectedApp = app;
             }, function () {
                 // modal dismissed
@@ -156,33 +158,26 @@
 
             modalInstance.result.then(function (server) {
                 console.log("Server picked", server);
+                $scope.resolvedVariables.length = 0;
                 $scope.selectedServer = server;
             }, function () {
                 // modal dismissed
             });
         }
 
-        $scope.resolve = function () {
-            // Create *one* object because we can't pass two parameters to a web API method.
-            var appAndServer = {
-                application: $scope.selectedApp,
-                server: $scope.selectedServer
-            }
-
-            var config = {
-                url: '/PrestoWeb/api/resolve/resolveVariables',
-                method: 'POST',
-                data: appAndServer
-            };
-
-            $http(config)
-                .then(function (response) {
-                    $scope.resolvedVariables = response.data;
-                    $rootScope.setUserMessage("Variables resolved");
-                }, function (response) {
-                    alert(response);
-                });
+        $scope.resolve = function (forceUpdate) {            
+            $scope.loading = 1;
+            resolveRepository.getResolvedVariables(forceUpdate, $scope.selectedApp, $scope.selectedServer, function (dataContainer) {
+                if (dataContainer) {
+                    $scope.selectedApp = dataContainer.app;
+                    $scope.selectedServer = dataContainer.server;
+                    $scope.resolvedVariables = dataContainer.data;
+                }
+                $scope.loading = 0;
+            });
         }
+
+        $scope.resolve(false);
     }
 
 })();

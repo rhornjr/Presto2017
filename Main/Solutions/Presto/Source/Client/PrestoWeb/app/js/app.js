@@ -118,6 +118,51 @@ app.factory('variableGroupsRepository', ['$http', '$rootScope', function ($http,
     }
 }]);
 
+app.factory('resolveRepository', ['$http', '$rootScope', function ($http, $rootScope) {
+    var dataContainer;
+
+    return {
+        getResolvedVariables: function (forceRefresh, app, server, callbackFunction) {
+            if (dataContainer && !forceRefresh) {
+                // We already have data, so let's return it so the page doesn't lose it's data when returning to it.
+                callbackFunction(dataContainer);
+                return;
+            }
+
+            if (!app || !server) // Ignore if no app/server selected.
+            {
+                callbackFunction(null);
+                return;
+            }
+
+            // Create *one* object because we can't pass two parameters to a web API method.
+            var appAndServer = {
+                application: app,
+                server: server
+            }
+
+            var config = {
+                url: '/PrestoWeb/api/resolve/resolveVariables',
+                method: 'POST',
+                data: appAndServer
+            };
+
+            $http(config)
+                .then(function (response) {
+                    // Store the resolved variables along with other data so the page doesn't lose its info when switching tabs.
+                    dataContainer = {};
+                    dataContainer.data = response.data;
+                    dataContainer.app = app;
+                    dataContainer.server = server;
+                    callbackFunction(dataContainer);
+                    $rootScope.setUserMessage("Variables resolved");
+                }, function (response) {
+                    console.log(response);
+                });
+        }
+    }
+}]);
+
 app.factory('installsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
     var data;
 

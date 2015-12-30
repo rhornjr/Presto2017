@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
@@ -16,10 +16,11 @@ namespace PrestoWeb.Controllers
         /// Returns a list of resolved variables for a given <see cref="Application"/> and <see cref="ApplicationServer"/>.
         /// </summary>
         [HttpPost]
-        public IEnumerable<CustomVariable> ResolveVariables(AppAndServer appAndServer)
+        public ResolvedVariablesContainer ResolveVariables(AppAndServerAndOverrides appAndServerAndOverrides)
         {
-            var app    = appAndServer.Application;
-            var server = appAndServer.Server;
+            var app       = appAndServerAndOverrides.Application;
+            var server    = appAndServerAndOverrides.Server;
+            var overrides = appAndServerAndOverrides.Overrides;
 
             // Hydrate the app with trusted data (ie: don't use what was sent from the browser).
             Application hydratedApp;
@@ -37,7 +38,7 @@ namespace PrestoWeb.Controllers
 
             var appWithOverrides = new ApplicationWithOverrideVariableGroup();
             appWithOverrides.Application = hydratedApp;
-            appWithOverrides.CustomVariableGroups = null;  // ToDo: Need to set this. Need to add it to UI first.
+            appWithOverrides.CustomVariableGroups = overrides;
 
             return VariableGroupResolver.Resolve(appWithOverrides, hydratedServer);
         }

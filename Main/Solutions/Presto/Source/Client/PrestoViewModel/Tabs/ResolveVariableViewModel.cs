@@ -2,12 +2,11 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
-using PrestoCommon.Exceptions;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using PrestoViewModel.Misc;
 using PrestoViewModel.Mvvm;
@@ -144,65 +143,17 @@ namespace PrestoViewModel.Tabs
 
         private void Resolve()
         {
-            int numberOfProblemsFound = 0;
-            bool variableFoundMoreThanOnce = false;
-            this.ResolvedCustomVariables.Clear();
-            string supplementalStatusMessage = string.Empty;
-
-            // Need to get the latest app, group, and server each time we do this. The user could have made changes to them
-            // since originally running this.
             RefreshAppGroupAndServer();
 
-            // This is normally set when calling Install(), but since we're not doing that
-            // here, set it explicitly.
-            ApplicationWithOverrideVariableGroup.SetInstallationStartTimestamp(DateTime.Now);
+            var resolvedVariablesContainer = VariableGroupResolver.Resolve(this.ApplicationWithGroup, this.ApplicationServer);
 
-            foreach (TaskBase task in this.ApplicationWithGroup.Application.MainAndPrerequisiteTasks)
-            {
-                if (variableFoundMoreThanOnce) { break; }
-
-                foreach (string taskProperty in task.GetTaskProperties())
-                {
-                    if (variableFoundMoreThanOnce) { break; }
-
-                    string key   = string.Empty;
-                    string value = string.Empty;
-
-                    foreach (Match match in CustomVariableGroup.GetCustomVariableStringsWithinBiggerString(taskProperty))
-                    {
-                        // Don't add the same key more than once.
-                        if (this.ResolvedCustomVariables.Any(x => x.Key == match.Value)) { continue; }
-
-                        try
-                        {
-                            key = match.Value;
-                            // Note, we pass true so that encrypted values stay encrypted. We don't want the user to see encrypted values.
-                            value = CustomVariableGroup.ResolveCustomVariable(match.Value, this.ApplicationServer, this.ApplicationWithGroup, true);
-                        }
-                        catch (CustomVariableMissingException)
-                        {
-                            numberOfProblemsFound++;
-                            value = "** NOT FOUND **";
-                        }
-                        catch (CustomVariableExistsMoreThanOnceException ex)
-                        {
-                            variableFoundMoreThanOnce = true;
-                            numberOfProblemsFound++;
-                            value = "** MORE THAN ONE FOUND **";
-                            supplementalStatusMessage = ex.Message;
-                            this.ResolvedCustomVariables.Clear();
-                            break;
-                        }
-
-                        this.ResolvedCustomVariables.Add(new CustomVariable() { Key = key, Value = value });
-                    }                    
-                }
-            }
+            this.ResolvedCustomVariables.Clear();
+            this.ResolvedCustomVariables.AddRange(resolvedVariablesContainer.Variables);
 
             ViewModelUtility.MainWindowViewModel.AddUserMessage(string.Format(CultureInfo.CurrentCulture,
                 ViewModelResources.VariablesResolved,
-                numberOfProblemsFound.ToString(CultureInfo.CurrentCulture),
-                supplementalStatusMessage));
+                resolvedVariablesContainer.NumberOfProblems.ToString(CultureInfo.CurrentCulture),
+                resolvedVariablesContainer.SupplementalStatusMessage));
         }
 
         private void RefreshAppGroupAndServer()

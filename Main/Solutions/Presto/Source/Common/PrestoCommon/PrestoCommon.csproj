@@ -105,7 +105,7 @@
     <Compile Include="..\..\..\Solution Items\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="DataTransferObjects\AppAndServer.cs" />
+    <Compile Include="DataTransferObjects\AppAndServerAndOverrides.cs" />
     <Compile Include="DataTransferObjects\ApplicationDtoSlim.cs" />
     <Compile Include="DataTransferObjects\ApplicationServerDtoSlim.cs" />
     <Compile Include="Entities\ActiveDirectoryInfo.cs" />
@@ -142,6 +142,7 @@
     <Compile Include="EntityHelperClasses\InstallationResultContainer.cs" />
     <Compile Include="EntityHelperClasses\InstallationSummaryDto.cs" />
     <Compile Include="EntityHelperClasses\PrestoObservableCollection.cs" />
+    <Compile Include="EntityHelperClasses\ResolvedVariablesContainer.cs" />
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\ITimeZoneHelper.cs" />
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperInstallingServer.cs" />
     <Compile Include="EntityHelperClasses\TimeZoneHelpers\TimeZoneHelperThisComputer.cs" />

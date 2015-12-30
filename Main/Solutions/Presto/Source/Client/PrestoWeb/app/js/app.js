@@ -122,7 +122,7 @@ app.factory('resolveRepository', ['$http', '$rootScope', function ($http, $rootS
     var dataContainer;
 
     return {
-        getResolvedVariables: function (forceRefresh, app, server, callbackFunction) {
+        getResolvedVariables: function (forceRefresh, app, server, overrides, callbackFunction) {
             if (dataContainer && !forceRefresh) {
                 // We already have data, so let's return it so the page doesn't lose it's data when returning to it.
                 callbackFunction(dataContainer);
@@ -135,27 +135,29 @@ app.factory('resolveRepository', ['$http', '$rootScope', function ($http, $rootS
                 return;
             }
 
-            // Create *one* object because we can't pass two parameters to a web API method.
-            var appAndServer = {
+            // Create *one* object because we can't pass multiple parameters to a web API method.
+            var appAndServerAndOverrides = {
                 application: app,
-                server: server
+                server: server,
+                overrides: overrides
             }
 
             var config = {
                 url: '/PrestoWeb/api/resolve/resolveVariables',
                 method: 'POST',
-                data: appAndServer
+                data: appAndServerAndOverrides
             };
 
             $http(config)
                 .then(function (response) {
+                    $rootScope.setUserMessage("Variables resolved");
                     // Store the resolved variables along with other data so the page doesn't lose its info when switching tabs.
                     dataContainer = {};
                     dataContainer.data = response.data;
                     dataContainer.app = app;
                     dataContainer.server = server;
+                    dataContainer.overrides = overrides;
                     callbackFunction(dataContainer);
-                    $rootScope.setUserMessage("Variables resolved");
                 }, function (response) {
                     console.log(response);
                 });

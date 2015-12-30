@@ -228,6 +228,7 @@
                 $scope.resolvedVariables.length = 0;
                 $scope.selectedOverrides = overrides;
                 // Show the list of names to the user.
+                $scope.selectedOverridesNames = '';
                 for (var i = 0; i < overrides.length; i++) {
                     $scope.selectedOverridesNames += overrides[i].Name + " | ";
                 }
@@ -236,15 +237,21 @@
             });
         }
 
-        $scope.resolve = function (forceUpdate) {            
+        $scope.resolve = function (forceUpdate) {
+            // When we come back to this page, we want to load the data that was there before we left the page.
+            // This is so the user doesn't lose his information.
             $scope.loading = 1;
-            resolveRepository.getResolvedVariables(forceUpdate, $scope.selectedApp, $scope.selectedServer, function (dataContainer) {
-                if (dataContainer) {
-                    $scope.selectedApp = dataContainer.app;
-                    $scope.selectedServer = dataContainer.server;
-                    $scope.resolvedVariables = dataContainer.data;
-                }
-                $scope.loading = 0;
+            resolveRepository.getResolvedVariables(forceUpdate, $scope.selectedApp, $scope.selectedServer,
+                $scope.selectedOverrides, function (dataContainer) {
+                    if (dataContainer) {
+                        $scope.selectedApp = dataContainer.app;
+                        $scope.selectedServer = dataContainer.server;
+                        $scope.selectedOverrides = dataContainer.overrides;
+                        $scope.resolvedVariables = dataContainer.data.Variables;
+                        $rootScope.setUserMessage("Problems: " + dataContainer.data.NumberOfProblems +
+                            ". " + dataContainer.data.SupplementalStatusMessage)
+                    }
+                    $scope.loading = 0;
             });
         }
 

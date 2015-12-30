@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PrestoCommon.Entities;
+using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Exceptions;
 
 namespace PrestoCommon.Misc
 {
     public static class VariableGroupResolver
     {
-        public static IEnumerable<CustomVariable> Resolve(ApplicationWithOverrideVariableGroup appWithGroup, ApplicationServer server)
+        public static ResolvedVariablesContainer Resolve(ApplicationWithOverrideVariableGroup appWithGroup, ApplicationServer server)
         {
             if (appWithGroup == null) { throw new ArgumentNullException("appWithGroup"); }
             if (server == null) { throw new ArgumentNullException("server"); }
@@ -17,6 +18,7 @@ namespace PrestoCommon.Misc
             int numberOfProblemsFound = 0;
             bool variableFoundMoreThanOnce = false;
             var resolvedCustomVariables = new List<CustomVariable>();
+            string supplementalStatusMessage = string.Empty;
 
             // This is normally set when calling Install(), but since we're not doing that
             // here, set it explicitly.
@@ -49,13 +51,12 @@ namespace PrestoCommon.Misc
                             numberOfProblemsFound++;
                             value = "** NOT FOUND **";
                         }
-                        catch (CustomVariableExistsMoreThanOnceException)
+                        catch (CustomVariableExistsMoreThanOnceException ex)
                         {
                             variableFoundMoreThanOnce = true;
                             numberOfProblemsFound++;
                             value = "** MORE THAN ONE FOUND **";
-                            resolvedCustomVariables.Clear();
-                            break;
+                            supplementalStatusMessage = ex.Message;
                         }
 
                         resolvedCustomVariables.Add(new CustomVariable() { Key = key, Value = value });
@@ -63,7 +64,12 @@ namespace PrestoCommon.Misc
                 }
             }
 
-            return resolvedCustomVariables;
+            var container                       = new ResolvedVariablesContainer();
+            container.NumberOfProblems          = numberOfProblemsFound;
+            container.SupplementalStatusMessage = supplementalStatusMessage;
+            container.Variables                 = resolvedCustomVariables;
+
+            return container;
         }
     }
 }

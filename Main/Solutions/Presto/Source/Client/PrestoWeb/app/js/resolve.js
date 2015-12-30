@@ -100,6 +100,53 @@
         $scope.refresh(true);
     });
 
+    // VARIABLE GROUPS PICKER
+
+    angular.module('myApp.controllers').controller('groupsPickerModalController', function ($scope, $uibModalInstance, uiGridConstants, variableGroupsRepository) {
+        $scope.loading = 1;
+        $scope.groups = null;
+        //$scope.selectedGroups = [];
+
+        $scope.gridGroups = {
+            data: 'groups',
+            multiSelect: true,
+            enableFiltering: true,
+            enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+            selectedItems: $scope.selectedApps,
+            columnDefs: [{ field: 'Name', displayName: 'Variable Group', width: "68%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } }]
+        };
+
+        $scope.refresh = function (forceRefresh) {
+            $scope.loading = 1;
+            // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
+            variableGroupsRepository.getVariableGroups(forceRefresh, function (dataResponse) {
+                $scope.groups = dataResponse;
+                $scope.loading = 0;
+            });
+        };
+
+        // Act on the row selection changing.
+        $scope.gridGroups.onRegisterApi = function (gridApi) {
+            $scope.gridApi = gridApi;
+            //gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            //    console.log(row.entity);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
+            //    $scope.selectedGroups.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+            //    $scope.selectedGroups.push(row.entity);
+            //});
+        };
+
+        $scope.ok = function () {
+            //$uibModalInstance.close($scope.selectedGroups);
+            $uibModalInstance.close($scope.gridApi.selection.getSelectedRows());
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss();
+        };
+
+        $scope.refresh(true);
+    });
+
     // ------------------------------- Resolve Controller -------------------------------
 
     function resolveController($scope, $rootScope, $http, resolveRepository, $uibModal, uiGridConstants) {
@@ -108,6 +155,8 @@
         $scope.selectedServer;
         $scope.resolvedVariables = [];
         $scope.selectedVariables = [];
+        $scope.selectedOverrides = [];
+        $scope.selectedOverridesNames = '';
 
         $scope.gridResolve = {
             data: 'resolvedVariables',
@@ -160,6 +209,28 @@
                 console.log("Server picked", server);
                 $scope.resolvedVariables.length = 0;
                 $scope.selectedServer = server;
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        $scope.pickOverrides = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/variableGroupsPicker.html',
+                controller: 'groupsPickerModalController',
+                size: 'sm',
+                //windowClass: 'modalConfirmationPosition'
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (overrides) {
+                console.log("Group(s) picked", overrides);
+                $scope.resolvedVariables.length = 0;
+                $scope.selectedOverrides = overrides;
+                // Show the list of names to the user.
+                for (var i = 0; i < overrides.length; i++) {
+                    $scope.selectedOverridesNames += overrides[i].Name + " | ";
+                }
             }, function () {
                 // modal dismissed
             });

@@ -8,7 +8,7 @@
         <input type="text" value="{{selectedServer.Name}}" placeholder="Server" class="form-control" style="width:60em; display:inline-block;" />
         <button class="btn btn-default" ng-click="pickServer();" style="display:inline-block;" ng-disabled="loading">...</button>
         <br />
-        <input type="text" value="{{overrides.Name}}" placeholder="Overrides" class="form-control" style="width:60em; display:inline-block;" />
+        <input type="text" value="{{selectedOverridesNames}}" placeholder="Overrides" class="form-control" style="width:60em; display:inline-block;" />
         <button class="btn btn-default" ng-click="pickOverrides();" style="display:inline-block;" ng-disabled="loading">...</button>
     </div>
     <div class="gridFull" ui-grid="gridResolve" ui-grid-selection ui-grid-draggable-rows></div>

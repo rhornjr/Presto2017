@@ -12,6 +12,9 @@
         <button class="btn btn-default" ng-click="pickOverrides();" style="display:inline-block;" ng-disabled="loading">...</button>
     </div>
     <div class="gridFull" ui-grid="gridResolve" ui-grid-selection ui-grid-draggable-rows></div>
+    <div ng-repeat="variable in selectedVariables" class="slide">
+        <pre>{{variable.Key}}<br />{{variable.Value}}</pre>
+    </div>
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="resolve();" ng-disabled="loading">Resolve</button>
     </h2>

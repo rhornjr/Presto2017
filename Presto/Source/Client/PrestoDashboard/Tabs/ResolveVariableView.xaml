@@ -36,7 +36,7 @@
         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource StandardLabel}" Content="Application:"/>
 
         <StackPanel Orientation="Horizontal" Height="25" Grid.Row="0" Grid.Column="1">
-            <TextBox Text="{Binding ApplicationWithGroup.Application.Name}" Width="360" IsEnabled="False"/>
+            <TextBox Text="{Binding ApplicationWithGroup.Application.NameAndVersion, Mode=OneWay}" Width="360" IsEnabled="False"/>
             <Button Content="..." Height="25" Width="25" Command="{Binding SelectApplicationCommand}" />
         </StackPanel>
 

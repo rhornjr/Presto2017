@@ -1,0 +1,18 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">DOS Command</h3>
+</div>
+<div class="modal-body">
+    <input ng-model="task.Description" placeholder="Description" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.XmlPathAndFileName" placeholder="XML Document" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.NodeNamespace" placeholder="NodeNamespace" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.NodeToChange" placeholder="NodeToChange" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.AttributeKey" placeholder="AttributeKey" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.AttributeKeyValue" placeholder="AttributeKeyValue" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.AttributeToChange" placeholder="AttributeToChange" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.AttributeToChangeValue" placeholder="New value" class="form-control" style="width:30em;" /><br />
+    <input type="checkbox" name="" value="">Failure causes all-stop<br>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

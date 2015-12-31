@@ -1,0 +1,14 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">DOS Command</h3>
+</div>
+<div class="modal-body">
+    <input ng-model="task.Description" placeholder="Description" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.SourcePath" placeholder="SourcePath" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.SourceFileName" placeholder="SourceFileName" class="form-control" style="width:30em;" /><br />
+    <input ng-model="task.DestinationPath" placeholder="DestinationPath" class="form-control" style="width:30em;" /><br />
+    <input type="checkbox" name="" value="">Failure causes all-stop<br>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

@@ -6,7 +6,7 @@
 
     // ------------------------------- Modal Controllers -------------------------------
 
-    angular.module('myApp.controllers').controller('taskDosCommandModalController', function ($scope, $uibModalInstance, task) {
+    angular.module('myApp.controllers').controller('taskModalController', function ($scope, $uibModalInstance, task) {
         $scope.task = task;
         
         $scope.ok = function () {
@@ -29,10 +29,6 @@
         $scope.gridOptions = {
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
-            // Note: Enabling rowTemplate (next line) caused the line to not be highlighted when clicked.
-            //       I don't know if rowTemplate is necessary anymore. If we don't notice an issue, just delete it.
-            //rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
             selectedItems: $scope.selectedTasks,
             columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                          { field: 'Description', displayName: 'Description', width: "62%" },
@@ -41,10 +37,6 @@
         };
 
         $scope.gridOptions.onRegisterApi = function (gridApi) {
-            // This caused an error after disabling rowTemplate in the grid above.
-            //gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
-            //    console.log("Dropped", info);
-            //});
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 $scope.selectedTasks.length = 0; // Truncate/clear the array. Yes, this is how it's done.
@@ -60,15 +52,13 @@
         };
 
         $scope.editTask = function() {
-            console.log("Task: ", $scope.selectedTasks[0].PrestoTaskType);
-            // Need to open the right page here, based on the task type (XmlModify, CopyFile, etc.)
-            if ($scope.selectedTasks[0].PrestoTaskType == "DosCommand") { openDosCommand($scope.selectedTasks[0]) }
+            openTask($scope.selectedTasks[0]);
         }
 
-        var openDosCommand = function (dosCommand) {
+        var openTask = function (task) {
             var modalInstance = $uibModal.open({
-                templateUrl: 'partials/taskDosCommand.html',
-                controller: 'taskDosCommandModalController',
+                templateUrl: 'partials/task' + task.PrestoTaskType + '.html',
+                controller: 'taskModalController',
                 size: 'sm',
                 windowClass: 'app-modal-window',
                 resolve: {
@@ -78,14 +68,11 @@
                 }
             });
 
-            modalInstance.result.then(function (dosCommand) {
-                // Since TaskDosCommand is a derived type and the Web API controller accepts the base
+            modalInstance.result.then(function (task) {
+                // Since task is a derived type and the Web API controller accepts the base
                 // type TaskBase, we need to set the $type property on the object so it will deserialize
                 // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
-                dosCommand.$type = 'PrestoCommon.Entities.TaskDosCommand, PrestoCommon';
-
-                console.log("taskDosCommand", dosCommand);
-                console.log("task", $scope.app);
+                task.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
 
                 var config = {
                     url: '/PrestoWeb/api/app/saveApplication',

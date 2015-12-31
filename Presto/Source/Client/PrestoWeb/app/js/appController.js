@@ -20,7 +20,7 @@
 
     // ------------------------------- App Controller -------------------------------
 
-    function appController($scope, $http, $uibModal, $routeParams, uiGridConstants) {
+    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants) {
         $scope.loading = 1;
         $scope.app = null;
         $scope.appId = $routeParams.appId;
@@ -79,7 +79,26 @@
             });
 
             modalInstance.result.then(function (dosCommand) {
+                // Since TaskDosCommand is a derived type and the Web API controller accepts the base
+                // type TaskBase, we need to set the $type property on the object so it will deserialize
+                // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
+                dosCommand.$type = 'PrestoCommon.Entities.TaskDosCommand, PrestoCommon';
+
                 console.log("taskDosCommand", dosCommand);
+                console.log("task", $scope.app);
+
+                var config = {
+                    url: '/PrestoWeb/api/app/saveApplication',
+                    method: 'POST',
+                    data: $scope.app
+                };
+
+                $http(config)
+                    .then(function (response) {
+                        $rootScope.setUserMessage("App saved");
+                    }, function (response) {
+                        console.log(response);
+                    });
             }, function () {
                 // modal dismissed
             });

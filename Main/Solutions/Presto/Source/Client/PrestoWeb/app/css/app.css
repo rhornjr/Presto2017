@@ -17,19 +17,18 @@ h2.myHeader {
 .subHeader { background-color: #4494C9; }
 .footer { background-color: #afb5b8; }
 
-.listHeaderLeft, .listHeaderRight {
+.customLabelLeft, .customLabelRight {
     border-bottom: 1px solid #d4d4d4;
     border-top: 1px solid #d4d4d4;
     border-radius: 5px;
     box-shadow: 3px 3px 3px #ccc;
     font-size: 1em;
-    /*margin: 12px;*/
     padding: 0.3em 1em;    
     display: inline-block;
 }
 
-.listHeaderLeft { color: white; background-color: #4494C9; width: 15em; text-align: right; }
-.listHeaderRight { color: white; background-color: #9FBEB9; width: 45em; text-align: left; }
+.customLabelLeft { color: white; background-color: #4494C9; width: 15em; text-align: right; }
+.customLabelRight { color: white; background-color: #9FBEB9; width: 45em; text-align: left; font-weight: bold; }
 
 .userMessage, .seperator {
     background-color: #7a5a5a;
@@ -72,7 +71,7 @@ div.PageContainer { width:910px }
     height: 500px;
 }
 
-.waitImage {
+.waitImage, .waitImageThin {
     height:64px;
     width:64px;
     margin:0px auto;
@@ -81,6 +80,8 @@ div.PageContainer { width:910px }
     left: 400px;
     top: 150px;
 }
+
+.waitImageThin { left:200px; }
 
 .red {
     color: red; 

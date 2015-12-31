@@ -31,12 +31,14 @@ h2.myHeader {
 .listHeaderLeft { color: white; background-color: #4494C9; width: 15em; text-align: right; }
 .listHeaderRight { color: white; background-color: #9FBEB9; width: 45em; text-align: left; }
 
-.userMessage {
+.userMessage, .seperator {
     background-color: #7a5a5a;
     font-size: 1.0em !important;
     text-align: left !important;
     text-shadow: none !important;
 }
+
+.seperator { background-color: #4494C9 }
 
 div.OneOfOne { height:550px; overflow:auto }
 div.OneOfTwo { height:300px; overflow:auto }
@@ -44,18 +46,21 @@ div.TwoOfTwo { height:250px; overflow:auto }
 div.PageContainer { width:910px }
 
 .gridLessThanHalf {
+    margin: 0 auto; /* So the grid is centered */
     border: 1px solid rgb(212,212,212);
     width: 890px; 
     height: 240px;
 }
 
 .gridHalf {
+    margin: 0 auto; /* So the grid is centered */
     border: 1px solid rgb(212,212,212);
     width: 890px; 
     height: 290px;
 }
 
 .gridFull {
+    margin: 0 auto; /* So the grid is centered */
     border: 1px solid rgb(212,212,212);
     width: 890px; 
     height: 500px;

@@ -4,6 +4,7 @@
     <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection></div>
     <h2 class="myHeader mainHeader" ng-hide="loading">Installation Details</h2>
     <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection></div>
+    <h2 class="myHeader seperator"></h2>
     <div ng-repeat="detail in selectedDetails" class="slide">
         <!-- Use the pre tag so newline characters are honored. -->
         <pre>Details: {{detail.Details}}</pre>

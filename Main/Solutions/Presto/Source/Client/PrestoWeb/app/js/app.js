@@ -51,6 +51,12 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
                     data = result.data;
                     $rootScope.setUserMessage("Application list refreshed");
                     callbackFunction(data);
+                }, function (response) {
+                    console.log(response);
+                    if (response.status == 403) {
+                        $rootScope.setUserMessage("Unauthorized");
+                        callbackFunction(null);
+                    }
                 });
         }
     }

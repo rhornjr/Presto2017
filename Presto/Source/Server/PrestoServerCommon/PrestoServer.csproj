@@ -90,6 +90,7 @@
     <Compile Include="Data\Interfaces\IGenericData.cs" />
     <Compile Include="Data\Interfaces\IGlobalSettingData.cs" />
     <Compile Include="Data\Interfaces\IInstallationEnvironmentData.cs" />
+    <Compile Include="Data\Interfaces\IInstallationsPendingData.cs" />
     <Compile Include="Data\Interfaces\IInstallationSummaryData.cs" />
     <Compile Include="Data\Interfaces\ILogMessageData.cs" />
     <Compile Include="Data\Interfaces\IPingRequestData.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryStartUtc.cs" />
     <Compile Include="Data\RavenDb\Indexes\LogMessageCreatedTime.cs" />
     <Compile Include="Data\RavenDb\InstallationEnvironmentData.cs" />
+    <Compile Include="Data\RavenDb\InstallationsPendingData.cs" />
     <Compile Include="Data\RavenDb\InstallationSummaryData.cs" />
     <Compile Include="Data\RavenDb\LogMessageData.cs" />
     <Compile Include="Data\RavenDb\PingRequestData.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />
     <Compile Include="Logic\GlobalSettingLogic.cs" />
     <Compile Include="Logic\InstallationEnvironmentLogic.cs" />
+    <Compile Include="Logic\InstallationsPendingLogic.cs" />
     <Compile Include="Logic\InstallationSummaryLogic.cs" />
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\LogMessageLogic.cs" />

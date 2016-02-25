@@ -17,24 +17,25 @@ namespace PrestoServer
 
         public static void RegisterRavenDataClasses()
         {
-            PrestoServerUtility.Container.RegisterType<IApplicationData, ApplicationData>();
-            PrestoServerUtility.Container.RegisterType<IApplicationServerData, ApplicationServerData>();
-            PrestoServerUtility.Container.RegisterType<ICustomVariableGroupData, CustomVariableGroupData>();
-            PrestoServerUtility.Container.RegisterType<IGenericData, GenericData>();
-            PrestoServerUtility.Container.RegisterType<IGlobalSettingData, GlobalSettingData>();
-            PrestoServerUtility.Container.RegisterType<IInstallationSummaryData, InstallationSummaryData>();
-            PrestoServerUtility.Container.RegisterType<ILogMessageData, LogMessageData>();
-            PrestoServerUtility.Container.RegisterType<IPingRequestData, PingRequestData>();
-            PrestoServerUtility.Container.RegisterType<IPingResponseData, PingResponseData>();
-            PrestoServerUtility.Container.RegisterType<IInstallationEnvironmentData, InstallationEnvironmentData>();
-            PrestoServerUtility.Container.RegisterType<ISecurityData, SecurityData>();
+            Container.RegisterType<IApplicationData, ApplicationData>();
+            Container.RegisterType<IApplicationServerData, ApplicationServerData>();
+            Container.RegisterType<ICustomVariableGroupData, CustomVariableGroupData>();
+            Container.RegisterType<IGenericData, GenericData>();
+            Container.RegisterType<IGlobalSettingData, GlobalSettingData>();
+            Container.RegisterType<IInstallationSummaryData, InstallationSummaryData>();
+            Container.RegisterType<IInstallationsPendingData, InstallationsPendingData>();
+            Container.RegisterType<ILogMessageData, LogMessageData>();
+            Container.RegisterType<IPingRequestData, PingRequestData>();
+            Container.RegisterType<IPingResponseData, PingResponseData>();
+            Container.RegisterType<IInstallationEnvironmentData, InstallationEnvironmentData>();
+            Container.RegisterType<ISecurityData, SecurityData>();
         }
 
         public static void RegisterRealClasses()
         {
             // This is so we can mock the actual app installations. When running test code, we don't
             // want an app to actually be installed.
-            PrestoServerUtility.Container.RegisterType<IAppInstaller, AppInstaller>();
+            Container.RegisterType<IAppInstaller, AppInstaller>();
         }
     }
 }

@@ -191,6 +191,26 @@ app.factory('installsRepository', ['$http', '$rootScope', function ($http, $root
     }
 }]);
 
+app.factory('pendingInstallsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
+    var data;
+
+    return {
+        getPending: function (forceRefresh, callbackFunction) {
+            if (data && !forceRefresh) {
+                callbackFunction(data);
+                return;
+                }
+
+            $http.get('/PrestoWeb/api/pendingInstalls/')
+                    .then(function (result) {
+                        data = result.data;
+                        $rootScope.setUserMessage("Pending installs list refreshed");
+                    callbackFunction(data);
+                });
+        }
+    }
+}]);
+
 app.factory('pingResponseRepository', ['$http', '$rootScope', function ($http, $rootScope, latestPingRequest) {
     var data;
 

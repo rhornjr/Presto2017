@@ -6,11 +6,22 @@
 
     // ------------------------------- Installs Controller -------------------------------    
 
-    function installsController($scope, $http, installsRepository) {
+    function installsController($scope, $http, installsRepository, pendingInstallsRepository) {
         $scope.loading = 1;
         $scope.installs = null;
+        $scope.pending = null;
         $scope.selectedSummaries = [];
         $scope.selectedDetails = [];
+
+        // ToDo: This grid should normally have nothing in it, so we should be able to collapse it.
+        $scope.gridPending = {
+            data: 'pending',
+            multiSelect: false,
+            enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+            columnDefs: [{ field: 'ApplicationServer.Name', displayName: 'Server', width: "20%", resizable: true },
+                         { field: 'ApplicationWithOverrideGroup.Application.Name', displayName: 'App', width: "35%" },
+                         { field: 'ApplicationWithOverrideGroup.CustomVariableGroupNames', displayName: 'Groups', width: "43%" }]                         
+        };
 
         $scope.gridOptions = {
             data: 'installs',
@@ -55,11 +66,27 @@
 
         $scope.refresh = function (forceRefresh) {
             $scope.loading = 1;
+
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
             installsRepository.getInstalls(forceRefresh, function (dataResponse) {
                 $scope.installs = dataResponse;
-                $scope.loading = 0;
             });
+
+            pendingInstallsRepository.getPending(forceRefresh, function (dataResponse) {
+                // Group names aren't showing. I believe it's because it's a calculated field and that doesn't run in a browser.
+                // So let's at least show the first one here.
+                for (var i = 0; i < dataResponse.length; i++)
+                {
+                    if (dataResponse[i].ApplicationWithOverrideGroup.CustomVariableGroups
+                        && dataResponse[i].ApplicationWithOverrideGroup.CustomVariableGroups.length > 0) {
+                        dataResponse[i].ApplicationWithOverrideGroup.CustomVariableGroupNames =
+                            dataResponse[i].ApplicationWithOverrideGroup.CustomVariableGroups[0].Name + '...';
+                    }
+                }
+                $scope.pending = dataResponse;
+            });
+
+            $scope.loading = 0;
         };
 
         $scope.refresh();

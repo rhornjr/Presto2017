@@ -21,5 +21,8 @@ namespace PrestoCommon.Interfaces
 
         [OperationContract]
         void SaveInstallationSummary(InstallationSummary installationSummary);
+
+        [OperationContract]
+        IEnumerable<ServerForceInstallation> GetPendingInstallations();
     }
 }

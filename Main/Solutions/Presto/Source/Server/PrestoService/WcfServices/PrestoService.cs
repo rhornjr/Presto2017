@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.ServiceModel;
 using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
@@ -12,7 +13,6 @@ using PrestoServer.Logic;
 using PrestoWcfService.DtoMapping;
 using Xanico.Core.Security;
 using Xanico.Core.Wcf;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PrestoWcfService.WcfServices
 {
@@ -209,6 +209,11 @@ namespace PrestoWcfService.WcfServices
         public void SaveInstallationSummary(InstallationSummary installationSummary)
         {
             Invoke(() => InstallationSummaryLogic.Save(installationSummary));
+        }
+
+        public IEnumerable<ServerForceInstallation> GetPendingInstallations()
+        {
+            return Invoke(() => InstallationsPendingLogic.GetPending());
         }
 
         #endregion

@@ -102,6 +102,7 @@
     <Compile Include="Data\RavenDb\DataAccessLayerBase.cs" />
     <Compile Include="Data\RavenDb\GenericData.cs" />
     <Compile Include="Data\RavenDb\GlobalSettingData.cs" />
+    <Compile Include="Data\RavenDb\Indexes\ApplicationArchived.cs" />
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryAppServerStart.cs" />
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryAppServerStart2.cs" />
     <Compile Include="Data\RavenDb\Indexes\InstallationSummaryAppStart.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Data\RavenDb\PingRequestData.cs" />
     <Compile Include="Data\RavenDb\PingResponseData.cs" />
     <Compile Include="Data\RavenDb\SecurityData.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\ApplicationLogic.cs" />
     <Compile Include="Logic\ApplicationServerLogic.cs" />
     <Compile Include="Logic\CustomVariableGroupLogic.cs" />

@@ -7,6 +7,8 @@ using PrestoCommon.EntityHelperClasses;
 using PrestoServer.Data.Interfaces;
 using Raven.Client;
 using Raven.Client.Linq;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace PrestoServer.Data.RavenDb
 {
@@ -36,16 +38,26 @@ namespace PrestoServer.Data.RavenDb
                 //       property was added after all of the other properties. It won't exist
                 //       for all apps, so we can't query by that property.
                 //       http://stackoverflow.com/a/11644645/279516
+                // Actually, this would work now because we're using a new Presto DB that started
+                // in 2014. The Archived property was added back in 2012. So it will now exist for
+                // all documents.
                 var appsNotArchived = apps.Where(x => x.Archived != true);
                 foreach (Application app in appsNotArchived) { HydrateApplication(app); }
                 return appsNotArchived;
             });
         }
 
-        public IEnumerable<Application> GetAllSlim()
+        public IEnumerable<Application> GetAllSlim(bool includeArchivedApps = false)
         {
+            Expression<Func<Application, bool>> whereClause = x => x.Archived != true; // default is non-archived apps
+            if (includeArchivedApps == true)
+            {
+                whereClause = _ => true; // return everything
+            }
+
             IEnumerable<Application> apps = QueryAndSetEtags(session =>
                     session.Query<Application>()
+                    .Where(whereClause)
                     .Take(int.MaxValue))
                     .AsEnumerable().Cast<Application>();
 

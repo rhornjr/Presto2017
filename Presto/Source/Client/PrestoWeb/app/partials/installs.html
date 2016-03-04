@@ -1,6 +1,10 @@
 ﻿<div id="container" class="PageContainer">
-    <h2 class="myHeader mainHeader">Pending</h2>
-    <div class="gridHalf" ui-grid="gridPending" ui-grid-selection></div>
+    <uib-accordion>
+        <uib-accordion-group heading="Pending">
+            <h2 class="myHeader mainHeader">Pending</h2>
+            <div class="gridHalf" ui-grid="gridPending" ui-grid-selection></div>
+        </uib-accordion-group>
+    </uib-accordion>
     <h2 class="myHeader mainHeader">Installations</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage"/>
     <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection></div>

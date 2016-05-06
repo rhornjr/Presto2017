@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -90,11 +91,18 @@ namespace PrestoServer.Data.RavenDb
 
         private static void SendEmailWarningIfTooManySessionRequests(int numberOfSessionRequests)
         {
-            if (_session.Advanced.NumberOfRequests <= 10) { return; }
+            int numberOfDbSessionRequestsToProduceWarning = 11; // default if nothing in config
+            string requestsAsString = ConfigurationManager.AppSettings["numberOfDbSessionRequestsToProduceWarning"];
+            if (!string.IsNullOrWhiteSpace(requestsAsString))
+            {
+                numberOfDbSessionRequestsToProduceWarning =
+                    Convert.ToInt32(requestsAsString, CultureInfo.InvariantCulture);
+            }
 
-            const string subject = "Presto DB Activity Warning - High Number of Session Requests";
+            if (_session.Advanced.NumberOfRequests < numberOfDbSessionRequestsToProduceWarning) { return; }
 
-            string emailBody = string.Format(CultureInfo.CurrentCulture,
+            string message = string.Format(CultureInfo.CurrentCulture,
+                "** Presto DB Activity Warning - High Number of Session Requests **" + Environment.NewLine +
                 "The number of session requests for RavenDB should ideally be 1. Acvitity just occurred where " +
                 "the number of session requests was {0}. A change was made on 28-Nov-2014 that causes some session " +
                 "requests to be around 5. This happened because we're hydrating the tasks within an application. " +
@@ -106,7 +114,10 @@ namespace PrestoServer.Data.RavenDb
                 numberOfSessionRequests,
                 Environment.StackTrace);
 
-            CommonUtility.SendEmail(subject, emailBody);
+            // Note: I'm using an exception here because the exception processing includes things
+            //       like sending an email every x seconds, recording the server name, etc.
+            var ex = new InvalidOperationException(message);
+            CommonUtility.ProcessExceptionWithLimits(ex);
         }
 
         /// <summary>

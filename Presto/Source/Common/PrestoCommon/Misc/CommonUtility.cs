@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.Practices.Unity;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
@@ -16,6 +17,7 @@ namespace PrestoCommon.Misc
 {
     public static class CommonUtility
     {
+        private static DateTime _lastEmailSent;
         private static UnityContainer _container = new UnityContainer();
         private static string _signalRAddress;
 
@@ -110,6 +112,45 @@ namespace PrestoCommon.Misc
                 }
                 throw;
             }
+        }
+
+        public static void ProcessExceptionWithLimits(Exception ex, string source = "")
+        {
+            // If a source wasn't passed in, but it's in the config file, use the value from the config file.
+            string sourceFromConfig = ConfigurationManager.AppSettings["processName"];
+            if (string.IsNullOrWhiteSpace(source) && !string.IsNullOrWhiteSpace(sourceFromConfig))
+            {
+                source = sourceFromConfig;
+            }
+
+            // Don't email timeout exceptions. They occur too frequently (in Malaysia) to send emails.
+            // ThreadAbortException happens when the PTR gets updated when updating the manifest file.
+            if (ex is TimeoutException || ex is ThreadAbortException)
+            {
+                ProcessException(ex, source, false);  // log only
+                return;
+            }
+
+            int maxExceptionEmailFrequencyInSeconds = 360; // default if no app setting exists
+            string maxFrequencyAsString = ConfigurationManager.AppSettings["maxExceptionEmailFrequencyInSeconds"];
+            if (!string.IsNullOrWhiteSpace(maxFrequencyAsString))
+            {
+                maxExceptionEmailFrequencyInSeconds =
+                    Convert.ToInt32(maxFrequencyAsString, CultureInfo.InvariantCulture);
+            }
+
+            bool shouldSendEmail = true;
+            if (DateTime.Now.Subtract(_lastEmailSent).TotalSeconds < maxExceptionEmailFrequencyInSeconds)
+            {
+                shouldSendEmail = false;
+            }
+
+            if (shouldSendEmail) { _lastEmailSent = DateTime.Now; }
+
+            // We always want to process the exception so it gets logged. We don't always want to
+            // send an email so poor Bob doesn't get flooded with 800,000 of them when the servers
+            // in Malaysia start timing out.
+            ProcessException(ex, source, shouldSendEmail);
         }
 
         /// <summary>

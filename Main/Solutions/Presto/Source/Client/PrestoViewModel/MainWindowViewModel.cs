@@ -37,7 +37,7 @@ namespace PrestoViewModel
                 {
                     this._userMessages.Add(string.Format(CultureInfo.CurrentCulture,
                         "{0}: {1}",
-                        DateTime.Now.ToString(),
+                        DateTime.Now.ToString(CultureInfo.CurrentCulture),
                         message));
 
                     // If we've exceeded our maximum number of messages to display, remove the first item.

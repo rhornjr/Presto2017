@@ -10,6 +10,7 @@ namespace PrestoCommon.Wcf
     public class PrestoWcf<TService> : IDisposable where TService : class
     {
         private WcfChannelFactory<TService> _channelFactory;
+        private string _prestoServiceAddress = string.Empty;
 
         /// <summary>
         /// Helper property to make Presto WCF calls
@@ -33,6 +34,16 @@ namespace PrestoCommon.Wcf
                 // service. This is done so that the proxy can retry on communication failures.            
                 return _channelFactory.CreateChannel(GetEndpointAddress());
             }
+        }
+
+        public PrestoWcf()
+        {
+            this._prestoServiceAddress = ConfigurationManager.AppSettings["prestoServiceAddress"];
+        }
+
+        public PrestoWcf(string prestoServiceAddress)
+        {
+            this._prestoServiceAddress = prestoServiceAddress;
         }
 
         /// <summary>
@@ -59,11 +70,11 @@ namespace PrestoCommon.Wcf
             }
         }
 
-        private static EndpointAddress GetEndpointAddress()
+        private EndpointAddress GetEndpointAddress()
         {
             // We need to use a dummy SPN here because we were getting "target principal name is incorrect" errors.
             // http://inaspiralarray.blogspot.com/2013/05/wcf-security-issue-target-principal.html
-            var uri              = new Uri(ConfigurationManager.AppSettings["prestoServiceAddress"]);
+            var uri              = new Uri(this._prestoServiceAddress);
             var endpointIdentity = EndpointIdentity.CreateSpnIdentity(string.Empty);
 
             return new EndpointAddress(uri, endpointIdentity);

@@ -26,6 +26,50 @@
         $scope.appId = $routeParams.appId;
         $scope.selectedTasks = [];
 
+        // ToDo: After moving tasks, need to enable a save button. The tasks don't save as they're moved.
+
+        $scope.moveTaskDown = function () {
+            moveTask(1);
+        }
+
+        $scope.moveTaskUp = function () {
+            moveTask(-1);
+        }
+
+        var moveTask = function (multiplier) {
+            // The way to make sense of this method is to think of the multiplier as a 1, and that's
+            // what works for moving a task down. Instead of trying to make sense of things like
+            // "-= (1 * multiplier)" just realize that a multiplier of -1 does the opposite of 1.
+            // It just works.
+            // Get the index of the selected task.
+            var selectedIndex = 0;
+            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                if ($scope.gridOptions.data[i].Sequence == $scope.selectedTasks[0].Sequence) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+
+            // Don't allow a move up if we're dealing with the top-most item already.
+            if (selectedIndex == 0 && multiplier == -1) {
+                return;
+            }
+
+            // Don't allow a move down if we're dealing with the bottom-most item already.
+            if (selectedIndex == $scope.gridOptions.data.length - 1 && multiplier == 1) {
+                return;
+            }
+
+            var taskToMove = $scope.gridOptions.data[selectedIndex];
+            var taskToSwap = $scope.gridOptions.data[selectedIndex + (1 * multiplier)];
+
+            taskToMove.Sequence += (1 * multiplier);
+            taskToSwap.Sequence -= (1 * multiplier);
+
+            $scope.gridOptions.data[selectedIndex] = taskToSwap;
+            $scope.gridOptions.data[selectedIndex + (1 * multiplier)] = taskToMove;
+        }
+
         $scope.gridOptions = {
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

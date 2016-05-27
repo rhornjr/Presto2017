@@ -114,6 +114,7 @@ namespace PrestoCommon.Misc
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification="Tiring overhead")]
         public static void ProcessExceptionWithLimits(Exception ex, string source = "")
         {
             // If a source wasn't passed in, but it's in the config file, use the value from the config file.

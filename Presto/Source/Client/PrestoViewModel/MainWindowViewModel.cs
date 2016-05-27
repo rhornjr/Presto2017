@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Globalization;
 using System.Windows.Threading;
 using PrestoViewModel.Misc;
@@ -15,6 +16,8 @@ namespace PrestoViewModel
 
         public static ViewLoader ViewLoader { get; set; }
 
+        public string MainWindowTitle { get; set; }
+
         public ObservableCollection<string> UserMessages
         {
             get { return this._userMessages; }
@@ -25,6 +28,9 @@ namespace PrestoViewModel
             // Set a reference to this view model so other view models can access it.
             // One reason for this is so that other view models can set a user message.
             ViewModelUtility.MainWindowViewModel = this;
+
+            MainWindowTitle = "Presto Dashboard - " +
+                ConfigurationManager.AppSettings["prestoServiceAddress"];
         }
 
         public void AddUserMessage(string message)

@@ -52,24 +52,36 @@
                 }
             }
 
+            var taskToMove = $scope.gridOptions.data[selectedIndex];
+
             // Don't allow a move up if we're dealing with the top-most item already.
-            if (selectedIndex == 0 && multiplier == -1) {
+            if (taskToMove.Sequence == 1 && multiplier == - 1) {
                 return;
             }
 
             // Don't allow a move down if we're dealing with the bottom-most item already.
-            if (selectedIndex == $scope.gridOptions.data.length - 1 && multiplier == 1) {
+            if (taskToMove.Sequence == $scope.gridOptions.data.length && multiplier == 1) {
                 return;
             }
 
-            var taskToMove = $scope.gridOptions.data[selectedIndex];
-            var taskToSwap = $scope.gridOptions.data[selectedIndex + (1 * multiplier)];
+            // Get the sequence of the task to swap.
+            var sequenceOfTaskToSwap = taskToMove.Sequence + (1 * multiplier);
+
+            var indexOfTaskToSwap = 0;
+            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                if ($scope.gridOptions.data[i].Sequence == sequenceOfTaskToSwap) {
+                    indexOfTaskToSwap = i;
+                    break;
+                }
+            }
+            
+            var taskToSwap = $scope.gridOptions.data[indexOfTaskToSwap];
 
             taskToMove.Sequence += (1 * multiplier);
             taskToSwap.Sequence -= (1 * multiplier);
 
             $scope.gridOptions.data[selectedIndex] = taskToSwap;
-            $scope.gridOptions.data[selectedIndex + (1 * multiplier)] = taskToMove;
+            $scope.gridOptions.data[indexOfTaskToSwap] = taskToMove;
         }
 
         // ---------------------------------------------------------------------------------------------------
@@ -145,11 +157,16 @@
                 data: $scope.app
             };
 
+            $scope.loading = 1;
             $http(config)
                 .then(function (response) {
+                    $scope.app = response.data;
+                    $scope.gridOptions.data = response.data.Tasks;
+                    $scope.loading = 0;
                     $rootScope.setUserMessage("App saved");
                     $scope.isDirty = false;
                 }, function (response) {
+                    $scope.loading = 0;
                     console.log(response);
                 });
         }
@@ -157,10 +174,10 @@
         // ---------------------------------------------------------------------------------------------------
 
         $http.get('/PrestoWeb/api/app/' + $scope.appId)
-            .then(function (result) {
-                $scope.app = result.data;
+            .then(function (response) {
+                $scope.app = response.data;
                 $scope.loading = 0;
-                $scope.gridOptions.data = result.data.Tasks;
+                $scope.gridOptions.data = response.data.Tasks;
             },
             function () {
                 $scope.loading = 0;

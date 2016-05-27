@@ -26,15 +26,17 @@
         $scope.appId = $routeParams.appId;
         $scope.selectedTasks = [];
 
-        // ToDo: After moving tasks, need to enable a save button. The tasks don't save as they're moved.
-
         $scope.moveTaskDown = function () {
             moveTask(1);
+            $scope.isDirty = true;
         }
 
         $scope.moveTaskUp = function () {
             moveTask(-1);
+            $scope.isDirty = true;
         }
+
+        // ---------------------------------------------------------------------------------------------------
 
         var moveTask = function (multiplier) {
             // The way to make sense of this method is to think of the multiplier as a 1, and that's
@@ -70,6 +72,8 @@
             $scope.gridOptions.data[selectedIndex + (1 * multiplier)] = taskToMove;
         }
 
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.gridOptions = {
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
@@ -80,6 +84,8 @@
                          { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]
         };
 
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.gridOptions.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -88,6 +94,8 @@
             });
         };
 
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.gridOptions2 = {
             data: 'app.CustomVariableGroups',
             multiSelect: false,
@@ -95,9 +103,13 @@
             columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
         };
 
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.editTask = function() {
             openTask($scope.selectedTasks[0]);
         }
+
+        // ---------------------------------------------------------------------------------------------------
 
         var openTask = function (task) {
             var modalInstance = $uibModal.open({
@@ -118,22 +130,31 @@
                 // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
                 task.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
 
-                var config = {
-                    url: '/PrestoWeb/api/app/saveApplication',
-                    method: 'POST',
-                    data: $scope.app
-                };
-
-                $http(config)
-                    .then(function (response) {
-                        $rootScope.setUserMessage("App saved");
-                    }, function (response) {
-                        console.log(response);
-                    });
+                saveApplication();
             }, function () {
                 // modal dismissed
             });
         }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.saveApplication = function () {
+            var config = {
+                url: '/PrestoWeb/api/app/saveApplication',
+                method: 'POST',
+                data: $scope.app
+            };
+
+            $http(config)
+                .then(function (response) {
+                    $rootScope.setUserMessage("App saved");
+                    $scope.isDirty = false;
+                }, function (response) {
+                    console.log(response);
+                });
+        }
+        
+        // ---------------------------------------------------------------------------------------------------
 
         $http.get('/PrestoWeb/api/app/' + $scope.appId)
             .then(function (result) {

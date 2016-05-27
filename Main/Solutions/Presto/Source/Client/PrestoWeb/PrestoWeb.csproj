@@ -596,6 +596,7 @@
     <Content Include="app\bower_components\angular-bootstrap\README.md" />
     <None Include="Properties\PublishProfiles\PrestoWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\FileSaver.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />

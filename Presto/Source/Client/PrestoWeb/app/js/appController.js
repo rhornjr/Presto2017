@@ -86,6 +86,29 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.exportTasks = function () {
+            // ToDo: Have this call return actual file as string of exported tasks.
+            var config = {
+                url: '/PrestoWeb/api/app/getTaskExportFileContents',
+                method: 'GET',
+                responseType: 'blob'
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    // http://stackoverflow.com/a/33635761/279516
+                    var blob = new Blob([response.data], { type: "application/octet-stream" });
+                    saveAs(blob, 'snuh.txt');
+                }, function (response) {
+                        $scope.loading = 0;
+                        console.log(response);
+                    });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.gridOptions = {
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

@@ -28,5 +28,12 @@ namespace PrestoWeb.Controllers
                 return prestoWcf.Service.SaveApplication(application);
             }
         }
+
+        [AcceptVerbs("GET")]
+        [Route("api/app/getTaskExportFileContents")]
+        public string GetTaskExportFileContents()
+        {
+            return "snuh";
+        }
     }
 }

@@ -87,11 +87,11 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.exportTasks = function () {
-            // ToDo: Have this call return actual file as string of exported tasks.
             var config = {
                 url: '/PrestoWeb/api/app/getTaskExportFileContents',
-                method: 'GET',
-                responseType: 'blob'
+                method: 'POST',
+                responseType: 'blob',
+                data: $scope.selectedTasks
             };
 
             $scope.loading = 1;

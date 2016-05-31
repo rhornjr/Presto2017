@@ -20,7 +20,7 @@
 
     // ------------------------------- App Controller -------------------------------
 
-    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants) {
+    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants, showInfoModal) {
         $scope.loading = 1;
         $scope.app = null;
         $scope.appId = $routeParams.appId;
@@ -90,7 +90,6 @@
             var config = {
                 url: '/PrestoWeb/api/app/getTaskExportFileContents',
                 method: 'POST',
-                responseType: 'blob',
                 data: $scope.selectedTasks
             };
 
@@ -99,10 +98,11 @@
                 .then(function (response) {
                     $scope.loading = 0;
                     // http://stackoverflow.com/a/33635761/279516
-                    var blob = new Blob([response.data], { type: "application/octet-stream" });
+                    var blob = new Blob([response.data], { type: "text/plain" });
                     saveAs(blob, 'snuh.txt');
                 }, function (response) {
                         $scope.loading = 0;
+                        showInfoModal.show(response.statusText, response.data);
                         console.log(response);
                     });
         }

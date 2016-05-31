@@ -32,6 +32,41 @@ app.run(function ($rootScope) {
         });
     });
 
+// ------------------------------- Info Modal Controller -------------------------------
+
+angular.module('myApp.controllers').controller('infoController', function ($scope, $uibModalInstance, title, message) {
+    $scope.title = title;
+    $scope.message = message
+    $scope.ok = function () {
+        $uibModalInstance.close();
+    };
+});
+
+// --------------------------------------------------------------------------------------
+
+app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($http, $rootScope, $uibModal) {
+    return {
+        show: function (title, message) {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/infoModal.html',
+                controller: 'infoController',
+                size: 'sm',
+                windowClass: 'app-modal-window',
+                resolve: {
+                    title: function () {
+                        return title;
+                    },
+                    message: function () {
+                        return message;
+                    }
+                }
+            });
+        }
+    }
+}]);
+
+// --------------------------------------------------------------------------------------
+
 app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
     // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.

@@ -110,8 +110,11 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.gridOptions = {
-            multiSelect: false,
+            multiSelect: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+            modifierKeysToMultiSelect: false, // allow shift-click to select multiple rows at once
+            enableRowSelection: true,
+            enableFullRowSelection: true,
             selectedItems: $scope.selectedTasks,
             columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                          { field: 'Description', displayName: 'Description', width: "62%" },

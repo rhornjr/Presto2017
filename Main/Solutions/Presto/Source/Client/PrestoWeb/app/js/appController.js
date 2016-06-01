@@ -110,25 +110,28 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.gridOptions = {
-            multiSelect: true,
+            //multiSelect: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            modifierKeysToMultiSelect: false, // allow shift-click to select multiple rows at once
             enableRowSelection: true,
             enableFullRowSelection: true,
             selectedItems: $scope.selectedTasks,
             columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                          { field: 'Description', displayName: 'Description', width: "62%" },
                          { field: 'PrestoTaskType', displayName: 'Type', width: "16%" },
-                         { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]
+                         { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]            
         };
+
+        // Online demo shows setting this after defining the columns. Don't know why.
+        $scope.gridOptions.multiSelect = true;
 
         // ---------------------------------------------------------------------------------------------------
 
         $scope.gridOptions.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
+            $scope.gridApi.selection.setModifierKeysToMultiSelect(true); // Allow ctrl-click or shift-click to select multiple rows.
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                $scope.selectedTasks.length = 0; // Truncate/clear the array. Yes, this is how it's done.
-                $scope.selectedTasks.push(row.entity);
+                // Assign the selectred rows to our tasks variable.
+                $scope.selectedTasks = gridApi.selection.getSelectedRows();
             });
         };
 

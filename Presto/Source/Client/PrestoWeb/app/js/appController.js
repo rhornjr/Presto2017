@@ -109,6 +109,51 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.importTasks = function (fileContents) {
+            if (!fileContents) { return; }
+            console.log(fileContents);
+            var importedTasks = fileContents;
+
+            var x2js = new X2JS();
+            var importedTasks = x2js.xml_str2json(fileContents);
+
+            console.log('Imported: ', importedTasks);
+            console.log('Selected: ', $scope.selectedTasks);
+
+            var importedCount = importedTasks.ArrayOfTaskBase._items.TaskBase.length;
+            if (importedTasks && importedCount > 0) {
+                for (var i = 0; i < importedCount; i++) {
+                    if (!importedTasks.ArrayOfTaskBase._items.TaskBase[i].Description) {
+                        // If there is no Description property, it's a null object. Don't include it.
+                        continue;
+                    }
+                    console.log('Description: ', importedTasks.ArrayOfTaskBase._items.TaskBase[i].Description);
+                    $scope.app.Tasks.push(importedTasks.ArrayOfTaskBase._items.TaskBase[i]);
+                }
+            }
+
+            //var config = {
+            //    url: '/PrestoWeb/api/app/getTaskExportFileContents',
+            //    method: 'POST',
+            //    data: $scope.selectedTasks
+            //};
+
+            //$scope.loading = 1;
+            //$http(config)
+            //    .then(function (response) {
+            //        $scope.loading = 0;
+            //        // http://stackoverflow.com/a/33635761/279516
+            //        var blob = new Blob([response.data], { type: "text/plain" });
+            //        saveAs(blob, 'snuh.txt');
+            //    }, function (response) {
+            //        $scope.loading = 0;
+            //        showInfoModal.show(response.statusText, response.data);
+            //        console.log(response);
+            //    });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.gridOptions = {
             //multiSelect: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

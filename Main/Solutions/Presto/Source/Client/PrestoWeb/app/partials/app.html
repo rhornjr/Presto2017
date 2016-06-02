@@ -13,7 +13,7 @@
         <button class="btn btn-default" ng-click="editTask();" ng-disabled="loading">Edit</button>
         <button class="btn btn-default" ng-click="moveTaskUp();" ng-disabled="loading">^</button>
         <button class="btn btn-default" ng-click="moveTaskDown();" ng-disabled="loading">v</button>
-        <input id="hiddenImport" style="display:none" type="file" on-read-file="importTasks(contents)" ng-click="importTasks();"/>
+        <input id="hiddenImport" style="display:none" type="file" on-read-file="importTasks(contents)"/>
         <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
         <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
         <button class="btn btn-default" ng-click="exportTasks();" ng-disabled="selectedTasks.length == 0 || loading">Export</button>

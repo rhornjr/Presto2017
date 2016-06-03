@@ -111,24 +111,24 @@
 
         $scope.importTasks = function (fileContents) {
             if (!fileContents) { return; }
-            console.log(fileContents);
             var importedTasks = fileContents;
 
             var x2js = new X2JS();
             var importedTasks = x2js.xml_str2json(fileContents);
 
-            console.log('Imported: ', importedTasks);
-            console.log('Selected: ', $scope.selectedTasks);
-
             var importedCount = importedTasks.ArrayOfTaskBase._items.TaskBase.length;
+            var newSequence = $scope.app.Tasks.length + 1;
             if (importedTasks && importedCount > 0) {
                 for (var i = 0; i < importedCount; i++) {
-                    if (!importedTasks.ArrayOfTaskBase._items.TaskBase[i].Description) {
-                        // If there is no Description property, it's a null object. Don't include it.
-                        continue;
+                    var task = importedTasks.ArrayOfTaskBase._items.TaskBase[i];
+                    if (!task.Description) {
+                        continue; // If there is no Description property, it's a null object. Don't include it.
                     }
-                    console.log('Description: ', importedTasks.ArrayOfTaskBase._items.TaskBase[i].Description);
-                    $scope.app.Tasks.push(importedTasks.ArrayOfTaskBase._items.TaskBase[i]);
+                    task.Id = null; // new
+                    task.Sequence = newSequence;
+                    task.Description = task.Description.__text;
+                    newSequence++;
+                    $scope.app.Tasks.push(task);
                 }
             }
 

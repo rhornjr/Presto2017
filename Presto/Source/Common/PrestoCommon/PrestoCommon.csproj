@@ -108,6 +108,7 @@
     <Compile Include="DataTransferObjects\AppAndServerAndOverrides.cs" />
     <Compile Include="DataTransferObjects\ApplicationDtoSlim.cs" />
     <Compile Include="DataTransferObjects\ApplicationServerDtoSlim.cs" />
+    <Compile Include="DataTransferObjects\AppAndTasksAsString.cs" />
     <Compile Include="Entities\ActiveDirectoryInfo.cs" />
     <Compile Include="Entities\AdGroupWithRoles.cs" />
     <Compile Include="Entities\Application.cs" />

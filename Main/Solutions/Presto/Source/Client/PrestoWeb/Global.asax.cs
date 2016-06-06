@@ -10,7 +10,7 @@ namespace PrestoWeb
     {
         protected void Application_Start()
         {
-            // Need this for derived objects to serialize correctly when sending as a Web API paremeter
+            // Need this for derived objects to serialize correctly when sending as a Web API parameter
             // that is the base class.
             // The other part of this is setting the $type property on the object. See appController.js
             // for the first use of it: dosCommand.$type.

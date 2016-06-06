@@ -110,46 +110,52 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.importTasks = function (fileContents) {
-            if (!fileContents) { return; }
-            var importedTasks = fileContents;
+            var config = {
+                url: '/PrestoWeb/api/app/importTasks',
+                method: 'POST',
+                data: { application: $scope.app, tasksAsString: fileContents }
+            };
 
-            var x2js = new X2JS();
-            var importedTasks = x2js.xml_str2json(fileContents);
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                }, function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                    console.log(response);
+                });
 
-            var importedCount = importedTasks.ArrayOfTaskBase._items.TaskBase.length;
-            var newSequence = $scope.app.Tasks.length + 1;
-            if (importedTasks && importedCount > 0) {
-                for (var i = 0; i < importedCount; i++) {
-                    var task = importedTasks.ArrayOfTaskBase._items.TaskBase[i];
-                    if (!task.Description) {
-                        continue; // If there is no Description property, it's a null object. Don't include it.
-                    }
-                    task.Id = null; // new
-                    task.Sequence = newSequence;
-                    task.Description = task.Description.__text;
-                    newSequence++;
-                    $scope.app.Tasks.push(task);
-                }
-            }
+            //if (!fileContents) { return; }
+            //var importedTasks = fileContents;
 
-            //var config = {
-            //    url: '/PrestoWeb/api/app/getTaskExportFileContents',
-            //    method: 'POST',
-            //    data: $scope.selectedTasks
-            //};
+            //var x2js = new X2JS();
+            //var importedTasks = x2js.xml_str2json(fileContents);
 
-            //$scope.loading = 1;
-            //$http(config)
-            //    .then(function (response) {
-            //        $scope.loading = 0;
-            //        // http://stackoverflow.com/a/33635761/279516
-            //        var blob = new Blob([response.data], { type: "text/plain" });
-            //        saveAs(blob, 'snuh.txt');
-            //    }, function (response) {
-            //        $scope.loading = 0;
-            //        showInfoModal.show(response.statusText, response.data);
-            //        console.log(response);
-            //    });
+            //var importedCount = importedTasks.ArrayOfTaskBase._items.TaskBase.length;
+            //var newSequence = $scope.app.Tasks.length + 1;
+            //if (importedTasks && importedCount > 0) {
+            //    for (var i = 0; i < importedCount; i++) {
+            //        var task = importedTasks.ArrayOfTaskBase._items.TaskBase[i];
+            //        if (!task.Description) {
+            //            continue; // If there is no Description property, it's a null object. Don't include it.
+            //        }
+            //        var taskToSave = {
+            //            Id: null,
+            //            Sequence: 0,
+            //            Description: '',
+            //            $type: ''
+            //        }
+            //        taskToSave.Id = null; // new
+            //        taskToSave.Sequence = newSequence;
+            //        taskToSave.Description = task.Description.__text;
+            //        taskToSave.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
+            //        newSequence++;
+            //        $scope.app.Tasks.push(taskToSave);
+            //    }
+            //}
+
+            //$scope.saveApplication();
         }
 
         // ---------------------------------------------------------------------------------------------------
@@ -225,6 +231,7 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.saveApplication = function () {
+            console.log('app: ', $scope.app);
             var config = {
                 url: '/PrestoWeb/api/app/saveApplication',
                 method: 'POST',
@@ -242,6 +249,7 @@
                 }, function (response) {
                     $scope.loading = 0;
                     console.log(response);
+                    showInfoModal.show(response.statusText, response.data);
                 });
         }
         

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
@@ -48,6 +49,39 @@ namespace PrestoWeb.Controllers
                     var streamAsString = Encoding.UTF8.GetString(memoryStream.ToArray());
                     return streamAsString;
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Exporting Tasks");
+            }
+        }
+
+        [AcceptVerbs("POST")]
+        [Route("api/app/importTasks")]
+        public Application ImportTasks(AppAndTasksAsString appDto)
+        {
+            try
+            {
+                List<TaskBase> importedTasks = new List<TaskBase>();
+
+                using (var memoryStream = new MemoryStream())
+                using (var writer = new StreamWriter(memoryStream))
+                {
+                    writer.Write(appDto.TasksAsString);
+                    var serializer = new NetDataContractSerializer();
+                    writer.Flush();
+                    memoryStream.Position = 0;
+                    importedTasks = serializer.Deserialize(memoryStream) as List<TaskBase>;
+                }
+
+                var app = appDto.Application;
+                foreach (var task in importedTasks)
+                {
+                    app.Tasks.Add(task);
+                }
+
+                return SaveApplication(app);
             }
             catch (Exception ex)
             {

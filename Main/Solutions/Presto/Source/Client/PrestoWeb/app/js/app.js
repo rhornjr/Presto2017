@@ -64,6 +64,20 @@ app.run(function ($rootScope) {
         });
     });
 
+// ------------------------------- Confirmation Modal Controller -------------------------------
+
+angular.module('myApp.controllers').controller('confirmationController', function ($scope, $uibModalInstance, question) {
+    $scope.question = question;
+
+    $scope.yes = function () {
+        $uibModalInstance.close(true);
+    };
+
+    $scope.no = function () {
+        $uibModalInstance.dismiss();
+    };
+});
+
 // ------------------------------- Info Modal Controller -------------------------------
 
 angular.module('myApp.controllers').controller('infoController', function ($scope, $uibModalInstance, title, message) {
@@ -325,6 +339,30 @@ app.factory('pingRequestRepository', ['$http', '$rootScope', function ($http, $r
                 function (result) {
                     alert(result);
                 });
+        }
+    }
+}]);
+
+app.factory('showConfirmationModal', ['$http', '$rootScope', '$uibModal', function ($http, $rootScope, $uibModal) {
+    return {
+        show: function (question, callback) {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/confirmationModal.html',
+                controller: 'confirmationController',
+                size: 'sm',
+                windowClass: 'app-modal-window',
+                resolve: {
+                    question: function () {
+                        return question;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (confirmed) {
+                callback(confirmed);
+            }, function () {
+                callback();
+            });
         }
     }
 }]);

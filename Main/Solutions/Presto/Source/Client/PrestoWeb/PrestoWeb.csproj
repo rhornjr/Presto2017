@@ -484,6 +484,7 @@
     <Content Include="app\partials\appAdd.html" />
     <Content Include="app\partials\appPicker.html" />
     <Content Include="app\partials\apps.html" />
+    <Content Include="app\partials\confirmationModal.html" />
     <Content Include="app\partials\global.html" />
     <Content Include="app\partials\infoModal.html" />
     <Content Include="app\partials\installs.html" />

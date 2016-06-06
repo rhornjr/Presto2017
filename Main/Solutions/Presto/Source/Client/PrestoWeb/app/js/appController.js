@@ -20,7 +20,7 @@
 
     // ------------------------------- App Controller -------------------------------
 
-    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants, showInfoModal) {
+    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants, showInfoModal, showConfirmationModal) {
         $scope.loading = 1;
         $scope.app = null;
         $scope.appId = $routeParams.appId;
@@ -120,42 +120,30 @@
             $http(config)
                 .then(function (response) {
                     $scope.loading = 0;
+                    $scope.app = response.data;
+                    $scope.gridOptions.data = $scope.app.Tasks;
                 }, function (response) {
                     $scope.loading = 0;
                     showInfoModal.show(response.statusText, response.data);
                     console.log(response);
                 });
+        }
+        
+        // ---------------------------------------------------------------------------------------------------
 
-            //if (!fileContents) { return; }
-            //var importedTasks = fileContents;
+        $scope.deleteTasks = function () {
+            showConfirmationModal.show('Delete selected tasks?', deleteTasks);
+        }
 
-            //var x2js = new X2JS();
-            //var importedTasks = x2js.xml_str2json(fileContents);
+        var deleteTasks = function (confirmed) {
+            if (!confirmed) { return; }
 
-            //var importedCount = importedTasks.ArrayOfTaskBase._items.TaskBase.length;
-            //var newSequence = $scope.app.Tasks.length + 1;
-            //if (importedTasks && importedCount > 0) {
-            //    for (var i = 0; i < importedCount; i++) {
-            //        var task = importedTasks.ArrayOfTaskBase._items.TaskBase[i];
-            //        if (!task.Description) {
-            //            continue; // If there is no Description property, it's a null object. Don't include it.
-            //        }
-            //        var taskToSave = {
-            //            Id: null,
-            //            Sequence: 0,
-            //            Description: '',
-            //            $type: ''
-            //        }
-            //        taskToSave.Id = null; // new
-            //        taskToSave.Sequence = newSequence;
-            //        taskToSave.Description = task.Description.__text;
-            //        taskToSave.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
-            //        newSequence++;
-            //        $scope.app.Tasks.push(taskToSave);
-            //    }
-            //}
+            // Remove the selected tasks from the main task list.
+            $scope.app.Tasks = $scope.app.Tasks.filter(function (element) {
+                return $scope.selectedTasks.indexOf(element) < 0;
+            });
 
-            //$scope.saveApplication();
+            $scope.saveApplication();
         }
 
         // ---------------------------------------------------------------------------------------------------
@@ -259,7 +247,7 @@
             .then(function (response) {
                 $scope.app = response.data;
                 $scope.loading = 0;
-                $scope.gridOptions.data = response.data.Tasks;
+                $scope.gridOptions.data = $scope.app.Tasks;
             },
             function () {
                 $scope.loading = 0;

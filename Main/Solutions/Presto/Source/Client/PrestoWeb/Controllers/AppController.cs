@@ -76,9 +76,12 @@ namespace PrestoWeb.Controllers
                 }
 
                 var app = appDto.Application;
+                int newSequenceNumber = app.Tasks.Count + 1;
                 foreach (var task in importedTasks)
                 {
+                    task.Sequence = newSequenceNumber;
                     app.Tasks.Add(task);
+                    newSequenceNumber++;
                 }
 
                 return SaveApplication(app);

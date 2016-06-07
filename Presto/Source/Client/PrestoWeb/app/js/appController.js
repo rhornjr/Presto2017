@@ -4,7 +4,7 @@
 
     angular.module('myApp.controllers').controller('appController', appController);
 
-    // ------------------------------- Modal Controllers -------------------------------
+    // ------------------------------- Task Modal Controller -------------------------------
 
     angular.module('myApp.controllers').controller('taskModalController', function ($scope, $uibModalInstance, task) {
         $scope.task = task;
@@ -17,6 +17,19 @@
             $uibModalInstance.dismiss();
         };
     });
+
+    // ------------------------------- Task Type Selector Modal Controller -------------------------------
+
+    angular.module('myApp.controllers').controller('taskTypeSelectorModalController', function ($scope, $uibModalInstance) {
+        $scope.onTaskSelected = function (taskType) {
+            $uibModalInstance.close(taskType);
+        }
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss();
+        };
+    });
+
 
     // ------------------------------- App Controller -------------------------------
 
@@ -129,6 +142,27 @@
                 });
         }
         
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.addTask = function () {
+            // Show modal for user to pick task type to add
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/taskTypeSelectorModal.html',
+                controller: 'taskTypeSelectorModalController',
+                size: 'sm',
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (taskType) {
+                var task = {
+                    PrestoTaskType: taskType
+                }
+                openTask(task);
+            }, function () {
+                // modal dismissed
+            });
+        }
+
         // ---------------------------------------------------------------------------------------------------
 
         $scope.deleteTasks = function () {

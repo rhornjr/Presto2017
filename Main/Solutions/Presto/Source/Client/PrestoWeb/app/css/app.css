@@ -167,6 +167,13 @@ div.PageContainer { width:910px }
   width: 500px;
 }
 
+.modal-title {
+    background-color:#4494C9;
+    color:#fff;
+    text-align:center;
+    border-radius:5px;
+}
+
 .navBar li {
     display: inline;
 }

@@ -10,6 +10,7 @@
     </div>
 
     <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="addTask();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editTask();" ng-disabled="selectedTasks.length == 0 || loading">Edit</button>
         <button class="btn btn-default" ng-click="deleteTasks();" ng-disabled="selectedTasks.length == 0 || loading">Delete</button>
         <button class="btn btn-default" ng-click="moveTaskUp();" ng-disabled="selectedTasks.length == 0 || loading">^</button>

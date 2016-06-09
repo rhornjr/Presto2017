@@ -6,7 +6,7 @@
     <input ng-model="task.SourcePath" placeholder="SourcePath" class="form-control" style="width:30em;" /><br />
     <input ng-model="task.SourceFileName" placeholder="SourceFileName" class="form-control" style="width:30em;" /><br />
     <input ng-model="task.DestinationPath" placeholder="DestinationPath" class="form-control" style="width:30em;" /><br />
-    <input type="checkbox" name="" value="">Failure causes all-stop<br>
+    <input ng-model="task.FailureCausesAllStop" type="checkbox" ng-true-value="1" ng-false-value="0">Failure causes all-stop<br>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>

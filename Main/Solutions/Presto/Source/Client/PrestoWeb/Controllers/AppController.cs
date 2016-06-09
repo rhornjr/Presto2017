@@ -28,6 +28,7 @@ namespace PrestoWeb.Controllers
             }
         }
 
+        [AcceptVerbs("POST")]
         public Application SaveApplication(Application application)
         {
             using (var prestoWcf = new PrestoWcf<IApplicationService>())

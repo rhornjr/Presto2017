@@ -141,44 +141,6 @@
                     console.log(response);
                 });
         }
-        
-        // ---------------------------------------------------------------------------------------------------
-
-        $scope.addTask = function () {
-            // Show modal for user to pick task type to add
-            var modalInstance = $uibModal.open({
-                templateUrl: 'partials/taskTypeSelectorModal.html',
-                controller: 'taskTypeSelectorModalController',
-                size: 'sm',
-                windowClass: 'app-modal-window'
-            });
-
-            modalInstance.result.then(function (taskType) {
-                var task = {
-                    PrestoTaskType: taskType
-                }
-                openTask(task);
-            }, function () {
-                // modal dismissed
-            });
-        }
-
-        // ---------------------------------------------------------------------------------------------------
-
-        $scope.deleteTasks = function () {
-            showConfirmationModal.show('Delete selected tasks?', deleteTasks);
-        }
-
-        var deleteTasks = function (confirmed) {
-            if (!confirmed) { return; }
-
-            // Remove the selected tasks from the main task list.
-            $scope.app.Tasks = $scope.app.Tasks.filter(function (element) {
-                return $scope.selectedTasks.indexOf(element) < 0;
-            });
-
-            $scope.saveApplication();
-        }
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -219,13 +181,63 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.editTask = function() {
-            openTask($scope.selectedTasks[0]);
+        $scope.addTask = function () {
+            // Show modal for user to pick task type to add
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/taskTypeSelectorModal.html',
+                controller: 'taskTypeSelectorModalController',
+                size: 'sm',
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (taskType) {
+                var task = {
+                    $type: 'PrestoCommon.Entities.Task' + taskType + ', PrestoCommon',
+                    PrestoTaskType: taskType
+                }
+                openTask(task, onAddTaskCompleted);
+            }, function () {
+                // modal dismissed
+            });
         }
 
         // ---------------------------------------------------------------------------------------------------
 
-        var openTask = function (task) {
+        var onAddTaskCompleted = function (task) {
+            $scope.app.Tasks.push(task);
+            $scope.saveApplication();
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.editTask = function() {
+            openTask($scope.selectedTasks[0], onEditTaskCompleted);
+        }
+
+        var onEditTaskCompleted = function (task) {
+            $scope.saveApplication();
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.deleteTasks = function () {
+            showConfirmationModal.show('Delete selected tasks?', deleteTasks);
+        }
+
+        var deleteTasks = function (confirmed) {
+            if (!confirmed) { return; }
+
+            // Remove the selected tasks from the main task list.
+            $scope.app.Tasks = $scope.app.Tasks.filter(function (element) {
+                return $scope.selectedTasks.indexOf(element) < 0;
+            });
+
+            $scope.saveApplication();
+        }        
+
+        // ---------------------------------------------------------------------------------------------------
+
+        var openTask = function (task, onCompleted) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/task' + task.PrestoTaskType + '.html',
                 controller: 'taskModalController',
@@ -233,7 +245,7 @@
                 windowClass: 'app-modal-window',
                 resolve: {
                     task: function () {
-                        return $scope.selectedTasks[0];  // pass data to modal
+                        return task;  // pass data to modal
                     }
                 }
             });
@@ -243,8 +255,10 @@
                 // type TaskBase, we need to set the $type property on the object so it will deserialize
                 // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
                 task.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
-
-                saveApplication();
+                if (!task.Sequence) {
+                    task.Sequence = 500;
+                }
+                onCompleted(task);                
             }, function () {
                 // modal dismissed
             });

@@ -41,12 +41,12 @@
 
         $scope.moveTaskDown = function () {
             moveTask(1);
-            $scope.isDirty = true;
+            $scope.appForm.$dirty = true;
         }
 
         $scope.moveTaskUp = function () {
             moveTask(-1);
-            $scope.isDirty = true;
+            $scope.appForm.$dirty = true;
         }
 
         // ---------------------------------------------------------------------------------------------------
@@ -267,7 +267,6 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.saveApplication = function () {
-            console.log('app: ', $scope.app);
             var config = {
                 url: '/PrestoWeb/api/app/saveApplication',
                 method: 'POST',
@@ -281,7 +280,7 @@
                     $scope.gridOptions.data = response.data.Tasks;
                     $scope.loading = 0;
                     $rootScope.setUserMessage("App saved");
-                    $scope.isDirty = false;
+                    $scope.appForm.$dirty = false;
                 }, function (response) {
                     $scope.loading = 0;
                     console.log(response);
@@ -301,6 +300,11 @@
                 $scope.loading = 0;
                 alert("An error occurred and the app could not be loaded.");
             });
-    }           
 
+        $scope.setIsDirty = function () {
+            // For some reason, the checkbox doesn't cause $dirty to update after the page is reloaded.
+            // So, as a hack, just do it here.
+            $scope.appForm.$dirty = true;
+        }
+    }
 })();

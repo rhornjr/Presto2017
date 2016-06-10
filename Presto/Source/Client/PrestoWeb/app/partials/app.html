@@ -1,14 +1,23 @@
 ﻿<div id="container" class="PageContainer">
     <h2 class="myHeader mainHeader">Application</h2>
-    <input type="text" value="{{app.Name}}" placeholder="Name" class="form-control" style="width:30em" />
-    <input type="text" value="{{app.Version}}" placeholder="Version" class="form-control" style="width:15em" />
-    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" />
-
-    <h2 class="myHeader subHeader">Tasks</h2>
-    <div class="OneOfTwo">
-        <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-draggable-rows></div>
-    </div>
-
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="position:absolute; top:40%; left:30%; z-index:100;" />
+    <form name="appForm">
+        <div class="row">
+            <div class="col-xs-6">
+                <input type="text" ng-model="app.Name" placeholder="Name" class="form-control" style="width:30em; margin-left:12px;" />
+            </div>
+            <div class="col-xs-2">
+                <input type="text" ng-model="app.Version" placeholder="Version" class="form-control" style="width:15em" />
+            </div>
+            <div class="col-xs-3 text-right">
+                <input ng-model="app.Archived" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Archived
+            </div>
+        </div>
+        <h2 class="myHeader subHeader">Tasks</h2>
+        <div class="OneOfTwo">
+            <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-draggable-rows></div>
+        </div>
+    </form>
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="addTask();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editTask();" ng-disabled="selectedTasks.length == 0 || loading">Edit</button>
@@ -19,7 +28,7 @@
         <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
         <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
         <button class="btn btn-default" ng-click="exportTasks();" ng-disabled="selectedTasks.length == 0 || loading">Export</button>
-        <button class="btn btn-default" ng-click="saveApplication();" ng-disabled="loading || !isDirty">Save</button>
+        <button class="btn btn-default" ng-click="saveApplication();" ng-disabled="loading || !appForm.$dirty">Save</button>
     </h2>
 
     <h2 class="myHeader subHeader">Custom Variable Groups</h2>

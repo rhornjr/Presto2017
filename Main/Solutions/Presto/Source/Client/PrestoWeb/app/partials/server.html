@@ -9,11 +9,16 @@
     </div>
     
     <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading">Save</button>
         <button class="btn btn-default" ng-click="install();" ng-disabled="loading">Install</button>
     </h2>
 
     <h2 class="myHeader subHeader">Custom Variable Groups</h2>
     <div class="TwoOfTwo">
-        <div class="gridLessThanHalf" ui-grid="gridOptions2" ui-grid-selection></div>
+        <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection></div>
     </div>
+    <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
+        <button class="btn btn-default" ng-click="deleteGroups();" ng-disabled="selectedGroups.length == 0 || loading">Delete</button>
+    </h2>
 </div>

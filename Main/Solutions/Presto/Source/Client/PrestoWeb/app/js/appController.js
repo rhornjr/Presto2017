@@ -180,7 +180,6 @@
                 templateUrl: 'partials/variableGroupsPicker.html',
                 controller: 'groupsPickerModalController',
                 size: 'sm',
-                //windowClass: 'modalConfirmationPosition'
                 windowClass: 'app-modal-window'
             });
 

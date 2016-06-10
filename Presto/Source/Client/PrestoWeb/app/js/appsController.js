@@ -24,7 +24,7 @@
 
     // ------------------------------- Apps Controller -------------------------------
 
-    function appsController($scope, $rootScope, $modal, $http, appsRepository, $window, uiGridConstants) {
+    function appsController($scope, $rootScope, $uibModal, $http, appsRepository, $window, uiGridConstants) {
         $scope.loading = 1;
         $scope.apps = null;
         $scope.selectedApps = [];
@@ -65,7 +65,7 @@
 
         $scope.addApp = function () {
             console.log("addApp() called.");
-                var modalInstance = $modal.open({
+                var modalInstance = $uibModal.open({
                     templateUrl: 'partials/appAdd.html',
                     controller: 'appAddModalController',
                     size: 'sm',

@@ -6,13 +6,16 @@
 
     // ------------------------------- Server Controller -------------------------------
 
-    function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants) {
+    function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants, $uibModal, showConfirmationModal) {
         $scope.loading = 1;
         $scope.server = null;
         $scope.serverId = $routeParams.serverId;
         $scope.selectedAppsWithGroup = [];
+        $scope.selectedGroups = [];
 
-        $scope.gridOptions = {
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.gridAppsWithGroup = {
             data: 'server.ApplicationsWithOverrideGroup',
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
@@ -23,12 +26,16 @@
                          { field: 'Enabled', displayName: 'Enabled', width: "12%" }]
         };
 
-        $scope.gridOptions2 = {
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.gridGroups = {
             data: 'server.CustomVariableGroups',
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
         };
+
+        // ---------------------------------------------------------------------------------------------------
 
         $http.get('/PrestoWeb/api/server/' + $scope.serverId)
                   .then(function (result) {
@@ -40,8 +47,10 @@
                       alert("An error occurred and the server could not be loaded.");
                   });
 
+        // ---------------------------------------------------------------------------------------------------
+
         // Act on the row selection changing.
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridAppsWithGroup.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
@@ -49,6 +58,62 @@
                 $scope.selectedAppsWithGroup.push(row.entity);
             });
         };
+
+        // ---------------------------------------------------------------------------------------------------
+
+        // Act on the row selection changing.
+        $scope.gridGroups.onRegisterApi = function (gridGroupsApi) {
+            $scope.gridGroupsApi = gridGroupsApi;
+            gridGroupsApi.selection.on.rowSelectionChanged($scope, function (row) {
+                console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
+                $scope.selectedGroups.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+                $scope.selectedGroups.push(row.entity);
+            });
+        };
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.addGroup = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/variableGroupsPicker.html',
+                controller: 'groupsPickerModalController',
+                size: 'sm',
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (overrides) {
+                for (var i = 0; i < overrides.length; i++) {
+                    $scope.server.CustomVariableGroups.push(overrides[i]);
+                }
+                $scope.saveServer();
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.deleteGroups = function () {
+            showConfirmationModal.show('Delete selected groups?', deleteGroups);
+        }
+
+        var deleteGroups = function (confirmed) {
+            if (!confirmed) { return; }
+
+            // Remove the selected items from the main list.
+            $scope.server.CustomVariableGroups = $scope.server.CustomVariableGroups.filter(function (element) {
+                return $scope.selectedGroups.indexOf(element) < 0;
+            });
+
+            $scope.saveServer();
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.saveServer = function () {
+            alert('saveServer() not yet implemented');
+        }
+        // ---------------------------------------------------------------------------------------------------
 
         $scope.install = function () {
             var entityContainer = {

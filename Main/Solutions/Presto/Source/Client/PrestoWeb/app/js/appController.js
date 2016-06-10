@@ -175,6 +175,27 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.addGroup = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/variableGroupsPicker.html',
+                controller: 'groupsPickerModalController',
+                size: 'sm',
+                //windowClass: 'modalConfirmationPosition'
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (overrides) {
+                for (var i = 0; i < overrides.length; i++) {
+                    $scope.app.CustomVariableGroups.push(overrides[i]);
+                }
+                $scope.saveApplication();
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.deleteGroups = function () {
             showConfirmationModal.show('Delete selected groups?', deleteGroups);
         }

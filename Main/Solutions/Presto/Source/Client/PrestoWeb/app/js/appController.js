@@ -38,113 +38,11 @@
         $scope.app = null;
         $scope.appId = $routeParams.appId;
         $scope.selectedTasks = [];
-
-        $scope.moveTaskDown = function () {
-            moveTask(1);
-            $scope.appForm.$dirty = true;
-        }
-
-        $scope.moveTaskUp = function () {
-            moveTask(-1);
-            $scope.appForm.$dirty = true;
-        }
+        $scope.selectedGroups = [];
 
         // ---------------------------------------------------------------------------------------------------
 
-        var moveTask = function (multiplier) {
-            // The way to make sense of this method is to think of the multiplier as a 1, and that's
-            // what works for moving a task down. Instead of trying to make sense of things like
-            // "-= (1 * multiplier)" just realize that a multiplier of -1 does the opposite of 1.
-            // It just works.
-            // Get the index of the selected task.
-            var selectedIndex = 0;
-            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-                if ($scope.gridOptions.data[i].Sequence == $scope.selectedTasks[0].Sequence) {
-                    selectedIndex = i;
-                    break;
-                }
-            }
-
-            var taskToMove = $scope.gridOptions.data[selectedIndex];
-
-            // Don't allow a move up if we're dealing with the top-most item already.
-            if (taskToMove.Sequence == 1 && multiplier == - 1) {
-                return;
-            }
-
-            // Don't allow a move down if we're dealing with the bottom-most item already.
-            if (taskToMove.Sequence == $scope.gridOptions.data.length && multiplier == 1) {
-                return;
-            }
-
-            // Get the sequence of the task to swap.
-            var sequenceOfTaskToSwap = taskToMove.Sequence + (1 * multiplier);
-
-            var indexOfTaskToSwap = 0;
-            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-                if ($scope.gridOptions.data[i].Sequence == sequenceOfTaskToSwap) {
-                    indexOfTaskToSwap = i;
-                    break;
-                }
-            }
-            
-            var taskToSwap = $scope.gridOptions.data[indexOfTaskToSwap];
-
-            taskToMove.Sequence += (1 * multiplier);
-            taskToSwap.Sequence -= (1 * multiplier);
-
-            $scope.gridOptions.data[selectedIndex] = taskToSwap;
-            $scope.gridOptions.data[indexOfTaskToSwap] = taskToMove;
-        }
-
-        // ---------------------------------------------------------------------------------------------------
-
-        $scope.exportTasks = function () {
-            var config = {
-                url: '/PrestoWeb/api/app/getTaskExportFileContents',
-                method: 'POST',
-                data: $scope.selectedTasks
-            };
-
-            $scope.loading = 1;
-            $http(config)
-                .then(function (response) {
-                    $scope.loading = 0;
-                    // http://stackoverflow.com/a/33635761/279516
-                    var blob = new Blob([response.data], { type: "text/plain" });
-                    saveAs(blob, 'snuh.txt');
-                }, function (response) {
-                        $scope.loading = 0;
-                        showInfoModal.show(response.statusText, response.data);
-                        console.log(response);
-                    });
-        }
-
-        // ---------------------------------------------------------------------------------------------------
-
-        $scope.importTasks = function (fileContents) {
-            var config = {
-                url: '/PrestoWeb/api/app/importTasks',
-                method: 'POST',
-                data: { application: $scope.app, tasksAsString: fileContents }
-            };
-
-            $scope.loading = 1;
-            $http(config)
-                .then(function (response) {
-                    $scope.loading = 0;
-                    $scope.app = response.data;
-                    $scope.gridOptions.data = $scope.app.Tasks;
-                }, function (response) {
-                    $scope.loading = 0;
-                    showInfoModal.show(response.statusText, response.data);
-                    console.log(response);
-                });
-        }
-
-        // ---------------------------------------------------------------------------------------------------
-
-        $scope.gridOptions = {
+        $scope.gridTasks = {
             //multiSelect: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             enableRowSelection: true,
@@ -157,26 +55,37 @@
         };
 
         // Online demo shows setting this after defining the columns. Don't know why.
-        $scope.gridOptions.multiSelect = true;
+        $scope.gridTasks.multiSelect = true;
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
-            $scope.gridApi = gridApi;
-            $scope.gridApi.selection.setModifierKeysToMultiSelect(true); // Allow ctrl-click or shift-click to select multiple rows.
-            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+        $scope.gridTasks.onRegisterApi = function (gridTasksApi) {
+            $scope.gridTasksApi = gridTasksApi;
+            $scope.gridTasksApi.selection.setModifierKeysToMultiSelect(true); // Allow ctrl-click or shift-click to select multiple rows.
+            gridTasksApi.selection.on.rowSelectionChanged($scope, function (row) {
                 // Assign the selectred rows to our tasks variable.
-                $scope.selectedTasks = gridApi.selection.getSelectedRows();
+                $scope.selectedTasks = gridTasksApi.selection.getSelectedRows();
             });
         };
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.gridOptions2 = {
+        $scope.gridGroups = {
             data: 'app.CustomVariableGroups',
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
+        };
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.gridGroups.onRegisterApi = function (gridGroupsApi) {
+            $scope.gridGroupsApi = gridGroupsApi;
+            $scope.gridGroupsApi.selection.setModifierKeysToMultiSelect(true); // Allow ctrl-click or shift-click to select multiple rows.
+            gridGroupsApi.selection.on.rowSelectionChanged($scope, function (row) {
+                // Assign the selectred rows to our tasks variable.
+                $scope.selectedGroups = gridGroupsApi.selection.getSelectedRows();
+            });
         };
 
         // ---------------------------------------------------------------------------------------------------
@@ -266,6 +175,23 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.deleteGroups = function () {
+            showConfirmationModal.show('Delete selected groups?', deleteGroups);
+        }
+
+        var deleteGroups = function (confirmed) {
+            if (!confirmed) { return; }
+
+            // Remove the selected items from the main list.
+            $scope.app.CustomVariableGroups = $scope.app.CustomVariableGroups.filter(function (element) {
+                return $scope.selectedGroups.indexOf(element) < 0;
+            });
+
+            $scope.saveApplication();
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.saveApplication = function () {
             var config = {
                 url: '/PrestoWeb/api/app/saveApplication',
@@ -277,7 +203,7 @@
             $http(config)
                 .then(function (response) {
                     $scope.app = response.data;
-                    $scope.gridOptions.data = response.data.Tasks;
+                    $scope.gridTasks.data = response.data.Tasks;
                     $scope.loading = 0;
                     $rootScope.setUserMessage("App saved");
                     $scope.appForm.$dirty = false;
@@ -294,17 +220,126 @@
             .then(function (response) {
                 $scope.app = response.data;
                 $scope.loading = 0;
-                $scope.gridOptions.data = $scope.app.Tasks;
+                $scope.gridTasks.data = $scope.app.Tasks;
             },
             function () {
                 $scope.loading = 0;
                 alert("An error occurred and the app could not be loaded.");
             });
 
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.setIsDirty = function () {
             // For some reason, the checkbox doesn't cause $dirty to update after the page is reloaded.
             // So, as a hack, just do it here.
             $scope.appForm.$dirty = true;
         }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.moveTaskDown = function () {
+            moveTask(1);
+            $scope.appForm.$dirty = true;
+        }
+
+        $scope.moveTaskUp = function () {
+            moveTask(-1);
+            $scope.appForm.$dirty = true;
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        var moveTask = function (multiplier) {
+            // The way to make sense of this method is to think of the multiplier as a 1, and that's
+            // what works for moving a task down. Instead of trying to make sense of things like
+            // "-= (1 * multiplier)" just realize that a multiplier of -1 does the opposite of 1.
+            // It just works.
+            // Get the index of the selected task.
+            var selectedIndex = 0;
+            for (var i = 0; i < $scope.gridTasks.data.length; i++) {
+                if ($scope.gridTasks.data[i].Sequence == $scope.selectedTasks[0].Sequence) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+
+            var taskToMove = $scope.gridTasks.data[selectedIndex];
+
+            // Don't allow a move up if we're dealing with the top-most item already.
+            if (taskToMove.Sequence == 1 && multiplier == - 1) {
+                return;
+            }
+
+            // Don't allow a move down if we're dealing with the bottom-most item already.
+            if (taskToMove.Sequence == $scope.gridTasks.data.length && multiplier == 1) {
+                return;
+            }
+
+            // Get the sequence of the task to swap.
+            var sequenceOfTaskToSwap = taskToMove.Sequence + (1 * multiplier);
+
+            var indexOfTaskToSwap = 0;
+            for (var i = 0; i < $scope.gridTasks.data.length; i++) {
+                if ($scope.gridTasks.data[i].Sequence == sequenceOfTaskToSwap) {
+                    indexOfTaskToSwap = i;
+                    break;
+                }
+            }
+            
+            var taskToSwap = $scope.gridTasks.data[indexOfTaskToSwap];
+
+            taskToMove.Sequence += (1 * multiplier);
+            taskToSwap.Sequence -= (1 * multiplier);
+
+            $scope.gridTasks.data[selectedIndex] = taskToSwap;
+            $scope.gridTasks.data[indexOfTaskToSwap] = taskToMove;
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.exportTasks = function () {
+            var config = {
+                url: '/PrestoWeb/api/app/getTaskExportFileContents',
+                method: 'POST',
+                data: $scope.selectedTasks
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    // http://stackoverflow.com/a/33635761/279516
+                    var blob = new Blob([response.data], { type: "text/plain" });
+                    saveAs(blob, 'snuh.txt');
+                }, function (response) {
+                        $scope.loading = 0;
+                        showInfoModal.show(response.statusText, response.data);
+                        console.log(response);
+                    });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.importTasks = function (fileContents) {
+            var config = {
+                url: '/PrestoWeb/api/app/importTasks',
+                method: 'POST',
+                data: { application: $scope.app, tasksAsString: fileContents }
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    $scope.app = response.data;
+                    $scope.gridTasks.data = $scope.app.Tasks;
+                }, function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                    console.log(response);
+                });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
     }
 })();

@@ -44,7 +44,7 @@
                   },
                   function (result) {
                       $scope.loading = 0;
-                      alert("An error occurred and the server could not be loaded.");
+                      showInfoModal.show(response.statusText, response.data);
                   });
 
         // ---------------------------------------------------------------------------------------------------
@@ -111,7 +111,21 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.saveServer = function () {
-            alert('saveServer() not yet implemented');
+            var config = {
+                url: '/PrestoWeb/api/server/save',
+                method: 'POST',
+                data: $scope.server
+            };
+
+            $http(config)
+                .then(function (response) {
+                    $scope.server = response.data;
+                    $rootScope.setUserMessage("Server saved.");
+                }, function (response) {
+                    $rootScope.setUserMessage("Save failed");
+                    console.log(response);
+                    showInfoModal.show(response.statusText, response.data);
+                });
         }
         // ---------------------------------------------------------------------------------------------------
 
@@ -133,6 +147,7 @@
                 }, function (response) {
                     $rootScope.setUserMessage("Install request failed");
                     console.log(response);
+                    showInfoModal.show(response.statusText, response.data);
                 });
         };
     }

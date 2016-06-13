@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using PrestoCommon.Entities;
@@ -71,6 +72,24 @@ namespace PrestoWeb.Controllers
             {
                 Logger.LogException(ex);
                 throw Helper.CreateHttpResponseException(ex, "Error Saving Server");
+            }
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/server/getEnvironments")]
+        public List<InstallationEnvironment> GetEnvironments()
+        {
+            try
+            {
+                using (var prestoWcf = new PrestoWcf<IInstallationEnvironmentService>())
+                {
+                    return prestoWcf.Service.GetAllInstallationEnvironments().OrderBy(x => x.LogicalOrder).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Getting Environments");
             }
         }
     }

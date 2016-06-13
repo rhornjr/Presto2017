@@ -6,12 +6,12 @@
 
     // ------------------------------- Server Controller -------------------------------
 
-    function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants, $uibModal, showConfirmationModal) {
-        $scope.loading = 1;
+    function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants, $uibModal, showConfirmationModal, showInfoModal) {
         $scope.server = null;
         $scope.serverId = $routeParams.serverId;
         $scope.selectedAppsWithGroup = [];
         $scope.selectedGroups = [];
+        $scope.environments = [];
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -37,15 +37,31 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $http.get('/PrestoWeb/api/server/' + $scope.serverId)
-                  .then(function (result) {
-                      $scope.server = result.data;
-                      $scope.loading = 0;
-                  },
-                  function (result) {
-                      $scope.loading = 0;
-                      showInfoModal.show(response.statusText, response.data);
-                  });
+        $scope.loading = 1;
+        $http.get('/PrestoWeb/api/server/getEnvironments')
+            .then(function (result) {
+                $scope.environments = result.data;
+                $scope.loading = 0;
+            },
+            function (result) {
+                $scope.loading = 0;
+                showInfoModal.show(response.statusText, response.data);
+            });
+
+        // ---------------------------------------------------------------------------------------------------
+
+        if ($scope.serverId) {
+            $scope.loading = 1;
+            $http.get('/PrestoWeb/api/server/' + $scope.serverId)
+                .then(function (result) {
+                    $scope.server = result.data;
+                    $scope.loading = 0;
+                },
+                function (result) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                });
+        }
 
         // ---------------------------------------------------------------------------------------------------
 

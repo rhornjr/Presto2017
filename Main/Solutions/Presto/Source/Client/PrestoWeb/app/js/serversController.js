@@ -40,6 +40,10 @@
             });
         };
 
+        $scope.addServer = function () {
+            $window.location.href = '/PrestoWeb/app/#/server';
+        };
+
         $scope.editServer = function () {
             var modifiedServerId = $scope.selectedServers[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
             $window.location.href = '/PrestoWeb/app/#/server/' + modifiedServerId;

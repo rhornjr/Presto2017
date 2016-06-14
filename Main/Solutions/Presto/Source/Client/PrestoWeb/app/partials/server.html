@@ -1,16 +1,31 @@
 ﻿<div id="container" class="PageContainer">
     <h2 class="myHeader mainHeader">Server</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage"/>
-    <div class="row">
-        <div class="col-xs-6">
-            <input type="text" ng-model="server.Name" placeholder="Name" class="form-control" style="width:30em" />
+
+    <form name="serverForm">
+        <div class="row">
+            <div class="col-xs-6">
+                <input type="text" ng-model="server.Name" placeholder="Name" class="form-control" style="width:30em; margin-left:12px;" />
+            </div>
+            <div class="col-xs-6">
+                <select ng-model="server.InstallationEnvironment"
+                        ng-options="env.Name for env in environments track by env.Id">
+                </select>
+            </div>
         </div>
-        <div class="col-xs-6">
-            <select ng-model="server.InstallationEnvironment"
-                    ng-options="env.Name for env in environments track by env.Id">
-            </select>
+
+        <div class="row">
+            <div class="col-xs-6">
+                <input type="text" ng-model="server.Description" placeholder="Description" class="form-control" style="width:30em; margin-left:12px;" />
+            </div>
+            <div class="col-xs-3">
+                <input ng-model="server.EnableDebugLogging" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Debug Log
+            </div>
+            <div class="col-xs-3">
+                <input ng-model="server.Archived" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Archived
+            </div>
         </div>
-    </div>
+    </form>
 
     <h2 class="myHeader subHeader">Apps and Overrides</h2>
     <div class="OneOfTwo">
@@ -18,7 +33,7 @@
     </div>
     
     <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading">Save</button>
+        <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading || !serverForm.$dirty">Save</button>
         <button class="btn btn-default" ng-click="install();" ng-disabled="loading">Install</button>
     </h2>
 

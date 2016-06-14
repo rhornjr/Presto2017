@@ -65,6 +65,14 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.setIsDirty = function () {
+            // For some reason, the checkbox doesn't cause $dirty to update after the page is reloaded.
+            // So, as a hack, just do it here.
+            $scope.serverForm.$dirty = true;
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         // Act on the row selection changing.
         $scope.gridAppsWithGroup.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;

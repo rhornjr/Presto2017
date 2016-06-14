@@ -7,7 +7,7 @@
     // ------------------------------- Server Controller -------------------------------
 
     function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants, $uibModal, showConfirmationModal, showInfoModal) {
-        $scope.server = null;
+        $scope.server = {};
         $scope.serverId = $routeParams.serverId;
         $scope.selectedAppsWithGroup = [];
         $scope.selectedGroups = [];
@@ -94,6 +94,24 @@
                 $scope.selectedGroups.push(row.entity);
             });
         };
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.pickAppAndGroup = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/appAndGroupPicker.html',
+                controller: 'appAndGroupPickerModalController',
+                size: 'lg'
+                //windowClass: 'app-modal-window'  // use "size" instead of windowClass
+            });
+
+            modalInstance.result.then(function (appAndGroups) {
+                console.log('app', appAndGroups.app);
+                console.log('groups', appAndGroups.groups);
+            }, function () {
+                // modal dismissed
+            });
+        }
 
         // ---------------------------------------------------------------------------------------------------
 

@@ -202,6 +202,7 @@
     <Content Include="app\index-async.html" />
     <Content Include="app\index.html" />
     <Content Include="app\js\app.js" />
+    <Content Include="app\js\appAndGroupPickerModalController.js" />
     <Content Include="app\js\appController.js" />
     <Content Include="app\js\appsController.js" />
     <Content Include="app\js\directives.js" />
@@ -483,6 +484,7 @@
     <Content Include="app\lib\ui-grid-draggable-rows\draggable-rows.js" />
     <Content Include="app\partials\app.html" />
     <Content Include="app\partials\appAdd.html" />
+    <Content Include="app\partials\appAndGroupPicker.html" />
     <Content Include="app\partials\appPicker.html" />
     <Content Include="app\partials\apps.html" />
     <Content Include="app\partials\confirmationModal.html" />

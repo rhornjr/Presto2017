@@ -17,7 +17,7 @@ h2.myHeader {
 .subHeader { background-color: #4494C9; }
 .footer { background-color: #afb5b8; }
 
-.customLabelLeft, .customLabelRight {
+.customLabelLeft, .customLabelRight, .customLabelLeftSkinny, .customLabelRightSkinny {
     border-bottom: 1px solid #d4d4d4;
     border-top: 1px solid #d4d4d4;
     border-radius: 5px;
@@ -29,6 +29,8 @@ h2.myHeader {
 
 .customLabelLeft { color: white; background-color: #4494C9; width: 15em; text-align: right; }
 .customLabelRight { color: white; background-color: #9FBEB9; width: 45em; text-align: left; font-weight: bold; }
+.customLabelLeftSkinny { color: white; background-color: #4494C9; width: 8em; text-align: right; }
+.customLabelRightSkinny { color: white; background-color: #9FBEB9; width: 25em; text-align: left; font-weight: bold; }
 
 .userMessage, .seperator {
     background-color: #7a5a5a;

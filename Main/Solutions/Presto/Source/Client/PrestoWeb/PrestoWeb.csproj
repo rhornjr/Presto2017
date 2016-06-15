@@ -215,6 +215,7 @@
     <Content Include="app\js\serverController.js" />
     <Content Include="app\js\serversController.js" />
     <Content Include="app\js\services.js" />
+    <Content Include="app\js\variableGroupController.js" />
     <Content Include="app\js\variableGroupsController.js" />
     <Content Include="app\js\groupsPickerModalController.js" />
     <Content Include="app\lib\angular\angular-animate.js" />
@@ -501,6 +502,7 @@
     <Content Include="app\partials\taskDosCommand.html" />
     <Content Include="app\partials\taskTypeSelectorModal.html" />
     <Content Include="app\partials\taskXmlModify.html" />
+    <Content Include="app\partials\variableGroup.html" />
     <Content Include="app\partials\variableGroups.html" />
     <Content Include="app\partials\variableGroupsPicker.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />

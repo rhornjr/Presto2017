@@ -1,0 +1,30 @@
+﻿<div id="container" class="PageContainer">
+    <h2 class="myHeader mainHeader">Variable Group</h2>
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="z-index:100;" />
+
+    <form name="groupForm">
+        <div class="row">
+            <div class="col-xs-10">
+                <input type="text" ng-model="group.Name" placeholder="Name" class="form-control" style="width:40em; margin-left:12px;" />
+            </div>
+            <div class="col-xs-2">
+                <label>
+                    <input ng-model="group.Archived" type="checkbox" ng-true-value="true" ng-false-value="false"
+                           ng-change="setIsDirty()">Archived
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <h2 class="myHeader subHeader">Variables</h2>
+    <div class="OneOfTwo">
+        <div class="gridHalf" ui-grid="gridVariables" ui-grid-selection></div>
+    </div>
+
+    <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="addAppAndGroup();" ng-disabled="loading">Add</button>
+        <button class="btn btn-default" ng-click="editAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Edit</button>
+        <button class="btn btn-default" ng-click="removeAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Remove</button>
+        <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading || !serverForm.$dirty">Save</button>
+    </h2>
+</div>

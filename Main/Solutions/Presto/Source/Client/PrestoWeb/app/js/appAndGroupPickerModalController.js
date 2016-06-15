@@ -4,7 +4,17 @@
 
     angular.module('myApp.controllers').controller('appAndGroupPickerModalController', appAndGroupPickerModalController);
 
-    function appAndGroupPickerModalController($scope, $uibModalInstance, $uibModal) {
+    function appAndGroupPickerModalController($scope, $uibModalInstance, $uibModal, appWithGroups) {
+        $scope.appWithGroups = {};
+        if (appWithGroups) {
+            $scope.appWithGroups = {
+                app: appWithGroups.Application,
+                groups: appWithGroups.CustomVariableGroups,
+                groupNames: appWithGroups.CustomVariableGroupNames,
+                enabled: appWithGroups.Enabled
+            };
+        }
+
         $scope.pickApp = function () {
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/appPicker.html',
@@ -14,8 +24,7 @@
             });
 
             modalInstance.result.then(function (app) {
-                console.log("App picked", app);
-                $scope.selectedApp = app;
+                $scope.appWithGroups.app = app;
             }, function () {
                 // modal dismissed
             });
@@ -32,12 +41,11 @@
             });
 
             modalInstance.result.then(function (overrides) {
-                console.log("Group(s) picked", overrides);
-                $scope.selectedOverrides = overrides;
+                $scope.appWithGroups.groups = overrides;
                 // Show the list of names to the user.
-                $scope.selectedOverridesNames = '';
+                $scope.appWithGroups.groupNames = '';
                 for (var i = 0; i < overrides.length; i++) {
-                    $scope.selectedOverridesNames += overrides[i].Name + " | ";
+                    $scope.appWithGroups.groupNames += overrides[i].Name + " | ";
                 }
             }, function () {
                 // modal dismissed
@@ -47,13 +55,7 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.ok = function () {
-            var newAppWithGroups = {
-                app: $scope.selectedApp,
-                groups: $scope.selectedOverrides,
-                groupNames: $scope.selectedOverridesNames,
-                enabled: $scope.enabled
-            };
-            $uibModalInstance.close(newAppWithGroups);
+            $uibModalInstance.close($scope.appWithGroups);
         };
 
         // ---------------------------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage"/>
     <div class="gridFull" ui-grid="gridVariableGroups" ui-grid-selection ui-grid-draggable-rows></div>
     <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="editTask();" ng-disabled="loading">Edit</button>
+        <button class="btn btn-default" ng-click="editGroup();" ng-disabled="loading || selectedGroups.length == 0">Edit</button>
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
 </div>

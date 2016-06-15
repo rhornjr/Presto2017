@@ -113,12 +113,16 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.pickAppAndGroup = function () {
+        $scope.addAppAndGroup = function () {
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/appAndGroupPicker.html',
                 controller: 'appAndGroupPickerModalController',
-                size: 'lg'
-                //windowClass: 'app-modal-window'  // use "size" instead of windowClass
+                size: 'lg',
+                resolve: {
+                    appWithGroups: function () {
+                        return null;
+                    }
+                }
             });
 
             modalInstance.result.then(function (appAndGroups) {
@@ -129,6 +133,37 @@
                     Enabled: appAndGroups.enabled
                 };
                 $scope.server.ApplicationsWithOverrideGroup.push(newAppWithGroups);
+                $scope.saveServer();
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.editAppAndGroup = function () {
+            // Get the index of the selected appWithGroup.
+            var indexOfGroupBeingEdited = $scope.server.ApplicationsWithOverrideGroup.indexOf($scope.selectedAppsWithGroup[0]);
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/appAndGroupPicker.html',
+                controller: 'appAndGroupPickerModalController',
+                size: 'lg',
+                resolve: {
+                    appWithGroups: function () {
+                        return $scope.selectedAppsWithGroup[0];
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (appAndGroups) {
+                var newAppWithGroups = {
+                    Application: appAndGroups.app,
+                    CustomVariableGroups: appAndGroups.groups,
+                    CustomVariableGroupNames: appAndGroups.groupNames,
+                    Enabled: appAndGroups.enabled
+                };
+                $scope.server.ApplicationsWithOverrideGroup[indexOfGroupBeingEdited] = newAppWithGroups;
                 $scope.saveServer();
             }, function () {
                 // modal dismissed
@@ -181,13 +216,18 @@
                 data: $scope.server
             };
 
+            $scope.loading = 1;
             $http(config)
                 .then(function (response) {
                     $scope.server = response.data;
+                    setCustomVariableGroupNames();
                     $rootScope.setUserMessage("Server saved.");
+                    $scope.selectedAppsWithGroup = [];
+                    $scope.loading = 0;
                 }, function (response) {
+                    $scope.loading = 0;
                     $rootScope.setUserMessage("Save failed");
-                    console.log(response);
+                    $scope.selectedAppsWithGroup = [];
                     showInfoModal.show(response.statusText, response.data);
                 });
         }

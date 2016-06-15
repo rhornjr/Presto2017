@@ -35,7 +35,8 @@
     </div>
     
     <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="pickAppAndGroup();" ng-disabled="loading">Add</button>
+        <button class="btn btn-default" ng-click="addAppAndGroup();" ng-disabled="loading">Add</button>
+        <button class="btn btn-default" ng-click="editAppAndGroup();" ng-disabled="selectedAppsWithGroup.length == 0 || loading">Edit</button>
         <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading || !serverForm.$dirty">Save</button>
         <button class="btn btn-default" ng-click="install();" ng-disabled="loading">Install</button>
     </h2>

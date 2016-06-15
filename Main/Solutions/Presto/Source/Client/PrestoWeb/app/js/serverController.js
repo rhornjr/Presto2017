@@ -172,6 +172,24 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.removeAppAndGroup = function () {
+            showConfirmationModal.show('Delete selected app with overrides?', removeAppAndGroup);
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        var removeAppAndGroup = function (confirmed) {
+            if (!confirmed) { return; }
+
+            // Get the index of the selected appWithGroup.
+            var indexOfGroupBeingDeleted = $scope.server.ApplicationsWithOverrideGroup.indexOf($scope.selectedAppsWithGroup[0]);
+
+            $scope.server.ApplicationsWithOverrideGroup.splice(indexOfGroupBeingDeleted, 1);
+            $scope.saveServer();
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         $scope.addGroup = function () {
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/variableGroupsPicker.html',

@@ -4,32 +4,34 @@
 
     <form name="serverForm">
         <div class="row">
-            <div class="col-xs-6">
-                <input type="text" ng-model="server.Name" placeholder="Name" class="form-control" style="width:30em; margin-left:12px;" />
+            <div class="col-xs-8">
+                <input type="text" ng-model="server.Name" placeholder="Name" class="form-control" style="width:40em; margin-left:12px;" />
             </div>
-            <div class="col-xs-6">
-                <select ng-model="server.InstallationEnvironment"
+            <div class="col-xs-4">
+                <select ng-model="server.InstallationEnvironment" class="form-control"
                         ng-options="env.Name for env in environments track by env.Id">
                 </select>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-xs-6">
-                <input type="text" ng-model="server.Description" placeholder="Description" class="form-control" style="width:30em; margin-left:12px;" />
+            <div class="col-xs-8">
+                <input type="text" ng-model="server.Description" placeholder="Description" class="form-control" style="width:40em; margin-left:12px;" />
             </div>
-            <div class="col-xs-3">
-                <input ng-model="server.EnableDebugLogging" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Debug Log
+            <div class="col-xs-2">
+                <label><input ng-model="server.EnableDebugLogging" type="checkbox" ng-true-value="true"
+                              ng-false-value="false" ng-change="setIsDirty()">Debug Log</label>
             </div>
-            <div class="col-xs-3">
-                <input ng-model="server.Archived" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Archived
+            <div class="col-xs-2">
+                <label><input ng-model="server.Archived" type="checkbox" ng-true-value="true" ng-false-value="false"
+                              ng-change="setIsDirty()">Archived</label>
             </div>
         </div>
     </form>
 
     <h2 class="myHeader subHeader">Apps and Overrides</h2>
     <div class="OneOfTwo">
-        <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection></div>
+        <div class="gridHalf" ui-grid="gridAppsWithGroup" ui-grid-selection></div>
     </div>
     
     <h2 class="myHeader footer">

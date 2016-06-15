@@ -47,7 +47,13 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.ok = function () {
-            $uibModalInstance.close({app: $scope.selectedApp, groups: $scope.selectedOverrides});
+            var newAppWithGroups = {
+                app: $scope.selectedApp,
+                groups: $scope.selectedOverrides,
+                groupNames: $scope.selectedOverridesNames,
+                enabled: $scope.enabled
+            };
+            $uibModalInstance.close(newAppWithGroups);
         };
 
         // ---------------------------------------------------------------------------------------------------

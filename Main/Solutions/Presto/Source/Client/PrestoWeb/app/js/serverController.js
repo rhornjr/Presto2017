@@ -53,14 +53,30 @@
         if ($scope.serverId) {
             $scope.loading = 1;
             $http.get('/PrestoWeb/api/server/' + $scope.serverId)
-                .then(function (result) {
-                    $scope.server = result.data;
+                .then(function (response) {
+                    $scope.server = response.data;
+                    setCustomVariableGroupNames();
                     $scope.loading = 0;
                 },
-                function (result) {
+                function (response) {
                     $scope.loading = 0;
                     showInfoModal.show(response.statusText, response.data);
                 });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        var setCustomVariableGroupNames = function () {
+            // Concatenate the group names for display
+            var appsWithGroupsCount = $scope.server.ApplicationsWithOverrideGroup.length;
+            for (var i = 0; i < appsWithGroupsCount; i++) {
+                var appWithGroups = $scope.server.ApplicationsWithOverrideGroup[i];
+                if (!appWithGroups.CustomVariableGroups) { continue; }
+                appWithGroups.CustomVariableGroupNames = '';
+                for (var j = 0; j < appWithGroups.CustomVariableGroups.length; j++) {
+                    appWithGroups.CustomVariableGroupNames += appWithGroups.CustomVariableGroups[j].Name + " | ";
+                }
+            }
         }
 
         // ---------------------------------------------------------------------------------------------------
@@ -106,8 +122,14 @@
             });
 
             modalInstance.result.then(function (appAndGroups) {
-                console.log('app', appAndGroups.app);
-                console.log('groups', appAndGroups.groups);
+                var newAppWithGroups = {
+                    Application: appAndGroups.app,
+                    CustomVariableGroups: appAndGroups.groups,
+                    CustomVariableGroupNames: appAndGroups.groupNames,
+                    Enabled: appAndGroups.enabled
+                };
+                $scope.server.ApplicationsWithOverrideGroup.push(newAppWithGroups);
+                $scope.saveServer();
             }, function () {
                 // modal dismissed
             });

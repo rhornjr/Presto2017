@@ -12,6 +12,11 @@
         <div class="customLabelLeftSkinny">Overrides</div>
         <div class="customLabelRightSkinny">{{selectedOverridesNames}}</div>
         <button class="btn btn-default" ng-click="pickOverrides();" style="display:inline-block;" ng-disabled="loading">...</button>
+        <br />
+        <label>
+            <input ng-model="enabled" type="checkbox" ng-true-value="true"
+                   ng-false-value="false" ng-change="setIsDirty()">Enabled
+        </label>
     </div>
 </div>
 <div class="modal-footer">

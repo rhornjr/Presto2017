@@ -1,9 +1,11 @@
 ﻿<div id="container" class="PageContainer">
     <h2 class="myHeader mainHeader">Variables</h2>
-    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage"/>
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="z-index:100;"/>
     <div class="gridFull" ui-grid="gridVariableGroups" ui-grid-selection ui-grid-draggable-rows></div>
     <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editGroup();" ng-disabled="loading || selectedGroups.length == 0">Edit</button>
+        <button class="btn btn-default" ng-click="deleteGroup();" ng-disabled="loading || selectedGroups.length == 0">Delete</button>
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
 </div>

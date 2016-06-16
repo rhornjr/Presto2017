@@ -24,7 +24,7 @@
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="addVariable();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editVariable();" ng-disabled="loading || selectedVariables.length == 0">Edit</button>
-        <button class="btn btn-default" ng-click="removeVariable();" ng-disabled="loading || selectedVariables.length == 0">Remove</button>
+        <button class="btn btn-default" ng-click="removeVariables();" ng-disabled="loading || selectedVariables.length == 0">Remove</button>
         <button class="btn btn-default" ng-click="saveVariableGroup();" ng-disabled="loading || !groupForm.$dirty">Save</button>
     </h2>
 </div>

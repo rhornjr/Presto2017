@@ -15,7 +15,7 @@
 
         $scope.gridVariables = {
             data: 'variables',
-            multiSelect: false,
+            multiSelect: true,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedVariables,
@@ -29,24 +29,29 @@
         $scope.gridVariables.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                var rows = gridApi.selection.getSelectedRows();
                 $scope.selectedVariables.length = 0; // Truncate/clear the array. Yes, this is how it's done.
-                $scope.selectedVariables.push(row.entity);
+                for (var i = 0; i < rows.length; i++) {
+                    $scope.selectedVariables.push(rows[i]);
+                }                
             });
         };
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.loading = 0;
-        $http.get('/PrestoWeb/api/variableGroups/' + $routeParams.groupId)
-            .then(function (response) {
-                $scope.group = response.data;
-                $scope.variables = $scope.group.CustomVariables;
-                $scope.loading = 0;
-            },
-            function (response) {
-                $scope.loading = 0;
-                showInfoModal.show(response.statusText, response.data);
-            });
+        if ($routeParams.groupId) {
+            $scope.loading = 1;
+            $http.get('/PrestoWeb/api/variableGroups/' + $routeParams.groupId)
+                .then(function (response) {
+                    $scope.group = response.data;
+                    $scope.variables = $scope.group.CustomVariables;
+                    $scope.loading = 0;
+                },
+                function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                });
+        }        
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -97,11 +102,11 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.removeVariable = function () {
-            showConfirmationModal.show('Delete selected variables?', deleteVariables);
+        $scope.removeVariables = function () {
+            showConfirmationModal.show('Delete selected variables?', removeVariables);
         }
 
-        var deleteVariables = function (confirmed) {
+        var removeVariables = function (confirmed) {
             if (!confirmed) { return; }
 
             // Remove the selected items from the main list.
@@ -125,6 +130,7 @@
             $http(config)
                 .then(function (response) {
                     $scope.group = response.data;
+                    $scope.variables = $scope.group.CustomVariables;
                     $rootScope.setUserMessage("Variable group saved.");
                     $scope.loading = 0;
                 }, function (response) {

@@ -8,7 +8,7 @@
         $scope.variable = variable;
 
         $scope.ok = function () {
-            $uibModalInstance.close(variable);
+            $uibModalInstance.close($scope.variable);
         };
 
         $scope.cancel = function () {

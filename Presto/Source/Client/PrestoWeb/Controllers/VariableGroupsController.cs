@@ -50,5 +50,23 @@ namespace PrestoWeb.Controllers
                 throw Helper.CreateHttpResponseException(ex, "Error Getting Variable Groups");
             }
         }
+
+        [AcceptVerbs("POST")]
+        [Route("api/variableGroups/save")]
+        public CustomVariableGroup Save(CustomVariableGroup group)
+        {
+            try
+            {
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    return prestoWcf.Service.SaveGroup(group);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Saving Variable Group");
+            }
+        }
     }
 }

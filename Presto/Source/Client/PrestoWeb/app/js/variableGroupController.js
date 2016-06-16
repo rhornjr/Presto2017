@@ -6,7 +6,7 @@
 
     // ------------------------------- Variable Group Controller -------------------------------
 
-    function variableGroupController($scope, $rootScope, $http, $routeParams, uiGridConstants, showInfoModal) {
+    function variableGroupController($scope, $rootScope, $http, $routeParams, uiGridConstants, showInfoModal, $uibModal) {
         $scope.group = {};
         $scope.selectedVariables = [];
         $scope.variables = [];
@@ -46,5 +46,47 @@
                 $scope.loading = 0;
                 showInfoModal.show(response.statusText, response.data);
             });
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.addVariable = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/variable.html',
+                controller: 'variableModalController',
+                size: 'lg',
+                resolve: {
+                    variable: function () {
+                        return null;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (variable) {
+                
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.editVariable = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/variable.html',
+                controller: 'variableModalController',
+                size: 'lg',
+                resolve: {
+                    variable: function () {
+                        return $scope.selectedVariables[0];
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (variable) {
+
+            }, function () {
+                // modal dismissed
+            });
+        }
     }
 })();

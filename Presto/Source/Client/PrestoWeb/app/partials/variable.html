@@ -1,0 +1,16 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Variable</h3>
+</div>
+<div class="modal-body">
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" />
+    <div style="display:table; margin:0 auto">
+        <input type="text" ng-model="variable.Key" placeholder="Key" class="form-control" style="width:35em; margin-left:12px;" />
+        <br />
+        <input type="text" ng-model="variable.Value" placeholder="Value" class="form-control" style="width:35em; margin-left:12px;" />
+        <button class="btn btn-default" ng-click="pickOverrides();" style="display:inline-block;" ng-disabled="loading">Encrypt</button>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

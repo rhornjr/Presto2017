@@ -68,5 +68,23 @@ namespace PrestoWeb.Controllers
                 throw Helper.CreateHttpResponseException(ex, "Error Saving Variable Group");
             }
         }
+
+        [AcceptVerbs("POST")]
+        [Route("api/variableGroups/delete")]
+        public void Delete(CustomVariableGroup group)
+        {
+            try
+            {
+                using (var prestoWcf = new PrestoWcf<ICustomVariableGroupService>())
+                {
+                    prestoWcf.Service.DeleteGroup(group);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Deleting Variable Group");
+            }
+        }
     }
 }

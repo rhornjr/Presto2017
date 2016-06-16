@@ -218,6 +218,7 @@
     <Content Include="app\js\variableGroupController.js" />
     <Content Include="app\js\variableGroupsController.js" />
     <Content Include="app\js\groupsPickerModalController.js" />
+    <Content Include="app\js\variableModalController.js" />
     <Content Include="app\lib\angular\angular-animate.js" />
     <Content Include="app\lib\angular\angular-animate.min.js" />
     <Content Include="app\lib\angular\angular-cookies.js" />
@@ -502,6 +503,7 @@
     <Content Include="app\partials\taskDosCommand.html" />
     <Content Include="app\partials\taskTypeSelectorModal.html" />
     <Content Include="app\partials\taskXmlModify.html" />
+    <Content Include="app\partials\variable.html" />
     <Content Include="app\partials\variableGroup.html" />
     <Content Include="app\partials\variableGroups.html" />
     <Content Include="app\partials\variableGroupsPicker.html" />

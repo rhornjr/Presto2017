@@ -22,9 +22,9 @@
     </div>
 
     <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="addAppAndGroup();" ng-disabled="loading">Add</button>
-        <button class="btn btn-default" ng-click="editAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Edit</button>
-        <button class="btn btn-default" ng-click="removeAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Remove</button>
-        <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading || !serverForm.$dirty">Save</button>
+        <button class="btn btn-default" ng-click="addVariable();" ng-disabled="loading">Add</button>
+        <button class="btn btn-default" ng-click="editVariable();" ng-disabled="loading || selectedVariables.length == 0">Edit</button>
+        <button class="btn btn-default" ng-click="removeVariable();" ng-disabled="loading || selectedVariables.length == 0">Remove</button>
+        <button class="btn btn-default" ng-click="saveVariable();" ng-disabled="loading || !groupForm.$dirty">Save</button>
     </h2>
 </div>

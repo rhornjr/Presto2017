@@ -80,9 +80,17 @@ angular.module('myApp.controllers').controller('confirmationController', functio
 
 // ------------------------------- Info Modal Controller -------------------------------
 
-angular.module('myApp.controllers').controller('infoController', function ($scope, $uibModalInstance, title, message) {
+angular.module('myApp.controllers').controller('infoController', function ($scope, $uibModalInstance, title, message, millisecondsToClose) {
     $scope.title = title;
     $scope.message = message
+
+    // Show this modal for the specified amount of time and then close (if the caller supplied millisecondsToClose).
+    if (millisecondsToClose) {
+        setTimeout(function () {
+            $uibModalInstance.close();
+        }, millisecondsToClose);  // Show status for a few seconds before closing   
+    }
+
     $scope.ok = function () {
         $uibModalInstance.close();
     };
@@ -92,7 +100,7 @@ angular.module('myApp.controllers').controller('infoController', function ($scop
 
 app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($http, $rootScope, $uibModal) {
     return {
-        show: function (title, message) {
+        show: function (title, message, millisecondsToClose) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/infoModal.html',
                 controller: 'infoController',
@@ -104,6 +112,9 @@ app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($htt
                     },
                     message: function () {
                         return message;
+                    },
+                    millisecondsToClose: function () {
+                        return millisecondsToClose;
                     }
                 }
             });

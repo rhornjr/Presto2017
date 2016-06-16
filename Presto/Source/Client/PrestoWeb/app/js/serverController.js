@@ -249,9 +249,16 @@
                     showInfoModal.show(response.statusText, response.data);
                 });
         }
+
         // ---------------------------------------------------------------------------------------------------
 
         $scope.install = function () {
+            showConfirmationModal.show('Install ' + $scope.selectedAppsWithGroup[0].Application.Name + '?', install);
+        }
+
+        var install = function (confirmed) {
+            if (!confirmed) { return; }
+
             var entityContainer = {
                 server: $scope.server,
                 appWithGroup: $scope.selectedAppsWithGroup[0]
@@ -266,9 +273,9 @@
             $http(config)
                 .then(function (response) {
                     $rootScope.setUserMessage("Install request sent successfully");
+                    showInfoModal.show("Install Request Sent", "Install request sent successfully for " + $scope.selectedAppsWithGroup[0].Application.Name, 3000);
                 }, function (response) {
                     $rootScope.setUserMessage("Install request failed");
-                    console.log(response);
                     showInfoModal.show(response.statusText, response.data);
                 });
         };

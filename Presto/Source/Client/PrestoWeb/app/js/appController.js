@@ -99,10 +99,15 @@
                 windowClass: 'app-modal-window'
             });
 
+            var newSequence = 1; // default
+            if ($scope.app.Tasks && $scope.app.Tasks.length > 1) {
+                newSequence = $scope.app.Tasks.length + 1;
+            }
             modalInstance.result.then(function (taskType) {
                 var task = {
                     $type: 'PrestoCommon.Entities.Task' + taskType + ', PrestoCommon',
-                    PrestoTaskType: taskType
+                    PrestoTaskType: taskType,
+                    Sequence: newSequence
                 }
                 openTask(task, onAddTaskCompleted);
             }, function () {
@@ -164,9 +169,6 @@
                 // type TaskBase, we need to set the $type property on the object so it will deserialize
                 // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
                 task.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
-                if (!task.Sequence) {
-                    task.Sequence = 500;
-                }
                 onCompleted(task);                
             }, function () {
                 // modal dismissed

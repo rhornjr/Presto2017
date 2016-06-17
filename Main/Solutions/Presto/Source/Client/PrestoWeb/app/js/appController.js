@@ -33,7 +33,7 @@
 
     // ------------------------------- App Controller -------------------------------
 
-    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants, showInfoModal, showConfirmationModal) {
+    function appController($scope, $rootScope, $http, $uibModal, $routeParams, uiGridConstants, showInfoModal, showConfirmationModal, $window) {
         $scope.loading = 1;
         $scope.app = null;
         $scope.appId = $routeParams.appId;
@@ -363,5 +363,9 @@
         }
 
         // ---------------------------------------------------------------------------------------------------
+
+        $scope.backToList = function () {
+            $window.location.href = '/PrestoWeb/app/#/apps/1';
+        }
     }
 })();

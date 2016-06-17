@@ -400,7 +400,7 @@ app.run(function ($rootScope, $location) {
 });
 
 app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/apps', { templateUrl: 'partials/apps.html', controller: 'appsController' });
+    $routeProvider.when('/apps/:showList?', { templateUrl: 'partials/apps.html', controller: 'appsController' });
     $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });
     $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
     $routeProvider.when('/server/:serverId?', { templateUrl: 'partials/server.html', controller: 'serverController' });

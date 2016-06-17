@@ -24,7 +24,10 @@
 
     // ------------------------------- Apps Controller -------------------------------
 
-    function appsController($scope, $rootScope, $uibModal, $http, appsRepository, $window, uiGridConstants) {
+    function appsController($scope, $rootScope, $uibModal, $http, $routeParams, appsRepository, $window, uiGridConstants) {
+        if ($routeParams.showList == 1) {
+            alert('show list');
+        }
         $scope.loading = 1;
         $scope.apps = null;
         $scope.selectedApps = [];

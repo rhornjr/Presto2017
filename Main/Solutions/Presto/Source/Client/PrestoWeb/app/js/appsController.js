@@ -24,30 +24,29 @@
 
     // ------------------------------- Apps Controller -------------------------------
 
-    function appsController($scope, $rootScope, $uibModal, $http, $routeParams, appsRepository, $window, uiGridConstants) {
-        if ($routeParams.showList == 1) {
-            alert('show list');
-        }
-        $scope.loading = 1;
-        $scope.apps = null;
-        $scope.selectedApps = [];
+    function appsController($scope, $rootScope, $uibModal, $http, $routeParams, appsRepository, appsState, $window, uiGridConstants) {
+        $scope.state = appsState;
 
         $scope.gridOptions = {
-            data: 'apps',
+            //data: 'apps',
             multiSelect: false,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            selectedItems: $scope.selectedApps,
+            selectedItems: $scope.state.selectedApps,
             columnDefs: [{ field: 'Name', displayName: 'Application', width: "78%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: {condition: uiGridConstants.filter.CONTAINS} },
                          { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
         };
 
         $scope.refresh = function (forceRefresh) {
+            if (!forceRefresh) {
+                return;
+            }
             $scope.loading = 1;
-            // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
             appsRepository.getApps(forceRefresh, function (dataResponse) {
-                $scope.apps = dataResponse;
+                $scope.state.apps = dataResponse;
+                $scope.gridOptions.data = $scope.state.apps;
                 $scope.loading = 0;
+                $rootScope.setUserMessage("Application list refreshed");
             });
         };
 
@@ -56,13 +55,13 @@
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
-                $scope.selectedApps.length = 0; // Truncate/clear the array. Yes, this is how it's done.
-                $scope.selectedApps.push(row.entity);
+                $scope.state.selectedApps.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+                $scope.state.selectedApps.push(row.entity);
             });
         };
 
         $scope.editApp = function () {
-            var modifiedAppId = $scope.selectedApps[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
+            var modifiedAppId = $scope.state.selectedApps[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
             $window.location.href = '/PrestoWeb/app/#/app/' + modifiedAppId;
         };
 
@@ -109,7 +108,20 @@
             $rootScope.userMessage = app.Name + ' saved.';
         }
 
-        $scope.refresh(false);
+        // If the apps haven't been loaded yet, or we've come here via a link telling us to load the list, then load the list.
+        if (!$scope.state.apps || $routeParams.showList == 1) {
+            $scope.refresh(true);
+        }
+        else {
+            // If an app has been selected, go back to it.
+            // Note: This is in a timeout because we can't redirect in the same turn as loading this page.
+            //       The timeout callback happens in a different turn, so it works. If we called $scope.editApp()
+            //       directly (not in the timeout), we end up in an infinite loop calling this line.
+            if ($scope.state.selectedApps[0]) {
+                setTimeout(function () {
+                    $scope.editApp();
+                }, 100);
+            }
+        }
     }        
-
 })();

@@ -124,8 +124,19 @@ app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($htt
 
 // --------------------------------------------------------------------------------------
 
+app.factory('appsState', ['$http', '$rootScope', function ($http, $rootScope) {
+    var state = {
+        apps: null,
+        selectedApps: []
+    }
+
+    return state;
+}]);
+
+// --------------------------------------------------------------------------------------
+
 app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
-    // The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
+// The factory exists so we only load this data once. If it was in the controller, the Presto service would be called every time
     // we went to the app web page.
     // This is what helped me get this to work: http://stackoverflow.com/a/20369746/279516
 
@@ -138,21 +149,23 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
                 return;
             }
 
-            $http.get('/PrestoWeb/api/apps/')
+        $http.get('/PrestoWeb/api/apps/')
                 .then(function (result) {
-                    data = result.data;
-                    $rootScope.setUserMessage("Application list refreshed");
-                    callbackFunction(data);
-                }, function (response) {
-                    console.log(response);
-                    if (response.status == 403) {
-                        $rootScope.setUserMessage("Unauthorized");
-                        callbackFunction(null);
-                    }
-                });
+                data = result.data;
+                $rootScope.setUserMessage("Application list refreshed");
+                callbackFunction(data);
+            }, function (response) {
+                console.log(response);
+                if (response.status == 403) {
+                    $rootScope.setUserMessage("Unauthorized");
+                    callbackFunction(null);
+                }
+            });
         }
     }
 }]);
+
+// --------------------------------------------------------------------------------------
 
 app.factory('serversRepository', ['$http', '$rootScope', function ($http, $rootScope) {
 
@@ -174,6 +187,8 @@ app.factory('serversRepository', ['$http', '$rootScope', function ($http, $rootS
         }
     }
 }]);
+
+// --------------------------------------------------------------------------------------
 
 app.factory('logRepository', ['$http', '$rootScope', function ($http, $rootScope) {
 

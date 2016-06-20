@@ -70,6 +70,7 @@
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
             installsRepository.getInstalls(forceRefresh, function (dataResponse) {
                 $scope.installs = dataResponse;
+                $scope.loading = 0;
             });
 
             pendingInstallsRepository.getPending(forceRefresh, function (dataResponse) {
@@ -85,8 +86,6 @@
                 }
                 $scope.pending = dataResponse;
             });
-
-            $scope.loading = 0;
         };
 
         $scope.refresh();

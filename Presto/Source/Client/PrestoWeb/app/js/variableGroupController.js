@@ -39,6 +39,29 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        $scope.saveVariableGroup = function () {
+            var config = {
+                url: '/PrestoWeb/api/variableGroups/save',
+                method: 'POST',
+                data: $scope.group
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.group = response.data;
+                    $scope.variables = $scope.group.CustomVariables;
+                    $rootScope.setUserMessage("Variable group saved.");
+                    $scope.loading = 0;
+                }, function (response) {
+                    $scope.loading = 0;
+                    $rootScope.setUserMessage("Save failed");
+                    showInfoModal.show(response.statusText, response.data);
+                });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         if ($routeParams.groupId) {
             $scope.loading = 1;
             $http.get('/PrestoWeb/api/variableGroups/' + $routeParams.groupId)
@@ -51,7 +74,13 @@
                     $scope.loading = 0;
                     showInfoModal.show(response.statusText, response.data);
                 });
-        }        
+        }
+        else {
+            // This is a new variable. Save it so we actually have a group when adding/editing/deleting
+            // variables in it. If we don't save it here, we get an error when modifying variables.
+            $scope.group.Name = 'Name' + new Date().valueOf();; // Give it a default name first.
+            $scope.saveVariableGroup();
+        }
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -115,29 +144,6 @@
             });
 
             $scope.saveVariableGroup();
-        }
-
-        // ---------------------------------------------------------------------------------------------------
-
-        $scope.saveVariableGroup = function () {
-            var config = {
-                url: '/PrestoWeb/api/variableGroups/save',
-                method: 'POST',
-                data: $scope.group
-            };
-
-            $scope.loading = 1;
-            $http(config)
-                .then(function (response) {
-                    $scope.group = response.data;
-                    $scope.variables = $scope.group.CustomVariables;
-                    $rootScope.setUserMessage("Variable group saved.");
-                    $scope.loading = 0;
-                }, function (response) {
-                    $scope.loading = 0;
-                    $rootScope.setUserMessage("Save failed");
-                    showInfoModal.show(response.statusText, response.data);
-                });
         }
     }
 })();

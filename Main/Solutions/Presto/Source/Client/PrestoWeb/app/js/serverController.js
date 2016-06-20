@@ -6,7 +6,7 @@
 
     // ------------------------------- Server Controller -------------------------------
 
-    function serverController($scope, $rootScope, $http, $routeParams, uiGridConstants, $uibModal, showConfirmationModal, showInfoModal) {
+    function serverController($scope, $rootScope, $http, $routeParams, $window, uiGridConstants, $uibModal, showConfirmationModal, showInfoModal) {
         $scope.server = {};
         $scope.serverId = $routeParams.serverId;
         $scope.selectedAppsWithGroup = [];
@@ -279,6 +279,12 @@
                     showInfoModal.show(response.statusText, response.data);
                 });
         };
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.backToList = function () {
+            $window.location.href = '/PrestoWeb/app/#/servers/1';
+        }
     }
 
 })();

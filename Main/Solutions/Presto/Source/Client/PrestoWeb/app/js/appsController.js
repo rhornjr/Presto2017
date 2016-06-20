@@ -28,7 +28,6 @@
         $scope.state = appsState;
 
         $scope.gridOptions = {
-            //data: 'apps',
             multiSelect: false,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

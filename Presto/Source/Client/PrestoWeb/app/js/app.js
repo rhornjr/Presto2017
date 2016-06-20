@@ -167,6 +167,17 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
 
 // --------------------------------------------------------------------------------------
 
+app.factory('serversState', ['$http', '$rootScope', function ($http, $rootScope) {
+    var state = {
+        servers: null,
+        selectedServers: []
+    }
+
+    return state;
+}]);
+
+// --------------------------------------------------------------------------------------
+
 app.factory('serversRepository', ['$http', '$rootScope', function ($http, $rootScope) {
 
     var data;
@@ -416,7 +427,7 @@ app.run(function ($rootScope, $location) {
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/apps/:showList?', { templateUrl: 'partials/apps.html', controller: 'appsController' });
-    $routeProvider.when('/servers', { templateUrl: 'partials/servers.html', controller: 'serversController' });
+    $routeProvider.when('/servers/:showList?', { templateUrl: 'partials/servers.html', controller: 'serversController' });
     $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
     $routeProvider.when('/server/:serverId?', { templateUrl: 'partials/server.html', controller: 'serverController' });
     $routeProvider.when('/variableGroups', { templateUrl: 'partials/variableGroups.html', controller: 'variableGroupsController' });

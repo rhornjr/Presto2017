@@ -293,13 +293,19 @@ app.factory('installsRepository', ['$http', '$rootScope', function ($http, $root
     var data;
 
     return {
-        getInstalls: function (forceRefresh, callbackFunction) {
+        getInstalls: function (forceRefresh, appAndServerAndOverrides, callbackFunction) {
             if (data && !forceRefresh) {
                 callbackFunction(data);
                 return;
             }
 
-            $http.get('/PrestoWeb/api/installs/')
+            var config = {
+                url: '/PrestoWeb/api/installs/',
+                method: 'POST',
+                data: appAndServerAndOverrides
+            };
+
+            $http(config)
                 .then(function (result) {
                     data = result.data;
                     $rootScope.setUserMessage("Installs list refreshed");

@@ -6,12 +6,14 @@
 
     // ------------------------------- Installs Controller -------------------------------    
 
-    function installsController($scope, $http, installsRepository, pendingInstallsRepository) {
+    function installsController($scope, $http, $uibModal, installsRepository, pendingInstallsRepository) {
         $scope.loading = 1;
-        $scope.installs = null;
+        $scope.installs = [];
         $scope.pending = null;
         $scope.selectedSummaries = [];
         $scope.selectedDetails = [];
+        $scope.selectedApp = null;
+        $scope.selectedServer = null;
 
         // ToDo: This grid should normally have nothing in it, so we should be able to collapse it.
         $scope.gridPending = {
@@ -67,8 +69,14 @@
         $scope.refresh = function (forceRefresh) {
             $scope.loading = 1;
 
+            var appAndServerAndOverrides = {
+                application: $scope.selectedApp,
+                server: $scope.selectedServer,
+                overrides: null
+            }
+
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            installsRepository.getInstalls(forceRefresh, function (dataResponse) {
+            installsRepository.getInstalls(forceRefresh, appAndServerAndOverrides, function (dataResponse) {
                 $scope.installs = dataResponse;
                 $scope.loading = 0;
             });
@@ -89,6 +97,58 @@
         };
 
         $scope.refresh();
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.pickApp = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/appPicker.html',
+                controller: 'appPickerModalController',
+                size: 'sm',
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (app) {
+                console.log("App picked", app);
+                $scope.selectedApp = app;
+                $scope.installs = [];
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.pickServer = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/serverPicker.html',
+                controller: 'serverPickerModalController',
+                size: 'sm',
+                windowClass: 'app-modal-window'
+            });
+
+            modalInstance.result.then(function (server) {
+                console.log("Server picked", server);
+                $scope.selectedServer = server;
+                $scope.installs = [];
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.clearApp = function () {
+            $scope.selectedApp = null;
+            $scope.installs = [];
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.clearServer = function () {
+            $scope.selectedServer = null;
+            $scope.installs = [];
+        }
     }
 
 })();

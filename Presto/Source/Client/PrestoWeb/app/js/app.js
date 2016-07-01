@@ -290,29 +290,16 @@ app.factory('resolveRepository', ['$http', '$rootScope', function ($http, $rootS
 }]);
 
 app.factory('installsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
-    var data;
-
-    return {
-        getInstalls: function (forceRefresh, appAndServerAndOverrides, callbackFunction) {
-            if (data && !forceRefresh) {
-                callbackFunction(data);
-                return;
-            }
-
-            var config = {
-                url: '/PrestoWeb/api/installs/',
-                method: 'POST',
-                data: appAndServerAndOverrides
-            };
-
-            $http(config)
-                .then(function (result) {
-                    data = result.data;
-                    $rootScope.setUserMessage("Installs list refreshed");
-                    callbackFunction(data);
-                });
-        }
+    var state = {
+        installs: [],
+        pending: null,
+        selectedSummaries: [],
+        selectedSummaryTaskDetails: [],
+        selectedDetails: [],
+        selectedApp: null,
+        selectedServer: null
     }
+    return state;
 }]);
 
 app.factory('pendingInstallsRepository', ['$http', '$rootScope', function ($http, $rootScope) {

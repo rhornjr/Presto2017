@@ -6,14 +6,8 @@
 
     // ------------------------------- Installs Controller -------------------------------    
 
-    function installsController($scope, $http, $uibModal, installsRepository, pendingInstallsRepository) {
-        $scope.loading = 1;
-        $scope.installs = [];
-        $scope.pending = null;
-        $scope.selectedSummaries = [];
-        $scope.selectedDetails = [];
-        $scope.selectedApp = null;
-        $scope.selectedServer = null;
+    function installsController($rootScope, $scope, $http, $uibModal, installsRepository, pendingInstallsRepository) {
+        $scope.state = installsRepository;
 
         // ToDo: This grid should normally have nothing in it, so we should be able to collapse it.
         $scope.gridPending = {
@@ -26,7 +20,7 @@
         };
 
         $scope.gridOptions = {
-            data: 'installs',
+            data: 'state.installs',
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'ApplicationName', displayName: 'App', width: "28%", resizable: true },
@@ -41,14 +35,16 @@
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
-                $scope.selectedSummaries.length = 0; // Truncate/clear the array. Yes, this is how it's done.
-                $scope.selectedSummaries.push(row.entity);
-                $scope.selectedDetails.length = 0; // The details no longer match what is selected, so clear them.
+                $scope.state.selectedSummaries.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+                $scope.state.selectedSummaries.push(row.entity);
+                $scope.state.selectedSummaryTaskDetails = row.entity.TaskDetails;
+                $scope.state.selectedDetails.length = 0; // The details no longer match what is selected, so clear them.
             });
         };
 
         $scope.gridOptions2 = {
-            data: 'selectedSummaries[0].TaskDetails',
+            //data: 'state.selectedSummaries[0].TaskDetails',
+            data: 'state.selectedSummaryTaskDetails',
             multiSelect: false,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'StartTime', displayName: 'Start', width: "20%", resizable: true },
@@ -61,25 +57,35 @@
             $scope.gridApi2 = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
-                $scope.selectedDetails.length = 0; // Truncate/clear the array. Yes, this is how it's done.
-                $scope.selectedDetails.push(row.entity);
+                $scope.state.selectedDetails.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+                $scope.state.selectedDetails.push(row.entity);
             });
         };
 
         $scope.refresh = function (forceRefresh) {
-            $scope.loading = 1;
+            if (!forceRefresh && $scope.state.installs.length > 0) {
+                return; // Not forcing a refresh and we already have data.
+            }
 
             var appAndServerAndOverrides = {
-                application: $scope.selectedApp,
-                server: $scope.selectedServer,
+                application: $scope.state.selectedApp,
+                server: $scope.state.selectedServer,
                 overrides: null
             }
 
-            // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            installsRepository.getInstalls(forceRefresh, appAndServerAndOverrides, function (dataResponse) {
-                $scope.installs = dataResponse;
-                $scope.loading = 0;
-            });
+            var config = {
+                url: '/PrestoWeb/api/installs/',
+                method: 'POST',
+                data: appAndServerAndOverrides
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (result) {
+                    $rootScope.setUserMessage("Installs list refreshed");
+                    $scope.state.installs = result.data;
+                    $scope.loading = 0;
+                });
 
             pendingInstallsRepository.getPending(forceRefresh, function (dataResponse) {
                 // Group names aren't showing. I believe it's because it's a calculated field and that doesn't run in a browser.
@@ -92,7 +98,7 @@
                             dataResponse[i].ApplicationWithOverrideGroup.CustomVariableGroups[0].Name + '...';
                     }
                 }
-                $scope.pending = dataResponse;
+                $scope.state.pending = dataResponse;
             });
         };
 
@@ -110,8 +116,8 @@
 
             modalInstance.result.then(function (app) {
                 console.log("App picked", app);
-                $scope.selectedApp = app;
-                $scope.installs = [];
+                $scope.state.selectedApp = app;
+                clearInstalls();
             }, function () {
                 // modal dismissed
             });
@@ -129,8 +135,8 @@
 
             modalInstance.result.then(function (server) {
                 console.log("Server picked", server);
-                $scope.selectedServer = server;
-                $scope.installs = [];
+                $scope.state.selectedServer = server;
+                clearInstalls();
             }, function () {
                 // modal dismissed
             });
@@ -139,15 +145,24 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.clearApp = function () {
-            $scope.selectedApp = null;
-            $scope.installs = [];
+            $scope.state.selectedApp = null;
+            clearInstalls();
         }
 
         // ---------------------------------------------------------------------------------------------------
 
         $scope.clearServer = function () {
-            $scope.selectedServer = null;
-            $scope.installs = [];
+            $scope.state.selectedServer = null;
+            clearInstalls();
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        var clearInstalls = function () {
+            $scope.state.installs.length = 0;            
+            $scope.state.selectedSummaries.length = 0;
+            $scope.state.selectedSummaryTaskDetails.length = 0;
+            $scope.state.selectedDetails.length = 0;
         }
     }
 

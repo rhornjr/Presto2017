@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.EntityHelperClasses.TimeZoneHelpers;
@@ -14,13 +15,10 @@ namespace PrestoWeb.Controllers
     [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]
     public class InstallsController : ApiController
     {
-        public IEnumerable<InstallationSummaryDto> Get()
+        [AcceptVerbs("POST")]
+        public IEnumerable<InstallationSummaryDto> Get(AppAndServerAndOverrides appAndServerAndOverrides)
         {
-            IEnumerable<InstallationSummary> installationSummaries;
-            using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
-            {
-                installationSummaries = prestoWcf.Service.GetMostRecentByStartTime(50);
-            }
+            var installationSummaries = GetInstallationSummaries(appAndServerAndOverrides);
 
             var installationSummaryDtos = new List<InstallationSummaryDto>();
 
@@ -42,6 +40,36 @@ namespace PrestoWeb.Controllers
             }
 
             return installationSummaryDtos.OrderByDescending(x => x.InstallationStart);
+        }
+
+        private IEnumerable<InstallationSummary> GetInstallationSummaries(AppAndServerAndOverrides appAndServerAndOverrides)
+        {
+            IEnumerable<InstallationSummary> installationSummaries;
+            const int numberToRetrieve = 50;
+
+            using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
+            {
+                if (appAndServerAndOverrides.Application != null & appAndServerAndOverrides.Server != null)
+                {
+                    return prestoWcf.Service.GetMostRecentByStartTimeServerAndApplication(
+                        numberToRetrieve, appAndServerAndOverrides.Server.Id, appAndServerAndOverrides.Application.Id);
+                }
+
+                if (appAndServerAndOverrides.Application != null)
+                {
+                    return prestoWcf.Service.GetMostRecentByStartTimeAndApplication(
+                        numberToRetrieve, appAndServerAndOverrides.Application.Id);
+                }
+
+                if (appAndServerAndOverrides.Server != null)
+                {
+                    return prestoWcf.Service.GetMostRecentByStartTimeAndServer(
+                        numberToRetrieve, appAndServerAndOverrides.Server.Id);
+                }
+
+                // No filter; just get the most recent.
+                return prestoWcf.Service.GetMostRecentByStartTime(numberToRetrieve);
+            }
         }
     }
 }

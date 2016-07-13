@@ -44,6 +44,7 @@
 
         $scope.gridTasks = {
             //multiSelect: true,
+            enableColumnResizing: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             enableRowSelection: true,
             enableFullRowSelection: true,
@@ -73,6 +74,7 @@
         $scope.gridGroups = {
             data: 'app.CustomVariableGroups',
             multiSelect: false,
+            enableColumnResizing: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
         };

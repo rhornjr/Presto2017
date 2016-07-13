@@ -11,6 +11,7 @@
 
         $scope.gridOptions = {
             multiSelect: false,
+            enableColumnResizing: true,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.state.selectedServers,

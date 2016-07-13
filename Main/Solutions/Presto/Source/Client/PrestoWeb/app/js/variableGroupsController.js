@@ -16,6 +16,7 @@
         $scope.gridVariableGroups = {
             data: 'variableGroups',
             multiSelect: false,
+            enableColumnResizing: true,
             enableFiltering: true,
             selectedItems: $scope.selectedGroups,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

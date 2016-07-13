@@ -16,7 +16,8 @@ var app = angular.module('myApp', [
   'ui.bootstrap',
   'ui.grid',  // http://ui-grid.info/
   'ui.grid.selection',
-  'ui.grid.draggable-rows'  // https://github.com/cdwv/ui-grid-draggable-rows
+  'ui.grid.draggable-rows',  // https://github.com/cdwv/ui-grid-draggable-rows
+  'ui.grid.resizeColumns'
 ]);
 
 angular.module('myApp.controllers', []);

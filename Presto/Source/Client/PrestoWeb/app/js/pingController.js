@@ -15,6 +15,7 @@
         $scope.gridPing= {
             data: 'pings',
             multiSelect: false,
+            enableColumnResizing: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             // Got the row template from https://github.com/cdwv/ui-grid-draggable-rows:
             rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',

@@ -16,6 +16,7 @@
         $scope.gridApps = {
             data: 'apps',
             multiSelect: false,
+            enableColumnResizing: true,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedApps,
@@ -63,6 +64,7 @@
         $scope.gridServers = {
             data: 'servers',
             multiSelect: false,
+            enableColumnResizing: true,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedApps,
@@ -114,6 +116,7 @@
         $scope.gridResolve = {
             data: 'resolvedVariables',
             multiSelect: false,
+            enableColumnResizing: true,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedVariables,

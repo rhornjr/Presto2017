@@ -6,19 +6,17 @@
 
     // ------------------------------- Variable Groups Controller -------------------------------
 
-    function variableGroupsController($scope, $rootScope, $http, $routeParams, variableGroupsRepository, uiGridConstants, $window, showConfirmationModal, showInfoModal) {
-        $scope.loading = 1;
-        $scope.variableGroups = null;
-        $scope.selectedGroups = [];
+    function variableGroupsController($scope, $rootScope, $http, $routeParams, variableGroupsRepository, uiGridConstants, $window, showConfirmationModal, showInfoModal, showTextEntryModal) {
+        $scope.state = variableGroupsRepository;
 
         // ---------------------------------------------------------------------------------------------------
 
         $scope.gridVariableGroups = {
-            data: 'variableGroups',
+            data: 'state.variableGroups',
             multiSelect: false,
             enableColumnResizing: true,
             enableFiltering: true,
-            selectedItems: $scope.selectedGroups,
+            selectedItems: $scope.state.selectedGroups,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } }]
         };
@@ -26,12 +24,21 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.refresh = function (forceRefresh) {
+            if ($scope.state.variableGroups.length > 0 && !forceRefresh) {
+                return;
+            }
+
             $scope.loading = 1;
-            // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            variableGroupsRepository.getVariableGroups(forceRefresh, function (dataResponse) {
-                $scope.variableGroups = dataResponse;
-                $scope.loading = 0;
-            });
+            $http.get('/PrestoWeb/api/variableGroups/')
+                .then(function (result) {
+                    $rootScope.setUserMessage("Variable group list refreshed");
+                    $scope.state.variableGroups = result.data;
+                    $scope.loading = 0;
+                }, function (response) {
+                    $scope.loading = 0;
+                    console.log(response);
+                    showInfoModal.show(response.statusText, response.data);
+                });
         };
 
         // ---------------------------------------------------------------------------------------------------
@@ -40,8 +47,8 @@
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
-                $scope.selectedGroups.length = 0; // Truncate/clear the array. Yes, this is how it's done.
-                $scope.selectedGroups.push(row.entity);
+                $scope.state.selectedGroups.length = 0; // Truncate/clear the array. Yes, this is how it's done.
+                $scope.state.selectedGroups.push(row.entity);
                 });
         };
 
@@ -54,7 +61,7 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.editGroup = function () {
-            var modifiedGroupId = $scope.selectedGroups[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
+            var modifiedGroupId = $scope.state.selectedGroups[0].Id.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
             $window.location.href = '/PrestoWeb/app/#/variableGroup/' + modifiedGroupId;
         }
 
@@ -69,7 +76,7 @@
             var config = {
                 url: '/PrestoWeb/api/variableGroups/delete',
                 method: 'POST',
-                data: $scope.selectedGroups[0]
+                data: $scope.state.selectedGroups[0]
             };
 
             $scope.loading = 1;
@@ -88,5 +95,25 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.refresh();
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.findKey = function () {
+            showTextEntryModal.show('Variable Key', onKeyEntered);
+        }
+
+        function onKeyEntered(key) {
+            var filteredGroups = [];
+
+            for (var i = 0; i < $scope.state.variableGroups.length; i++) {
+                for (var j = 0; j < $scope.state.variableGroups[i].CustomVariables.length; j++) {
+                    if ($scope.state.variableGroups[i].CustomVariables[j].Key == key) {
+                        filteredGroups.push($scope.state.variableGroups[i]);
+                    }
+                }
+            }
+
+            $scope.state.variableGroups = filteredGroups;
+        }
     }
 })();

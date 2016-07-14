@@ -97,6 +97,25 @@ angular.module('myApp.controllers').controller('infoController', function ($scop
     };
 });
 
+// ------------------------- Text Entry Modal Controller -------------------------
+
+angular.module('myApp.controllers').controller('textEntryController', function ($scope, $uibModalInstance, modalTitle) {
+    $scope.textEntry = '';
+    $scope.modalTitle = modalTitle;
+
+    $scope.ok = function () {
+        $uibModalInstance.close($scope.textEntry);
+    };
+
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+    };
+
+    $scope.onTextEntryKeyUp = function (event) {
+        if (event.key == 'Enter') { $scope.ok() }
+    }
+});
+
 // --------------------------------------------------------------------------------------
 
 app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($http, $rootScope, $uibModal) {
@@ -224,23 +243,12 @@ app.factory('logRepository', ['$http', '$rootScope', function ($http, $rootScope
 }]);
 
 app.factory('variableGroupsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
-    var data;
-
-    return {
-        getVariableGroups: function (forceRefresh, callbackFunction) {
-            if (data && !forceRefresh) {
-                callbackFunction(data);
-                return;
-            }
-
-            $http.get('/PrestoWeb/api/variableGroups/')
-                .then(function (result) {
-                    data = result.data;
-                    $rootScope.setUserMessage("Variable group list refreshed");
-                    callbackFunction(data);
-                });
-        }
+    var state = {
+        variableGroups: [],
+        selectedGroups: []
     }
+
+    return state;
 }]);
 
 app.factory('resolveRepository', ['$http', '$rootScope', function ($http, $rootScope) {
@@ -393,6 +401,40 @@ app.factory('showConfirmationModal', ['$http', '$rootScope', '$uibModal', functi
                 callback(confirmed);
             }, function () {
                 callback();
+            });
+        }
+    }
+}]);
+
+app.factory('showTextEntryModal', ['$http', '$rootScope', '$uibModal', function ($http, $rootScope, $uibModal) {
+    return {
+        show: function (modalTitle, callback) {
+            $rootScope.disableScanBecauseModal = true;
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/textEntryModal.html',
+                controller: 'textEntryController',
+                size: 'sm',
+                windowClass: 'app-modal-window',
+                resolve: {
+                    modalTitle: function () {
+                        return modalTitle;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (text) {
+                try {
+                    callback(text);
+                }
+                finally {
+                    var millisecondsToWait = 500;
+                    setTimeout(function () {
+                        $rootScope.disableScanBecauseModal = false;
+                    }, millisecondsToWait);  // Wait briefly to allow the callback to happen and not the scan.
+                }
+            }, function () {
+                $rootScope.disableScanBecauseModal = false;
+                // modal dismissed
             });
         }
     }

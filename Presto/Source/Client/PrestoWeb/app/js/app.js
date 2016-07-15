@@ -473,5 +473,6 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/log', { templateUrl: 'partials/log.html', controller: 'logController' });
     $routeProvider.when('/ping', { templateUrl: 'partials/ping.html', controller: 'pingController' });
     $routeProvider.when('/global', { templateUrl: 'partials/global.html', controller: 'globalController' });
+    $routeProvider.when('/security', { templateUrl: 'partials/security.html', controller: 'securityController' });
     $routeProvider.otherwise({ redirectTo: '/global' });
 }]);

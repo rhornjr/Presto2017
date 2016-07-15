@@ -1,0 +1,19 @@
+﻿<div id="container" class="PageContainer">
+    <h2 class="myHeader mainHeader">Security</h2>
+
+    <div style="display:table; margin:0 auto">
+        <!-- Center this whole div. Note: We use &nbsp; here so the div has content and the same height
+             as the rest of the divs, even if the div is empty (which now it's not because of the space). -->
+        <div class="customLabelLeft">Allowed users</div>
+        <div class="customLabelRight">{{authorizationSetting.AllowedUsers}}&nbsp;</div>
+        <br />
+        <div class="customLabelLeft">Allowed roles</div>
+        <div class="customLabelRight">{{authorizationSetting.AllowedRoles}}&nbsp;</div>
+        <br />
+        <div class="customLabelLeft">Denied users</div>
+        <div class="customLabelRight">{{authorizationSetting.DeniedUsers}}&nbsp;</div>
+        <br />
+        <div class="customLabelLeft">Denied roles</div>
+        <div class="customLabelRight">{{authorizationSetting.DeniedRoles}}&nbsp;</div>
+    </div>
+</div>

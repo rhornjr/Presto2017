@@ -2,7 +2,7 @@
     <uib-accordion>
         <uib-accordion-group heading="Pending">
             <h2 class="myHeader mainHeader">Pending</h2>
-            <div class="gridHalf" ui-grid="gridPending" ui-grid-selection></div>
+            <div class="gridHalf" ui-grid="gridPending" ui-grid-selection ui-grid-resize-columns></div>
         </uib-accordion-group>
     </uib-accordion>
     <h2 class="myHeader mainHeader">Installations</h2>
@@ -20,9 +20,9 @@
         <button class="btn btn-default" ng-click="clearServer();" style="display:inline-block;" ng-disabled="loading">x</button>
         <br />
     </div>
-    <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection></div>
+    <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns></div>
     <h2 class="myHeader mainHeader" ng-hide="loading">Installation Details</h2>
-    <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection></div>
+    <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection ui-grid-resize-columns></div>
     <h2 class="myHeader seperator"></h2>
     <div ng-repeat="detail in state.selectedDetails" class="slide">
         <!-- Use the pre tag so newline characters are honored. -->

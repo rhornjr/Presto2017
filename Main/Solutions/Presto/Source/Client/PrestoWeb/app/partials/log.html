@@ -2,7 +2,7 @@
     <h2 class="myHeader mainHeader">Log Messages</h2>
     <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
-    <div class="gridFull" ui-grid="gridOptions"></div>
+    <div class="gridFull" ui-grid="gridOptions" ui-grid-resize-columns></div>
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>

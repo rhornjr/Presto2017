@@ -2,7 +2,7 @@
     <h2 class="myHeader mainHeader">Applications</h2>
     <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
-    <div class="gridFull" ui-grid="gridOptions" ui-grid-selection></div>
+    <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns></div>
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="addApp();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editApp();" ng-disabled="loading">Edit</button>

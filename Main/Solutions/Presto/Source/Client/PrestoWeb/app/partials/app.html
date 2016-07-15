@@ -20,7 +20,7 @@
         </div>
         <h2 class="myHeader subHeader">Tasks</h2>
         <div class="OneOfTwo">
-            <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-draggable-rows></div>
+            <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows></div>
         </div>
     </form>
     <h2 class="myHeader footer">
@@ -38,7 +38,7 @@
 
     <h2 class="myHeader subHeader">Custom Variable Groups</h2>
     <div class="TwoOfTwo">
-        <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ng-hide="loading"></div>
+        <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ui-grid-resize-columns ng-hide="loading"></div>
     </div>
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>

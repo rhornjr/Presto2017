@@ -4,8 +4,7 @@
 
     angular.module('myApp.controllers').controller('groupsPickerModalController', groupsPickerModalController);
 
-    function groupsPickerModalController ($scope, $uibModalInstance, uiGridConstants, variableGroupsRepository) {
-        $scope.loading = 1;
+    function groupsPickerModalController($rootScope, $scope, $http, $uibModalInstance, uiGridConstants, variableGroupsRepository) {
         $scope.groups = null;
 
         $scope.gridGroups = {
@@ -18,13 +17,14 @@
             columnDefs: [{ field: 'Name', displayName: 'Variable Group', width: "68%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } }]
         };
 
-        $scope.refresh = function (forceRefresh) {
+        $scope.refresh = function () {
             $scope.loading = 1;
-            // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
-            variableGroupsRepository.getVariableGroups(forceRefresh, function (dataResponse) {
-                $scope.groups = dataResponse;
-                $scope.loading = 0;
-            });
+            $http.get('/PrestoWeb/api/variableGroups/')
+                .then(function (result) {
+                    $scope.loading = 0;
+                    $scope.groups = result.data;
+                    $rootScope.setUserMessage("Variable group list refreshed");                    
+                });
         };
 
         // Act on the row selection changing.
@@ -33,7 +33,6 @@
         };
 
         $scope.ok = function () {
-            //$uibModalInstance.close($scope.selectedGroups);
             $uibModalInstance.close($scope.gridApi.selection.getSelectedRows());
         };
 
@@ -41,6 +40,6 @@
             $uibModalInstance.dismiss();
         };
 
-        $scope.refresh(true);
+        $scope.refresh();
     };
 })();

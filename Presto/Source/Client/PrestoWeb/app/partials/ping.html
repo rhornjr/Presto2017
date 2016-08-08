@@ -3,6 +3,7 @@
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <div class="gridFull" ui-grid="gridPing" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows></div>
     <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="sendPingRequest();" ng-disabled="loading">Send Ping</button>
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
 </div>

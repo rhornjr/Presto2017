@@ -6,11 +6,14 @@
 
     // ------------------------------- Ping Controller -------------------------------
 
-    function pingController($scope, $http, $routeParams, pingRequestRepository, pingResponseRepository, uiGridConstants) {
+    function pingController($rootScope, $scope, $http, $routeParams, pingRequestRepository, pingResponseRepository, uiGridConstants, showInfoModal) {
         $scope.loading = 1;
         $scope.pings = null;
         $scope.latestPingRequest;
         $scope.latestPingRequestTime;
+        var timerIntervalObject = null;
+        var pingRefreshIntervalInMilliseconds = 10000;
+        var numberOfMinutesToContinuouslyRefresh = 2;
 
         $scope.gridPing= {
             data: 'pings',
@@ -29,17 +32,77 @@
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
 
             pingRequestRepository.getLatestPingRequest(forceRefresh, function (dataResponse) {
-                $scope.latestPingRequest = dataResponse;
-                $scope.latestPingRequestTime = moment($scope.latestPingRequest.RequestTime).format('DD-MMM-YYYY HH:mm:ss');
-
-                pingResponseRepository.getResponses(forceRefresh, $scope.latestPingRequest, function (pingResponses) {
-                    $scope.pings = pingResponses;
-                    $scope.loading = 0;
-                });
+                setPingInfo(dataResponse);
+                getPingResponses(forceRefresh);
             });
         };
 
         $scope.refresh();
+
+        // -----------------------------------------------------------------------------------
+
+        function setPingInfo(pingRequest) {
+            $scope.latestPingRequest = pingRequest;
+            $scope.latestPingRequestTime = moment($scope.latestPingRequest.RequestTime).format('DD-MMM-YYYY HH:mm:ss');
+        }
+
+        // -----------------------------------------------------------------------------------
+
+        function getPingResponses(forceRefresh) {
+            $scope.loading = 1;
+            pingResponseRepository.getResponses(forceRefresh, $scope.latestPingRequest, function (pingResponses) {
+                $scope.pings = pingResponses;
+                $scope.loading = 0;
+            });
+        }
+
+        // -----------------------------------------------------------------------------------
+
+        $scope.sendPingRequest = function () {
+            var config = {
+                url: '/PrestoWeb/api/ping/sendRequest/',
+                method: 'POST'
+            };
+
+            $http(config)
+                .then(function (response) {
+                    $rootScope.setUserMessage("Starting ping refresh every " + pingRefreshIntervalInMilliseconds +
+                        " milliseconds for " + numberOfMinutesToContinuouslyRefresh + " minute(s).");
+                    showInfoModal.show("Ping Request Sent", "Ping request sent successfully", 3000);
+                    setPingInfo(response.data);
+                    startTimer(); // Now that we have a new ping, start the timer to get ping responses from servers.
+                }, function (response) {
+                    showInfoModal.show(response.statusText, response.data);
+            });
+        }
+
+        // -----------------------------------------------------------------------------------
+
+        function startTimer() {            
+            timerIntervalObject = window.setInterval(myTimer, pingRefreshIntervalInMilliseconds);
+        }
+        
+        // -----------------------------------------------------------------------------------
+
+        function myTimer() {
+            // Only refresh if we're not already loading from the previous call.
+            if ($scope.loading == 1) {
+                return;
+            }
+
+            // If we've hit our threshold for how long we want to refresh, stop the timer.
+            var startTime = moment($scope.latestPingRequest.RequestTime);
+            var endTime = moment(Date.now());
+            var duration = moment.duration(endTime.diff(startTime));
+            var minutes = duration.asMinutes();
+            if (minutes >= numberOfMinutesToContinuouslyRefresh) {
+                window.clearInterval(timerIntervalObject);
+                $rootScope.setUserMessage("Done refreshing pings");
+                return;
+            }
+
+            getPingResponses(true);
+        }
     }
 
 })();

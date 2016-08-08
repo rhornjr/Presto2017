@@ -97,6 +97,21 @@ namespace PrestoCommon.Entities
                     ModifyExistingNode(taskResolved, rootElement, prefix, prefixSuffix, namespaceManager);
                 }
 
+                // If internal subset doesn't have a value, then make it null. Making it null will cause
+                // <!DOCTYPE HTML> to be the result (which is what we want), instead of <!DOCTYPE HTML[]>.
+                // The brackets enable quirks mode. We don't want quirks mode.
+                // http://stackoverflow.com/q/38832479/279516
+                // http://stackoverflow.com/a/16451790/279516
+                if (xmlDocument.DocumentType != null && string.IsNullOrWhiteSpace(xmlDocument.DocumentType.InternalSubset))
+                {
+                    var name                               = xmlDocument.DocumentType.Name;
+                    var publicId                           = xmlDocument.DocumentType.PublicId;
+                    var systemId                           = xmlDocument.DocumentType.SystemId;
+                    var parent                             = xmlDocument.DocumentType.ParentNode;
+                    var documentTypeWithNullInternalSubset = xmlDocument.CreateDocumentType(name, publicId, systemId, null);
+                    parent.ReplaceChild(documentTypeWithNullInternalSubset, xmlDocument.DocumentType);
+                }
+
                 xmlDocument.Save(taskResolved.XmlPathAndFileName);
                 xmlDocument = null;
 

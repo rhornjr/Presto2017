@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
+using PrestoCommon.Misc;
 using PrestoCommon.Wcf;
 using Xanico.Core;
 
@@ -84,6 +85,22 @@ namespace PrestoWeb.Controllers
             {
                 Logger.LogException(ex);
                 throw Helper.CreateHttpResponseException(ex, "Error Deleting Variable Group");
+            }
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/variableGroups/encrypt")]
+        public string Encrypt(string valueToEncrypt)
+        {
+            try
+            {
+                var encryptedValue = AesCrypto.Encrypt(valueToEncrypt);
+                return encryptedValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Encrypting Value");
             }
         }
     }

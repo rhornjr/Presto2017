@@ -1,12 +1,6 @@
-﻿<div id="container" class="PageContainer">
-    <uib-accordion>
-        <uib-accordion-group heading="Pending">
-            <h2 class="myHeader mainHeader">Pending</h2>
-            <div class="gridHalf" ui-grid="gridPending" ui-grid-selection ui-grid-resize-columns></div>
-        </uib-accordion-group>
-    </uib-accordion>
+﻿<div id="container" class="PageContainer">    
     <h2 class="myHeader mainHeader">Installations</h2>
-    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition" />
     <div style="display:table; margin:0 auto">
         <!-- Center this whole div -->
         <div class="customLabelLeftSkinny" style="float:left;">End date</div>
@@ -18,7 +12,6 @@
                 <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
         </div>
-        <br />
         <div class="customLabelLeftSkinny">Application</div>
         <div class="customLabelRight">{{state.selectedApp.Name}} {{state.selectedApp.Version}}</div>
         <button class="btn btn-default" ng-click="pickApp();" style="display:inline-block;" ng-disabled="loading">...</button>
@@ -30,7 +23,14 @@
         <button class="btn btn-default" ng-click="clearServer();" style="display:inline-block;" ng-disabled="loading">x</button>
         <br />
     </div>
+    <hr />
     <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns></div>
+    <span style="margin:12px;">Displaying most recent {{state.numberOfInstallsToRetrieve}} installs as of {{state.dateEnd}}</span>
+    <h2 class="myHeader footer">
+        <button class="btn btn-default" ng-click="convertToCsv();" ng-disabled="loading">Export to CSV...</button>
+        <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+    </h2>
+    <hr />
     <h2 class="myHeader mainHeader" ng-hide="loading">Installation Details</h2>
     <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection ui-grid-resize-columns></div>
     <h2 class="myHeader seperator"></h2>
@@ -38,7 +38,10 @@
         <!-- Use the pre tag so newline characters are honored. -->
         <pre>Details: {{detail.Details}}</pre>
     </div>
-    <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
-    </h2>
+    <uib-accordion>
+        <uib-accordion-group heading="Pending">
+            <h2 class="myHeader mainHeader">Pending</h2>
+            <div class="gridHalf" ui-grid="gridPending" ui-grid-selection ui-grid-resize-columns></div>
+        </uib-accordion-group>
+    </uib-accordion>
 </div>

@@ -197,6 +197,57 @@
         $scope.open1 = function () {
             $scope.popup1.opened = true;
         };
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.convertToCsv = function () {
+            var config = {
+                url: '/PrestoWeb/api/installs/convertToCsv',
+                method: 'POST',
+                data: $scope.state.installs
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    // http://stackoverflow.com/a/33635761/279516
+                    var blob = new Blob([response.data], { type: "text/plain" });
+                    saveAs(blob, 'installs.csv');
+                }, function (response) {
+                        $scope.loading = 0;
+                        showInfoModal.show(response.statusText, response.data);
+                        console.log(response);
+                    });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        function getNumberOfInstallsToRetrieve() {
+            if ($scope.state.numberOfInstallsToRetrieve > 0) {
+                return; // already retrieved
+            }
+
+            var config = {
+                url: '/PrestoWeb/api/installs/getNumberOfInstallsToRetrieve',
+                method: 'GET'
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    $scope.state.numberOfInstallsToRetrieve = response.data;
+                }, function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                    console.log(response);
+                });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        getNumberOfInstallsToRetrieve();
     }
 
 })();

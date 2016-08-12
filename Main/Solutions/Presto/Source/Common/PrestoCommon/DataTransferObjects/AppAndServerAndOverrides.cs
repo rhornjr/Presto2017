@@ -1,4 +1,5 @@
-﻿using PrestoCommon.Entities;
+﻿using System;
+using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 
 namespace PrestoCommon.DataTransferObjects
@@ -10,5 +11,7 @@ namespace PrestoCommon.DataTransferObjects
         public ApplicationServer Server { get; set; }
 
         public PrestoObservableCollection<CustomVariableGroup> Overrides { get; set; }
+
+        public DateTime EndDate { get; set; }
     }
 }

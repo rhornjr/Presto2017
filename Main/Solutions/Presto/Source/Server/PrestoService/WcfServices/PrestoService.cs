@@ -186,24 +186,24 @@ namespace PrestoWcfService.WcfServices
 
         #region [InstallationSummary]
 
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve, DateTime endDate)
         {
-            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTime(numberToRetrieve));
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTime(numberToRetrieve, endDate));
         }
 
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId)
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId, DateTime endDate)
         {
-            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeAndServer(numberToRetrieve, serverId));
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeAndServer(numberToRetrieve, serverId, endDate));
         }
 
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId)
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId, DateTime endDate)
         {
-            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeAndApplication(numberToRetrieve, appId));
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeAndApplication(numberToRetrieve, appId, endDate));
         }
 
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId)
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId, DateTime endDate)
         {
-            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeServerAndApplication(numberToRetrieve, serverId, appId));
+            return Invoke(() => InstallationSummaryLogic.GetMostRecentByStartTimeServerAndApplication(numberToRetrieve, serverId, appId, endDate));
         }
 
         public void SaveInstallationSummary(InstallationSummary installationSummary)

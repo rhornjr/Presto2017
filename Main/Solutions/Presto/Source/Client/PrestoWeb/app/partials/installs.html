@@ -9,6 +9,16 @@
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <div style="display:table; margin:0 auto">
         <!-- Center this whole div -->
+        <div class="customLabelLeftSkinny" style="float:left;">End date</div>
+        <div class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="state.dateEnd"
+                    is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+                    alt-input-formats="altInputFormats" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </div>
+        <br />
         <div class="customLabelLeftSkinny">Application</div>
         <div class="customLabelRight">{{state.selectedApp.Name}} {{state.selectedApp.Version}}</div>
         <button class="btn btn-default" ng-click="pickApp();" style="display:inline-block;" ng-disabled="loading">...</button>

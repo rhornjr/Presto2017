@@ -196,26 +196,26 @@ namespace PrestoViewModel.Tabs
                 if (this.ApplicationServer != null && this.Application != null)
                 {
                     this.InstallationSummaryList = new Collection<InstallationSummary>(
-                        prestoWcf.Service.GetMostRecentByStartTimeServerAndApplication(50, this.ApplicationServer.Id, this.Application.Id).ToList());
+                        prestoWcf.Service.GetMostRecentByStartTimeServerAndApplication(50, this.ApplicationServer.Id, this.Application.Id, DateTime.Now).ToList());
                     return;
                 }
 
                 if (this.ApplicationServer != null)
                 {
                     this.InstallationSummaryList = new Collection<InstallationSummary>(
-                        prestoWcf.Service.GetMostRecentByStartTimeAndServer(50, this.ApplicationServer.Id).ToList());
+                        prestoWcf.Service.GetMostRecentByStartTimeAndServer(50, this.ApplicationServer.Id, DateTime.Now).ToList());
                     return;
                 }
 
                 if (this.Application != null)
                 {
                     this.InstallationSummaryList = new Collection<InstallationSummary>(
-                        prestoWcf.Service.GetMostRecentByStartTimeAndApplication(50, this.Application.Id).ToList());
+                        prestoWcf.Service.GetMostRecentByStartTimeAndApplication(50, this.Application.Id, DateTime.Now).ToList());
                     return;
                 }
 
                 // No filter; just get the most recent.
-                this.InstallationSummaryList = new Collection<InstallationSummary>(prestoWcf.Service.GetMostRecentByStartTime(50).ToList());
+                this.InstallationSummaryList = new Collection<InstallationSummary>(prestoWcf.Service.GetMostRecentByStartTime(50, DateTime.Now).ToList());
             }
         }
 

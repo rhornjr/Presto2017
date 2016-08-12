@@ -8,6 +8,7 @@ namespace PrestoCommon.EntityHelperClasses
     {
         public string Id { get; set; }
         public string ServerName { get; set; }
+        public string Environment { get; set; }
         public string ApplicationName { get; set; }
         public DateTime InstallationStart { get; set; }
         public DateTime InstallationEnd { get; set; }

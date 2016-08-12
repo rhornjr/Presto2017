@@ -91,25 +91,29 @@ namespace PrestoServer.Data.RavenDb
             });
         }
 
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve)
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve, DateTime endDate)
         {
-            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, _ => true);
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, x => x.InstallationStart < endDate);
         }
 
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId)
-        {
-            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, x => x.ApplicationServerId == serverId);
-        }
-
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId)
-        {
-            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve, x => x.ApplicationWithOverrideVariableGroup.ApplicationId == appId);
-        }
-
-        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId)
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId, DateTime endDate)
         {
             return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve,
-                x => x.ApplicationWithOverrideVariableGroup.ApplicationId == appId && x.ApplicationServerId == serverId);
+                x => x.ApplicationServerId == serverId && x.InstallationStart < endDate);
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId, DateTime endDate)
+        {
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve,
+                x => x.ApplicationWithOverrideVariableGroup.ApplicationId == appId && x.InstallationStart < endDate);
+        }
+
+        public IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId, DateTime endDate)
+        {
+            return GetMostRecentByStartTimeAndWhereClause(numberToRetrieve,
+                x => x.ApplicationWithOverrideVariableGroup.ApplicationId == appId
+                  && x.ApplicationServerId == serverId
+                  && x.InstallationStart < endDate);
         }
 
         private IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndWhereClause(int numberToRetrieve, Expression<Func<InstallationSummary, bool>> whereClause)
@@ -167,6 +171,10 @@ namespace PrestoServer.Data.RavenDb
             summary.ApplicationServer =
                 QuerySingleResultAndSetEtag(session => session.Load<ApplicationServer>(summary.ApplicationServerId))
                 as ApplicationServer;
+
+            // Hydrate the environment on the server.
+            summary.ApplicationServer.InstallationEnvironment = QuerySingleResultAndSetEtag(session =>
+                session.Load<InstallationEnvironment>(summary.ApplicationServer.InstallationEnvironmentId)) as InstallationEnvironment;
 
             summary.ApplicationWithOverrideVariableGroup.Application =
                 QuerySingleResultAndSetEtag(session => session.Load<Application>(summary.ApplicationWithOverrideVariableGroup.ApplicationId))

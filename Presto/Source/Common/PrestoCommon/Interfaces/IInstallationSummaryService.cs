@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using PrestoCommon.Entities;
 
@@ -8,16 +9,16 @@ namespace PrestoCommon.Interfaces
     public interface IInstallationSummaryService
     {
         [OperationContract]
-        IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve);
+        IEnumerable<InstallationSummary> GetMostRecentByStartTime(int numberToRetrieve, DateTime endDate);
 
         [OperationContract]
-        IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId);
+        IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndServer(int numberToRetrieve, string serverId, DateTime endDate);
 
         [OperationContract]
-        IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId);
+        IEnumerable<InstallationSummary> GetMostRecentByStartTimeAndApplication(int numberToRetrieve, string appId, DateTime endDate);
 
         [OperationContract]
-        IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId);
+        IEnumerable<InstallationSummary> GetMostRecentByStartTimeServerAndApplication(int numberToRetrieve, string serverId, string appId, DateTime endDate);
 
         [OperationContract]
         void SaveInstallationSummary(InstallationSummary installationSummary);

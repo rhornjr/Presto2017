@@ -306,7 +306,8 @@ app.factory('installsRepository', ['$http', '$rootScope', function ($http, $root
         selectedSummaryTaskDetails: [],
         selectedDetails: [],
         selectedApp: null,
-        selectedServer: null
+        selectedServer: null,
+        dateEnd: new Date()
     }
     return state;
 }]);

@@ -6,8 +6,18 @@
 
     // ------------------------------- Installs Controller -------------------------------    
 
-    function installsController($rootScope, $scope, $http, $uibModal, installsRepository, pendingInstallsRepository) {
+    function installsController($rootScope, $scope, $http, $uibModal, installsRepository, pendingInstallsRepository, showInfoModal) {
         $scope.state = installsRepository;
+
+        // ---------------------------------------------------------------------------------------------------
+
+        // Whenever the user provides a new date, set the hours component on it.
+
+        $scope.$watch('state.dateEnd', function () {
+            $scope.state.dateEnd.setHours(23, 59, 59, 999); // Use ending of end date. (hour,min,sec,millisec)
+        });
+
+        // ---------------------------------------------------------------------------------------------------
 
         // ToDo: This grid should normally have nothing in it, so we should be able to collapse it.
         $scope.gridPending = {
@@ -24,11 +34,13 @@
             data: 'state.installs',
             multiSelect: false,
             enableColumnResizing: true,
+            enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'ApplicationName', displayName: 'App', width: "28%", resizable: true },
                          { field: 'ServerName', displayName: 'Server', width: "20%" },
-                         { field: 'InstallationStart', displayName: 'Start', width: "20%" },
-                         { field: 'InstallationEnd', displayName: 'End', width: "20%" },
+                         { field: 'Environment', displayName: 'Env', width: "10%" },
+                         { field: 'InstallationStart', displayName: 'Start', width: "15%" },
+                         { field: 'InstallationEnd', displayName: 'End', width: "15%" },
                          { field: 'Result', displayName: 'Result', width: "10%" }]
         };
 
@@ -70,10 +82,14 @@
                 return; // Not forcing a refresh and we already have data.
             }
 
+            var weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+
             var appAndServerAndOverrides = {
                 application: $scope.state.selectedApp,
                 server: $scope.state.selectedServer,
-                overrides: null
+                overrides: null,
+                endDate: $scope.state.dateEnd
             }
 
             var config = {
@@ -88,6 +104,9 @@
                     $rootScope.setUserMessage("Installs list refreshed");
                     $scope.state.installs = result.data;
                     $scope.loading = 0;
+                }, function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
                 });
 
             pendingInstallsRepository.getPending(forceRefresh, function (dataResponse) {
@@ -167,6 +186,17 @@
             $scope.state.selectedSummaryTaskDetails.length = 0;
             $scope.state.selectedDetails.length = 0;
         }
+
+        // ---------------------------------------------------------------------------------------------------
+        // Datepicker stuff
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
     }
 
 })();

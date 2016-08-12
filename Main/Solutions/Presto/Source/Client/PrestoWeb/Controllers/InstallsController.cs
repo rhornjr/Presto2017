@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using PrestoCommon.DataTransferObjects;
@@ -82,6 +83,35 @@ namespace PrestoWeb.Controllers
                 // No filter; just get the most recent.
                 return prestoWcf.Service.GetMostRecentByStartTime(_maxInstallsToRetrieve, appAndServerAndOverrides.EndDate);
             }
+        }
+
+        [AcceptVerbs("POST")]
+        [Route("api/installs/convertToCsv")]
+        public string ConvertToCsv(IEnumerable<InstallationSummaryDto> summaries)
+        {
+            var builder = new StringBuilder();
+            var delimiter = ",";
+
+            foreach (var summary in summaries)
+            {
+                builder.AppendLine(
+                    summary.Id + delimiter +
+                    summary.ApplicationName + delimiter +
+                    summary.ServerName + delimiter +
+                    summary.Environment + delimiter +
+                    summary.InstallationStart + delimiter +
+                    summary.InstallationEnd + delimiter +
+                    summary.Result);
+            }
+
+            return builder.ToString();
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/installs/getNumberOfInstallsToRetrieve")]
+        public int GetNumberOfInstallsToRetrieve()
+        {
+            return this._maxInstallsToRetrieve;
         }
     }
 }

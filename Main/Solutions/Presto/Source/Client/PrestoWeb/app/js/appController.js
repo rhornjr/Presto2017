@@ -334,7 +334,7 @@
                     $scope.loading = 0;
                     // http://stackoverflow.com/a/33635761/279516
                     var blob = new Blob([response.data], { type: "text/plain" });
-                    saveAs(blob, 'snuh.txt');
+                    saveAs(blob, $scope.app.Name + '_tasks.txt');
                 }, function (response) {
                         $scope.loading = 0;
                         showInfoModal.show(response.statusText, response.data);

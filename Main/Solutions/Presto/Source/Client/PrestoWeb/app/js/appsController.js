@@ -37,6 +37,8 @@
                          { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
         };
 
+        $scope.gridOptions.data = $scope.state.apps;
+
         $scope.refresh = function (forceRefresh) {
             if (!forceRefresh) {
                 return;

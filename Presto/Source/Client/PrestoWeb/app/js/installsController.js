@@ -233,13 +233,10 @@
                 method: 'GET'
             };
 
-            $scope.loading = 1;
             $http(config)
                 .then(function (response) {
-                    $scope.loading = 0;
                     $scope.state.numberOfInstallsToRetrieve = response.data;
                 }, function (response) {
-                    $scope.loading = 0;
                     showInfoModal.show(response.statusText, response.data);
                     console.log(response);
                 });

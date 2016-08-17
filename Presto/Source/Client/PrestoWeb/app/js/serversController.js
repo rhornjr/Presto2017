@@ -19,6 +19,8 @@
                          { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
         };
 
+        $scope.gridOptions.data = $scope.state.servers;
+
         $scope.refresh = function (forceRefresh) {
             $scope.loading = 1;
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.          

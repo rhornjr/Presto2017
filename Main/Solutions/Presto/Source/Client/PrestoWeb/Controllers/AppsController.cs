@@ -5,7 +5,6 @@ using System.Web.Http.Cors;
 using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
-using PrestoWeb.Security;
 
 namespace PrestoWeb.Controllers
 {
@@ -13,7 +12,7 @@ namespace PrestoWeb.Controllers
     [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]  // * See notes, below, for why this is necessary.
     public class AppsController : ApiController
     {
-        [Functionality(FunctionalityName = "GetApps")]
+        //[Functionality(FunctionalityName = "GetApps")] // Disable for now because MES KLM Developers Contract also needs access.
         public IEnumerable<ApplicationDtoSlim> Get()
         {
             using (var prestoWcf = new PrestoWcf<IApplicationService>())

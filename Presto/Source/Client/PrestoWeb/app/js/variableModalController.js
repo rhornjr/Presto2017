@@ -8,9 +8,11 @@
         $scope.variable = variable;
 
         // In case the user cancels after making changes:
-        $scope.initialKey = variable.Key;
-        $scope.initialValue = variable.Value;
-        $scope.initialValueIsEncrypted = variable.ValueIsEncrypted;
+        if (variable) {
+            $scope.initialKey = variable.Key;
+            $scope.initialValue = variable.Value;
+            $scope.initialValueIsEncrypted = variable.ValueIsEncrypted;
+        }
 
         // -----------------------------------------------------------------------------
 
@@ -22,9 +24,12 @@
 
         $scope.cancel = function () {
             // Reset the variable to its initial state and close.
-            $scope.variable.Key = $scope.initialKey;
-            $scope.variable.Value = $scope.initialValue;
-            $scope.variable.ValueIsEncrypted = $scope.initialValueIsEncrypted;
+            if ($scope.variable) {
+                $scope.variable.Key = $scope.initialKey;
+                $scope.variable.Value = $scope.initialValue;
+                $scope.variable.ValueIsEncrypted = $scope.initialValueIsEncrypted;
+            }
+            
             $uibModalInstance.dismiss();
         };
 

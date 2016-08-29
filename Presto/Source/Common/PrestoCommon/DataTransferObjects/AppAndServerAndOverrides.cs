@@ -13,5 +13,7 @@ namespace PrestoCommon.DataTransferObjects
         public PrestoObservableCollection<CustomVariableGroup> Overrides { get; set; }
 
         public DateTime EndDate { get; set; }
+
+        public int MaxResults { get; set; }
     }
 }

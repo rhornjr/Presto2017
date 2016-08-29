@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Http;
@@ -19,6 +20,7 @@ namespace PrestoWeb.Controllers
     [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]
     public class InstallsController : ApiController
     {
+        int _defaultInstallsToRetrieve = Convert.ToInt32(ConfigurationManager.AppSettings["DefaultInstallsToRetrieve"]);
         int _maxInstallsToRetrieve = Convert.ToInt32(ConfigurationManager.AppSettings["MaxInstallsToRetrieve"]);
 
         [AcceptVerbs("POST")]
@@ -26,6 +28,11 @@ namespace PrestoWeb.Controllers
         {
             try
             {
+                if (appAndServerAndOverrides.MaxResults <= 0)
+                {
+                    appAndServerAndOverrides.MaxResults = _defaultInstallsToRetrieve;
+                }
+
                 var installationSummaries = GetInstallationSummaries(appAndServerAndOverrides);
 
                 var installationSummaryDtos = new List<InstallationSummaryDto>();
@@ -59,29 +66,39 @@ namespace PrestoWeb.Controllers
 
         private IEnumerable<InstallationSummary> GetInstallationSummaries(AppAndServerAndOverrides appAndServerAndOverrides)
         {
+            if (appAndServerAndOverrides.MaxResults > _maxInstallsToRetrieve)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture,
+                    "Cannot retrieve {0} records. The maximum allowed is {1}.",
+                    appAndServerAndOverrides.MaxResults,
+                    _maxInstallsToRetrieve);
+
+                throw new InvalidOperationException(message);
+            }
+
             using (var prestoWcf = new PrestoWcf<IInstallationSummaryService>())
             {
                 if (appAndServerAndOverrides.Application != null & appAndServerAndOverrides.Server != null)
                 {
                     return prestoWcf.Service.GetMostRecentByStartTimeServerAndApplication(
-                        _maxInstallsToRetrieve, appAndServerAndOverrides.Server.Id, appAndServerAndOverrides.Application.Id,
+                        appAndServerAndOverrides.MaxResults, appAndServerAndOverrides.Server.Id, appAndServerAndOverrides.Application.Id,
                         appAndServerAndOverrides.EndDate);
                 }
 
                 if (appAndServerAndOverrides.Application != null)
                 {
                     return prestoWcf.Service.GetMostRecentByStartTimeAndApplication(
-                        _maxInstallsToRetrieve, appAndServerAndOverrides.Application.Id, appAndServerAndOverrides.EndDate);
+                        appAndServerAndOverrides.MaxResults, appAndServerAndOverrides.Application.Id, appAndServerAndOverrides.EndDate);
                 }
 
                 if (appAndServerAndOverrides.Server != null)
                 {
                     return prestoWcf.Service.GetMostRecentByStartTimeAndServer(
-                        _maxInstallsToRetrieve, appAndServerAndOverrides.Server.Id, appAndServerAndOverrides.EndDate);
+                        appAndServerAndOverrides.MaxResults, appAndServerAndOverrides.Server.Id, appAndServerAndOverrides.EndDate);
                 }
 
                 // No filter; just get the most recent.
-                return prestoWcf.Service.GetMostRecentByStartTime(_maxInstallsToRetrieve, appAndServerAndOverrides.EndDate);
+                return prestoWcf.Service.GetMostRecentByStartTime(appAndServerAndOverrides.MaxResults, appAndServerAndOverrides.EndDate);
             }
         }
 
@@ -110,6 +127,13 @@ namespace PrestoWeb.Controllers
         [AcceptVerbs("GET")]
         [Route("api/installs/getNumberOfInstallsToRetrieve")]
         public int GetNumberOfInstallsToRetrieve()
+        {
+            return this._defaultInstallsToRetrieve;
+        }
+
+        [AcceptVerbs("GET")]
+        [Route("api/installs/getMaxNumberOfInstallsToRetrieve")]
+        public int GetMaxNumberOfInstallsToRetrieve()
         {
             return this._maxInstallsToRetrieve;
         }

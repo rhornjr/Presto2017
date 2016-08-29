@@ -89,7 +89,8 @@
                 application: $scope.state.selectedApp,
                 server: $scope.state.selectedServer,
                 overrides: null,
-                endDate: $scope.state.dateEnd
+                endDate: $scope.state.dateEnd,
+                maxResults: $scope.state.numberOfInstallsToRetrieve
             }
 
             var config = {
@@ -244,7 +245,29 @@
 
         // ---------------------------------------------------------------------------------------------------
 
+        function getMaxNumberOfInstallsToRetrieve() {
+            if ($scope.state.maxNumberOfInstallsToRetrieve > 0) {
+                return; // already retrieved
+            }
+
+            var config = {
+                url: '/PrestoWeb/api/installs/getMaxNumberOfInstallsToRetrieve',
+                method: 'GET'
+            };
+
+            $http(config)
+                .then(function (response) {
+                    $scope.state.maxNumberOfInstallsToRetrieve = response.data;
+                }, function (response) {
+                    showInfoModal.show(response.statusText, response.data);
+                    console.log(response);
+                });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
         getNumberOfInstallsToRetrieve();
+        getMaxNumberOfInstallsToRetrieve();
     }
 
 })();

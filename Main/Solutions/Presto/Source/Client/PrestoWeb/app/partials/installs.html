@@ -3,14 +3,23 @@
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition" />
     <div style="display:table; margin:0 auto">
         <!-- Center this whole div -->
-        <div class="customLabelLeftSkinny" style="float:left;">End date</div>
-        <div class="input-group">
-            <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="state.dateEnd"
-                    is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
-                    alt-input-formats="altInputFormats" />
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="customLabelLeftSkinny" style="float:left;">End date</div>
+                <div class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="state.dateEnd"
+                           is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+                           alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="customLabelLeftSkinny" style="float:left;">Max results</div>&nbsp;
+                <input type="text" style="width:100px;" ng-model="state.numberOfInstallsToRetrieve" />
+                (1 - {{state.maxNumberOfInstallsToRetrieve}})
+            </div>
         </div>
         <div class="customLabelLeftSkinny">Application</div>
         <div class="customLabelRight">{{state.selectedApp.Name}} {{state.selectedApp.Version}}</div>
@@ -25,7 +34,7 @@
     </div>
     <hr />
     <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns></div>
-    <span style="margin:12px;">Displaying most recent {{state.numberOfInstallsToRetrieve}} installs as of {{state.dateEnd}}</span>
+    <span style="margin:12px;">Displaying most recent {{state.installs.length}} installs as of {{state.dateEnd}}</span>
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="convertToCsv();" ng-disabled="loading">Export to CSV...</button>
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>

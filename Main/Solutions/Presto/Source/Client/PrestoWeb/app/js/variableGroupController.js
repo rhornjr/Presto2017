@@ -16,6 +16,7 @@
         $scope.gridVariables = {
             data: 'variables',
             multiSelect: true,
+            modifierKeysToMultiSelect : true, // must use shift/ctrl to select multiple rows.
             enableColumnResizing: true,
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

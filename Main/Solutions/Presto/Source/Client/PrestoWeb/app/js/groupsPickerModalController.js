@@ -14,7 +14,7 @@
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedApps,
-            columnDefs: [{ field: 'Name', displayName: 'Variable Group', width: "68%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } }]
+            columnDefs: [{ field: 'Name', displayName: 'Variable Group', width: "98%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } }]
         };
 
         $scope.refresh = function () {

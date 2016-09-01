@@ -8,7 +8,7 @@
     <input ng-model="task.AfterTaskPauseInSeconds" placeholder="Pause (seconds)" class="form-control" style="width:30em;" /><br />
     <input ng-model="task.RunAsUser" placeholder="Run as user" class="form-control" style="width:30em;" /><br />
     <input ng-model="task.RunAsPassword" placeholder="Run as password" class="form-control" style="width:30em;" /><br />
-    <input type="checkbox" name="" value="">Failure causes all-stop<br>
+    <input type="checkbox" ng-model="task.FailureCausesAllStop" ng-true-value="1" ng-false-value="0">Failure causes all-stop<br>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>

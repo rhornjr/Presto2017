@@ -10,7 +10,8 @@
     <input ng-model="task.AttributeKeyValue" placeholder="AttributeKeyValue" class="form-control" style="width:30em;" /><br />
     <input ng-model="task.AttributeToChange" placeholder="AttributeToChange" class="form-control" style="width:30em;" /><br />
     <input ng-model="task.AttributeToChangeValue" placeholder="New value" class="form-control" style="width:30em;" /><br />
-    <input type="checkbox" name="" value="">Failure causes all-stop<br>
+    <input type="checkbox" ng-model="task.FailureCausesAllStop" ng-true-value="1" ng-false-value="0">Failure causes all-stop<br>
+    <input type="checkbox" ng-model="task.AddNode" ng-true-value="true" ng-false-value="false">Add node<br>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>

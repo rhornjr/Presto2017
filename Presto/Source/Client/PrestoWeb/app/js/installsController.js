@@ -21,7 +21,7 @@
 
         // ToDo: This grid should normally have nothing in it, so we should be able to collapse it.
         $scope.gridPending = {
-            data: 'pending',
+            data: 'state.pending',
             multiSelect: false,
             enableColumnResizing: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.

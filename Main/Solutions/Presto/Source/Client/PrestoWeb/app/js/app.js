@@ -463,29 +463,7 @@ app.run(function ($rootScope, $location, $http, $window) {
     }
 
     $rootScope.setUserMessage('Presto started');
-
-    logUserStartedWebApp($http, $window);
 });
-
-function logUserStartedWebApp(http, window) {
-    if (window.sessionStorage.getItem('alreadyLoggedStarted') == 'true') {
-        // We don't want to log every time the user hits F5. A new session will occur when the user closes and reopens the browser.
-        return;
-    }
-
-    var config = {
-        url: '/PrestoWeb/api/log/saveLogMessage/?message=Presto Web started',
-        method: 'POST'
-    };
-
-    http(config)
-        .then(function (result) {
-            // Don't need to do anything. We just logged that the user started the app.
-            window.sessionStorage.setItem('alreadyLoggedStarted', 'true')
-        }, function (response) {
-            console.log(response);
-        });
-}
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/apps/:showList?', { templateUrl: 'partials/apps.html', controller: 'appsController' });

@@ -4,7 +4,7 @@
 
     angular.module('myApp.controllers').controller('groupsPickerModalController', groupsPickerModalController);
 
-    function groupsPickerModalController($rootScope, $scope, $http, $uibModalInstance, uiGridConstants, variableGroupsRepository) {
+    function groupsPickerModalController($rootScope, $scope, $http, $uibModalInstance, $timeout, uiGridConstants, variableGroupsRepository, selectedOverrides) {
         $scope.groups = null;
 
         $scope.gridGroups = {
@@ -23,7 +23,10 @@
                 .then(function (result) {
                     $scope.loading = 0;
                     $scope.groups = result.data;
-                    $rootScope.setUserMessage("Variable group list refreshed");                    
+                    $rootScope.setUserMessage("Variable group list refreshed");
+                    $timeout(function () {
+                        setSelectedItems();
+                    }, 50);
                 });
         };
 
@@ -39,6 +42,18 @@
         $scope.cancel = function () {
             $uibModalInstance.dismiss();
         };
+
+        function setSelectedItems() {
+            // Loop through the selected overrides passed into this modal. Find the group and select it.
+            for (var i = 0; i < selectedOverrides.length; i++) {
+                for (var j = 0; j < $scope.groups.length; j++) {
+                    if ($scope.groups[j].Id == selectedOverrides[i].Id) {
+                        $scope.gridApi.selection.selectRow($scope.groups[j]);
+                        break;
+                    }
+                }
+            }
+        }
 
         $scope.refresh();
     };

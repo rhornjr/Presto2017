@@ -18,7 +18,9 @@
 
     <h2 class="myHeader subHeader">Variables</h2>
     <div class="OneOfTwo">
-        <div class="gridHalf" ui-grid="gridVariables" ui-grid-selection ui-grid-resize-columns></div>
+        <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
+        <div class="gridHalf" ui-grid="gridVariables" ui-grid-selection ui-grid-resize-columns
+             ng-dblclick="editVariable()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
     </div>
 
     <h2 class="myHeader footer">

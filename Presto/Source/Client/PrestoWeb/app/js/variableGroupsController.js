@@ -8,6 +8,7 @@
 
     function variableGroupsController($scope, $rootScope, $http, $routeParams, variableGroupsRepository, uiGridConstants, $window, showConfirmationModal, showInfoModal, showTextEntryModal) {
         $scope.state = variableGroupsRepository;
+        var lastSelectedGroup = null;
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -49,7 +50,13 @@
                 console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
                 $scope.state.selectedGroups.length = 0; // Truncate/clear the array. Yes, this is how it's done.
                 $scope.state.selectedGroups.push(row.entity);
-                });
+                // A single click always happens during a double-click event. And apparently it's not trivial
+                // to implement double-click and pass the selected row. So, when a single click occurs, set
+                // the selected item. And for the double-click part, just call the edit method.
+                if ($scope.state.selectedGroups.length > 0) {
+                    lastSelectedGroup = $scope.state.selectedGroups[0];
+                }
+            });
         };
 
         // ---------------------------------------------------------------------------------------------------

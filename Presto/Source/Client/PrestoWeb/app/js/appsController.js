@@ -26,6 +26,7 @@
 
     function appsController($scope, $rootScope, $uibModal, $http, $routeParams, appsRepository, appsState, $window, uiGridConstants) {
         $scope.state = appsState;
+        var lastSelectedApp = null;
 
         $scope.gridOptions = {
             multiSelect: false,
@@ -56,9 +57,14 @@
         $scope.gridOptions.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
                 $scope.state.selectedApps.length = 0; // Truncate/clear the array. Yes, this is how it's done.
                 $scope.state.selectedApps.push(row.entity);
+                // A single click always happens during a double-click event. And apparently it's not trivial
+                // to implement double-click and pass the selected row. So, when a single click occurs, set
+                // the selected item. And for the double-click part, just call the edit method.
+                if ($scope.state.selectedApps.length > 0) {
+                    lastSelectedApp = $scope.state.selectedApps[0];
+                }
             });
         };
 

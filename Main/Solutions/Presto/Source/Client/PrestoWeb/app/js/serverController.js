@@ -12,6 +12,7 @@
         $scope.selectedAppsWithGroup = [];
         $scope.selectedGroups = [];
         $scope.environments = [];
+        var lastSelectedAppWithGroup = null;
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -98,6 +99,12 @@
                 console.log(row);  // This is a nice option. It allowed my to browse the object and discover that I wanted the entity property.
                 $scope.selectedAppsWithGroup.length = 0; // Truncate/clear the array. Yes, this is how it's done.
                 $scope.selectedAppsWithGroup.push(row.entity);
+                // A single click always happens during a double-click event. And apparently it's not trivial
+                // to implement double-click and pass the selected row. So, when a single click occurs, set
+                // the selected item. And for the double-click part, just call the edit method.
+                if ($scope.selectedAppsWithGroup.length > 0) {
+                    lastSelectedAppWithGroup = $scope.selectedAppsWithGroup[0];
+                }
             });
         };
 

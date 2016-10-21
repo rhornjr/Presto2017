@@ -10,6 +10,7 @@
         $scope.group = {};
         $scope.selectedVariables = [];
         $scope.variables = [];
+        var lastSelectedVariable = null;
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -32,10 +33,18 @@
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 var rows = gridApi.selection.getSelectedRows();
+                
+                // A single click always happens during a double-click event. And apparently it's not trivial
+                // to implement double-click and pass the selected row. So, when a single click occurs, set
+                // the selected item. And for the double-click part, just call the edit method.
+                if (rows.length > 0) {
+                    lastSelectedVariable = rows[0];
+                }
+
                 $scope.selectedVariables.length = 0; // Truncate/clear the array. Yes, this is how it's done.
                 for (var i = 0; i < rows.length; i++) {
                     $scope.selectedVariables.push(rows[i]);
-                }                
+                }
             });
         };
 
@@ -110,7 +119,7 @@
 
         $scope.editVariable = function () {
             // Get the index of the selected item.
-            var indexOfVariableBeingEdited = $scope.group.CustomVariables.indexOf($scope.selectedVariables[0]);
+            var indexOfVariableBeingEdited = $scope.group.CustomVariables.indexOf(lastSelectedVariable);
 
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/variable.html',
@@ -118,7 +127,7 @@
                 size: 'lg',
                 resolve: {
                     variable: function () {
-                        return $scope.selectedVariables[0];
+                        return lastSelectedVariable;
                     }
                 }
             });

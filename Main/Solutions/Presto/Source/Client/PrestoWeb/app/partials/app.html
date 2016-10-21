@@ -21,7 +21,8 @@
         <h2 class="myHeader subHeader">Tasks</h2>
         <div class="OneOfTwo">
             <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-            <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
+            <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows
+                 ng-dblclick="editTask()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
         </div>
     </form>
     <h2 class="myHeader footer">

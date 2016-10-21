@@ -39,6 +39,7 @@
         $scope.appId = $routeParams.appId;
         $scope.selectedTasks = [];
         $scope.selectedGroups = [];
+        var lastSelectedTask = null;
 
         // ---------------------------------------------------------------------------------------------------
 
@@ -68,6 +69,12 @@
             gridTasksApi.selection.on.rowSelectionChanged($scope, function (row) {
                 // Assign the selected rows to our tasks variable.
                 $scope.selectedTasks = gridTasksApi.selection.getSelectedRows();
+                // A single click always happens during a double-click event. And apparently it's not trivial
+                // to implement double-click and pass the selected row. So, when a single click occurs, set
+                // the selected task. And for the double-click part, just open that task.
+                if ($scope.selectedTasks.length > 0) {
+                    lastSelectedTask = $scope.selectedTasks[0];
+                }                
             });
 
             // This fires on shift-click.
@@ -135,7 +142,7 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.editTask = function() {
-            openTask($scope.selectedTasks[0], onEditTaskCompleted);
+            openTask(lastSelectedTask, onEditTaskCompleted);
         }
 
         var onEditTaskCompleted = function (task) {

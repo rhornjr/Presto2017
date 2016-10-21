@@ -37,7 +37,12 @@
                 templateUrl: 'partials/variableGroupsPicker.html',
                 controller: 'groupsPickerModalController',
                 size: 'sm',
-                windowClass: 'app-modal-window'
+                windowClass: 'app-modal-window',
+                resolve: {
+                    selectedOverrides: function () {
+                        return $scope.appWithGroups.groups;
+                    }
+                }
             });
 
             modalInstance.result.then(function (overrides) {

@@ -197,7 +197,12 @@
                 templateUrl: 'partials/variableGroupsPicker.html',
                 controller: 'groupsPickerModalController',
                 size: 'sm',
-                windowClass: 'app-modal-window'
+                windowClass: 'app-modal-window',
+                resolve: {
+                    selectedOverrides: function () {
+                        return [];
+                    }
+                }
             });
 
             modalInstance.result.then(function (overrides) {

@@ -157,7 +157,6 @@
                 templateUrl: 'partials/serverPicker.html',
                 controller: 'serverPickerModalController',
                 size: 'sm',
-                //windowClass: 'modalConfirmationPosition'
                 windowClass: 'app-modal-window'
             });
 
@@ -175,8 +174,12 @@
                 templateUrl: 'partials/variableGroupsPicker.html',
                 controller: 'groupsPickerModalController',
                 size: 'sm',
-                //windowClass: 'modalConfirmationPosition'
-                windowClass: 'app-modal-window'
+                windowClass: 'app-modal-window',
+                resolve: {
+                    selectedOverrides: function () {
+                        return $scope.selectedOverrides;
+                    }
+                }
             });
 
             modalInstance.result.then(function (overrides) {

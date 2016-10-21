@@ -63,8 +63,16 @@
         $scope.gridTasks.onRegisterApi = function (gridTasksApi) {
             $scope.gridTasksApi = gridTasksApi;
             $scope.gridTasksApi.selection.setModifierKeysToMultiSelect(true); // Allow ctrl-click or shift-click to select multiple rows.
+
+            // This works when selecting one row, but doesn't fire on a shift-click.
             gridTasksApi.selection.on.rowSelectionChanged($scope, function (row) {
-                // Assign the selectred rows to our tasks variable.
+                // Assign the selected rows to our tasks variable.
+                $scope.selectedTasks = gridTasksApi.selection.getSelectedRows();
+            });
+
+            // This fires on shift-click.
+            gridTasksApi.selection.on.rowSelectionChangedBatch($scope, function () {
+                // Assign the selected rows to our tasks variable.
                 $scope.selectedTasks = gridTasksApi.selection.getSelectedRows();
             });
         };

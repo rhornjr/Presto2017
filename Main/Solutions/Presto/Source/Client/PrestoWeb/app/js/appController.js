@@ -44,7 +44,6 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.gridTasks = {
-            //multiSelect: true,
             enableColumnResizing: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             enableRowSelection: true,
@@ -169,6 +168,12 @@
         // ---------------------------------------------------------------------------------------------------
 
         var openTask = function (task, onCompleted) {
+            if (task.PrestoTaskType.toUpperCase() == 'APP') {
+                // Need extra functionality for app/group picker.
+                openTaskApp(task, onCompleted);
+                return;
+            }
+
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/task' + task.PrestoTaskType + '.html',
                 controller: 'taskModalController',
@@ -187,6 +192,58 @@
                 // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
                 task.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
                 onCompleted(task);                
+            }, function () {
+                // modal dismissed
+            });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        function openTaskApp (task, onCompleted) {
+            // A task app only has the appId set. Use it to hydrate the app.
+            var modifiedAppId = task.AppWithGroup.ApplicationId.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
+            $http.get('/PrestoWeb/api/app/' + modifiedAppId)
+                .then(function (response) {
+                    task.AppWithGroup.Application = response.data;
+                    openTaskAppAfterAppHydration(task, onCompleted);
+                },
+                function (response) {
+                    $rootScope.setUserMessage("Error retreiving application within an app task.");
+                    showInfoModal.show(response.statusText, response.data);
+                });
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        function openTaskAppAfterAppHydration(task, onCompleted) {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'partials/task' + task.PrestoTaskType + '.html',
+                controller: 'appAndGroupPickerModalController',
+                size: 'lg',
+                windowClass: 'app-modal-window',
+                resolve: {
+                    appWithGroups: function () {
+                        return task.AppWithGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (appWithGroups) {
+                // Since task is a derived type and the Web API controller accepts the base
+                // type TaskBase, we need to set the $type property on the object so it will deserialize
+                // correctly in the Web API method. If we don't do this, the app.Tasks property has 0 items.
+                task.$type = 'PrestoCommon.Entities.Task' + task.PrestoTaskType + ', PrestoCommon';
+
+                var newAppWithGroups = {
+                    Application: appWithGroups.app,
+                    CustomVariableGroups: appWithGroups.groups,
+                    CustomVariableGroupNames: appWithGroups.groupNames,
+                    Enabled: appWithGroups.enabled
+                };
+
+                task.AppWithGroup = newAppWithGroups;
+
+                onCompleted(task);
             }, function () {
                 // modal dismissed
             });

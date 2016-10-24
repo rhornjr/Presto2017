@@ -501,6 +501,7 @@
     <Content Include="app\partials\server.html" />
     <Content Include="app\partials\serverPicker.html" />
     <Content Include="app\partials\servers.html" />
+    <Content Include="app\partials\taskApp.html" />
     <Content Include="app\partials\taskCopyFile.html" />
     <Content Include="app\partials\taskDosCommand.html" />
     <Content Include="app\partials\taskTypeSelectorModal.html" />

@@ -44,6 +44,10 @@
         };
 
         function setSelectedItems() {
+            if (!selectedOverrides) {
+                return;
+            }
+
             // Loop through the selected overrides passed into this modal. Find the group and select it.
             for (var i = 0; i < selectedOverrides.length; i++) {
                 for (var j = 0; j < $scope.groups.length; j++) {

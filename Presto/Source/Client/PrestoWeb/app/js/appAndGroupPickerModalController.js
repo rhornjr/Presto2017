@@ -6,6 +6,16 @@
 
     function appAndGroupPickerModalController($scope, $uibModalInstance, $uibModal, appWithGroups) {
         $scope.appWithGroups = {};
+
+        // If we have groups, but the groupNames property isn't set, then set it.
+        if (appWithGroups.CustomVariableGroups && appWithGroups.CustomVariableGroups.length > 0
+            && !appWithGroups.CustomVariableGroupNames) {
+            appWithGroups.CustomVariableGroupNames = '';
+            for (var i = 0; i < appWithGroups.CustomVariableGroups.length; i++) {
+                appWithGroups.CustomVariableGroupNames += appWithGroups.CustomVariableGroups[i].Name + " | ";
+            }
+        }        
+
         if (appWithGroups) {
             $scope.appWithGroups = {
                 app: appWithGroups.Application,

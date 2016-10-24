@@ -126,7 +126,7 @@
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/appAndGroupPicker.html',
                 controller: 'appAndGroupPickerModalController',
-                size: 'lg',
+                size: 'md',
                 resolve: {
                     appWithGroups: function () {
                         return null;
@@ -157,7 +157,7 @@
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/appAndGroupPicker.html',
                 controller: 'appAndGroupPickerModalController',
-                size: 'lg',
+                size: 'md',
                 resolve: {
                     appWithGroups: function () {
                         return $scope.selectedAppsWithGroup[0];

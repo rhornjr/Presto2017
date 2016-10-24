@@ -8,7 +8,7 @@
         $scope.appWithGroups = {};
 
         // If we have groups, but the groupNames property isn't set, then set it.
-        if (appWithGroups.CustomVariableGroups && appWithGroups.CustomVariableGroups.length > 0
+        if (appWithGroups && appWithGroups.CustomVariableGroups && appWithGroups.CustomVariableGroups.length > 0
             && !appWithGroups.CustomVariableGroupNames) {
             appWithGroups.CustomVariableGroupNames = '';
             for (var i = 0; i < appWithGroups.CustomVariableGroups.length; i++) {

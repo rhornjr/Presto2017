@@ -219,8 +219,7 @@
             var modalInstance = $uibModal.open({
                 templateUrl: 'partials/task' + task.PrestoTaskType + '.html',
                 controller: 'appAndGroupPickerModalController',
-                size: 'lg',
-                windowClass: 'app-modal-window',
+                size: 'md',
                 resolve: {
                     appWithGroups: function () {
                         return task.AppWithGroup;

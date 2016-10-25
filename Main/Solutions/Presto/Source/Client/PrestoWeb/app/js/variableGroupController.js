@@ -179,5 +179,28 @@
                     console.log(response);
                 });
         }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.importVariables = function (fileContents) {
+            var config = {
+                url: '/PrestoWeb/api/variableGroups/importVariables',
+                method: 'POST',
+                data: { customVariableGroup: $scope.group, variablesAsString: fileContents }
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    $scope.group = response.data;
+                    $scope.variables = $scope.group.CustomVariables;
+                    $scope.gridVariables.data = $scope.variables;
+                }, function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                    console.log(response);
+                });
+        }
     }
 })();

@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using PrestoCommon.DataTransferObjects;
 using PrestoCommon.Entities;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Misc;
@@ -120,6 +121,39 @@ namespace PrestoWeb.Controllers
                     var streamAsString = Encoding.UTF8.GetString(memoryStream.ToArray());
                     return streamAsString;
                 }
+            }
+            catch(Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Exporting Tasks");
+            }
+        }
+
+        [AcceptVerbs("POST")]
+        [Route("api/variableGroups/importVariables")]
+        public CustomVariableGroup ImportVariables(VariableGroupAndVariablesAsString groupAndVariables)
+        {
+            try
+            {
+                var importedVariables = new List<CustomVariable>();
+
+                using(var memoryStream = new MemoryStream())
+                using(var writer = new StreamWriter(memoryStream))
+                {
+                    writer.Write(groupAndVariables.VariablesAsString);
+                    var serializer = new NetDataContractSerializer();
+                    writer.Flush();
+                    memoryStream.Position = 0;
+                    importedVariables = serializer.Deserialize(memoryStream) as List<CustomVariable>;
+                }
+
+                var group = groupAndVariables.CustomVariableGroup;
+                foreach(var variable in importedVariables)
+                {
+                    group.CustomVariables.Add(variable);
+                }
+
+                return Save(group);
             }
             catch(Exception ex)
             {

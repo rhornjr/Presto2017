@@ -470,7 +470,7 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/servers/:showList?', { templateUrl: 'partials/servers.html', controller: 'serversController' });
     $routeProvider.when('/app/:appId?', { templateUrl: 'partials/app.html', controller: 'appController' });
     $routeProvider.when('/server/:serverId?', { templateUrl: 'partials/server.html', controller: 'serverController' });
-    $routeProvider.when('/variableGroups', { templateUrl: 'partials/variableGroups.html', controller: 'variableGroupsController' });
+    $routeProvider.when('/variableGroups/:showList?', { templateUrl: 'partials/variableGroups.html', controller: 'variableGroupsController' });
     $routeProvider.when('/variableGroup/:groupId?', { templateUrl: 'partials/variableGroup.html', controller: 'variableGroupController' });
     $routeProvider.when('/resolve', { templateUrl: 'partials/resolve.html', controller: 'resolveController' });
     $routeProvider.when('/installs', { templateUrl: 'partials/installs.html', controller: 'installsController' });

@@ -6,7 +6,7 @@
 
     // ------------------------------- Variable Group Controller -------------------------------
 
-    function variableGroupController($scope, $rootScope, $http, $routeParams, uiGridConstants, showInfoModal, $uibModal, showConfirmationModal) {
+    function variableGroupController($scope, $rootScope, $http, $routeParams, uiGridConstants, showInfoModal, $uibModal, showConfirmationModal, $window) {
         $scope.group = {};
         $scope.selectedVariables = [];
         $scope.variables = [];
@@ -202,5 +202,13 @@
                     console.log(response);
                 });
         }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.backToList = function () {
+            $window.location.href = '/PrestoWeb/app/#/variableGroups/1';
+        }
+
+        // ---------------------------------------------------------------------------------------------------
     }
 })();

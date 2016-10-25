@@ -25,7 +25,7 @@
         // ---------------------------------------------------------------------------------------------------
 
         $scope.refresh = function (forceRefresh) {
-            if ($scope.state.variableGroups.length > 0 && !forceRefresh) {
+            if (!forceRefresh) {
                 return;
             }
 
@@ -101,7 +101,20 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.refresh();
+        if ($scope.state.variableGroups.length == 0 || $routeParams.showList == 1) {
+            $scope.refresh(true);
+        }
+        else {
+            // If a group has been selected, go back to it.
+            // Note: This is in a timeout because we can't redirect in the same turn as loading this page.
+            //       The timeout callback happens in a different turn, so it works. If we called $scope.editGroup()
+            //       directly (not in the timeout), we end up in an infinite loop calling this line.
+            if ($scope.state.selectedGroups[0]) {
+                setTimeout(function () {
+                    $scope.editGroup();
+                }, 100);
+            }
+        }        
 
         // ---------------------------------------------------------------------------------------------------
 

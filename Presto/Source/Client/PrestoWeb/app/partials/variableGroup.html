@@ -27,6 +27,10 @@
         <button class="btn btn-default" ng-click="addVariable();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editVariable();" ng-disabled="loading || selectedVariables.length == 0">Edit</button>
         <button class="btn btn-default" ng-click="removeVariables();" ng-disabled="loading || selectedVariables.length == 0">Remove</button>
+        <input id="hiddenImport" style="display:none" type="file" on-read-file="importVariables(contents)" />
+        <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
+        <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
+        <button class="btn btn-default" ng-click="exportVariables();" ng-disabled="selectedVariables.length == 0 || loading">Export</button>
         <button class="btn btn-default" ng-click="saveVariableGroup();" ng-disabled="loading || !groupForm.$dirty">Save</button>
     </h2>
 </div>

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using PrestoCommon.Entities;
@@ -101,6 +104,27 @@ namespace PrestoWeb.Controllers
             {
                 Logger.LogException(ex);
                 throw Helper.CreateHttpResponseException(ex, "Error Encrypting Value");
+            }
+        }
+
+        [AcceptVerbs("POST")]
+        [Route("api/variableGroups/getVariableExportFileContents")]
+        public string GetVariableExportFileContents(List<CustomVariable> selectedVariables)
+        {
+            try
+            {
+                using(var memoryStream = new MemoryStream())
+                {
+                    var serializer = new NetDataContractSerializer();
+                    serializer.Serialize(memoryStream, selectedVariables);
+                    var streamAsString = Encoding.UTF8.GetString(memoryStream.ToArray());
+                    return streamAsString;
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.LogException(ex);
+                throw Helper.CreateHttpResponseException(ex, "Error Exporting Tasks");
             }
         }
     }

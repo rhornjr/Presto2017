@@ -156,5 +156,28 @@
 
             $scope.saveVariableGroup();
         }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.exportVariables = function () {
+            var config = {
+                url: '/PrestoWeb/api/variableGroups/getVariableExportFileContents',
+                method: 'POST',
+                data: $scope.selectedVariables
+            };
+
+            $scope.loading = 1;
+            $http(config)
+                .then(function (response) {
+                    $scope.loading = 0;
+                    // http://stackoverflow.com/a/33635761/279516
+                    var blob = new Blob([response.data], { type: "text/plain" });
+                    saveAs(blob, $scope.group.Name + '_variables.txt');
+                }, function (response) {
+                    $scope.loading = 0;
+                    showInfoModal.show(response.statusText, response.data);
+                    console.log(response);
+                });
+        }
     }
 })();

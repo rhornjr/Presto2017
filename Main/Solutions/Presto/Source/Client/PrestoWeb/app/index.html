@@ -27,9 +27,9 @@
                                 Source: http://stackoverflow.com/a/14202514/279516
                             -->
                             <ul>
-                                <li><a data-ng-class="{active : activeController  == 'appsController'}" href="#/apps">Apps</a></li>
-                                <li><a data-ng-class="{active : activeController  == 'serversController'}" href="#/servers">Servers</a></li>
-                                <li><a data-ng-class="{active : activeController  == 'variableGroupsController'}" href="#/variableGroups">Variables</a></li>
+                                <li><a data-ng-class="{active : activeController  == 'appsController' || activeController  == 'appController'}" href="#/apps">Apps</a></li>
+                                <li><a data-ng-class="{active : activeController  == 'serversController' || activeController  == 'serverController'}" href="#/servers">Servers</a></li>
+                                <li><a data-ng-class="{active : activeController  == 'variableGroupsController' || activeController  == 'variableGroupController'}" href="#/variableGroups">Variables</a></li>
                                 <li><a data-ng-class="{active : activeController  == 'resolveController'}" href="#/resolve">Resolve</a></li>
                                 <li><a data-ng-class="{active : activeController  == 'installsController'}" href="#/installs">Installs</a></li>
                                 <li><a data-ng-class="{active : activeController  == 'logController'}" href="#/log">Log</a></li>

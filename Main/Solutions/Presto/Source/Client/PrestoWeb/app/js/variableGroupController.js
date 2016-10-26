@@ -46,6 +46,12 @@
                     $scope.selectedVariables.push(rows[i]);
                 }
             });
+
+            // This fires on shift-click.
+            gridApi.selection.on.rowSelectionChangedBatch($scope, function () {
+                // Assign the selected rows to our tasks variable.
+                $scope.selectedVariables = gridApi.selection.getSelectedRows();
+            });
         };
 
         // ---------------------------------------------------------------------------------------------------

@@ -80,9 +80,9 @@ namespace PrestoWcfService.WcfServices
             return Invoke(() => ApplicationLogic.GetAll(includeArchivedApps));
         }
 
-        public IEnumerable<ApplicationDtoSlim> GetAllApplicationsSlim()
+        public IEnumerable<ApplicationDtoSlim> GetAllApplicationsSlim(bool includeArchivedApps)
         {
-            return Invoke(() => ApplicationLogic.GetAllSlim().ToDtoSlim());
+            return Invoke(() => ApplicationLogic.GetAllSlim(includeArchivedApps).ToDtoSlim());
         }
 
         public Application GetByName(string name)

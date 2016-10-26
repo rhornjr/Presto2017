@@ -14,9 +14,9 @@ namespace PrestoServer.Logic
             return DataAccessFactory.GetDataInterface<IApplicationData>().GetAll(includeArchivedApps);
         }
 
-        public static IEnumerable<Application> GetAllSlim()
+        public static IEnumerable<Application> GetAllSlim(bool includeArchivedApps)
         {
-            return DataAccessFactory.GetDataInterface<IApplicationData>().GetAllSlim();
+            return DataAccessFactory.GetDataInterface<IApplicationData>().GetAllSlim(includeArchivedApps);
         }
 
         public static Application GetByName(string name)

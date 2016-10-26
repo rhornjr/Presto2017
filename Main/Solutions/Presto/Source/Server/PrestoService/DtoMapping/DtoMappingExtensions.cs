@@ -14,10 +14,11 @@ namespace PrestoWcfService.DtoMapping
 
             foreach (var app in apps)
             {
-                var slimApp     = new ApplicationDtoSlim();
-                slimApp.Id      = app.Id;
-                slimApp.Name    = app.Name;
-                slimApp.Version = app.Version;
+                var slimApp      = new ApplicationDtoSlim();
+                slimApp.Id       = app.Id;
+                slimApp.Name     = app.Name;
+                slimApp.Version  = app.Version;
+                slimApp.Archived = app.Archived;
 
                 slimApps.Add(slimApp);
             }
@@ -38,7 +39,8 @@ namespace PrestoWcfService.DtoMapping
                 var slimServer                      = new ApplicationServerDtoSlim();
                 slimServer.Id                       = server.Id;
                 slimServer.Name                     = server.Name;
-                slimServer.InstallationEnvironment = server.InstallationEnvironment.Name;
+                slimServer.InstallationEnvironment  = server.InstallationEnvironment.Name;
+                slimServer.Archived                 = server.Archived;
 
                 slimServers.Add(slimServer);
             }

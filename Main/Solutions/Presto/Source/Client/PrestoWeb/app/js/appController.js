@@ -162,8 +162,27 @@
                 return $scope.selectedTasks.indexOf(element) < 0;
             });
 
+            resetTaskSequenceNumbers();
+
             $scope.saveApplication();
-        }        
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        function resetTaskSequenceNumbers() {
+            // Note: This function was originally created to deal with deleting a task and having a missing
+            //       sequence number for the task that was deleted.
+
+            // First, make sure we're processing these in sequence order.
+            $scope.app.Tasks.sort(function (a, b) {
+                return parseInt(a.Sequence) - parseInt(b.Sequence);
+            });
+
+            // Now reset the sequence numbers.
+            for (var i = 0; i < $scope.app.Tasks.length; i++) {
+                $scope.app.Tasks[i].Sequence = i + 1; // Because i is zero-based and we want to start with 1.
+            }
+        }
 
         // ---------------------------------------------------------------------------------------------------
 

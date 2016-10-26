@@ -146,8 +146,11 @@ app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($htt
 
 app.factory('appsState', ['$http', '$rootScope', function ($http, $rootScope) {
     var state = {
-        apps: null,
-        selectedApps: []
+        allApps: [],
+        filteredApps: [],
+        selectedApps: [],
+        showArchived: false,
+        archiveButtonText: 'Show archived'
     }
 
     return state;
@@ -169,7 +172,7 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
                 return;
             }
 
-        $http.get('/PrestoWeb/api/apps/')
+        $http.get('/PrestoWeb/api/apps/?includeArchivedApps=true')
                 .then(function (result) {
                 data = result.data;
                 $rootScope.setUserMessage("Application list refreshed");
@@ -177,9 +180,9 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
             }, function (response) {
                 console.log(response);
                 if (response.status == 403) {
-                    $rootScope.setUserMessage("Unauthorized");
-                    callbackFunction(null);
+                    $rootScope.setUserMessage("Unauthorized");                    
                 }
+                callbackFunction(null);
             });
         }
     }
@@ -189,8 +192,11 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
 
 app.factory('serversState', ['$http', '$rootScope', function ($http, $rootScope) {
     var state = {
-        servers: null,
-        selectedServers: []
+        allServers: null,
+        selectedServers: [],
+        filteredServers: [],
+        showArchived: false,
+        archiveButtonText: 'Show archived'
     }
 
     return state;

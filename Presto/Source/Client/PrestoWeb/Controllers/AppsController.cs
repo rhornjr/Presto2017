@@ -13,11 +13,11 @@ namespace PrestoWeb.Controllers
     public class AppsController : ApiController
     {
         //[Functionality(FunctionalityName = "GetApps")] // Disable for now because MES KLM Developers Contract also needs access.
-        public IEnumerable<ApplicationDtoSlim> Get()
+        public IEnumerable<ApplicationDtoSlim> Get(bool includeArchivedApps)
         {
             using (var prestoWcf = new PrestoWcf<IApplicationService>())
             {
-                return prestoWcf.Service.GetAllApplicationsSlim().OrderBy(x => x.Name);
+                return prestoWcf.Service.GetAllApplicationsSlim(includeArchivedApps).OrderBy(x => x.Name);
             }
         }
     }

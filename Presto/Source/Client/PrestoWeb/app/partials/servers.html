@@ -1,5 +1,5 @@
 <div id="container" class="PageContainer">
-    <h2 class="myHeader mainHeader">Servers</h2>
+    <h2 class="myHeader mainHeader">Servers ({{state.filteredServers.length}})</h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
     <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns
@@ -7,6 +7,7 @@
     <h2 class="myHeader footer">
         <button class="btn btn-default" ng-click="addServer();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editServer();" ng-disabled="loading">Edit</button>
+        <button class="btn btn-default" ng-click="toggleArchived();" ng-disabled="loading">{{state.archiveButtonText}}</button>
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
     </h2>
 </div>

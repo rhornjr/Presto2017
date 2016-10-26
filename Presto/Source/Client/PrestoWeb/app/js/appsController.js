@@ -38,7 +38,7 @@
                          { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
         };
 
-        $scope.gridOptions.data = $scope.state.apps;
+        $scope.gridOptions.data = $scope.state.filteredApps;
 
         $scope.refresh = function (forceRefresh) {
             if (!forceRefresh) {
@@ -46,8 +46,11 @@
             }
             $scope.loading = 1;
             appsRepository.getApps(forceRefresh, function (dataResponse) {
-                $scope.state.apps = dataResponse;
-                $scope.gridOptions.data = $scope.state.apps;
+                $scope.state.allApps = dataResponse;
+
+                filterAppsByArchived();
+                $scope.gridOptions.data = $scope.state.filteredApps; // Grid doesn't update unless I do this. Not sure why.
+                
                 $scope.loading = 0;
                 $rootScope.setUserMessage("Application list refreshed");
             });
@@ -117,7 +120,7 @@
         }
 
         // If the apps haven't been loaded yet, or we've come here via a link telling us to load the list, then load the list.
-        if (!$scope.state.apps || $routeParams.showList == 1) {
+        if ($scope.state.allApps.length == 0 || $routeParams.showList == 1) {
             $scope.refresh(true);
         }
         else {
@@ -130,6 +133,44 @@
                     $scope.editApp();
                 }, 100);
             }
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.toggleArchived = function () {
+            $scope.state.showArchived = !$scope.state.showArchived;
+
+            $scope.state.archiveButtonText = 'Show archived'; // default
+
+            if ($scope.state.showArchived) {
+                $scope.state.archiveButtonText = 'Hide archived';
+            }
+
+            filterAppsByArchived();
+            $scope.gridOptions.data = $scope.state.filteredApps; // Grid doesn't update unless I do this. Not sure why.
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        function filterAppsByArchived() {
+            if (!$scope.state.allApps) {
+                $scope.state.filteredApps = [];
+                return;
+            }
+
+            if ($scope.state.showArchived) {
+                $scope.state.filteredApps = $scope.state.allApps.filter(function (element) {
+                    return true;
+                });
+                return;
+            }
+            
+            $scope.state.filteredApps = $scope.state.allApps.filter(function (element) {
+                if (element.Archived) {
+                    return false;
+                }
+                return true;
+            });
         }
     }        
 })();

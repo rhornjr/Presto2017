@@ -15,7 +15,7 @@ namespace PrestoCommon.Interfaces
         IEnumerable<Application> GetAllApplications(bool includeArchivedApps);
 
         [OperationContract]
-        IEnumerable<ApplicationDtoSlim> GetAllApplicationsSlim();
+        IEnumerable<ApplicationDtoSlim> GetAllApplicationsSlim(bool includeArchivedApps);
 
 
         [OperationContract]

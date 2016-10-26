@@ -20,15 +20,17 @@
                          { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
         };
 
-        $scope.gridOptions.data = $scope.state.servers;
+        $scope.gridOptions.data = $scope.state.filteredServers;
 
         $scope.refresh = function (forceRefresh) {
             $scope.loading = 1;
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.          
             serversRepository.getServers(forceRefresh, function (dataResponse) {
-                $scope.state.servers = dataResponse;
-                $scope.gridOptions.data = $scope.state.servers;
+                $scope.state.allServers = dataResponse;
+                filterServersByArchived();
+                $scope.gridOptions.data = $scope.state.filteredServers;
                 $scope.loading = 0;
+                $rootScope.setUserMessage("Server list refreshed");
             });
         };
 
@@ -58,7 +60,7 @@
         };
 
         // If the servers haven't been loaded yet, or we've come here via a link telling us to load the list, then load the list.
-        if (!$scope.state.servers || $routeParams.showList == 1) {
+        if (!$scope.state.allServers || $routeParams.showList == 1) {
             $scope.refresh(false);
         }
         else {
@@ -71,6 +73,44 @@
                     $scope.editServer();
                 }, 100);
             }
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        $scope.toggleArchived = function () {
+            $scope.state.showArchived = !$scope.state.showArchived;
+
+            $scope.state.archiveButtonText = 'Show archived'; // default
+
+            if ($scope.state.showArchived) {
+                $scope.state.archiveButtonText = 'Hide archived';
+            }
+
+            filterServersByArchived();
+            $scope.gridOptions.data = $scope.state.filteredServers; // Grid doesn't update unless I do this. Not sure why.
+        }
+
+        // ---------------------------------------------------------------------------------------------------
+
+        function filterServersByArchived() {
+            if (!$scope.state.allServers) {
+                $scope.state.filteredServers = [];
+                return;
+            }
+
+            if ($scope.state.showArchived) {
+                $scope.state.filteredServers = $scope.state.allServers.filter(function (element) {
+                    return true;
+                });
+                return;
+            }
+
+            $scope.state.filteredServers = $scope.state.allServers.filter(function (element) {
+                if (element.Archived) {
+                    return false;
+                }
+                return true;
+            });
         }
     }
 

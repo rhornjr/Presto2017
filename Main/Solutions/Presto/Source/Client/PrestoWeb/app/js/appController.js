@@ -199,7 +199,27 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        function openTaskApp (task, onCompleted) {
+        function openTaskApp(task, onCompleted) {
+            // If adding a new appWithGroup, create an empty property for use later.
+            if (!task.AppWithGroup) {
+                task.AppWithGroup = {
+                    Application: null,
+                    ApplicationId: ''
+                }
+
+                openTaskAppAfterAppHydration(task, onCompleted);
+
+                return;
+            }
+
+            // Just in case an appWithGroup doesn't have its app set.
+            if (!task.AppWithGroup.ApplicationId) {
+                openTaskAppAfterAppHydration(task, onCompleted);
+                return;
+            }
+
+            // If we get here, the task already had an appWithGroup (and application) on it, so hydrate the app and then open the task.
+
             // A task app only has the appId set. Use it to hydrate the app.
             var modifiedAppId = task.AppWithGroup.ApplicationId.replace("/", "^^");  // Because we shouldn't send slashes in a URL.
             $http.get('/PrestoWeb/api/app/' + modifiedAppId)

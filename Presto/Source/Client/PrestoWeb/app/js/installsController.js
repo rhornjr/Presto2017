@@ -29,7 +29,7 @@
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'ApplicationServer.Name', displayName: 'Server', width: "20%", resizable: true },
                          { field: 'ApplicationWithOverrideGroup.Application.Name', displayName: 'App', width: "35%" },
-                         { field: 'ApplicationWithOverrideGroup.CustomVariableGroupNames', displayName: 'Groups', width: "43%" }]                         
+                         { field: 'ApplicationWithOverrideGroup.CustomVariableGroupNames', displayName: 'Groups', width: "45%" }]                         
         };
 
         $scope.gridOptions = {
@@ -41,8 +41,8 @@
             columnDefs: [{ field: 'ApplicationName', displayName: 'App', width: "28%", resizable: true },
                          { field: 'ServerName', displayName: 'Server', width: "20%" },
                          { field: 'Environment', displayName: 'Env', width: "10%" },
-                         { field: 'InstallationStart', displayName: 'Start', width: "15%" },
-                         { field: 'InstallationEnd', displayName: 'End', width: "15%" },
+                         { field: 'InstallationStart', displayName: 'Start', width: "16%" },
+                         { field: 'InstallationEnd', displayName: 'End', width: "16%" },
                          { field: 'Result', displayName: 'Result', width: "10%" }]
         };
 
@@ -66,7 +66,7 @@
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             columnDefs: [{ field: 'StartTime', displayName: 'Start', width: "20%", resizable: true },
                          { field: 'EndTime', displayName: 'End', width: "20%" },
-                         { field: 'Details', displayName: 'Details', width: "58%" }]
+                         { field: 'Details', displayName: 'Details', width: "60%" }]
         };
 
         // Act on the row selection changing.

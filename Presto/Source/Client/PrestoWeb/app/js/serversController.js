@@ -16,7 +16,7 @@
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.state.selectedServers,
-            columnDefs: [{ field: 'Name', displayName: 'Server', width: "78%", resizable: true, filter: { condition: uiGridConstants.filter.CONTAINS } },
+            columnDefs: [{ field: 'Name', displayName: 'Server', width: "80%", resizable: true, filter: { condition: uiGridConstants.filter.CONTAINS } },
                          { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
         };
 

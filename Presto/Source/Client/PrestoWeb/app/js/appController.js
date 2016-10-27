@@ -52,7 +52,7 @@
             enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
             selectedItems: $scope.selectedTasks,
             columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
-                         { field: 'Description', displayName: 'Description', width: "60%" },
+                         { field: 'Description', displayName: 'Description', width: "62%" },
                          { field: 'PrestoTaskType', displayName: 'Type', width: "16%" },
                          { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]            
         };
@@ -92,7 +92,7 @@
             multiSelect: false,
             enableColumnResizing: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true }]
+            columnDefs: [{ field: 'Name', displayName: 'Name', width: "100%", resizable: true }]
         };
 
         // ---------------------------------------------------------------------------------------------------

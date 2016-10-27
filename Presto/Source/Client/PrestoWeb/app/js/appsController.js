@@ -34,7 +34,7 @@
             enableFiltering: true,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.state.selectedApps,
-            columnDefs: [{ field: 'Name', displayName: 'Application', width: "79%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: {condition: uiGridConstants.filter.CONTAINS} },
+            columnDefs: [{ field: 'Name', displayName: 'Application', width: "80%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: {condition: uiGridConstants.filter.CONTAINS} },
                          { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
         };
 

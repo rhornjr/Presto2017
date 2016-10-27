@@ -15,7 +15,7 @@
             multiSelect: false,
             enableColumnResizing: true,
             columnDefs: [{ field: 'MessageCreatedTime', displayName: 'Time', width: "20%", resizable: true },
-                         { field: 'Message', displayName: 'Message', width: "58%", resizable: true },
+                         { field: 'Message', displayName: 'Message', width: "60%", resizable: true },
                          { field: 'UserName', displayName: 'User', width: "20%", resizable: true }]
         };
 

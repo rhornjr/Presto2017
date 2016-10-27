@@ -19,7 +19,7 @@
             enableFiltering: true,
             selectedItems: $scope.state.selectedGroups,
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            columnDefs: [{ field: 'Name', displayName: 'Name', width: "98%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } }]
+            columnDefs: [{ field: 'Name', displayName: 'Name', width: "100%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } }]
         };
 
         // ---------------------------------------------------------------------------------------------------

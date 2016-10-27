@@ -121,7 +121,7 @@
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             selectedItems: $scope.selectedVariables,
             columnDefs: [{ field: 'Key', displayName: 'Variable', width: "30%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } },
-                         { field: 'Value', displayName: 'Value', width: "68%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
+                         { field: 'Value', displayName: 'Value', width: "70%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
         };
 
         // Act on the row selection changing.

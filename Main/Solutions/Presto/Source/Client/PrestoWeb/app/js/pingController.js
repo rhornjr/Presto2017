@@ -24,7 +24,7 @@
             rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
             columnDefs: [{ field: 'ApplicationServer.Name', displayName: 'Server', width: "25%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                          { field: 'ResponseTime', displayName: 'Response Time', width: "25%", resizable: true },
-                         { field: 'Comment', displayName: 'Comment', width: "48%", resizable: true}]
+                         { field: 'Comment', displayName: 'Comment', width: "50%", resizable: true}]
         };
 
         $scope.refresh = function (forceRefresh) {

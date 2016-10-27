@@ -32,24 +32,38 @@
         <button class="btn btn-default" ng-click="clearServer();" style="display:inline-block;" ng-disabled="loading">x</button>
         <br />
     </div>
-    <hr />
-    <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns></div>
-    <span style="margin:12px;">Displaying most recent {{state.installs.length}} installs as of {{state.dateEnd}}</span>
-    <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="convertToCsv();" ng-disabled="loading">Export to CSV...</button>
-        <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
-    </h2>
-    <hr />
-    <h2 class="myHeader mainHeader" ng-hide="loading">Installation Details</h2>
-    <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection ui-grid-resize-columns></div>
-    <h2 class="myHeader seperator"></h2>
-    <div ng-repeat="detail in state.selectedDetails" class="slide">
-        <!-- Use the pre tag so newline characters are honored. -->
-        <pre>Details: {{detail.Details}}</pre>
-    </div>
+
     <uib-accordion>
-        <uib-accordion-group heading="Pending">
-            <h2 class="myHeader mainHeader">Pending</h2>
+        <uib-accordion-group style="margin-left:12px; margin-top:12px;" is-open="true">
+            <uib-accordion-heading>
+                <span>Installations ({{state.installs.length}})</span><span style="font-size:12px;"> - as of {{state.dateEndUiFriendly}}</span>
+            </uib-accordion-heading>
+            <div class="gridHalf" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns></div>
+            <div style="margin-top: 12px; text-align: center;">
+                <button class="btn btn-default" ng-click="convertToCsv();" ng-disabled="loading">Export to CSV...</button>
+                <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>	
+    
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px;">
+            <uib-accordion-heading>
+                <span>Installation Details</span>
+            </uib-accordion-heading>
+            <div class="gridHalf" ui-grid="gridOptions2" ui-grid-selection ui-grid-resize-columns></div>
+            <div ng-repeat="detail in state.selectedDetails" class="slide">
+                <!-- Use the pre tag so newline characters are honored. -->
+                <pre>Details: {{detail.Details}}</pre>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>	
+    
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px;">
+            <uib-accordion-heading>
+                <span>Pending</span>
+            </uib-accordion-heading>
             <div class="gridHalf" ui-grid="gridPending" ui-grid-selection ui-grid-resize-columns></div>
         </uib-accordion-group>
     </uib-accordion>

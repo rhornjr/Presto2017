@@ -34,27 +34,34 @@
         </div>
     </form>
 
-    <h2 class="myHeader subHeader">Apps and Overrides</h2>
-    <div class="OneOfTwo">
-        <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-        <div class="gridHalf" ui-grid="gridAppsWithGroup" ui-grid-selection ui-grid-resize-columns
-             ng-dblclick="editAppAndGroup()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
-    </div>
-    
-    <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="addAppAndGroup();" ng-disabled="loading">Add</button>
-        <button class="btn btn-default" ng-click="editAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Edit</button>
-        <button class="btn btn-default" ng-click="removeAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Remove</button>
-        <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading || !serverForm.$dirty">Save</button>
-        <button class="btn btn-default" ng-click="install();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Install</button>
-    </h2>
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px; margin-top:12px;" is-open="true">
+            <uib-accordion-heading>
+                <span>Apps and Overrides</span>
+            </uib-accordion-heading>
+            <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
+            <div class="gridHalf" ui-grid="gridAppsWithGroup" ui-grid-selection ui-grid-resize-columns
+                 ng-dblclick="editAppAndGroup()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
+            <div style="margin-top: 12px; text-align: center;">
+                <button class="btn btn-default" ng-click="addAppAndGroup();" ng-disabled="loading">Add</button>
+                <button class="btn btn-default" ng-click="editAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Edit</button>
+                <button class="btn btn-default" ng-click="removeAppAndGroup();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Remove</button>
+                <button class="btn btn-default" ng-click="saveServer();" ng-disabled="loading || !serverForm.$dirty">Save</button>
+                <button class="btn btn-default" ng-click="install();" ng-disabled="loading || selectedAppsWithGroup.length == 0">Install</button>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>	
 
-    <h2 class="myHeader subHeader">Custom Variable Groups</h2>
-    <div class="TwoOfTwo">
-        <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ui-grid-resize-columns></div>
-    </div>
-    <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
-        <button class="btn btn-default" ng-click="deleteGroups();" ng-disabled="selectedGroups.length == 0 || loading">Delete</button>
-    </h2>
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px;">
+            <uib-accordion-heading>
+                <span>Custom Variable Groups</span>
+            </uib-accordion-heading>
+            <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ui-grid-resize-columns></div>
+            <div style="margin-top: 12px; text-align: center;">
+                <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
+                <button class="btn btn-default" ng-click="deleteGroups();" ng-disabled="selectedGroups.length == 0 || loading">Delete</button>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>
 </div>

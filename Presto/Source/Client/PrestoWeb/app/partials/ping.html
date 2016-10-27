@@ -1,9 +1,9 @@
 ﻿<div id="container" class="PageContainer">
-    <h2 class="myHeader mainHeader">Ping request time: {{latestPingRequestTime}}</h2>
+    <h2 class="myHeader mainHeader">Ping <span style="font-size:12px;">({{latestPingRequestTime}})</span></h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <div class="gridFull" ui-grid="gridPing" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows></div>
-    <h2 class="myHeader footer">
+    <div style="margin-top: 12px; text-align: center;">
         <button class="btn btn-default" ng-click="sendPingRequest();" ng-disabled="loading">Send Ping</button>
         <button class="btn btn-default" ng-click="refresh(true);" ng-disabled="loading">Refresh</button>
-    </h2>
+    </div>
 </div>

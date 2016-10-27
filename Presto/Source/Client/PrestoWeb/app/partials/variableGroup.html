@@ -21,14 +21,18 @@
         </div>
     </form>
 
-    <h2 class="myHeader subHeader">Variables</h2>
-    <div class="OneOfTwo">
-        <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-        <div class="gridHalf" ui-grid="gridVariables" ui-grid-selection ui-grid-resize-columns
-             ng-dblclick="editVariable()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
-    </div>
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px; margin-top:12px;" is-open="true">
+            <uib-accordion-heading>
+                <span>Variables</span>
+            </uib-accordion-heading>
+            <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
+            <div class="gridHalf" ui-grid="gridVariables" ui-grid-selection ui-grid-resize-columns
+                 ng-dblclick="editVariable()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
+        </uib-accordion-group>
+    </uib-accordion>	    
 
-    <h2 class="myHeader footer">
+    <div style="margin-top: 12px; text-align: center;">
         <button class="btn btn-default" ng-click="addVariable();" ng-disabled="loading">Add</button>
         <button class="btn btn-default" ng-click="editVariable();" ng-disabled="loading || selectedVariables.length == 0">Edit</button>
         <button class="btn btn-default" ng-click="removeVariables();" ng-disabled="loading || selectedVariables.length == 0">Remove</button>
@@ -37,5 +41,5 @@
         <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
         <button class="btn btn-default" ng-click="exportVariables();" ng-disabled="selectedVariables.length == 0 || loading">Export</button>
         <button class="btn btn-default" ng-click="saveVariableGroup();" ng-disabled="loading || !groupForm.$dirty">Save</button>
-    </h2>
+    </div>
 </div>

@@ -314,6 +314,7 @@ app.factory('installsRepository', ['$http', '$rootScope', function ($http, $root
         selectedApp: null,
         selectedServer: null,
         dateEnd: new Date(),
+        dateEndUiFriendly: '',
         numberOfInstallsToRetrieve: 0,
         maxNumberOfInstallsToRetrieve: 0,
         numberOfInstallsActuallyRetrieved: 0

@@ -18,32 +18,42 @@
                 <input ng-model="app.Archived" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Archived
             </div>
         </div>
-        <h2 class="myHeader subHeader">Tasks</h2>
-        <div class="OneOfTwo">
-            <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-            <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows
-                 ng-dblclick="editTask()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
-        </div>
-    </form>
-    <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="addTask();" ng-disabled="loading">Add</button>
-        <button class="btn btn-default" ng-click="editTask();" ng-disabled="selectedTasks.length == 0 || loading">Edit</button>
-        <button class="btn btn-default" ng-click="deleteTasks();" ng-disabled="selectedTasks.length == 0 || loading">Delete</button>
-        <button class="btn btn-default" ng-click="moveTaskUp();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-up"></span></button>
-        <button class="btn btn-default" ng-click="moveTaskDown();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-down"></span></button>
-        <input id="hiddenImport" style="display:none" type="file" on-read-file="importTasks(contents)"/>
-        <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
-        <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
-        <button class="btn btn-default" ng-click="exportTasks();" ng-disabled="selectedTasks.length == 0 || loading">Export</button>
-        <button class="btn btn-default" ng-click="saveApplication();" ng-disabled="loading || !appForm.$dirty">Save</button>
-    </h2>
-
-    <h2 class="myHeader subHeader">Custom Variable Groups</h2>
-    <div class="TwoOfTwo">
-        <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ui-grid-resize-columns ng-hide="loading"></div>
-    </div>
-    <h2 class="myHeader footer">
-        <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
-        <button class="btn btn-default" ng-click="deleteGroups();" ng-disabled="selectedGroups.length == 0 || loading">Delete</button>
-    </h2>
+        <uib-accordion>
+            <uib-accordion-group style="margin-left:12px; margin-top:12px;" is-open="true">
+                <uib-accordion-heading>
+                    <span>Tasks</span>
+                </uib-accordion-heading>
+                <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
+                <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows
+                        ng-dblclick="editTask()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
+                <div style="margin-top: 12px; text-align: center;">
+                    <button class="btn btn-default" ng-click="addTask();" ng-disabled="loading">Add</button>
+                    <button class="btn btn-default" ng-click="editTask();" ng-disabled="selectedTasks.length == 0 || loading">Edit</button>
+                    <button class="btn btn-default" ng-click="deleteTasks();" ng-disabled="selectedTasks.length == 0 || loading">Delete</button>
+                    <button class="btn btn-default" ng-click="moveTaskUp();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                    <button class="btn btn-default" ng-click="moveTaskDown();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                    <input id="hiddenImport" style="display:none" type="file" on-read-file="importTasks(contents)" />
+                    <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
+                    <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
+                    <button class="btn btn-default" ng-click="exportTasks();" ng-disabled="selectedTasks.length == 0 || loading">Export</button>
+                    <button class="btn btn-default" ng-click="saveApplication();" ng-disabled="loading || !appForm.$dirty">Save</button>
+                </div>
+            </uib-accordion-group>
+        </uib-accordion>                
+    </form>    
+    <hr />
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px;">
+            <uib-accordion-heading>
+                <span>Custom Variable Groups</span>
+            </uib-accordion-heading>
+            <div class="TwoOfTwo">
+                <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ui-grid-resize-columns ng-hide="loading"></div>
+            </div>
+            <h2 class="myHeader footer">
+                <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
+                <button class="btn btn-default" ng-click="deleteGroups();" ng-disabled="selectedGroups.length == 0 || loading">Delete</button>
+            </h2>
+        </uib-accordion-group>
+    </uib-accordion>    
 </div>

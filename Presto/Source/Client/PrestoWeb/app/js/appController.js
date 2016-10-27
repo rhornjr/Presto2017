@@ -48,6 +48,8 @@
             enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
             enableRowSelection: true,
             enableFullRowSelection: true,
+            enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER, // Hack. See http://stackoverflow.com/a/35847744/279516
+            enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
             selectedItems: $scope.selectedTasks,
             columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
                          { field: 'Description', displayName: 'Description', width: "62%" },

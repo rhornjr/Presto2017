@@ -15,6 +15,8 @@
 
         $scope.$watch('state.dateEnd', function () {
             $scope.state.dateEnd.setHours(23, 59, 59, 999); // Use ending of end date. (hour,min,sec,millisec)
+            $scope.state.dateEndUiFriendly = new Date($scope.state.dateEnd);
+            $scope.state.dateEndUiFriendly = moment($scope.state.dateEndUiFriendly).format('DD-MMM-YYYY HH:mm:ss');
         });
 
         // ---------------------------------------------------------------------------------------------------

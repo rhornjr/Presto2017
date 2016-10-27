@@ -52,7 +52,7 @@
             enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
             selectedItems: $scope.selectedTasks,
             columnDefs: [{ field: 'Sequence', displayName: 'Order', type: 'number', width: "8%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } },
-                         { field: 'Description', displayName: 'Description', width: "62%" },
+                         { field: 'Description', displayName: 'Description', width: "60%" },
                          { field: 'PrestoTaskType', displayName: 'Type', width: "16%" },
                          { field: 'FailureCausesAllStop', displayName: 'Stop', width: "12%" }]            
         };

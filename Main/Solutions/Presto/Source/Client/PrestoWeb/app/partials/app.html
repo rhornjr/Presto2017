@@ -1,10 +1,7 @@
 ﻿<div id="container" class="PageContainer">
-    <h2 class="myHeader mainHeader">
-        <div class="row">
-            <div class="col-xs-2"><a href="" ng-click="backToList()" class="headerLink">back to list</a></div>
-            <div class="col-xs-8 text-center">Application</div>
-        </div>
-    </h2>
+    <hr />
+    <h2 style="margin-left:24px;">{{app.Name}} <a href="" ng-click="backToList()" class="headerLink">back to list</a></h2>
+
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="position:absolute; top:35%; left:30%; z-index:100;" />
     <form name="appForm">
         <div class="row">

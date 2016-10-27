@@ -1,5 +1,7 @@
 <div id="container" class="PageContainer">
-    <h2 class="myHeader mainHeader">Applications ({{state.filteredApps.length}})</h2>
+    <hr />
+    <span style="font-size:14px; margin-left:36px;">Count: {{state.filteredApps.length}}</span>
+
     <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->

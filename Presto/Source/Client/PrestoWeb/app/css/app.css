@@ -19,7 +19,7 @@ h2.myHeader {
 
 .headerLink {
     font-size:small !important;
-    color:white !important;
+    color:black !important;
     text-decoration:underline !important;
 }
 
@@ -39,7 +39,9 @@ h2.myHeader {
 .customLabelRightSkinny { color: white; background-color: #9FBEB9; width: 25em; text-align: left; font-weight: bold; }
 
 .userMessage, .seperator {
-    background-color: #7a5a5a;
+    /*background-color: #7a5a5a;*/
+    background-color: #F0F5F5;
+    color: black !important;
     font-size: 1.0em !important;
     text-align: left !important;
     text-shadow: none !important;
@@ -154,6 +156,10 @@ div.PageContainer { width:910px }
 .ui-grid .ui-grid-render-container-body .ui-grid-viewport {
   overflow-x: auto !important;
   overflow-y: auto !important;
+}
+
+.ui-grid {
+  border-bottom-width: 2px !important; /* Hack: Bottom row covers 1px of this border. So make it 2px so bottom border shows. */
 }
 
 /* ui-grid draggable styling */

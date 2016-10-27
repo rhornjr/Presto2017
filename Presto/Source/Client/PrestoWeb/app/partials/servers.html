@@ -1,6 +1,6 @@
 <div id="container" class="PageContainer">
     <hr />
-    <span style="font-size:14px; margin-left:36px;">Count: {{state.filteredServers.length}}</span>
+    <h2 style="margin-left:36px;">Servers<span style="font-size:14px;"> ({{state.filteredServers.length}})</span></h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
     <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns

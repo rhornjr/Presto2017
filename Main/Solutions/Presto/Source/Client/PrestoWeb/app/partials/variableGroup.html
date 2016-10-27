@@ -1,12 +1,12 @@
 ﻿<div id="container" class="PageContainer">
     <hr />
-    <h2 style="margin-left:24px;">{{group.Name}} <a href="" ng-click="backToList()" class="headerLink">back to list</a></h2>
+    <a href="" style="margin-left:24px;" ng-click="backToList()" class="headerLink">back to list</a>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="z-index:100;" />
 
     <form name="groupForm">
         <div class="row">
             <div class="col-xs-10">
-                <input type="text" ng-model="group.Name" placeholder="Name" class="form-control" style="width:40em; margin-left:12px;" />
+                <input type="text" ng-model="group.Name" placeholder="Name" class="form-control" style="width:40em; margin-left:12px; font-size:18px; font-weight:bold;" />
             </div>
             <div class="col-xs-2">
                 <label>

@@ -1,17 +1,18 @@
 ﻿<div id="container" class="PageContainer">
     <hr />
-    <h2 style="margin-left:24px;">{{app.Name}} <a href="" ng-click="backToList()" class="headerLink">back to list</a></h2>
+    <!--<h2 style="margin-left:24px;">{{app.Name}} <a href="" ng-click="backToList()" class="headerLink">back to list</a></h2>-->
+    <a href="" style="margin-left:24px;" ng-click="backToList()" class="headerLink">back to list</a>
 
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="position:absolute; top:35%; left:30%; z-index:100;" />
     <form name="appForm">
         <div class="row">
-            <div class="col-xs-6">
-                <input type="text" ng-model="app.Name" placeholder="Name" class="form-control" style="width:30em; margin-left:12px;" />
+            <div class="col-xs-8">
+                <input type="text" ng-model="app.Name" placeholder="Name" class="form-control" style="width:30em; margin-left:12px; font-size:18px; font-weight:bold;" />
             </div>
             <div class="col-xs-2">
-                <input type="text" ng-model="app.Version" placeholder="Version" class="form-control" style="width:15em" />
+                <input type="text" ng-model="app.Version" placeholder="Version" class="form-control" style="width:10em" />
             </div>
-            <div class="col-xs-3 text-right">
+            <div class="col-xs-2 text-right">
                 <input ng-model="app.Archived" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Archived
             </div>
         </div>
@@ -47,10 +48,10 @@
             <div class="TwoOfTwo">
                 <div class="gridLessThanHalf" ui-grid="gridGroups" ui-grid-selection ui-grid-resize-columns ng-hide="loading"></div>
             </div>
-            <h2 class="myHeader footer">
+            <div style="margin-top: 12px; text-align: center;">
                 <button class="btn btn-default" ng-click="addGroup();" ng-disabled="loading">Add</button>
                 <button class="btn btn-default" ng-click="deleteGroups();" ng-disabled="selectedGroups.length == 0 || loading">Delete</button>
-            </h2>
+            </div>
         </uib-accordion-group>
     </uib-accordion>    
 </div>

@@ -1,6 +1,6 @@
 ﻿<div id="container" class="PageContainer">
     <hr />
-    <span style="font-size:14px; margin-left:36px;">Count: {{state.variableGroups.length}}</span>
+    <h2 style="margin-left:36px;">Variable Groups<span style="font-size:14px;"> ({{state.variableGroups.length}})</span></h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
     <div class="gridFull" ui-grid="gridVariableGroups" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows

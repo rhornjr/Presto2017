@@ -62,8 +62,8 @@ div.PageContainer { width:910px }
 .gridHalf {
     margin: 0 auto; /* So the grid is centered */
     border: 1px solid rgb(212,212,212);
-    width: 890px; 
-    height: 290px;
+    width: 850px; 
+    height: 300px;
 }
 
 .gridFull {
@@ -148,6 +148,12 @@ div.PageContainer { width:910px }
 .menu > li:nth-child(1):before {
   content: "";
   padding: 0;
+}
+
+/* This is here so angular ui-grids only show scrollbars when necessary. http://stackoverflow.com/a/35847744/279516 */
+.ui-grid .ui-grid-render-container-body .ui-grid-viewport {
+  overflow-x: auto !important;
+  overflow-y: auto !important;
 }
 
 /* ui-grid draggable styling */

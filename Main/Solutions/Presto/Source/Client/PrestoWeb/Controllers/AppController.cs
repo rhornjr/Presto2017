@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Web.Http;
@@ -78,7 +79,7 @@ namespace PrestoWeb.Controllers
 
                 var app = appDto.Application;
                 int newSequenceNumber = app.Tasks.Count + 1;
-                foreach (var task in importedTasks)
+                foreach (var task in importedTasks.OrderBy(x => x.Sequence))
                 {
                     task.Sequence = newSequenceNumber;
                     app.Tasks.Add(task);

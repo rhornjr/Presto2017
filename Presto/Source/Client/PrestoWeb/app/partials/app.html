@@ -1,7 +1,7 @@
 ﻿<div id="container" class="PageContainer">
     <hr />
     <!--<h2 style="margin-left:24px;">{{app.Name}} <a href="" ng-click="backToList()" class="headerLink">back to list</a></h2>-->
-    <a href="" style="margin-left:24px;" ng-click="backToList()" class="headerLink">back to list</a>
+    <a href="" style="margin-left:24px;" ng-click="backToList()" class="headerLink">back to list</a>    
 
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage" style="position:absolute; top:35%; left:30%; z-index:100;" />
     <form name="appForm">
@@ -15,31 +15,33 @@
             <div class="col-xs-2 text-right">
                 <input ng-model="app.Archived" type="checkbox" ng-true-value="true" ng-false-value="false" ng-change="setIsDirty()">Archived
             </div>
-        </div>
-        <uib-accordion>
-            <uib-accordion-group style="margin-left:12px; margin-top:12px;" is-open="true">
-                <uib-accordion-heading>
-                    <span>Tasks</span>
-                </uib-accordion-heading>
-                <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-                <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows
-                        ng-dblclick="editTask()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
-                <div style="margin-top: 12px; text-align: center;">
-                    <button class="btn btn-default" ng-click="addTask();" ng-disabled="loading">Add</button>
-                    <button class="btn btn-default" ng-click="editTask();" ng-disabled="selectedTasks.length == 0 || loading">Edit</button>
-                    <button class="btn btn-default" ng-click="deleteTasks();" ng-disabled="selectedTasks.length == 0 || loading">Delete</button>
-                    <button class="btn btn-default" ng-click="moveTaskUp();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                    <button class="btn btn-default" ng-click="moveTaskDown();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-down"></span></button>
-                    <input id="hiddenImport" style="display:none" type="file" on-read-file="importTasks(contents)" />
-                    <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
-                    <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
-                    <button class="btn btn-default" ng-click="exportTasks();" ng-disabled="selectedTasks.length == 0 || loading">Export</button>
-                    <button class="btn btn-default" ng-click="saveApplication();" ng-disabled="loading || !appForm.$dirty">Save</button>
-                </div>
-            </uib-accordion-group>
-        </uib-accordion>                
+        </div>        
     </form>    
     
+    <!-- Moved this outside of the <form> element because the import button didn't work inside of it. -->
+    <uib-accordion>
+        <uib-accordion-group style="margin-left:12px; margin-top:12px;" is-open="true">
+            <uib-accordion-heading>
+                <span>Tasks</span>
+            </uib-accordion-heading>
+            <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
+            <div class="gridHalf" ui-grid="gridTasks" ui-grid-selection ui-grid-resize-columns ui-grid-draggable-rows
+                 ng-dblclick="editTask()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
+            <div style="margin-top: 12px; text-align: center;">
+                <button class="btn btn-default" ng-click="addTask();" ng-disabled="loading">Add</button>
+                <button class="btn btn-default" ng-click="editTask();" ng-disabled="selectedTasks.length == 0 || loading">Edit</button>
+                <button class="btn btn-default" ng-click="deleteTasks();" ng-disabled="selectedTasks.length == 0 || loading">Delete</button>
+                <button class="btn btn-default" ng-click="moveTaskUp();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                <button class="btn btn-default" ng-click="moveTaskDown();" ng-disabled="selectedTasks.length == 0 || loading"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                <input id="hiddenImport" style="display:none" type="file" on-read-file="importTasks(contents)" />
+                <!-- We want to show the button instead of the input, so when the label is clicked, we're really clicking the input. -->
+                <label for="hiddenImport"><button class="btn btn-default" ng-disabled="loading">Import</button></label>
+                <button class="btn btn-default" ng-click="exportTasks();" ng-disabled="selectedTasks.length == 0 || loading">Export</button>
+                <button class="btn btn-default" ng-click="saveApplication();" ng-disabled="loading || !appForm.$dirty">Save</button>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>                
+
     <uib-accordion>
         <uib-accordion-group style="margin-left:12px;">
             <uib-accordion-heading>

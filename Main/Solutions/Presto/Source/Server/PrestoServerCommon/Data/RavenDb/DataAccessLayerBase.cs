@@ -103,7 +103,7 @@ namespace PrestoServer.Data.RavenDb
 
             string message = string.Format(CultureInfo.CurrentCulture,
                 "** Presto DB Activity Warning - High Number of Session Requests **" + Environment.NewLine +
-                "The number of session requests for RavenDB should ideally be 1. Acvitity just occurred where " +
+                "The number of session requests for RavenDB should ideally be 1. Activity just occurred where " +
                 "the number of session requests was {0}. A change was made on 28-Nov-2014 that causes some session " +
                 "requests to be around 5. This happened because we're hydrating the tasks within an application. " +
                 "Those tasks could be of type TaskApp, which would have custom variable groups. It's not possible " +

@@ -9,7 +9,9 @@ using PrestoCommon.Entities;
 using PrestoCommon.EntityHelperClasses;
 using PrestoCommon.Interfaces;
 using PrestoCommon.Wcf;
+using PrestoServer;
 using PrestoServer.Data.RavenDb;
+using PrestoServer.Logic;
 
 namespace ConsoleTestRunner
 {
@@ -41,7 +43,7 @@ namespace ConsoleTestRunner
         {
             try
             {
-                TestAddingXmlNode();
+                TestHighNumberOfSessionRequests();
             }
             catch (Exception ex)
             {
@@ -50,6 +52,13 @@ namespace ConsoleTestRunner
 
             Console.WriteLine("Press any key to stop the program.");
             Console.ReadKey();
+        }
+
+        private static void TestHighNumberOfSessionRequests()
+        {
+            PrestoServerUtility.RegisterRavenDataClasses();
+            var appServer = ApplicationServerLogic.GetByName("PBG1MES22S105");
+            Debug.WriteLine(appServer.Name);
         }
 
         private static void TestAddingXmlNode()

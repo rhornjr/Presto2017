@@ -102,6 +102,7 @@
         // ---------------------------------------------------------------------------------------------------
 
         if ($scope.state.variableGroups.length == 0 || $routeParams.showList == 1) {
+            $scope.state.selectedGroups.length = 0; // No longer have a selected group.
             $scope.refresh(true);
         }
         else {

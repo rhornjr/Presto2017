@@ -121,6 +121,7 @@
 
         // If the apps haven't been loaded yet, or we've come here via a link telling us to load the list, then load the list.
         if ($scope.state.allApps.length == 0 || $routeParams.showList == 1) {
+            $scope.state.selectedApps.length = 0; // No longer have a selected app.
             $scope.refresh(true);
         }
         else {

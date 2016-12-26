@@ -144,14 +144,26 @@ app.factory('showInfoModal', ['$http', '$rootScope', '$uibModal', function ($htt
 
 // --------------------------------------------------------------------------------------
 
-app.factory('appsState', ['$http', '$rootScope', function ($http, $rootScope) {
+app.factory('appsState', ['$http', '$rootScope', 'uiGridConstants', function ($http, $rootScope, uiGridConstants) {
+    var gridOptions = {
+        multiSelect: false,
+        enableColumnResizing: true,
+        enableFiltering: true,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        columnDefs: [{ field: 'Name', displayName: 'Application', width: "80%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: { condition: uiGridConstants.filter.CONTAINS } },
+                     { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
+    };
+
     var state = {
         allApps: [],
         filteredApps: [],
         selectedApps: [],
         showArchived: false,
-        archiveButtonText: 'Show archived'
+        archiveButtonText: 'Show archived',
+        gridOptions: gridOptions
     }
+
+    state.gridOptions.selectedItems = state.selectedApps;
 
     return state;
 }]);

@@ -143,7 +143,12 @@ namespace PrestoTaskRunner.Logic
             {
                 ApplicationServer appServer = GetApplicationServerForThisMachine(Environment.MachineName);
 
-                if (appServer == null) { return; }
+                // 26-Dec-2016: I was going to shortcut the process and check right here to see if a server
+                // had any force installations to do. That would have been a mistake because an *app* can have
+                // a force installation. In that case, the server won't have one, but the server would still
+                // need to be submitted to ApplicationServerLogic.InstallApplications() to compare its apps
+                // with any app that may have a force installation on it.
+                if(appServer == null) { return; }
 
                 ApplicationServerLogic.InstallApplications(appServer);
             }

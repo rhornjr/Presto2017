@@ -61,6 +61,7 @@
 
         // If the servers haven't been loaded yet, or we've come here via a link telling us to load the list, then load the list.
         if (!$scope.state.allServers || $routeParams.showList == 1) {
+            $scope.state.selectedServers.length = 0; // No longer have a selected server.
             $scope.refresh(false);
         }
         else {

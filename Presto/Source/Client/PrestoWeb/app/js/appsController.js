@@ -28,17 +28,7 @@
         $scope.state = appsState;
         var lastSelectedApp = null;
 
-        $scope.gridOptions = {
-            multiSelect: false,
-            enableColumnResizing: true,
-            enableFiltering: true,
-            enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            selectedItems: $scope.state.selectedApps,
-            columnDefs: [{ field: 'Name', displayName: 'Application', width: "80%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 }, filter: {condition: uiGridConstants.filter.CONTAINS} },
-                         { field: 'Version', displayName: 'Version', width: "20%", sort: { direction: uiGridConstants.ASC, priority: 2 } }]
-        };
-
-        $scope.gridOptions.data = $scope.state.filteredApps;
+        $scope.state.gridOptions.data = $scope.state.filteredApps;
 
         $scope.refresh = function (forceRefresh) {
             if (!forceRefresh) {
@@ -49,7 +39,7 @@
                 $scope.state.allApps = dataResponse;
 
                 filterAppsByArchived();
-                $scope.gridOptions.data = $scope.state.filteredApps; // Grid doesn't update unless I do this. Not sure why.
+                $scope.state.gridOptions.data = $scope.state.filteredApps; // Grid doesn't update unless I do this. Not sure why.
                 
                 $scope.loading = 0;
                 $rootScope.setUserMessage("Application list refreshed");
@@ -57,7 +47,7 @@
         };
 
         // Act on the row selection changing.
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.state.gridOptions.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 $scope.state.selectedApps.length = 0; // Truncate/clear the array. Yes, this is how it's done.
@@ -148,7 +138,7 @@
             }
 
             filterAppsByArchived();
-            $scope.gridOptions.data = $scope.state.filteredApps; // Grid doesn't update unless I do this. Not sure why.
+            $scope.state.gridOptions.data = $scope.state.filteredApps; // Grid doesn't update unless I do this. Not sure why.
         }
 
         // ---------------------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
     <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-    <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns
+    <div class="gridFull" ui-grid="state.gridOptions" ui-grid-selection ui-grid-resize-columns
          ng-dblclick="editApp()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
     <div style="margin-top: 12px; text-align: center;">
         <button class="btn btn-default" ng-click="addApp();" ng-disabled="loading">Add</button>

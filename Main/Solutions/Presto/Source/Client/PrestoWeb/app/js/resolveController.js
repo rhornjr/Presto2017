@@ -8,7 +8,7 @@
 
     // APP PICKER
 
-    angular.module('myApp.controllers').controller('appPickerModalController', function ($scope, $uibModalInstance, uiGridConstants, appsRepository) {
+    angular.module('myApp.controllers').controller('appPickerModalController', function ($scope, $uibModalInstance, $timeout, uiGridConstants, appsRepository) {
         $scope.loading = 1;
         $scope.apps = null;
         $scope.selectedApps = [];
@@ -29,7 +29,16 @@
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.
             appsRepository.getApps(forceRefresh, function (dataResponse) {
                 $scope.apps = dataResponse;
-                $scope.loading = 0;
+                $scope.loading = 0;                
+                $timeout(function () {
+                    // We want the focus to be on the filter in the grid. Since that input, within the ui-grid, doesn't
+                    // have an ID, we can select it by class names. It's within a div that has a class of modal, then
+                    // within ui-grid-header-cell, then ui-grid-filter-input-0. I first tried just using
+                    // ui-grid-filter-input-0, but there were four of them (I think on the main page; not within the modal).
+                    // I found these class names by looking using the DOM explorer in F12 tools.
+                    var elements = document.querySelector('.modal .ui-grid-header-cell .ui-grid-filter-input-0');
+                    elements.focus();
+                }, 50);
             });
         };
 
@@ -51,12 +60,12 @@
             $uibModalInstance.dismiss();
         };
 
-        $scope.refresh(true);
+        $scope.refresh(true);        
     });
 
     // SERVER PICKER
 
-    angular.module('myApp.controllers').controller('serverPickerModalController', function ($scope, $uibModalInstance, uiGridConstants, serversRepository) {
+    angular.module('myApp.controllers').controller('serverPickerModalController', function ($scope, $uibModalInstance, $timeout, uiGridConstants, serversRepository) {
         $scope.loading = 1;
         $scope.servers = null;
         $scope.selectedServers = [];
@@ -78,6 +87,10 @@
             serversRepository.getServers(forceRefresh, function (dataResponse) {
                 $scope.servers = dataResponse;
                 $scope.loading = 0;
+                $timeout(function () {
+                    var elements = document.querySelector('.modal .ui-grid-header-cell .ui-grid-filter-input-0');
+                    elements.focus();
+                }, 50);
             });
         };
 

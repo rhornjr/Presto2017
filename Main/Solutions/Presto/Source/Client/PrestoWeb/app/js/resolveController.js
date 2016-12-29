@@ -88,6 +88,7 @@
                 $scope.servers = dataResponse;
                 $scope.loading = 0;
                 $timeout(function () {
+                    // Use class hierarchy to put the focus on the filter in the grid.
                     var elements = document.querySelector('.modal .ui-grid-header-cell .ui-grid-filter-input-0');
                     elements.focus();
                 }, 50);

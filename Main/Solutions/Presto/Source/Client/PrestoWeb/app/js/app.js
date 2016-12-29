@@ -202,14 +202,26 @@ app.factory('appsRepository', ['$http', '$rootScope', function ($http, $rootScop
 
 // --------------------------------------------------------------------------------------
 
-app.factory('serversState', ['$http', '$rootScope', function ($http, $rootScope) {
+app.factory('serversState', ['$http', '$rootScope', 'uiGridConstants', function ($http, $rootScope, uiGridConstants) {
+    var gridOptions = {
+        multiSelect: false,
+        enableColumnResizing: true,
+        enableFiltering: true,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        columnDefs: [{ field: 'Name', displayName: 'Server', width: "80%", resizable: true, filter: { condition: uiGridConstants.filter.CONTAINS } },
+                     { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
+    };
+
     var state = {
         allServers: null,
         selectedServers: [],
         filteredServers: [],
         showArchived: false,
-        archiveButtonText: 'Show archived'
+        archiveButtonText: 'Show archived',
+        gridOptions: gridOptions
     }
+
+    state.gridOptions.selectedItems = state.selectedServers;
 
     return state;
 }]);
@@ -260,11 +272,23 @@ app.factory('logRepository', ['$http', '$rootScope', function ($http, $rootScope
     }
 }]);
 
-app.factory('variableGroupsRepository', ['$http', '$rootScope', function ($http, $rootScope) {
+app.factory('variableGroupsRepository', ['$http', '$rootScope', 'uiGridConstants', function ($http, $rootScope, uiGridConstants) {
+    var gridVariableGroups = {
+        data: 'state.variableGroups',
+        multiSelect: false,
+        enableColumnResizing: true,
+        enableFiltering: true,
+        enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
+        columnDefs: [{ field: 'Name', displayName: 'Name', width: "100%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } }]
+    };
+
     var state = {
         variableGroups: [],
-        selectedGroups: []
+        selectedGroups: [],
+        gridVariableGroups: gridVariableGroups
     }
+
+    state.gridVariableGroups.selectedItems = state.selectedGroups;
 
     return state;
 }]);

@@ -1,10 +1,13 @@
 ﻿<div id="container" class="PageContainer">
-    <hr />
-    <h2 style="margin-left:36px;">Global Settings</h2>
+    <!-- The path to the image is relative to index.html, which is one folder above this partial apps.html file. -->
+    <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition" />
     <div style="display:table; margin:0 auto"> <!-- Center this whole div -->
+        <hr />
+        <span style="font-weight:bold;">Presto Service:</span><br /><br />
         <div class="customLabelLeft">Service Address</div>
         <div class="customLabelRight">{{serviceAddress}}</div>
-        <br />
+        <hr />
+        <span><b>System Variables</b> (can be used in any app task):</span><br /><br />
         <div class="customLabelLeft">$(sys:applicationName)</div>
         <div class="customLabelRight">The name of the application being installed</div>
         <br />
@@ -16,5 +19,21 @@
         <br />
         <div class="customLabelLeft">$(sys:installationTimestamp)</div>
         <div class="customLabelRight">Installation start time (yyyyMMdd.HHmmss). Unique value for an installation.</div>
+        <hr />
+        <form name="globalForm">
+            <span style="font-weight:bold;">Settings:</span><br /><br />
+            <div class="customLabelLeft">Freeze all installations</div>
+            <div class="customLabelRight">
+                <label>
+                    <input ng-model="state.globalSetting.FreezeAllInstallations" type="checkbox" ng-true-value="true"
+                           ng-false-value="false" ng-change="setIsDirty()">
+                </label>                
+            </div>
+            <br /><br />
+            <div style="text-align:center;">
+                <button class="btn btn-default" ng-click="saveGlobalSetting();" ng-disabled="loading || !globalForm.$dirty">Save</button>
+            </div>
+        </form>
+        <hr />
     </div>
 </div>

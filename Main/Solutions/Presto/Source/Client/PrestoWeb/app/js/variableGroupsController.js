@@ -6,9 +6,11 @@
 
     // ------------------------------- Variable Groups Controller -------------------------------
 
-    function variableGroupsController($scope, $rootScope, $http, $routeParams, variableGroupsRepository, uiGridConstants, $window, showConfirmationModal, showInfoModal, showTextEntryModal) {
-        $scope.state = variableGroupsRepository;
+    function variableGroupsController($scope, $rootScope, $http, $routeParams, variableGroupsState, $window, showConfirmationModal, showInfoModal, showTextEntryModal) {
+        $scope.state = variableGroupsState;        
         var lastSelectedGroup = null;
+
+        // Note: This is how you can see the filter value: $scope.state.gridVariableGroups.columnDefs[0].filter.term
 
         // ---------------------------------------------------------------------------------------------------
 

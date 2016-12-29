@@ -4,7 +4,7 @@
 
     angular.module('myApp.controllers').controller('groupsPickerModalController', groupsPickerModalController);
 
-    function groupsPickerModalController($rootScope, $scope, $http, $uibModalInstance, $timeout, uiGridConstants, variableGroupsRepository, selectedOverrides) {
+    function groupsPickerModalController($rootScope, $scope, $http, $uibModalInstance, $timeout, uiGridConstants, selectedOverrides) {
         $scope.groups = null;
 
         $scope.gridGroups = {

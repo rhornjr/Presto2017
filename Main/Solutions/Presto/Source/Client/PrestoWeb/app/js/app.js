@@ -432,6 +432,7 @@ app.factory('pingRequestRepository', ['$http', '$rootScope', function ($http, $r
 app.factory('globalState', ['$http', '$rootScope', function ($http, $rootScope) {
     var state = {
         retrieved: false,
+        serviceAddress: '',
         globalSetting: {}
     }
 

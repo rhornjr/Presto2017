@@ -3,7 +3,7 @@
     <h2 style="margin-left:36px;">Servers<span style="font-size:14px;"> ({{state.filteredServers.length}})</span></h2>
     <img id="waitImage" src="images/wait.gif" ng-show="loading" class="waitImage waitImageTopGridPosition"/>
     <!-- ng-mousedown="$event.shiftKey && $event.preventDefault()" prevents IE from selecting other DOM elements on shift-click -->
-    <div class="gridFull" ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns
+    <div class="gridFull" ui-grid="state.gridOptions" ui-grid-selection ui-grid-resize-columns
          ng-dblclick="editServer()" ng-mousedown="$event.shiftKey && $event.preventDefault()"></div>
     <div style="margin-top: 12px; text-align: center;">
         <button class="btn btn-default" ng-click="addServer();" ng-disabled="loading">Add</button>

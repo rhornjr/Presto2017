@@ -12,18 +12,6 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.gridVariableGroups = {
-            data: 'state.variableGroups',
-            multiSelect: false,
-            enableColumnResizing: true,
-            enableFiltering: true,
-            selectedItems: $scope.state.selectedGroups,
-            enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            columnDefs: [{ field: 'Name', displayName: 'Name', width: "100%", resizable: true, sort: { direction: uiGridConstants.ASC, priority: 1 } }]
-        };
-
-        // ---------------------------------------------------------------------------------------------------
-
         $scope.refresh = function (forceRefresh) {
             if (!forceRefresh) {
                 return;
@@ -44,7 +32,7 @@
 
         // ---------------------------------------------------------------------------------------------------
 
-        $scope.gridVariableGroups.onRegisterApi = function (gridApi) {
+        $scope.state.gridVariableGroups.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.

@@ -26,6 +26,7 @@
                     $rootScope.setUserMessage("Variable group list refreshed");
                     $timeout(function () {
                         setSelectedItems();
+                        // Use class hierarchy to put the focus on the filter in the grid.
                         var elements = document.querySelector('.modal .ui-grid-header-cell .ui-grid-filter-input-0');
                         elements.focus();
                     }, 50);

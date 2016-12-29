@@ -10,17 +10,7 @@
         $scope.state = serversState;
         var lastSelectedServer = null;
 
-        $scope.gridOptions = {
-            multiSelect: false,
-            enableColumnResizing: true,
-            enableFiltering: true,
-            enableRowHeaderSelection: false, // We don't want to have to click a row header to select a row. We want to just click the row itself.
-            selectedItems: $scope.state.selectedServers,
-            columnDefs: [{ field: 'Name', displayName: 'Server', width: "80%", resizable: true, filter: { condition: uiGridConstants.filter.CONTAINS } },
-                         { field: 'InstallationEnvironment', displayName: 'Environment', width: "20%", resizable: true }]
-        };
-
-        $scope.gridOptions.data = $scope.state.filteredServers;
+        $scope.state.gridOptions.data = $scope.state.filteredServers;
 
         $scope.refresh = function (forceRefresh) {
             $scope.loading = 1;
@@ -28,14 +18,14 @@
             serversRepository.getServers(forceRefresh, function (dataResponse) {
                 $scope.state.allServers = dataResponse;
                 filterServersByArchived();
-                $scope.gridOptions.data = $scope.state.filteredServers;
+                $scope.state.gridOptions.data = $scope.state.filteredServers;
                 $scope.loading = 0;
                 $rootScope.setUserMessage("Server list refreshed");
             });
         };
 
         // Act on the row selection changing.
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.state.gridOptions.onRegisterApi = function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 console.log(row);  // This is a nice option. It allowed me to browse the object and discover that I wanted the entity property.
@@ -88,7 +78,7 @@
             }
 
             filterServersByArchived();
-            $scope.gridOptions.data = $scope.state.filteredServers; // Grid doesn't update unless I do this. Not sure why.
+            $scope.state.gridOptions.data = $scope.state.filteredServers; // Grid doesn't update unless I do this. Not sure why.
         }
 
         // ---------------------------------------------------------------------------------------------------

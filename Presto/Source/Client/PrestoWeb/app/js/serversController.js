@@ -12,6 +12,8 @@
 
         $scope.state.gridOptions.data = $scope.state.filteredServers;
 
+        // Note: This is how you can see the filter value: $scope.state.gridOptions.columnDefs[0].filter.term
+
         $scope.refresh = function (forceRefresh) {
             $scope.loading = 1;
             // Since the eventual $http call is async, we have to provide a callback function to use the data retrieved.          

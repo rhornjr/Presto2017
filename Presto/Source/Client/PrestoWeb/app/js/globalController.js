@@ -13,7 +13,7 @@
             // Get the service address so the user can see where he's connected.
             $http.get('/PrestoWeb/api/utility/getServiceAddress')
                 .then(function (result) {
-                    $scope.serviceAddress = result.data;
+                    $scope.state.serviceAddress = result.data;
                 }, function (response) {
                     console.log(response);
                     showInfoModal.show(response.statusText, response.data);

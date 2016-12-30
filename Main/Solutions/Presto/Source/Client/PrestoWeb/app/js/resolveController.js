@@ -200,11 +200,7 @@
                 console.log("Group(s) picked", overrides);
                 $scope.resolvedVariables.length = 0;
                 $scope.selectedOverrides = overrides;
-                // Show the list of names to the user.
-                $scope.selectedOverridesNames = '';
-                for (var i = 0; i < overrides.length; i++) {
-                    $scope.selectedOverridesNames += overrides[i].Name + " | ";
-                }
+                setSelectedOverridesNames();
             }, function () {
                 // modal dismissed
             });
@@ -220,12 +216,21 @@
                         $scope.selectedApp = dataContainer.app;
                         $scope.selectedServer = dataContainer.server;
                         $scope.selectedOverrides = dataContainer.overrides;
+                        setSelectedOverridesNames();
                         $scope.resolvedVariables = dataContainer.data.Variables;
                         $rootScope.setUserMessage("Problems: " + dataContainer.data.NumberOfProblems +
                             ". " + dataContainer.data.SupplementalStatusMessage)
                     }
                     $scope.loading = 0;
             });
+        }
+
+        var setSelectedOverridesNames = function () {
+            // Show the list of names to the user.
+            $scope.selectedOverridesNames = '';
+            for (var i = 0; i < $scope.selectedOverrides.length; i++) {
+                $scope.selectedOverridesNames += $scope.selectedOverrides[i].Name + " | ";
+            }
         }
 
         $scope.resolve(false);

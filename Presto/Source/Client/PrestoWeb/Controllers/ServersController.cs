@@ -8,8 +8,8 @@ using PrestoCommon.Wcf;
 
 namespace PrestoWeb.Controllers
 {
-    // The origin is the web server.
-    [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]
+    // The origin is the web server. localhost:4200 is Angular's local server.
+    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
     public class ServersController : ApiController
     {
         public IEnumerable<ApplicationServerDtoSlim> Get()

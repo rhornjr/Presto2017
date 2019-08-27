@@ -14,6 +14,7 @@ export class ServersComponent implements OnInit {
   ngOnInit() {
     this._http.getServers().subscribe(data => {
       this.servers = data;
+      console.log(this.servers);
     });
   }
 }

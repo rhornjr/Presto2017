@@ -12,7 +12,7 @@ using Xanico.Core;
 namespace PrestoWeb.Controllers
 {
     // The origin is the web server.
-    [EnableCors(origins: "http://apps.firstsolar.com", headers: "*", methods: "*")]
+    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
     public class ServerController : ApiController
     {
         public ApplicationServer Get(string id)

@@ -2,6 +2,6 @@
 
 <ul *ngIf="servers">
     <li *ngFor="let server of servers">
-        <p>{{server.Name}}</p>
+        <a href="#" routerLink="/server" [queryParams]="{id: server.Id}">{{server.Name}}</a>
     </li>
 </ul>

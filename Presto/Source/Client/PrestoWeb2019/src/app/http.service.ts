@@ -10,4 +10,10 @@ export class HttpService {
   getServers() {
     return this.http.get('http://localhost/PrestoWeb/api/servers');
   }
+
+  getServer(id: string) {
+    const uri = 'http://localhost/PrestoWeb/api/server/?id=' + encodeURI(id);
+    console.log(uri);
+    return this.http.get(uri);
+  }
 }

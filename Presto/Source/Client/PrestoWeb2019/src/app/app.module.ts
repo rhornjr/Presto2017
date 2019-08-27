@@ -5,15 +5,18 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { ServersComponent } from './servers/servers.component';
+import { ServerComponent } from './server/server.component';
 
 const routes: Routes = [
-  { path: 'servers', component: ServersComponent }
+  { path: 'servers', component: ServersComponent },
+  { path: 'server', component: ServerComponent }
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
-    ServersComponent
+    ServersComponent,
+    ServerComponent
   ],
   imports: [
     BrowserModule,

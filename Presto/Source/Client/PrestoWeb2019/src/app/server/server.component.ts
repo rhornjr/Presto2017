@@ -14,12 +14,14 @@ export class ServerComponent implements OnInit {
   serverId: string;
   server: Object;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.serverId = this.route.snapshot.queryParamMap.get("id")
     this._http.getServer(this.serverId).subscribe(data => {
       this.server = data;
-      console.log(this.server);
     });
   }
 
+  saveServer(server) {
+    this._http.saveServer(server);
+  }
 }

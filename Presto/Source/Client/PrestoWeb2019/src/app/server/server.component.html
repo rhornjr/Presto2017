@@ -5,3 +5,7 @@
     <li>{{server.Name}}</li>
     <li>{{server.InstallationEnvironment.Name}}</li>
 </ul>
+
+<input *ngIf="server" [(ngModel)]="server.Name">
+
+<button (click)="saveServer(server)">Save</button>

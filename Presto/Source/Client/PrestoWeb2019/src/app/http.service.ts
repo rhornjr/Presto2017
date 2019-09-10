@@ -11,9 +11,15 @@ export class HttpService {
     return this.http.get('http://localhost/PrestoWeb/api/servers');
   }
 
-  getServer(id: string) {
+  getServer(id: string): any {
     const uri = 'http://localhost/PrestoWeb/api/server/?id=' + encodeURI(id);
-    console.log(uri);
     return this.http.get(uri);
+  }
+
+  saveServer(server: object): void {
+    const uri = 'http://localhost/PrestoWeb/api/server/save';
+    this.http.post(uri, server).subscribe({
+      next: result => console.log(result)
+    });
   }
 }

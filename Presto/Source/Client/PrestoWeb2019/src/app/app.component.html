@@ -1,6 +1,45 @@
-<h1>Presto</h1>
-
-<a href="#" routerLink="/servers">Servers</a>
+<nav class="navbar navbar-dark bg-primary">
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">Presto</a>
+  
+    <!-- Figure out how to do the jQuery way of collapsing after clicking.
+         (That way we don't need to add data-toggle and data-target to every link.)
+         https://stackoverflow.com/a/42401686/279516 -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/applications">Applications <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Servers</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Variables</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Resolve</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Installations</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Log</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Ping</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Global</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <a class="nav-link" href="#" routerLink="/servers">Security</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
 <!-- This is where the routed component's view displays. -->
 <router-outlet></router-outlet>

@@ -7,17 +7,20 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { ServersComponent } from './servers/servers.component';
 import { ServerComponent } from './server/server.component';
+import { ApplicationsComponent } from './applications/applications.component';
 
 const routes: Routes = [
   { path: 'servers', component: ServersComponent },
-  { path: 'server', component: ServerComponent }
+  { path: 'server', component: ServerComponent },
+  { path: 'applications', component: ApplicationsComponent }
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
     ServersComponent,
-    ServerComponent
+    ServerComponent,
+    ApplicationsComponent
   ],
   imports: [
     BrowserModule,
